@@ -22,7 +22,7 @@ export class User extends BaseEntity {
     @JoinTable()
     friends: User[]
 
-    @Column()
+    @Column('varchar', { array: true })
     friends_status: string[]
 
     @OneToOne(() => Stats)

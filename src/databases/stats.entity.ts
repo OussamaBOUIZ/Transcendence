@@ -11,7 +11,7 @@ export class Stats extends BaseEntity {
     
 
     // unidirectional
-    @OneToMany(() => Achievement, (achievement) => achievement.user)
+    @OneToMany(() => Achievement, (achievement) => achievement.stat)
     achievements: Achievement[]
     
     @Column()

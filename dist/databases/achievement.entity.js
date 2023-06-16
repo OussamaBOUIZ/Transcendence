@@ -9,31 +9,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Achievement = void 0;
 const typeorm_1 = require("typeorm");
-let User = exports.User = class User extends typeorm_1.BaseEntity {
+const user_entity_1 = require("./user.entity");
+const stats_entity_1 = require("./stats.entity");
+let Achievement = exports.Achievement = class Achievement extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Achievement.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => user_entity_1.User),
+    __metadata("design:type", user_entity_1.User)
+], Achievement.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => stats_entity_1.Stats, (stat) => stat.achievements),
+    __metadata("design:type", stats_entity_1.Stats)
+], Achievement.prototype, "stat", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "firstName", void 0);
+], Achievement.prototype, "badge_icon", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "lastName", void 0);
+], Achievement.prototype, "badge_name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "nickname", void 0);
+], Achievement.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: true }),
+    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
     __metadata("design:type", Boolean)
-], User.prototype, "isActive", void 0);
-exports.User = User = __decorate([
-    (0, typeorm_1.Entity)('Users')
-], User);
-//# sourceMappingURL=user.entity.js.map
+], Achievement.prototype, "is_achieved", void 0);
+exports.Achievement = Achievement = __decorate([
+    (0, typeorm_1.Entity)('Achievement')
+], Achievement);
+//# sourceMappingURL=achievement.entity.js.map

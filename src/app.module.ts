@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { Stats } from './databases/stats.entity';
+import { Achievement } from './databases/achievement.entity';
+import { Match_history } from './databases/match_history.entity';
+import { User } from './databases/user.entity';
 
 
 @Module({
@@ -10,8 +13,8 @@ import { User } from './user.entity';
     port: 5434,
     username: 'postgres',
     password: '123',
-    database: 'postgres',
-    entities: [User],
+    database: 'postgres', //  PingPong
+    entities: [User, Stats, Achievement, Match_history],
     synchronize: true,
   })
 ]

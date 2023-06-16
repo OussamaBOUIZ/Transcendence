@@ -5,9 +5,9 @@ services:
     ports:
       - 5434:5432
     environment:
-      POSTGRES_USER: app_postgres_1
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
+      POSTGRES_DB: PingPong
     networks:
       - freecodecamp
 # ? need volume  also for envs of course for testing 
