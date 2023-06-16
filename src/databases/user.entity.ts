@@ -1,4 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm"
+
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { Stats } from "./stats.entity"
+import { Match_history } from "./match_history.entity"
 
 
 @Entity('User')
@@ -7,7 +10,7 @@ export class User extends BaseEntity {
     id: number
 
     @Column({ unique: true })
-    name: string
+    unique_name: string
 
     @Column()
     avatar: string
@@ -15,4 +18,17 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
+    @ManyToMany(() => User)
+    @JoinTable()
+    friends: User[]
+
+    @Column()
+    friends_status: string[]
+
+    @OneToOne(() => Stats)
+    @JoinColumn()
+    stat: Stats
+
+    @OneToMany(() => Match_history, (match_history) => match_history.user)
+    match_history: Match_history[]
 }

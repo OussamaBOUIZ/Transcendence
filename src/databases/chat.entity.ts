@@ -13,5 +13,4 @@ export class Chat extends BaseEntity {
     channel_type: string
 
     
-
 }
