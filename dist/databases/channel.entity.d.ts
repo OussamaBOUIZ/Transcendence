@@ -6,6 +6,7 @@ export declare class Channel extends BaseEntity {
     channel_type: string;
     channel_password: string;
     channel_owners: number[];
+    channel_users: number[];
     banned_users: number[];
     muted: Muted_users[];
     direct_messages: string;

@@ -7,6 +7,8 @@ export declare class User extends BaseEntity {
     id: number;
     unique_name: string;
     avatar: string;
+    email: string;
+    password: string;
     is_two_factor: boolean;
     friends: Friend[];
     blocked_users: number[];

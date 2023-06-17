@@ -37,10 +37,13 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)('int', { array: true }),
     __metadata("design:type", Array)
+], Channel.prototype, "channel_users", void 0);
+__decorate([
+    (0, typeorm_1.Column)('int', { array: true }),
+    __metadata("design:type", Array)
 ], Channel.prototype, "banned_users", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => muted_users_entity_1.Muted_users, (muted_users) => muted_users.user_id),
-    (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], Channel.prototype, "muted", void 0);
 __decorate([

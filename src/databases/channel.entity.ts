@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm"
 import { Muted_users } from "./muted_users.entity"
-import { join } from "path"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
@@ -18,13 +17,14 @@ export class Channel extends BaseEntity {
 
     @Column('int', {array: true})
     channel_owners: number[]
+    
+    @Column('int', {array: true})
+    channel_users: number[]
 
     @Column('int', {array: true})
     banned_users: number[]
 
-
     @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
-    @JoinTable()
     muted: Muted_users[]
 
     @Column()

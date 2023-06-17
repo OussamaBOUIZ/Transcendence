@@ -14,8 +14,14 @@ export class User extends BaseEntity {
     @Column({ unique: true })
     unique_name: string
 
-    @Column()
+    @Column({ default: 'path' })
     avatar: string
+    
+    @Column({ unique: true })
+    email: string
+
+    @Column()
+    password: string
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
