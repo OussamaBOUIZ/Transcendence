@@ -9,54 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Channel = void 0;
 const typeorm_1 = require("typeorm");
-const stats_entity_1 = require("./stats.entity");
-const match_history_entity_1 = require("./match_history.entity");
-const friend_entity_1 = require("./friend.entity");
-const channel_entity_1 = require("./channel.entity");
-let User = exports.User = class User extends typeorm_1.BaseEntity {
+const muted_users_entity_1 = require("./muted_users.entity");
+let Channel = exports.Channel = class Channel extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Channel.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
-], User.prototype, "unique_name", void 0);
+], Channel.prototype, "channel_name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "avatar", void 0);
+], Channel.prototype, "channel_type", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "is_two_factor", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => friend_entity_1.Friend),
-    (0, typeorm_1.JoinTable)(),
-    __metadata("design:type", Array)
-], User.prototype, "friends", void 0);
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Channel.prototype, "channel_password", void 0);
 __decorate([
     (0, typeorm_1.Column)('int', { array: true }),
     __metadata("design:type", Array)
-], User.prototype, "blocked_users", void 0);
+], Channel.prototype, "channel_owners", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => channel_entity_1.Channel),
+    (0, typeorm_1.Column)('int', { array: true }),
+    __metadata("design:type", Array)
+], Channel.prototype, "banned_users", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => muted_users_entity_1.Muted_users, (muted_users) => muted_users.user_id),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "joined_channels", void 0);
+], Channel.prototype, "muted", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => stats_entity_1.Stats),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", stats_entity_1.Stats)
-], User.prototype, "stat", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Channel.prototype, "direct_messages", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => match_history_entity_1.Match_history, (match_history) => match_history.user),
-    __metadata("design:type", Array)
-], User.prototype, "match_history", void 0);
-exports.User = User = __decorate([
-    (0, typeorm_1.Entity)('User')
-], User);
-//# sourceMappingURL=user.entity.js.map
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Channel.prototype, "access_profiles", void 0);
+exports.Channel = Channel = __decorate([
+    (0, typeorm_1.Entity)('Channel')
+], Channel);
+//# sourceMappingURL=channel.entity.js.map

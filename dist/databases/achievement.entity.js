@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Achievement = void 0;
 const typeorm_1 = require("typeorm");
-const user_entity_1 = require("./user.entity");
 const stats_entity_1 = require("./stats.entity");
 let Achievement = exports.Achievement = class Achievement extends typeorm_1.BaseEntity {
 };
@@ -19,10 +18,6 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Achievement.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.User),
-    __metadata("design:type", user_entity_1.User)
-], Achievement.prototype, "user", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => stats_entity_1.Stats, (stat) => stat.achievements),
     __metadata("design:type", stats_entity_1.Stats)
@@ -43,6 +38,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'boolean', default: false }),
     __metadata("design:type", Boolean)
 ], Achievement.prototype, "is_achieved", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Achievement.prototype, "user_id", void 0);
 exports.Achievement = Achievement = __decorate([
     (0, typeorm_1.Entity)('Achievement')
 ], Achievement);

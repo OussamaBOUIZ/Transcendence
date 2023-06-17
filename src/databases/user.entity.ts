@@ -1,7 +1,9 @@
 
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
 import { Stats } from "./stats.entity"
 import { Match_history } from "./match_history.entity"
+import { Friend } from "./friend.entity"
+import { Channel } from "./channel.entity"
 
 
 @Entity('User')
@@ -18,12 +20,16 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    @ManyToMany(() => User)
+    @ManyToOne(() => Friend)
     @JoinTable()
-    friends: User[]
+    friends: Friend[]
 
-    @Column('varchar', { array: true })
-    friends_status: string[]
+    @Column('int', {array: true})
+    blocked_users: number[]
+
+    @ManyToOne(() => Channel)
+    @JoinTable()
+    joined_channels: Channel[]
 
     @OneToOne(() => Stats)
     @JoinColumn()

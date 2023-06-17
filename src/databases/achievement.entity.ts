@@ -1,17 +1,14 @@
 
 import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
-import { User } from "./user.entity"
 import { Stats } from "./stats.entity"
-
-
 
 @Entity('Achievement')
 export class Achievement extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
     
-    @OneToOne(() => User)
-    user: User
+    // @OneToOne(() => User)
+    // user: User
     
     @ManyToOne(() => Stats , (stat) => stat.achievements)
     stat: Stats
@@ -27,4 +24,7 @@ export class Achievement extends BaseEntity {
 
     @Column({ type: 'boolean', default: false })
     is_achieved: boolean
+    
+    @Column()
+    user_id: number
 }

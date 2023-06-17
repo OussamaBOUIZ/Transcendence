@@ -9,23 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Chat = void 0;
+exports.Muted_users = void 0;
 const typeorm_1 = require("typeorm");
-let Chat = exports.Chat = class Chat extends typeorm_1.BaseEntity {
+let Muted_users = exports.Muted_users = class Muted_users extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Chat.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true }),
-    __metadata("design:type", String)
-], Chat.prototype, "channel_name", void 0);
+], Muted_users.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Chat.prototype, "channel_type", void 0);
-exports.Chat = Chat = __decorate([
-    (0, typeorm_1.Entity)('Chat')
-], Chat);
-//# sourceMappingURL=chat.entity.js.map
+    __metadata("design:type", Number)
+], Muted_users.prototype, "user_id", void 0);
+exports.Muted_users = Muted_users = __decorate([
+    (0, typeorm_1.Entity)('Muted_users')
+], Muted_users);
+//# sourceMappingURL=muted_users.entity.js.map
