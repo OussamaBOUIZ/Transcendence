@@ -20,11 +20,15 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Friend.prototype, "user_id", void 0);
+], Friend.prototype, "friend_id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Friend.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Friend.prototype, "friend_wins", void 0);
 exports.Friend = Friend = __decorate([
     (0, typeorm_1.Entity)('Friend')
 ], Friend);
