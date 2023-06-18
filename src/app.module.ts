@@ -8,6 +8,8 @@ import { Muted_users } from './databases/muted_users.entity';
 import { Stats } from './databases/stats.entity';
 import { User } from './databases/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -26,7 +28,10 @@ import { AuthModule } from './auth/auth.module';
   //   synchronize: true,
   // })
   // , 
-  AuthModule
+  AuthModule,
+  ConfigModule.forRoot({
+    isGlobal: true,
+  })
 ]
 })
 export class AppModule {}
