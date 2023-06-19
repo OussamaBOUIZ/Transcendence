@@ -10,28 +10,21 @@ import { User } from './databases/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { ChatGatewayGateway } from './chat-gateway/chat-gateway.gateway';
+import { GatewayModule } from './chat-gateway/gateway.module';
+import { dataSourceOptions } from './datasource/data-source';
 
 @Module({
   imports: [
-  //   TypeOrmModule.forRoot({
-  //   type: 'postgres',
-  //   host: 'localhost',
-  //   port: 5434,
-  //   username: 'postgres',
-  //   password: '123',
-  //   database: 'PingPong', //  PingPong
-  //   entities: [Achievement, Channel,
-  //      Friend, Match_history,
-  //      Muted_users, Stats,
-  //      User
-  //   ],
-  //   synchronize: true,
-  // })
-  // , 
+    // TypeOrmModule.forRoot([]) 
+    TypeOrmModule.forRoot(dataSourceOptions)
+  , 
   AuthModule,
+  GatewayModule,
   ConfigModule.forRoot({
     isGlobal: true,
   })
-]
+],
+  providers: [ChatGatewayGateway]
 })
 export class AppModule {}
