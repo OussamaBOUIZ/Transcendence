@@ -8,7 +8,8 @@ export class Match_history extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne(() => User, (user) => user.match_history)
+
+    @ManyToOne(() => User, (user) => user.match_histories)
     user: User
 
     @OneToOne(() => User)

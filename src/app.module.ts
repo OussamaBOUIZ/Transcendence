@@ -13,10 +13,11 @@ import { HttpModule } from '@nestjs/axios';
 import { ChatGatewayGateway } from './chat-gateway/chat-gateway.gateway';
 import { GatewayModule } from './chat-gateway/gateway.module';
 import { dataSourceOptions } from './datasource/data-source';
+import { User_chat } from './databases/userchat.entity';
+
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot([]) 
     TypeOrmModule.forRoot(dataSourceOptions)
   , 
   AuthModule,

@@ -42,5 +42,5 @@ export class User extends BaseEntity {
     stat: Stats
 
     @OneToMany(() => Match_history, (match_history) => match_history.user)
-    match_history: Match_history[]
+    match_histories: Match_history[]
 }

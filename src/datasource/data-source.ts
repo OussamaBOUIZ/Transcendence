@@ -1,11 +1,13 @@
-import { Channel } from "diagnostics_channel";
-import { Stats } from "fs";
+
 import { Achievement } from "src/databases/achievement.entity";
+import { Channel } from "src/databases/channel.entity";
 import { Friend } from "src/databases/friend.entity";
 import { Match_history } from "src/databases/match_history.entity";
 import { Muted_users } from "src/databases/muted_users.entity";
+import { Stats } from "src/databases/stats.entity";
 import { User } from "src/databases/user.entity";
-import { DataSourceOptions } from "typeorm";
+import { User_chat } from "src/databases/userchat.entity";
+import { DataSource, DataSourceOptions } from "typeorm";
 
 export const dataSourceOptions: DataSourceOptions ={
     type: 'postgres',
@@ -17,7 +19,10 @@ export const dataSourceOptions: DataSourceOptions ={
     entities: [Achievement, Channel,
        Friend, Match_history,
        Muted_users, Stats,
-       User
+       User_chat, User
     ],
     synchronize: true,
 }
+
+const dataSource = new DataSource(dataSourceOptions)
+export default dataSource;
