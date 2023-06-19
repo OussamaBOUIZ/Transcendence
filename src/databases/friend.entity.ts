@@ -6,8 +6,11 @@ export class Friend extends BaseEntity {
     id: number
 
     @Column()
-    user_id: number
+    friend_id: number
     
     @Column()
     status: string
+
+    @Column()
+    friend_wins: number
 }
