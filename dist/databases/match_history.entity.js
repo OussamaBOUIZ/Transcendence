@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Match_history = void 0;
 const typeorm_1 = require("typeorm");
-const user_entity_1 = require("./User/user.entity");
+const user_entity_1 = require("./user.entity");
 let Match_history = exports.Match_history = class Match_history extends typeorm_1.BaseEntity {
 };
 __decorate([

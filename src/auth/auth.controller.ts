@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
-import { User } from 'src/databases/User/user.entity';
+import { User } from 'src/databases/user.entity';
 import { json } from 'stream/consumers';
 import { Repository } from 'typeorm';
 
@@ -37,17 +37,22 @@ export class AuthController {
         };
         const response = await lastValueFrom(this.httpServer.post(tokenEndpoint, requestBody));
         const { access_token, token_type, expires_in, refresh_token, scope, created_at } = response.data;
-        const user = this.userRepository.findOneBy({
-            access_token: access_token
-        })
-        console.log(access_token);
-        console.log(expires_in);
+        // console.log(access_token);
+        // const user = await this.userRepository.findOneBy({
+        //     access_token: access_token
+        // })
         // if(user)
         // {
-        //     if()
+        //     console.log(user);
         // }
         // else
         // {
+            const newuser = new User();
+            // newuser.access_token = access_token;
+            // newuser.token_expire = expires_in;
+            // newuser.refresh_token = refresh_token;
+            // await this.userRepository.save(newuser);
+
 
         // }
         return 'success';

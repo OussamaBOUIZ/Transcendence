@@ -1,5 +1,5 @@
 import { BaseEntity } from "typeorm";
-import { User } from "./User/user.entity";
+import { User } from "./user.entity";
 export declare class Match_history extends BaseEntity {
     id: number;
     user: User;
