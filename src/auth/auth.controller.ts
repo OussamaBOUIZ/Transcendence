@@ -4,14 +4,15 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
-import { UserRepository } from 'src/databases/User/user.repository';
+import { User } from 'src/databases/User/user.entity';
 import { json } from 'stream/consumers';
+import { Repository } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
-        @InjectRepository(UserRepository) private userRepository: UserRepository) {}
+        @InjectRepository(User) private userRepository: Repository<User>) {}
     @Get()
     @Redirect()
     entrypoint() {
