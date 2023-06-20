@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, HttpStatus, Query, Redirect, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, Redirect, Req, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, response } from 'express';
@@ -7,13 +7,26 @@ import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { json } from 'stream/consumers';
 import { Repository } from 'typeorm';
+import { GoogleAuthGuard } from './googleapi/googleguard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
         @InjectRepository(User) private userRepository: Repository<User>) {}
-    @Get()
+    @Get('google')
+    @UseGuards(GoogleAuthGuard)
+    googleLogin()
+    {
+        return 'google success';
+    }
+    @Get('google/callback')
+    @UseGuards(GoogleAuthGuard)
+    googleRedirect()
+    {
+        return 'google redirect success';
+    }
+    @Get('42')
     @Redirect()
     entrypoint() {
         const clientId = this.configService.get<string>('42_CLIENT_ID');
