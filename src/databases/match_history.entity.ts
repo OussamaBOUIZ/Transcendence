@@ -1,6 +1,6 @@
 
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
-import { User } from "./user.entity"
+import { User } from "./User/user.entity"
 
 
 @Entity('Match_history')
