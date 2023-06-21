@@ -5,20 +5,20 @@ import { User } from "./user.entity"
 
 @Entity('Match_history')
 export class Match_history extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    // @PrimaryGeneratedColumn()
+    // id: number
 
-    @ManyToOne(() => User, (user) => user.match_history)
-    user: User
+    // @ManyToOne(() => User, (user) => user.match_history)
+    // user: User
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    opponent: User
+    // @OneToOne(() => User)
+    // @JoinColumn()
+    // opponent: User
     
-    @Column()
-    user_score: number
+    // @Column()
+    // user_score: number
 
-    @Column()
-    opponent_score: number
+    // @Column()
+    // opponent_score: number
     
 }

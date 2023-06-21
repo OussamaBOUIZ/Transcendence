@@ -8,23 +8,36 @@ import { User } from 'src/databases/user.entity';
 import { json } from 'stream/consumers';
 import { Repository } from 'typeorm';
 import { GoogleAuthGuard } from './googleapi/googleguard';
+import { AuthService } from './auth.service';
+import { JwtGuard } from './jwt/jwtGuard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
-        @InjectRepository(User) private userRepository: Repository<User>) {}
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private readonly authService: AuthService) {}
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     googleLogin() {}
 
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
-    googleRedirect(@Req() req, @Res() res: Response)
+    async googleRedirect(@Req() req, @Res() res: Response)
     {
-        console.log('request is ');
-        console.log(req.user);
-        return 'google redirect success';
+        const token = await this.authService.signin(req.user);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            sameSite: true,
+            secure: false,
+        });
+        return res.status(HttpStatus.OK).send('Sucessful');
+    }
+    @Get('gettext')
+    @UseGuards(JwtGuard)
+    gettext() : string
+    {
+        return 'yes';
     }
     @Get('42')
     @Redirect()

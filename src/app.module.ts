@@ -10,7 +10,7 @@ import { User } from './databases/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { AuthServiceTs } from './auth.service.ts/auth.service.ts';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -21,19 +21,18 @@ import { AuthServiceTs } from './auth.service.ts/auth.service.ts';
     username: 'postgres',
     password: '123',
     database: 'PingPong', //  PingPong
-    entities: [Achievement, Channel,
-       Friend, Match_history,
-       Muted_users, Stats,
+    entities: [
+      // Achievement, Channel,
+      //  Friend, Match_history,
+      //  Muted_users, Stats,
        User
     ],
     synchronize: true,
-  })
-  , 
+  }), 
   AuthModule,
   ConfigModule.forRoot({
     isGlobal: true,
   })
-],
-  providers: [AuthServiceTs]
+]
 })
 export class AppModule {}

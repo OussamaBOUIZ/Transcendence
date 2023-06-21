@@ -8,23 +8,25 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class AuthService {
 
-    generateJwt(payload) {
-        return this.jwtService.sign(payload);
-      }
     constructor(@InjectRepository (User) private userRepository: Repository<User>
     , private readonly jwtService: JwtService
     , private readonly configService: ConfigService)
     {
     }
+    generateJwt(payload) {
+        return this.jwtService.sign(payload);
+      }
     async signin(user)
     {
         if(!user) {
             throw new BadRequestException('Unauthenticated');
         }
-
         const userFound = await this.searchForEmail(user.email);
-        if(!userFound)
-            return this.registerUser(user);
+        if(!userFound){
+            console.log('USER WILL BE CREATED');
+            return await this.registerUser(user);
+        }
+
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: userFound.id,
@@ -34,8 +36,13 @@ export class AuthService {
 
     async registerUser(user)
     {
-        const createdUser = this.userRepository.create(user);
-        createdUser.
+        const createdUser = new User();
+        createdUser.email = user.email;
+        await this.userRepository.save(createdUser);
+        const secret = this.configService.get<string>('JWT_SECRET');
+        return await this.jwtService.sign({
+            id: createdUser.id,
+            email: createdUser.email}, {secret});
     }
     async searchForEmail(email)
     {

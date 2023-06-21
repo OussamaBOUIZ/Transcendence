@@ -3,33 +3,33 @@ import { Muted_users } from "./muted_users.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    // @PrimaryGeneratedColumn()
+    // id: number
 
-    @Column({unique: true})
-    channel_name: string
+    // @Column({unique: true})
+    // channel_name: string
 
-    @Column()
-    channel_type: string
+    // @Column()
+    // channel_type: string
 
-    @Column({nullable: true})
-    channel_password: string
+    // @Column({nullable: true})
+    // channel_password: string
 
-    @Column('int', {array: true})
-    channel_owners: number[]
+    // @Column('int', {array: true})
+    // channel_owners: number[]
     
-    @Column('int', {array: true})
-    channel_users: number[]
+    // @Column('int', {array: true})
+    // channel_users: number[]
 
-    @Column('int', {array: true})
-    banned_users: number[]
+    // @Column('int', {array: true})
+    // banned_users: number[]
 
-    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
-    muted: Muted_users[]
+    // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
+    // muted: Muted_users[]
 
-    @Column()
-    direct_messages: string
+    // @Column()
+    // direct_messages: string
 
-    @Column()
-    access_profiles: string
+    // @Column()
+    // access_profiles: string
 }

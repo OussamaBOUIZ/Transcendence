@@ -4,27 +4,27 @@ import { Stats } from "./stats.entity"
 
 @Entity('Achievement')
 export class Achievement extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    // @PrimaryGeneratedColumn()
+    // id: number
     
-    // @OneToOne(() => User)
-    // user: User
+    // // @OneToOne(() => User)
+    // // user: User
     
-    @ManyToOne(() => Stats , (stat) => stat.achievements)
-    stat: Stats
+    // @ManyToOne(() => Stats , (stat) => stat.achievements)
+    // stat: Stats
 
-    @Column()
-    badge_icon: string
+    // @Column()
+    // badge_icon: string
     
-    @Column()
-    badge_name: string
+    // @Column()
+    // badge_name: string
 
-    @Column()
-    description: string
+    // @Column()
+    // description: string
 
-    @Column({ type: 'boolean', default: false })
-    is_achieved: boolean
+    // @Column({ type: 'boolean', default: false })
+    // is_achieved: boolean
     
-    @Column()
-    user_id: number
+    // @Column()
+    // user_id: number
 }
