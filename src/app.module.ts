@@ -10,6 +10,7 @@ import { User } from './databases/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { AuthServiceTs } from './auth.service.ts/auth.service.ts';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { HttpModule } from '@nestjs/axios';
   ConfigModule.forRoot({
     isGlobal: true,
   })
-]
+],
+  providers: [AuthServiceTs]
 })
 export class AppModule {}

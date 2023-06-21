@@ -18,6 +18,7 @@ const stats_entity_1 = require("./databases/stats.entity");
 const user_entity_1 = require("./databases/user.entity");
 const auth_module_1 = require("./auth/auth.module");
 const config_1 = require("@nestjs/config");
+const auth_service_ts_1 = require("./auth.service.ts/auth.service.ts");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -41,7 +42,8 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             })
-        ]
+        ],
+        providers: [auth_service_ts_1.AuthServiceTs]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

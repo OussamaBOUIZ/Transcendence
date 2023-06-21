@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, HttpStatus, Query, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, Redirect, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request, response } from 'express';
+import { Request, Response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { json } from 'stream/consumers';
@@ -16,14 +16,14 @@ export class AuthController {
         @InjectRepository(User) private userRepository: Repository<User>) {}
     @Get('google')
     @UseGuards(GoogleAuthGuard)
-    googleLogin()
-    {
-        return 'google success';
-    }
+    googleLogin() {}
+
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
-    googleRedirect()
+    googleRedirect(@Req() req, @Res() res: Response)
     {
+        console.log('request is ');
+        console.log(req.user);
         return 'google redirect success';
     }
     @Get('42')
