@@ -7,6 +7,7 @@ import { googleStrategy } from './googleapi/googleStrategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
+import { fortyTwoStrategy } from './42api/42Strategy';
 
 @Module({
   controllers: [AuthController],
@@ -16,7 +17,7 @@ import { AuthService } from './auth.service';
     secret: process.env.JWT_SECRET,
   })
 ],
-  providers: [googleStrategy, AuthService]
+  providers: [googleStrategy, AuthService, fortyTwoStrategy]
 })
 export class AuthModule {
 
