@@ -11,17 +11,25 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ unique: true, nullable: true })
-    unique_name: string
+    @Column({nullable: true })
+    firstname: string
+    
+    @Column({ nullable: true })
+    lastname: string
+    
+    @Column({ nullable: true })
+    username: string
 
+    @Column({nullable: true})
+    password: string
+    
     @Column({ default: 'path', nullable: true })
     avatar: string
     
     @Column({ unique: true, nullable: true })
     email: string
 
-    @Column({nullable: true})
-    password: string
+
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean

@@ -22,10 +22,9 @@ export class AuthService {
             throw new BadRequestException('Unauthenticated');
         }
         const userFound = await this.searchForEmail(user.email);
-        if(!userFound){
-            console.log('USER WILL BE CREATED');
+        console.log(user);
+        if(!userFound)
             return await this.registerUser(user);
-        }
 
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
@@ -48,7 +47,9 @@ export class AuthService {
     {
         const user = await this.userRepository.findOneBy({email: email});
         if(user)
+        {
             return user;
+        }
         return null;
     }
 }
