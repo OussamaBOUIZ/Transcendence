@@ -6,7 +6,7 @@ import { Match_history } from "src/databases/match_history.entity";
 import { Muted_users } from "src/databases/muted_users.entity";
 import { Stats } from "src/databases/stats.entity";
 import { User } from "src/databases/user.entity";
-import { User_chat } from "src/databases/userchat.entity";
+import { User_chat } from "src/databases/chat/userchat.entity";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 export const dataSourceOptions: DataSourceOptions ={
