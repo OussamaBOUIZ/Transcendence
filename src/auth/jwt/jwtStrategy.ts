@@ -37,8 +37,8 @@ async validate(payload: JwtPayload) {
     if (!user) throw new UnauthorizedException('Please log in to continue');
 
     return {
-    id: payload.sub,
-    email: payload.email,
+        id: payload.sub,
+        email: payload.email,
     };
 }
 }

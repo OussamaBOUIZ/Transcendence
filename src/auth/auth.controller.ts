@@ -44,7 +44,7 @@ export class AuthController {
     async fortyTwoRedirect(@Req() req, @Res() res: Response)
     {
         console.log(req.user);
-        return 'yes';
+        return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
 
