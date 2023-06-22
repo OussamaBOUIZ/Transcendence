@@ -1,9 +1,18 @@
 import { MessageBody, OnGatewayConnection, OnGatewayDisconnect,
     OnGatewayInit, SubscribeMessage,
-    WebSocketGateway, WebSocketServer 
-  } from "@nestjs/websockets"; 
-  import { Server, Socket } from 'socket.io';
+    WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Server, Socket } from 'socket.io';
 import { ChatGatewayService } from "./userchat.service";
+import {UnauthorizedException, UseGuards} from "@nestjs/common";
+import {GoogleAuthGuard} from "../../auth/googleapi/googleguard";
+import {JwtService} from "@nestjs/jwt";
+import {ConfigService} from "@nestjs/config";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import { User } from 'src/databases/user.entity';
+import {JwtPayload} from "../../auth/jwt/jwtStrategy";
+import {JwtGuard} from "../../auth/jwt/jwtGuard";
+import {AuthGuard} from "@nestjs/passport";
 
   /**
    * RxJS : 
@@ -14,17 +23,15 @@ import { ChatGatewayService } from "./userchat.service";
    * 
    * 
    */
-
-        export interface User {
-          userId: string
-          userName: string
-          socketId: string
-        }
-
 @WebSocketGateway()
 export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  
-  constructor (private chatGatewayService: ChatGatewayService) {}
+
+  constructor (@InjectRepository (User) private userRepository: Repository<User>,
+               private chatGatewayService: ChatGatewayService,
+               private readonly jwt: JwtService, private readonly configService: ConfigService
+  ) {}
+
+
   private ids: string [] = []
   @WebSocketServer()
   wss: Server;
@@ -38,7 +45,7 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       const secretRoom = jsonData[0];
       const hostSocketId = secretRoom.host.socketId;
 
-      // Access socketId from the users array in the private JSON
+      // Access socketId from the users array   the private JSON
       const users = secretRoom.users;
       for (const user of users) {
         const userSocketId = user.socketId;
@@ -53,6 +60,7 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		// this.wss.to(client.id).emit('message', data)
   }
 
+  @UseGuards(GoogleAuthGuard)
   @SubscribeMessage('message')
   handleSendMessage(client: Socket, payload: string) {
       console.log('TODO')
@@ -63,9 +71,28 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     
   }
 
-  handleConnection(client: Socket) {
-    console.log('todo: check the the rights of user connected to the socket') 
-    console.log(`${client} connected`)
+  @UseGuards(AuthGuard('jwt'))
+  async handleConnection(client: Socket) {
+    console.log('hello welcome')
+    // try {
+    //   const decodedToken = await this.jwt.decode(client.handshake.headers.authorization) as {id: number}
+    //   const user = await this.userRepository.findOneBy({id: decodedToken.id})
+    //   if (!user)
+    //   {
+    //     console.log('todo: handle if the user not exist in DB')
+    //     this.wss.emit('error', new UnauthorizedException('Login first'))
+    //     client.disconnect()
+    //     return
+    //   }
+    //   console.log(user)
+    //   console.log(decodedToken.id)
+    //   console.log('todo: check the the rights of user connected to the socket')
+    // }
+    // catch (err) {
+    //   console.log('unauthorized')
+    //   this.wss.emit('error', err)
+    // }
+    // console.log(client.handshake.headers.authorization)
   }
 
   handleDisconnect(client: any) {

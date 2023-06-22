@@ -3,14 +3,14 @@ import { Channel } from "./channel.entity"
 
 @Entity('Muted_users')
 export class Muted_users extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    // @PrimaryGeneratedColumn()
+    // id: number
 
-    @Column()
-    user_id: number
+    // @Column()
+    // user_id: number
 
-    @ManyToOne(() => Channel, (channel) => channel.muted)
-    channel: Channel
+    // @ManyToOne(() => Channel, (channel) => channel.muted)
+    // channel: Channel
 
     // @Column()
     // ! timestamp 

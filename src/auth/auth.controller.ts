@@ -1,63 +1,60 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, HttpStatus, Query, Redirect, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, Redirect, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Request, response } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Request, Response } from 'express';
+import { lastValueFrom, map, tap } from 'rxjs';
+import { User } from 'src/databases/user.entity';
+import { json } from 'stream/consumers';
+import { Repository } from 'typeorm';
+import { GoogleAuthGuard } from './googleapi/googleguard';
+import { AuthService } from './auth.service';
+import { JwtGuard } from './jwt/jwtGuard';
+import { FortyTwoGuard } from './42api/42guard';
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
-        private readonly httpServer: HttpService) {}
-    @Get()
-    @Redirect()
-    entrypoint() {
-        const clientId = this.configService.get<string>('42_CLIENT_ID');
-        const redirectUri = this.configService.get<string>('42_REDIRECT_URI');
-        return { url: `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`};
-    }
-    @Get('42api')
-    api_token(@Req() req: Request)
+                private readonly httpServer: HttpService,
+                @InjectRepository(User) private userRepository: Repository<User>,
+                private readonly authService: AuthService) {}
+    @Get('google')
+    @UseGuards(GoogleAuthGuard)
+    googleLogin() {}
+
+    @Get('google/callback')
+    @UseGuards(GoogleAuthGuard)
+    async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-        const clientId = this.configService.get<string>('42API_CLIENT_ID');
-        const clientSecret = this.configService.get<string>('42API_CLIENT_SECRET');
-        const redirectUri = this.configService.get<string>('42API_REDIRECT_URI');
-        const query_code = req.query.code;
-        const requestBody = {
-        grant_type: 'authorization_code',
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: query_code,
-        redirect_uri: redirectUri,
-        };
-        const reponse = this.httpServer.post(tokenEndpoint, requestBody);
-        return 'success';
+        const token = await this.authService.signin(googlereq.user);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
+        return res.status(HttpStatus.OK).send('google Sucessful');
+    }
+
+    @Get('yes')
+    @UseGuards(AuthGuard('jwt'))
+    retyes(){
+        return 'yes';
+    }
+    @Get('42')
+    @UseGuards(FortyTwoGuard)
+    fortyTwoLogin() {}
+
+    @Get('42api')
+    @UseGuards(FortyTwoGuard)
+    async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
+    {
+        const token = await this.authService.signin(fortyTworeq.user);
+        console.log(`token ${token}`);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
+        return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
 }
-
-/*
-@Injectable()
-export class TokenService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {}
-
-  async getToken(code: string): Promise<AxiosResponse<any>> {
-    const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-    const clientId = this.configService.get<string>('42API_CLIENT_ID');
-    const clientSecret = this.configService.get<string>('42API_CLIENT_SECRET');
-    const redirectUri = this.configService.get<string>('42API_REDIRECT_URI');
-
-    const requestBody = {
-      grant_type: 'authorization_code',
-      client_id: clientId,
-      client_secret: clientSecret,
-      code: code,
-      redirect_uri: redirectUri,
-    };
-
-    return this.httpService.post(tokenEndpoint, requestBody).toPromise();
-  }
-}
-*/

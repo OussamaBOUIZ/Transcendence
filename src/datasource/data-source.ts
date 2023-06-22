@@ -16,10 +16,7 @@ export const dataSourceOptions: DataSourceOptions ={
     username: 'postgres',
     password: '123',
     database: 'PingPong', //  PingPong
-    entities: [Achievement, Channel,
-       Friend, Match_history,
-       Muted_users, Stats,
-       User_chat, User
+    entities: [User
     ],
     synchronize: true,
 }

@@ -4,19 +4,19 @@ import { Achievement } from "./achievement.entity"
 
 @Entity('Stats')
 export class Stats extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+    // @PrimaryGeneratedColumn()
+    // id: number
     
-    // unidirectional
-    @OneToMany(() => Achievement, (achievement) => achievement.stat)
-    achievements: Achievement[]
+    // // unidirectional
+    // @OneToMany(() => Achievement, (achievement) => achievement.stat)
+    // achievements: Achievement[]
     
-    @Column()
-    wins: number
+    // @Column()
+    // wins: number
     
-    @Column()
-    losses: number
+    // @Column()
+    // losses: number
     
-    @Column()
-    ladder_level: number
+    // @Column()
+    // ladder_level: number
 }
