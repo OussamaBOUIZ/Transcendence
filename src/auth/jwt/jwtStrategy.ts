@@ -12,34 +12,35 @@ export type JwtPayload = {
   };
   
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-constructor(private configService: ConfigService,
-    @InjectRepository(User) private userRepository: Repository<User>,
-) {
-    const extractJwtFromCookie = (req) => {
-    let token = null;
-    if (req && req.cookies) {
-        token = req.cookies['access_token'];
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') 
+{
+    constructor(private readonly configService: ConfigService,
+    @InjectRepository(User) private userRepository: Repository<User>) 
+    {
+        const extractJwtFromCookie = (req) => {
+        let token = null;
+        if (req && req.cookies) {
+            token = req.cookies['access_token'];
+        }
+        return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+        };
+
+        super({
+            ignoreExpiration: false,
+            secretOrKey: configService.get<string>('JWT_SECRET'),
+            jwtFromRequest: extractJwtFromCookie,
+        });
+        console.log(configService.get<string>('JWT_SECRET'));
     }
-    return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    };
 
-    super({
-    ignoreExpiration: false,
-    secretOrKey: configService.get<string>('JWT_SECRET'),
-    jwtFromRequest: extractJwtFromCookie,
-    });
-}
+    async validate(payload: JwtPayload) {
+        const user = await this.userRepository.findOneBy({ email: payload.email });
+        console.log(user);
+        if (!user) throw new UnauthorizedException('Please log in to continue');
 
-async validate(payload: JwtPayload) {
-    const user = await this.userRepository.findOneBy({ email: payload.email });
-
-    console.log(user);
-    if (!user) throw new UnauthorizedException('Please log in to continue');
-
-    return {
-        id: payload.sub,
-        email: payload.email,
-    };
-}
+        return {
+            id: payload.sub,
+            email: payload.email,
+        };
+    }
 }

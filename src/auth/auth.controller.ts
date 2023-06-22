@@ -11,14 +11,13 @@ import { GoogleAuthGuard } from './googleapi/googleguard';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
-import {AuthGuard} from "@nestjs/passport";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
-                private readonly httpServer: HttpService,
-                @InjectRepository(User) private userRepository: Repository<User>,
-                private readonly authService: AuthService) {}
+        private readonly httpServer: HttpService,
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private readonly authService: AuthService) {}
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     googleLogin() {}
@@ -32,14 +31,15 @@ export class AuthController {
             maxAge: 2592000000,
             secure: false,
         });
-        return res.status(HttpStatus.OK).send('google Sucessful');
+        return res.status(HttpStatus.OK).send('google Sucessful'); 
     }
 
     @Get('yes')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtGuard)
     retyes(){
         return 'yes';
     }
+
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}
