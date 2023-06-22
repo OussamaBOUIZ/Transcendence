@@ -23,7 +23,8 @@ export class AuthService {
         if(!userFound)
             return await this.registerUser(user);
         const secret = this.configService.get<string>('JWT_SECRET');
-        return this.jwtService.sign({
+        console.log(`secret : ${secret}`);
+        return this.jwtService.sign ({ 
             id: userFound.id,
             email: userFound.email}, {secret});
         

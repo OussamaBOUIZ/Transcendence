@@ -39,6 +39,7 @@ export class AuthController {
     retyes(){
         return 'yes';
     }
+
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}

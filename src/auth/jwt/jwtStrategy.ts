@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Verify } from "crypto";
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from "src/databases/user.entity";
 import { Repository } from "typeorm";
@@ -27,10 +26,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt')
         };
 
         super({
-        ignoreExpiration: false,
-        secretOrKey: configService.get<string>('JWT_SECRET'),
-        jwtFromRequest: extractJwtFromCookie,
+            ignoreExpiration: false,
+            secretOrKey: configService.get<string>('JWT_SECRET'),
+            jwtFromRequest: extractJwtFromCookie,
         });
+        console.log(configService.get<string>('JWT_SECRET'));
     }
 
     async validate(payload: JwtPayload) {
