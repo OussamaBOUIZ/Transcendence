@@ -23,7 +23,6 @@ export class AuthService {
         if(!userFound)
             return await this.registerUser(user);
         const secret = this.configService.get<string>('JWT_SECRET');
-        console.log(`secret : ${secret}`);
         return this.jwtService.sign ({ 
             id: userFound.id,
             email: userFound.email}, {secret});
@@ -34,6 +33,10 @@ export class AuthService {
     {
         const createdUser = new User();
         createdUser.email = user.email;
+        createdUser.firstname = user.firstname;
+        createdUser.lastname = user.lastname;
+        createdUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
+        createdUser.password = user.provider !== '42' && user.provider !== 'google' ? user.password : ''; 
         await this.userRepository.save(createdUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({

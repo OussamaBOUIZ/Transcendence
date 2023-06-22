@@ -11,6 +11,7 @@ import { GoogleAuthGuard } from './googleapi/googleguard';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +28,7 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.signin(googlereq.user);
+        console.log(`token ${token}`);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,
@@ -34,10 +36,14 @@ export class AuthController {
         return res.status(HttpStatus.OK).send('google Sucessful'); 
     }
 
-    @Get('yes')
     @UseGuards(JwtGuard)
-    retyes(){
-        return 'yes';
+    @Get('yes')
+    async retyes()
+    {
+        const user = await this.userRepository.findOneBy({email: 'ijmari@student.1337.ma'});
+        if(user)
+            return user;
+        return 'no user found with the given email';
     }
 
     @Get('42')
@@ -49,7 +55,7 @@ export class AuthController {
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.signin(fortyTworeq.user);
-        console.log(`token ${token}`);
+        console.log(`token2 ${token}`);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,
