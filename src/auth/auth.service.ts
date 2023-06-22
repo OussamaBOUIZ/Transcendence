@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtSecretRequestType, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
@@ -13,9 +13,7 @@ export class AuthService {
     , private readonly configService: ConfigService)
     {
     }
-    generateJwt(payload) {
-        return this.jwtService.sign(payload);
-      }
+
     async signin(user)
     {
         if(!user) {
@@ -45,9 +43,7 @@ export class AuthService {
     {
         const user = await this.userRepository.findOneBy({email: email});
         if(user)
-        {
             return user;
-        }
         return null;
     }
 }

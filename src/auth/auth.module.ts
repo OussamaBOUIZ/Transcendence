@@ -8,16 +8,20 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { fortyTwoStrategy } from './42api/42Strategy';
-
+import { JwtStrategy } from './jwt/jwtStrategy';
+const jwtFactory = {
+  useFactory: async (configService: ConfigService) => ({
+    global: true,
+    secret: configService.get('JWT_SECRET'),
+  }),
+  inject: [ConfigService],
+};
 @Module({
   controllers: [AuthController],
   imports: [HttpModule, TypeOrmModule.forFeature([User]),
-   JwtModule.register({
-    global: true,
-    secret: process.env.JWT_SECRET,
-  })
+   JwtModule.registerAsync(jwtFactory),
 ],
-  providers: [googleStrategy, AuthService, fortyTwoStrategy]
+  providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy]
 })
 export class AuthModule {
 

@@ -24,28 +24,36 @@ export class AuthController {
 
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
-    async googleRedirect(@Req() req, @Res() res: Response)
+    async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const token = await this.authService.signin(req.user);
+        const token = await this.authService.signin(googlereq.user);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
-            sameSite: true,
             secure: false,
         });
-        return res.status(HttpStatus.OK).send('google Sucessful');
+        return res.status(HttpStatus.OK).send('google Sucessful'); 
     }
 
+    @Get('yes')
+    @UseGuards(JwtGuard)
+    retyes(){
+        return 'yes';
+    }
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}
 
     @Get('42api')
     @UseGuards(FortyTwoGuard)
-    async fortyTwoRedirect(@Req() req, @Res() res: Response)
+    async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
-        console.log(req.user);
+        const token = await this.authService.signin(fortyTworeq.user);
+        console.log(`token ${token}`);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
         return res.status(HttpStatus.OK).send('42 Sucessful');
     }
-
 
 }
