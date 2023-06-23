@@ -34,21 +34,21 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    // @ManyToOne(() => Friend)
-    // @JoinTable()
-    // friends: Friend[]
+    @ManyToOne(() => Friend, {nullable: true})
+    @JoinTable()
+    friends: Friend[]
 
-    // @Column('int', {array: true})
-    // blocked_users: number[]
+    @Column('int', {array: true, nullable: true})
+    blocked_users: number[]
 
-    // @ManyToOne(() => Channel)
-    // @JoinTable()
-    // joined_channels: Channel[]
+    @ManyToOne(() => Channel, {nullable: true})
+    @JoinTable()
+    joined_channels: Channel[]
 
-    // @OneToOne(() => Stats)
-    // @JoinColumn()
-    // stat: Stats
+    @OneToOne(() => Stats, {nullable: true})
+    @JoinColumn()
+    stat: Stats
 
-    // @OneToMany(() => Match_history, (match_history) => match_history.user)
-    // match_history: Match_history[]
+    @OneToMany(() => Match_history, (match_history) => match_history.user, {nullable: true})
+    match_history: Match_history[]
 }

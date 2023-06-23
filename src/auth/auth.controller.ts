@@ -40,10 +40,10 @@ export class AuthController {
     @Get('yes')
     async retyes()
     {
-        // const user = await this.userRepository.findOneBy({email: 'ijmari@student.1337.ma'});
-        // if(user)
-        //     return user;
-        // return 'no user found with the given email';
+        const user = await this.userRepository.findOneBy({email: 'issam@gmail.com'});
+        if(user)
+            return user;
+        return 'no user found with the given email';
     }
 
     @Get('42')
@@ -62,23 +62,25 @@ export class AuthController {
         return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
-    @Post('signin')
+    @Post('signin') 
     async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        // const token = await this.authService.signin(userDto);
-        // res.cookie('access_token', token, {
-        //     maxAge: 2592000000,
-        //     secure: false,
-        // });
+        const token = await this.authService.signin(userDto);
+        console.log(`token : ${token}`);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
         return res.status(HttpStatus.OK).send('local Sucessful');
     }
-
+    
     @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        // const token = await this.authService.signin(userDto);
-        // res.cookie('access_token', token, {
-        //     maxAge: 2592000000,
-        //     secure: false,
-        // });
+        const token = await this.authService.signup(userDto);
+        console.log(`token : ${token}`);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
         return res.status(HttpStatus.OK).send('local Sucessful');
     }
 }

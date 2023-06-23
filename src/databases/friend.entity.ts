@@ -2,15 +2,15 @@ import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinCo
 
 @Entity('Friend')
 export class Friend extends BaseEntity {
-    // @PrimaryGeneratedColumn()
-    // id: number
+    @PrimaryGeneratedColumn()
+    id: number
 
-    // @Column()
-    // friend_id: number
+    @Column()
+    friend_id: number
     
-    // @Column()
-    // status: string
+    @Column()
+    status: string
 
-    // @Column()
-    // friend_wins: number
+    @Column()
+    friend_wins: number
 }
