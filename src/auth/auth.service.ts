@@ -4,8 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
-import { UserDto } from './dto/userdto';
 import * as argon from 'argon2'
+import { userSignUpDto } from './dto/userSignUpDto';
+import { userSignInDto } from './dto/userSignInDto';
 
 @Injectable()
 export class AuthService {
@@ -60,12 +61,12 @@ export class AuthService {
         return null;
     }
 
-    async signin(userdto: UserDto)
+    async signin(userdto: userSignInDto)
     {
         const userFound = await this.userRepository.findOneBy({email: userdto.email});
         if(!userFound)
             throw new ForbiddenException('incorrect credentials');
-            const userCorrect = await argon.verify(userFound.password, userdto.password);
+        const userCorrect = await argon.verify(userFound.password, userdto.password);
         if(userCorrect)
             throw new ForbiddenException('incorrect credentials');
         const secret = this.configService.get<string>('JWT_SECRET');
@@ -75,7 +76,7 @@ export class AuthService {
         }, {secret});
     }
 
-    async signup(userdto: UserDto)
+    async signup(userdto: userSignUpDto)
     {
         const pass_hash = await argon.hash(userdto.password);
 

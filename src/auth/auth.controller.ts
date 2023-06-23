@@ -11,7 +11,8 @@ import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
 import { AuthGuard } from '@nestjs/passport';
-import { UserDto } from './dto/userdto';
+import { userSignInDto } from './dto/userSignInDto';
+import { userSignUpDto } from './dto/userSignUpDto';
 
 @Controller('auth')
 export class AuthController {
@@ -62,12 +63,22 @@ export class AuthController {
     }
 
     @Post('signin')
-    async localSignIn(@Body() userDto: UserDto, @Res() res: Response) {
-        const token = await this.authService.signin(userDto);
-        res.cookie('access_token', token, {
-            maxAge: 2592000000,
-            secure: false,
-        });
+    async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
+        // const token = await this.authService.signin(userDto);
+        // res.cookie('access_token', token, {
+        //     maxAge: 2592000000,
+        //     secure: false,
+        // });
+        return res.status(HttpStatus.OK).send('local Sucessful');
+    }
+
+    @Post('signup')
+    async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
+        // const token = await this.authService.signin(userDto);
+        // res.cookie('access_token', token, {
+        //     maxAge: 2592000000,
+        //     secure: false,
+        // });
         return res.status(HttpStatus.OK).send('local Sucessful');
     }
 }
