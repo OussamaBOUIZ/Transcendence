@@ -63,4 +63,7 @@ export class AuthController {
         return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
+    @Get('signin')
+    @UseGuards(AuthGuard('local'))
+    fortyTwoLogin() {}
 }

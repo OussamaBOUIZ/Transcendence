@@ -36,7 +36,7 @@ export class AuthService {
         createdUser.firstname = user.firstname;
         createdUser.lastname = user.lastname;
         createdUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
-        createdUser.password = user.provider !== '42' && user.provider !== 'google' ? user.password : ''; 
+        createdUser.password = user.provider !== '42' && user.provider !== 'google' ? user.password : '';
         await this.userRepository.save(createdUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
@@ -48,6 +48,14 @@ export class AuthService {
         const user = await this.userRepository.findOneBy({email: email});
         if(user)
             return user;
+        return null;
+    }
+
+    async validateUser(username: string, password: string)
+    {
+        const foundUser = await this.userRepository.findOneBy({username: username});
+        if(foundUser && foundUser.password === password)
+            return foundUser;
         return null;
     }
 }
