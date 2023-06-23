@@ -1,17 +1,17 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, HttpStatus, Query, Redirect, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
-import { json } from 'stream/consumers';
 import { Repository } from 'typeorm';
 import { GoogleAuthGuard } from './googleapi/googleguard';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
 import { AuthGuard } from '@nestjs/passport';
+import { UserDto } from './dto/userdto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,12 +23,11 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     googleLogin() {}
 
-    @Get('google/callback')
+    @Post('google/callback')
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.signin(googlereq.user);
-        console.log(`token ${token}`);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,
@@ -40,22 +39,21 @@ export class AuthController {
     @Get('yes')
     async retyes()
     {
-        const user = await this.userRepository.findOneBy({email: 'ijmari@student.1337.ma'});
-        if(user)
-            return user;
-        return 'no user found with the given email';
+        // const user = await this.userRepository.findOneBy({email: 'ijmari@student.1337.ma'});
+        // if(user)
+        //     return user;
+        // return 'no user found with the given email';
     }
 
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}
 
-    @Get('42api')
+    @Post('42api')
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
-        const token = await this.authService.signin(fortyTworeq.user);
-        console.log(`token2 ${token}`);
+        const token = await this.authService.apisignin(fortyTworeq.user);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,
@@ -63,7 +61,13 @@ export class AuthController {
         return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
-    @Get('signin')
-    @UseGuards(AuthGuard('local'))
-    fortyTwoLogin() {}
+    @Post('signin')
+    async localSignIn(@Body() userDto: UserDto, @Res() res: Response) {
+        const token = await this.authService.signin(userDto);
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
+        return res.status(HttpStatus.OK).send('local Sucessful');
+    }
 }

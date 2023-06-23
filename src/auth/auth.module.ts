@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { fortyTwoStrategy } from './42api/42Strategy';
 import { JwtStrategy } from './jwt/jwtStrategy';
+import { LocalStrategy } from './local/localStrategy';
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
     global: true,
@@ -21,7 +22,7 @@ const jwtFactory = {
   imports: [HttpModule, TypeOrmModule.forFeature([User]),
    JwtModule.registerAsync(jwtFactory),
 ],
-  providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy]
+  providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy, LocalStrategy]
 })
 export class AuthModule {
 
