@@ -18,10 +18,10 @@ export class Channel extends BaseEntity {
     @Column('int', {array: true, nullable: true})
     channel_owners: number[]
     
-    @Column('int', {array: true})
+    @Column('int', {array: true, nullable: true})
     channel_users: number[]
 
-    @Column('int', {array: true})
+    @Column('int', {array: true, nullable: true})
     banned_users: number[]
 
     // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)

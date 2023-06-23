@@ -29,8 +29,6 @@ export class User extends BaseEntity {
     @Column({ unique: true, nullable: true })
     email: string
 
-
-
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 

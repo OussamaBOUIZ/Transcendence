@@ -9,6 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const achievement_entity_1 = require("./databases/achievement.entity");
+const channel_entity_1 = require("./databases/channel.entity");
+const friend_entity_1 = require("./databases/friend.entity");
+const match_history_entity_1 = require("./databases/match_history.entity");
+const stats_entity_1 = require("./databases/stats.entity");
 const user_entity_1 = require("./databases/user.entity");
 const auth_module_1 = require("./auth/auth.module");
 const config_1 = require("@nestjs/config");
@@ -25,6 +30,9 @@ exports.AppModule = AppModule = __decorate([
                 password: '123',
                 database: 'PingPong',
                 entities: [
+                    achievement_entity_1.Achievement, channel_entity_1.Channel,
+                    friend_entity_1.Friend, match_history_entity_1.Match_history,
+                    stats_entity_1.Stats,
                     user_entity_1.User
                 ],
                 synchronize: true,

@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Achievement.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => stats_entity_1.Stats, (stat) => stat.achievements),
+    (0, typeorm_1.ManyToOne)(() => stats_entity_1.Stats, (stat) => stat.achievements, { nullable: true }),
     __metadata("design:type", stats_entity_1.Stats)
 ], Achievement.prototype, "stat", void 0);
 __decorate([

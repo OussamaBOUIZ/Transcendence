@@ -22,9 +22,10 @@ import { AuthService } from './auth/auth.service';
     password: '123',
     database: 'PingPong', //  PingPong
     entities: [
-      // Achievement, Channel,
-      //  Friend, Match_history,
-      //  Muted_users, Stats,
+      Achievement, Channel,
+       Friend, Match_history,
+      //  Muted_users, 
+       Stats,
        User
     ],
     synchronize: true,

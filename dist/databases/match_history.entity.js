@@ -19,11 +19,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Match_history.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.match_history),
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.match_history, { nullable: true }),
     __metadata("design:type", user_entity_1.User)
 ], Match_history.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.User),
+    (0, typeorm_1.OneToOne)(() => user_entity_1.User, { nullable: true }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", user_entity_1.User)
 ], Match_history.prototype, "opponent", void 0);

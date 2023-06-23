@@ -10,7 +10,7 @@ export class Achievement extends BaseEntity {
     // @OneToOne(() => User)
     // user: User
     
-    @ManyToOne(() => Stats , (stat) => stat.achievements)
+    @ManyToOne(() => Stats , (stat) => stat.achievements, {nullable: true})
     stat: Stats
 
     @Column()

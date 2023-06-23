@@ -30,15 +30,15 @@ __decorate([
     __metadata("design:type", String)
 ], Channel.prototype, "channel_password", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { array: true }),
+    (0, typeorm_1.Column)('int', { array: true, nullable: true }),
     __metadata("design:type", Array)
 ], Channel.prototype, "channel_owners", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { array: true }),
+    (0, typeorm_1.Column)('int', { array: true, nullable: true }),
     __metadata("design:type", Array)
 ], Channel.prototype, "channel_users", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { array: true }),
+    (0, typeorm_1.Column)('int', { array: true, nullable: true }),
     __metadata("design:type", Array)
 ], Channel.prototype, "banned_users", void 0);
 __decorate([
