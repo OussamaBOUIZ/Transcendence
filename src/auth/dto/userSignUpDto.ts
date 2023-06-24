@@ -5,11 +5,11 @@ export class userSignUpDto {
 
     @IsNotEmpty()
     @IsString()
-    public firstName: string;
+    public firstname: string;
     
     @IsNotEmpty()
     @IsString()
-    public lastName: string;
+    public lastname: string;
 
     @IsEmail()
     @IsNotEmpty()

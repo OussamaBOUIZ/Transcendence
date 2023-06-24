@@ -6,7 +6,7 @@ export class userSignInDto {
     @IsEmail()
     @IsNotEmpty()
     @IsString()
-    public email: string;
+    public username: string;
 
     @IsNotEmpty()
     @IsStrongPassword()

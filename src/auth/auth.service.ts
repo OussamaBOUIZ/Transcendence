@@ -56,23 +56,20 @@ export class AuthService {
     async validateUser(username: string, password: string)
     {
         const foundUser = await this.userRepository.findOneBy({username: username});
-        if(foundUser && foundUser.password === password)
-            return foundUser;
-        return null;
+        if(!foundUser)
+            return null;
+        const userCorrect = await argon.verify(foundUser.password, password);
+        if(!userCorrect)
+            return null;
+        return foundUser;
     }
 
-    async signin(userdto: userSignInDto)
+    signToken(user: User)
     {
-        const userFound = await this.userRepository.findOneBy({email: userdto.email});
-        if(!userFound)
-            throw new ForbiddenException('incorrect credentials');
-        const userCorrect = await argon.verify(userFound.password, userdto.password);
-        if(userCorrect)
-            throw new ForbiddenException('incorrect credentials');
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
-            id: userFound.id,
-            email: userFound.email
+            id: user.id,
+            email: user.username
         }, {secret});
     }
 
@@ -82,10 +79,10 @@ export class AuthService {
 
         const newUser = new User();
         newUser.email = userdto.email;
-        newUser.firstname = userdto.firstName;
-        newUser.lastname = userdto.lastName;
-        newUser.username = userdto.firstName[0] + userdto.lastName;
-        newUser.password = userdto.password;
+        newUser.firstname = userdto.firstname;
+        newUser.lastname = userdto.lastname;
+        newUser.username = userdto.firstname[0] + userdto.lastname;
+        newUser.password = pass_hash;
         await this.userRepository.save(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({

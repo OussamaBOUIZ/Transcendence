@@ -13,6 +13,7 @@ import { FortyTwoGuard } from './42api/42guard';
 import { AuthGuard } from '@nestjs/passport';
 import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
+import { LocalGuard } from './local/localguard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +29,7 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const token = await this.authService.signin(googlereq.user);
+        const token = await this.authService.apisignin(googlereq.user);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,
@@ -63,9 +64,9 @@ export class AuthController {
     }
 
     @Post('signin') 
-    async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        const token = await this.authService.signin(userDto);
-        console.log(`token : ${token}`);
+    @UseGuards(LocalGuard)
+    async localSignIn(@Req() userData, @Res() res: Response) {
+        const token = await this.authService.signToken(userData.user);
         res.cookie('access_token', token, {
             maxAge: 2592000000,
             secure: false,

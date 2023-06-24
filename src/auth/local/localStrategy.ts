@@ -1,4 +1,4 @@
-import { Strategy } from 'passport-local';
+import { IVerifyOptions, Strategy, VerifyFunction } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
@@ -9,10 +9,10 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     super();
   }
 
-  async validate(username: string, password: string, done: any): Promise<any> {
-    console.log(`username ${username} password ${password}`);
+  async validate(username: string, password: string, done: (error: any, user?: Express.User | false, options?: IVerifyOptions) => void): Promise<any> {
     const user = await this.authService.validateUser(username, password);
-    if(!user) done(null, false);
-    return done(null, user);
+    if(!user)
+      done(null, false);
+    done(null, user);
   }
 }
