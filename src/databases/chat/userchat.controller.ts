@@ -37,7 +37,7 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	server: Server;
 
 	@SubscribeMessage('message')
-	SendMessage(socket: Socket, @MessageBody() data: any) {
+	SendMessage(socket: Socket, data: any) {
 		const { message, userR} = data
 		console.log(userR)
 		console.log(message)
@@ -45,7 +45,7 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let token = socket.handshake?.headers?.authorization.split(' ')[1]
 		let decodedToken = this.jwt.verify(token, {
 			secret: this.configService.get('JWT_SECRET') })
-		console.log(`--- ${decodedToken}`)
+		console.log(decodedToken)
 	}
 
 	afterInit(server: any) {
