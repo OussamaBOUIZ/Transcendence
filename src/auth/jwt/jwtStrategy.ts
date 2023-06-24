@@ -14,9 +14,10 @@ export type JwtPayload = {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') 
 {
-    constructor(private readonly configService: ConfigService,
-    @InjectRepository(User) private userRepository: Repository<User>) 
-    {
+    constructor(
+        private readonly configService: ConfigService,
+        @InjectRepository(User) private userRepository: Repository<User>
+    ) {
         const extractJwtFromCookie = (req) => {
         let token = null;
         if (req && req.cookies) {

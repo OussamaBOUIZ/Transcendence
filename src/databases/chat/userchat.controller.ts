@@ -13,6 +13,7 @@ import { User } from 'src/databases/user.entity';
 import {JwtPayload} from "../../auth/jwt/jwtStrategy";
 import {JwtGuard} from "../../auth/jwt/jwtGuard";
 import {AuthGuard} from "@nestjs/passport";
+import {WsGuard} from "../../auth/socketGuard/wsGuard";
 
   /**
    * RxJS : 
@@ -24,6 +25,7 @@ import {AuthGuard} from "@nestjs/passport";
    * 
    */
 @WebSocketGateway()
+@UseGuards(WsGuard)
 export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor (@InjectRepository (User) private userRepository: Repository<User>,
@@ -35,11 +37,12 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private ids: string [] = []
   @WebSocketServer()
   wss: Server;
-  
+
+
   @SubscribeMessage('sendMessage')
   handleMessage(@MessageBody() data: any) {
     console.log(data)
-    try {
+    /*try {
       const jsonData = JSON.parse(data);
       // Handle the parsed JSON data
       const secretRoom = jsonData[0];
@@ -57,25 +60,27 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       console.error('Failed to parse JSON data:', error);
     }
 		// this.chatGatewayService.returnMessage(data);
-		// this.wss.to(client.id).emit('message', data)
+		// this.wss.to(client.id).emit('message', data)*/
   }
 
-  @UseGuards(GoogleAuthGuard)
+  // @UseGuards(WsGuard)
   @SubscribeMessage('message')
   handleSendMessage(client: Socket, payload: string) {
-      console.log('TODO')
+    console.log('TODO')
     // const newMessage = this.mess
   }
 
   afterInit(server: any) {
-    
+    console.log('after init called')
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  async handleConnection(client: Socket) {
-    console.log('hello welcome')
+
+   handleConnection(client: Socket) {
+    console.log('hello welcome you are connected to socket')
+    // console.log(client.handshake.headers.authorization)
     // try {
     //   const decodedToken = await this.jwt.decode(client.handshake.headers.authorization) as {id: number}
+    //   console.log(decodedToken)
     //   const user = await this.userRepository.findOneBy({id: decodedToken.id})
     //   if (!user)
     //   {
