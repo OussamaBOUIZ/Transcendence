@@ -11,6 +11,7 @@ import { GoogleAuthGuard } from './googleapi/googleguard';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('auth')
 export class AuthController {
@@ -34,8 +35,8 @@ export class AuthController {
         return res.status(HttpStatus.OK).send('google Sucessful'); 
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get('yes')
-    @UseGuards(JwtGuard)
     retyes(){
         return 'yes';
     }
