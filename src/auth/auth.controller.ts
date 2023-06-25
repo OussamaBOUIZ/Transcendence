@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
@@ -14,52 +14,47 @@ import { AuthGuard } from '@nestjs/passport';
 import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
 import { LocalGuard } from './local/localguard';
+import { MailTemplate } from './MailService/mailer.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
         @InjectRepository(User) private userRepository: Repository<User>,
-        private readonly authService: AuthService) {}
+        private readonly authService: AuthService,
+        private readonly mailTemp: MailTemplate) {}
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     googleLogin() {}
 
-    @Post('google/callback')
+    @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
-        res.cookie('access_token', token, {
-            maxAge: 2592000000,
-            secure: false,
-        });
+        this.authService.setResCookie(res, token);
         return res.status(HttpStatus.OK).send('google Sucessful'); 
-    }
-
-    @UseGuards(JwtGuard)
-    @Get('yes')
-    async retyes()
-    {
-        const user = await this.userRepository.findOneBy({email: 'issam@gmail.com'});
-        if(user)
-            return user;
-        return 'no user found with the given email';
     }
 
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}
 
-    @Post('42api')
+    // @Get('test')
+    // test() {
+    //     console.log(process.env.MAIL_USER,
+    //         process.env.GOOGLE_CLIENT_ID,
+    //         process.env.GOOGLE_SECRET)
+    //     this.mailTemp.sendEmail();
+    // }
+
+    @Get('42api')
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
-        res.cookie('access_token', token, {
-            maxAge: 2592000000,
-            secure: false,
-        });
+        console.log(token);
+        this.authService.setResCookie(res, token);
         return res.status(HttpStatus.OK).send('42 Sucessful');
     }
 
@@ -67,10 +62,7 @@ export class AuthController {
     @UseGuards(LocalGuard)
     async localSignIn(@Req() userData, @Res() res: Response) {
         const token = await this.authService.signToken(userData.user);
-        res.cookie('access_token', token, {
-            maxAge: 2592000000,
-            secure: false,
-        });
+        this.authService.setResCookie(res, token);
         return res.status(HttpStatus.OK).send('local Sucessful');
     }
     
@@ -78,10 +70,7 @@ export class AuthController {
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
         const token = await this.authService.signup(userDto);
         console.log(`token : ${token}`);
-        res.cookie('access_token', token, {
-            maxAge: 2592000000,
-            secure: false,
-        });
+        this.authService.setResCookie(res, token);
         return res.status(HttpStatus.OK).send('local Sucessful');
     }
 }

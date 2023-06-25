@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,7 +6,7 @@ import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
-import { userSignInDto } from './dto/userSignInDto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -89,5 +89,12 @@ export class AuthService {
             id: newUser.id,
             email: newUser.email
         }, {secret});
+    }
+    setResCookie(res: Response, token: string)
+    {
+        res.cookie('access_token', token, {
+            maxAge: 2592000000,
+            secure: false,
+        });
     }
 }
