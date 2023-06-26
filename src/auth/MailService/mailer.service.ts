@@ -7,15 +7,14 @@ export class MailTemplate {
 
   async sendEmail() {
     const from: string = 'issamjmari098@gmail.com';
-    const to: string = 'issamjmari098@gmail.com';
-    const subject: string = 'Checks';
-    const context: any = {name: 'issam', url: ''};
+    const to: string = 'oussamarabi3i02@gmail.com';
+    const subject: string = 'greetings';
+    const text: string = 'd3iiiiiiiiiiiiiiiiiif';
     const v = await this.mailerService.sendMail({
       from,
       to,
       subject,
-      context,
+      text,
     });
-    console.log(v);
   }
 }

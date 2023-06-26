@@ -36,6 +36,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)('int', { array: true, nullable: true }),
     __metadata("design:type", Array)
+], Channel.prototype, "channel_admins", void 0);
+__decorate([
+    (0, typeorm_1.Column)('int', { array: true, nullable: true }),
+    __metadata("design:type", Array)
 ], Channel.prototype, "channel_users", void 0);
 __decorate([
     (0, typeorm_1.Column)('int', { array: true, nullable: true }),

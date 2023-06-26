@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './auth/auth.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -33,7 +34,18 @@ import { AuthService } from './auth/auth.service';
   AuthModule,
   ConfigModule.forRoot({
     isGlobal: true,
-  })
+  }),
+  MailerModule.forRoot({
+    transport: {
+      host: 'smtp-mail.outlook.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      }
+    },
+   }),
 ]
 })
 export class AppModule {}

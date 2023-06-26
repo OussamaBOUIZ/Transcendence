@@ -40,13 +40,10 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {}
 
-    // @Get('test')
-    // test() {
-    //     console.log(process.env.MAIL_USER,
-    //         process.env.GOOGLE_CLIENT_ID,
-    //         process.env.GOOGLE_SECRET)
-    //     this.mailTemp.sendEmail();
-    // }
+    @Get('test')
+    test() {
+        this.mailTemp.sendEmail();
+    }
 
     @Get('42api')
     @UseGuards(FortyTwoGuard)

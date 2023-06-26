@@ -19,6 +19,9 @@ export class Channel extends BaseEntity {
     channel_owners: number[]
     
     @Column('int', {array: true, nullable: true})
+    channel_admins: number[]
+
+    @Column('int', {array: true, nullable: true})
     channel_users: number[]
 
     @Column('int', {array: true, nullable: true})
