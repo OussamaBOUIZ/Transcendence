@@ -1,7 +1,5 @@
 import {CanActivate, ExecutionContext, Injectable} from "@nestjs/common";
-import {Observable} from "rxjs";
 import {JwtService} from "@nestjs/jwt";
-import {Socket} from "socket.io";
 import {WsException} from "@nestjs/websockets";
 import {ConfigService} from "@nestjs/config";
 
@@ -16,11 +14,9 @@ export class WsGuard implements CanActivate {
         let token = client.handshake?.headers?.authorization.split(' ')[1]
 
         try {
-            console.log(token)
-            let decodedToken = this.jwtService.verify(token, {
-                secret: this.configService.get('JWT_SECRET')
+            client.data.user = this.jwtService.verify(token, {
+                secret : this.configService.get('JWT_SECRET')
             })
-            console.log(decodedToken)
             return true
         } catch (e) {
             console.log(`not authorized\n${e}`)
