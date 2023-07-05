@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from './datasource/data-source';
-import { ChatGatewayModule } from './databases/chat/userchat.module';
+import { ChatGatewayModule } from './chat/userchat.module';
 
 
 

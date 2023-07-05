@@ -13,9 +13,10 @@ import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {User} from 'src/databases/user.entity';
-import {WsGuard} from "../../auth/socketGuard/wsGuard";
+import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./ws.mw";
+import {MessageDto} from "../interfaces/interfaces";
 
 /**
  * RxJS :
@@ -51,17 +52,12 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 
 	@SubscribeMessage('message')
-	SendMessage(socket: Socket, data: any) {
-		const {message, userR} = data
-		this.logger.log(userR)
-		this.logger.log(message)
-		this.logger.log(socket.id)
-		this.logger.log(socket.data.user)
-		let token = socket.handshake?.headers?.authorization.split(' ')[1]
-		let decodedToken = this.jwt.verify(token, {
-			secret: this.configService.get('JWT_SECRET')
-		})
-		this.logger.log(decodedToken)
+	async SendMessage(socket: Socket, data: { Message: MessageDto }) {
+		let user = await this.chatGatewayService.getUserById(data.Message.user.userId)
+		if (!user)
+			this.logger.log('todo handle if not exist!!')
+
+
 	}
 
 	afterInit(client: Socket) {
@@ -75,6 +71,7 @@ export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		const user = this.chatGatewayService.getUser(authorization)
 		user.socketId = client.id
+		client.data.client = user;
 		await this.userRepository.save(user)
 	}
 

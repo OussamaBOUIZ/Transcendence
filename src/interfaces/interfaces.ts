@@ -1,9 +1,17 @@
+import {IsNotEmpty, IsNotEmptyObject} from "class-validator";
 
 
-// MESSAGE INTERFACE
-export interface messageI {
-	id?: number;
-	text: string;
-	created_at?: Date;
-	updated_at?: Date;
+class Rec {
+	@IsNotEmpty()
+	userName: string;
+	@IsNotEmpty()
+	userId: number;
+}
+export class MessageDto {
+	@IsNotEmptyObject()
+	user: Rec;
+	@IsNotEmpty()
+	timeSent: string;
+	@IsNotEmpty()
+	message: string;
 }

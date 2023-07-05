@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { chatGateway } from "./userchat.gateway";
 import { ChatGatewayService } from "./userchat.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "../user.entity";
-import {AuthModule} from "../../auth/auth.module";
+import {User} from "../databases/user.entity";
+import {AuthModule} from "../auth/auth.module";
 import {JwtModule, JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
-import {WsGuard} from "../../auth/socketGuard/wsGuard";
+import {WsGuard} from "../auth/socketGuard/wsGuard";
 
 
 @Module({
