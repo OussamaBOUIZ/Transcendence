@@ -26,7 +26,7 @@ export class AuthController {
 
     @Get()
     retFile(@Res() res: Response) {
-        res.sendFile('/Users/ijmari/Desktop/Transcendence/src/auth/file.html');
+        res.status(HttpStatus.OK).send('Hello my friends');
     }
     @Get('google')
     @UseGuards(GoogleAuthGuard)
