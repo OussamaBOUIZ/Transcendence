@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { chatGateway } from "./userchat.gateway";
+import { ChatGateway } from "./userchat.gateway";
 import { ChatGatewayService } from "./userchat.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
@@ -21,7 +21,7 @@ import {WsGuard} from "../auth/socketGuard/wsGuard";
         // })
     ],
     controllers: [],
-    providers: [ChatGatewayService, chatGateway, JwtService, WsGuard]
+    providers: [ChatGatewayService, ChatGateway, JwtService, WsGuard]
 })
 
 export class ChatGatewayModule{}

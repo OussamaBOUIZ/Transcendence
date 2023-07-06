@@ -36,4 +36,9 @@ export class ChatGatewayService {
 	async getUserById(Id: number) {
 		return await this.userRepository.findOneBy({id: Id})
 	}
+
+	async getMessages(user: User) {
+
+	}
+
 }

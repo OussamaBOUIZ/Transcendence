@@ -1,10 +1,10 @@
 import {
-	OnGatewayConnection,
-	OnGatewayDisconnect,
-	OnGatewayInit,
-	SubscribeMessage,
-	WebSocketGateway,
-	WebSocketServer
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+    OnGatewayInit,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
 import {ChatGatewayService} from "./userchat.service";
@@ -16,7 +16,7 @@ import {User} from 'src/databases/user.entity';
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./ws.mw";
-import {MessageDto} from "../interfaces/interfaces";
+import {MessageDto, ReceiverDto} from "../interfaces/interfaces";
 
 /**
  * RxJS :
@@ -36,48 +36,51 @@ import {MessageDto} from "../interfaces/interfaces";
 
 @WebSocketGateway()
 @UseGuards(WsGuard)
-export class chatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-	private readonly logger: Logger;
+export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    @WebSocketServer() server: Server;
+    private readonly logger: Logger;
 
-	constructor(
-		@InjectRepository(User) private userRepository: Repository<User>,
-		private chatGatewayService: ChatGatewayService,
-		private readonly jwt: JwtService,
-		private readonly configService: ConfigService
-	) {
-		this.logger = new Logger('chatGateway');
-	}
+    constructor(
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private chatGatewayService: ChatGatewayService,
+        private readonly jwt: JwtService,
+        private readonly configService: ConfigService
+    ) {
+        this.logger = new Logger('chatGateway');
+    }
 
-	@WebSocketServer() server: Server;
+    @SubscribeMessage('message')
+    async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
+        let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
+        if (!user)
+            this.logger.log('todo handle if not exist!!')
 
+    }
 
-	@SubscribeMessage('message')
-	async SendMessage(socket: Socket, data: { Message: MessageDto }) {
-		let user = await this.chatGatewayService.getUserById(data.Message.user.userId)
-		if (!user)
-			this.logger.log('todo handle if not exist!!')
+    @SubscribeMessage('SendMessage')
+    sendMessage(socket: Socket, data: { Message: MessageDto }) {
 
-
-	}
-
-	afterInit(client: Socket) {
-		client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
-		console.log('after init called')
-	}
+    }
 
 
-	async handleConnection(client: Socket) {
-		const {authorization} = client.handshake.headers;
-
-		const user = this.chatGatewayService.getUser(authorization)
-		user.socketId = client.id
-		client.data.client = user;
-		await this.userRepository.save(user)
-	}
+    afterInit(client: Socket) {
+        client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
+        console.log('after init called')
+    }
 
 
-	handleDisconnect(client: any) {
-		console.log('disconnected')
-	}
+    async handleConnection(client: Socket) {
+        const {authorization} = client.handshake.headers;
+
+        const user = this.chatGatewayService.getUser(authorization)
+        user.socketId = client.id
+        client.data.client = user;
+        await this.userRepository.save(user)
+    }
+
+
+    handleDisconnect(client: any) {
+        console.log('disconnected')
+    }
 }
 

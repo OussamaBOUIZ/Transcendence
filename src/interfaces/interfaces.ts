@@ -1,15 +1,16 @@
 import {IsNotEmpty, IsNotEmptyObject} from "class-validator";
 
 
-class Rec {
+export class ReceiverDto {
 	@IsNotEmpty()
 	userName: string;
 	@IsNotEmpty()
 	userId: number;
 }
+
 export class MessageDto {
 	@IsNotEmptyObject()
-	user: Rec;
+	user: ReceiverDto;
 	@IsNotEmpty()
 	timeSent: string;
 	@IsNotEmpty()

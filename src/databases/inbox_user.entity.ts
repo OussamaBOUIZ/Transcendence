@@ -1,7 +1,8 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {User} from "./user.entity";
 
-@Entity('inbox_user')
-export class inbox_user extends BaseEntity {
+@Entity('Inbox_user')
+export class Inbox_user extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -16,5 +17,8 @@ export class inbox_user extends BaseEntity {
 
     @Column({default: 0})
     unseenMessages: number
+
+    @OneToMany(() => User, (user) => user.inbox_users)
+    user: User
 }
 
