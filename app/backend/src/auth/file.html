@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Auth Testing</title>
+    </head>
+    <body>
+        <div class="container">
+            <button class="btn btn-42">Sign in with 42</button>
+            <button class="btn btn-google">Sign in with Google</button>
+        </div>
+    </body>
+    <style>
+        .body {
+            margin: 0 auto;
+            margin-top: 2em;
+            color: white;
+        }
+        .btn {
+            cursor: pointer;
+            color: white;
+            background-color: black;
+            position: relative;
+            width: 10rem;
+            height: 3em;
+            border-radius: 12px;
+            margin: 8px;
+        }
+        .btn:hover {
+            background-color: white;
+            color: black;
+        }
+        .btn-google {
+            background-color: red;
+        }
+        .btn-google:hover {
+            background-color: white;
+            color: red;
+        }
+    </style>
+    <script>
+        // Get the button element
+        const button42 = document.querySelector(".btn-42");
+
+        // Attach event listener to the button
+        button42.addEventListener("click", function() {
+        // Send request to the backend
+        fetch("/auth/42", {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(data => {
+            // Handle the response from the backend
+            console.log(data);
+            })
+            .catch(error => {
+            // Handle any errors that occurred during the request
+            console.error(error);
+            });
+        });
+
+
+        // Get the button element
+        const buttonGl = document.querySelector(".btn-google");
+        
+        // Attach event listener to the button
+        buttonGl.addEventListener("click", function() {
+            // Send request to the backend
+            fetch("http://localhost:3000/auth/google", {
+                method: "GET"
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the backend
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the request
+                console.error(error);
+            });
+        });
+
+    </script>
+</html>
