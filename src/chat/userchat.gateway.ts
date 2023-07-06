@@ -17,6 +17,7 @@ import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./ws.mw";
 import {MessageDto, ReceiverDto} from "../interfaces/interfaces";
+import {json} from "stream/consumers";
 
 /**
  * RxJS :
@@ -46,7 +47,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         private readonly jwt: JwtService,
         private readonly configService: ConfigService
     ) {
-        this.logger = new Logger('chatGateway');
+        this.logger = new Logger(ChatGateway.name);
     }
 
     @SubscribeMessage('message')
@@ -58,8 +59,27 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('SendMessage')
-    sendMessage(socket: Socket, data: { Message: MessageDto }) {
-
+    async sendMessage(socket: Socket, data: any) {
+        // let receiver = await this.chatGatewayService.getUserById(data.Message.message)
+        // if (!receiver)
+        //     console.log('TODO : handle if the receiver not exist')
+        try {
+            const jsn = JSON.parse(data)
+            console.log(jsn)
+        }
+        catch (e)
+        {
+            console.log(e)
+        }
+        // const msg = new MessageDto()
+        // const usr = new ReceiverDto()
+        // usr.userId = 1
+        // usr.userName = "abde"
+        // msg.message = "hello world"
+        // msg.timeSent = "2011"
+        // msg.user = usr
+        // const jsn = JSON.stringify(msg)
+        // console.log({jsn})
     }
 
 
@@ -74,7 +94,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         const user = this.chatGatewayService.getUser(authorization)
         user.socketId = client.id
-        client.data.client = user;
+        this.logger.log(client.data.client)
         await this.userRepository.save(user)
     }
 

@@ -1,17 +1,16 @@
-import { Module } from "@nestjs/common";
-import { ChatGateway } from "./userchat.gateway";
-import { ChatGatewayService } from "./userchat.service";
+import {Module} from "@nestjs/common";
+import {ChatGateway} from "./userchat.gateway";
+import {ChatGatewayService} from "./userchat.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
-import {AuthModule} from "../auth/auth.module";
-import {JwtModule, JwtService} from "@nestjs/jwt";
-import {ConfigService} from "@nestjs/config";
+import {JwtService} from "@nestjs/jwt";
 import {WsGuard} from "../auth/socketGuard/wsGuard";
+import {User_chat} from "../databases/userchat.entity";
 
 
 @Module({
-    imports:[
-        TypeOrmModule.forFeature([User]),
+    imports: [
+        TypeOrmModule.forFeature([User, User_chat]),
         // JwtModule.registerAsync({
         // useFactory: async (configService: ConfigService) => ({
         //     global: true,
@@ -24,4 +23,5 @@ import {WsGuard} from "../auth/socketGuard/wsGuard";
     providers: [ChatGatewayService, ChatGateway, JwtService, WsGuard]
 })
 
-export class ChatGatewayModule{}
+export class ChatGatewayModule {
+}

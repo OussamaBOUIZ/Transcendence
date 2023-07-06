@@ -9,10 +9,10 @@ export class ReceiverDto {
 }
 
 export class MessageDto {
-	@IsNotEmptyObject()
-	user: ReceiverDto;
-	@IsNotEmpty()
+	user: {
+		userId: string;
+		userName: string;
+	};
 	timeSent: string;
-	@IsNotEmpty()
 	message: string;
 }
