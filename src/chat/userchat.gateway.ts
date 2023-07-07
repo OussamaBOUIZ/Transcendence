@@ -44,7 +44,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
         private chatGatewayService: ChatGatewayService,
-        private readonly jwt: JwtService,
+        // private readonly jwt: JwtService,
         private readonly configService: ConfigService
     ) {
         this.logger = new Logger(ChatGateway.name);
@@ -59,27 +59,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('SendMessage')
-    async sendMessage(socket: Socket, data: any) {
-        // let receiver = await this.chatGatewayService.getUserById(data.Message.message)
-        // if (!receiver)
-        //     console.log('TODO : handle if the receiver not exist')
-        try {
-            const jsn = JSON.parse(data)
-            console.log(jsn)
-        }
-        catch (e)
-        {
-            console.log(e)
-        }
-        // const msg = new MessageDto()
-        // const usr = new ReceiverDto()
-        // usr.userId = 1
-        // usr.userName = "abde"
-        // msg.message = "hello world"
-        // msg.timeSent = "2011"
-        // msg.user = usr
-        // const jsn = JSON.stringify(msg)
-        // console.log({jsn})
+    async sendMessage(socket: Socket, data: MessageDto) {
+        let receiver = await this.chatGatewayService.getUserById(data.user.userId)
+        if (!receiver)
+            console.log('TODO : handle if the receiver not exist')
+        this.logger.log({receiver})
+        this.logger.log({sender: socket.data.user})
+        console.log(socket.data.user.id)
+        await this.chatGatewayService.saveMessage(data, receiver, socket.data.user.id)
+        this.server.to(receiver.socketId).emit("message", data.message)
     }
 
 
@@ -88,13 +76,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('after init called')
     }
 
-
     async handleConnection(client: Socket) {
         const {authorization} = client.handshake.headers;
 
         const user = this.chatGatewayService.getUser(authorization)
         user.socketId = client.id
-        this.logger.log(client.data.client)
         await this.userRepository.save(user)
     }
 

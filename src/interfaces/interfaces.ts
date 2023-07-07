@@ -8,10 +8,19 @@ export class ReceiverDto {
 	userId: number;
 }
 
+// export class MessageDto {
+// 	user: {
+// 		userId: string;
+// 		userName: string;
+// 	};
+// 	timeSent: string;
+// 	message: string;
+// }
+
 export class MessageDto {
 	user: {
-		userId: string;
 		userName: string;
+		userId: number;
 	};
 	timeSent: string;
 	message: string;

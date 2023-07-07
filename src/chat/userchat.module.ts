@@ -6,11 +6,12 @@ import {User} from "../databases/user.entity";
 import {JwtService} from "@nestjs/jwt";
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {User_chat} from "../databases/userchat.entity";
+import {Message} from "../databases/message.entity";
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User, User_chat]),
+        TypeOrmModule.forFeature([User, User_chat, Message]),
         // JwtModule.registerAsync({
         // useFactory: async (configService: ConfigService) => ({
         //     global: true,
