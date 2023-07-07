@@ -26,7 +26,7 @@ export class AuthController {
 
     @Get()
     retFile(@Res() res: Response) {
-        res.status(HttpStatus.OK).send('Hello my friends');
+        res.status(HttpStatus.OK).send('Hello my friendss');
     }
     @Get('google')
     @UseGuards(GoogleAuthGuard)
@@ -49,8 +49,7 @@ export class AuthController {
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {
-
-        console.log('ok');
+        console.log('YES WAS HERE');
     }
 
 

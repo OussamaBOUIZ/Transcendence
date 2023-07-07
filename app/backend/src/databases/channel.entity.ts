@@ -30,9 +30,9 @@ export class Channel extends BaseEntity {
     // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
     // muted: Muted_users[]
 
-    @Column()
-    direct_messages: string
+    // @Column()
+    // direct_messages: string
 
-    @Column()
-    access_profiles: string
+    // @Column()
+    // access_profiles: string
 }

@@ -7,15 +7,18 @@ function App() {
   const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
-    fetch('/api/auth/')
+    fetch('/api/auth/42')
     .then((res) => res.text())
     .then(setGreeting);
   }, []);
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
+        {/* <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a> */}
+        <a href="http://localhost:3000/api/auth/42" target="_blank">
+          <img src={viteLogo} className="logo" alt="transcendence" />
         </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
