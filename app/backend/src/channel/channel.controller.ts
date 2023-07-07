@@ -6,10 +6,9 @@ import { ChannelService } from './channel.service';
 export class ChannelController {
     constructor(private readonly channelservice: ChannelService) {}
     @Post('update')
-    updateChannel(@Body() channelData: channelDto)
+    async updateChannel(@Body() channelData: channelDto)
     {
-        
+        await this.channelservice.channelUpdate(channelData);
     }
-
 
 }

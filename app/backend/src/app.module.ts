@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './auth/auth.service';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ChannelModule } from './channel/channel.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       }
     },
    }),
+   ChannelModule,
 ]
 })
 export class AppModule {}
