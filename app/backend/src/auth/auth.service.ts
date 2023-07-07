@@ -14,8 +14,7 @@ export class AuthService {
     constructor(@InjectRepository (User) private userRepository: Repository<User>
     , private readonly jwtService: JwtService
     , private readonly configService: ConfigService)
-    {
-    }
+    {}
 
     async apisignin(user)
     {

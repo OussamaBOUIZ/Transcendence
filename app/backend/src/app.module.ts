@@ -33,6 +33,7 @@ import { ChannelModule } from './channel/channel.module';
     synchronize: true,
   }), 
   AuthModule,
+  ChannelModule,
   ConfigModule.forRoot({
     isGlobal: true,
   }),
@@ -47,7 +48,6 @@ import { ChannelModule } from './channel/channel.module';
       }
     },
    }),
-   ChannelModule,
 ]
 })
 export class AppModule {}

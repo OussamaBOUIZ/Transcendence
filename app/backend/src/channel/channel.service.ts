@@ -9,6 +9,7 @@ import { User } from 'src/databases/user.entity';
 export class ChannelService {
     constructor(@InjectRepository(Channel) private channelRepo: Repository<Channel>,
     @InjectRepository(User) private userRepo: Repository<User>) {}
+
     async channelUpdate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelData.channelName});
@@ -20,6 +21,8 @@ export class ChannelService {
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = channelData.channelPassword;
             const userFound = await this.userRepo.findOneBy({username: channelData.channelOwner});
+            newChannel.channel_owners = [];
+            newChannel.channel_admins = [];
             newChannel.channel_owners.push(userFound.id);
             newChannel.channel_admins.push(userFound.id);
             console.log(newChannel);
