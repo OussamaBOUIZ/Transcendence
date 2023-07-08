@@ -24,10 +24,7 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly mailTemp: MailTemplate) {}
 
-    @Get()
-    retFile(@Res() res: Response) {
-        res.status(HttpStatus.OK).send('Hello my friendss');
-    }
+
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     googleLogin() {}

@@ -47,14 +47,20 @@ export class ChannelService {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelOwner.channelName});
         if(!channelFound.channel_owners)
             channelFound.channel_owners = [];
-        channelFound.channel_owners.push(channelOwner.newChannelOwner);
+        if(channelFound.channel_admins.includes(channelOwner.newChannelOwner))
+            throw new HttpException('conflict', HttpStatus.CONFLICT);
+        channelFound.channel_admins.push(channelOwner.newChannelOwner);
+        this.channelRepo.save(channelFound);
     }
     async setChannelAdmin(channelAdmin: channelAdminDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelAdmin.channelName});
         if(!channelFound.channel_admins)
             channelFound.channel_admins = [];
+        if(channelFound.channel_admins.includes(channelAdmin.newChannelAdmin))
+            throw new HttpException('conflict', HttpStatus.CONFLICT);
         channelFound.channel_admins.push(channelAdmin.newChannelAdmin);
+        this.channelRepo.save(channelFound);
     }
     async checkProtectedPass(newUser: newUserDto)
     {
@@ -65,15 +71,21 @@ export class ChannelService {
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
         if(!channelFound.channel_users)
             channelFound.channel_users = [];
+        if(channelFound.channel_users.includes(newUser.channelNewUser))
+            throw new HttpException('conflict', HttpStatus.CONFLICT);
         channelFound.channel_users.push(newUser.channelNewUser);
+        this.channelRepo.save(channelFound);
     }
     async addToPublicChannel(newUser: newUserDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
         if(!channelFound)
             throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-            if(!channelFound.channel_users)
-            channelFound.channel_users = []; 
+        if(!channelFound.channel_users)
+            channelFound.channel_users = [];
+        if(channelFound.channel_users.includes(newUser.channelNewUser))
+            throw new HttpException('conflict', HttpStatus.CONFLICT);
         channelFound.channel_users.push(newUser.channelNewUser);
+        this.channelRepo.save(channelFound);
     }
 }
