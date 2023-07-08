@@ -25,15 +25,19 @@ export class ChannelService {
             newChannel.channel_admins = [];
             newChannel.channel_owners.push(userFound.id);
             newChannel.channel_admins.push(userFound.id);
-            console.log(newChannel);
             this.channelRepo.save(newChannel);
         }
         else
         {
-            channelFound.channel_name = channelData.channelName;
-            channelFound.channel_type = channelData.channelType;
-            if(channelFound.channel_type === 'protected')
+            const prevChannelType = channelFound.channel_type;
+            if(channelData.channelName !== channelFound.channel_name)
+                channelFound.channel_name = channelData.channelName;
+            if(channelData.channelType !== channelFound.channel_type)
+                channelFound.channel_type = channelData.channelType;
+            if(channelFound.channel_type === 'protected' && channelData.channelPassword !== channelFound.channel_password)
                 channelFound.channel_password = channelData.channelPassword;
+            else if (channelFound.channel_type !== 'protected')
+                channelFound.channel_password = null;
             this.channelRepo.save(channelFound);
         }
     }
