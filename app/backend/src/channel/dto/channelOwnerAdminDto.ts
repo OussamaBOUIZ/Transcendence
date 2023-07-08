@@ -4,7 +4,15 @@ export class channelOwnerDto {
     @IsString()
     public channelName: string
 
-    @IsString()
     @IsNotEmpty()
-    public newChannelOwner: string
+    public newChannelOwner: number
+}
+
+export class channelAdminDto {
+    @IsNotEmpty()
+    @IsString()
+    public channelName: string
+
+    @IsNotEmpty()
+    public newChannelAdmin: number
 }
