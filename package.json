@@ -7,6 +7,10 @@
   },
   "workspaces": [
     "app/*"
-  ]
-  
+  ],
+  "dependencies": {
+    "@nestjs/platform-socket.io": "^10.0.5",
+    "@nestjs/websockets": "^10.0.5",
+    "pg": "^8.11.1"
+  }
 }

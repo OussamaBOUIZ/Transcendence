@@ -1,32 +1,15 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react'
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+export default function App () {
 
-  useEffect(() => {
-    fetch('/api/auth/42')
-    .then((res) => res.text())
-    .then(setGreeting);
-  }, []);
+  const [counter, setCounter] = React.useState(1)
+
   return (
-    <>
-      <div>
-        {/* <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a> */}
-        <a href="http://localhost:3000/api/auth/42" target="_blank">
-          <img src={viteLogo} className="logo" alt="transcendence" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>{greeting}</h1>
-    </>
+    <div>
+      <button onClick={() => setCounter(counter => counter * 1337)}>
+        {counter}
+      </button>
+    </div>
   )
 }
 
-export default App
