@@ -73,7 +73,7 @@ export class ChannelService {
         if(!channelFound)
             throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
             if(!channelFound.channel_users)
-            channelFound.channel_users = [];
+            channelFound.channel_users = []; 
         channelFound.channel_users.push(newUser.channelNewUser);
     }
 }
