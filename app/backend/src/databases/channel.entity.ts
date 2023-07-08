@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm"
 import { Muted_users } from "./muted_users.entity"
 
 @Entity('Channel')
