@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/databases/user.entity';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { newUserDto } from './dto/newUserDto';
+import { UserOperationDto } from './dto/operateUserDto';
 
 @Injectable()
 export class ChannelService {
@@ -86,6 +87,33 @@ export class ChannelService {
         if(channelFound.channel_users.includes(newUser.channelNewUser))
             throw new HttpException('conflict', HttpStatus.CONFLICT);
         channelFound.channel_users.push(newUser.channelNewUser);
+        this.channelRepo.save(channelFound);
+    }
+    async kickUserFromChannel(kickUser: UserOperationDto)
+    {
+        const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
+        if(!channelFound)
+            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!channelFound.channel_users)
+            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+        if(!channelFound.channel_users.includes(kickUser.userId))
+            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== kickUser.userId);
+        this.channelRepo.save(channelFound);
+    }
+    async banUserFromChannel(kickUser: UserOperationDto)
+    {
+        const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
+        if(!channelFound)
+            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!channelFound.channel_users)
+            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+        if(!channelFound.channel_users.includes(kickUser.userId))
+            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== kickUser.userId);
+        if(!channelFound.banned_users)
+            channelFound.banned_users = [];
+        channelFound.banned_users.push(kickUser.userId);
         this.channelRepo.save(channelFound);
     }
 }

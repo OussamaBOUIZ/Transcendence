@@ -4,6 +4,7 @@ import { ChannelService } from './channel.service';
 import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { newUserDto } from './dto/newUserDto';
+import { UserOperationDto } from './dto/operateUserDto';
 
 @Controller('channel')
 export class ChannelController {
@@ -39,6 +40,11 @@ export class ChannelController {
             await this.channelservice.addToPublicChannel(addedUserData);
             return res.status(HttpStatus.CREATED).send('new channel user was set');
         }
+    }
+    @Post('kickuser')
+    async kickUserFromChannel(@Body() userKick: UserOperationDto, @Res() res: Response)
+    {
+        await this.channelservice.kickUserFromChannel();
     }
 
 }
