@@ -64,9 +64,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         if (!receiver)
             console.log('TODO : handle if the receiver not exist')
         this.logger.log({receiver})
-        this.logger.log({sender: socket.data.user})
-        console.log(socket.data.user.id)
-        await this.chatGatewayService.saveMessage(data, receiver, socket.data.user.id)
+        this.logger.log(socket.data.user.email)
+        // find the sender by email
+
+        const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
+        this.logger.log({db_user})
+        console.log(db_user.id)
+        await this.chatGatewayService.saveMessage(data, receiver, db_user.id)
         this.server.to(receiver.socketId).emit("message", data.message)
     }
 
@@ -80,8 +84,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const {authorization} = client.handshake.headers;
 
         const user = this.chatGatewayService.getUser(authorization)
-        user.socketId = client.id
-        await this.userRepository.save(user)
+        console.log(user)
+        const db_user = new User()
+        db_user.email = user.email
+        db_user.socketId = client.id;
+
+        await this.userRepository.save(db_user)
     }
 
 
