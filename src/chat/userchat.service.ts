@@ -45,6 +45,7 @@ export class ChatGatewayService {
 	async getMessages(user: User) {
 
 	}
+
 	async saveMessage(dto: MessageDto, user: User, sender: number) {
 		const user_chat = new User_chat()
 		const msg = new Message()
@@ -59,4 +60,24 @@ export class ChatGatewayService {
 		msg.user_chat = user_chat
 		await this.messageRepository.save(msg)
 	}
+	async loadMessage(user: User, sender: number) {
+		const receiverMsgs = await  this.getAllMessages(user.id)
+		const sendMsgs = await this.getAllMessages(sender)
+
+		this.logger.log(sendMsgs)
+		this.logger.log(receiverMsgs)
+	}
+
+	async getAllMessages(id: number): Promise<User_chat[]> {
+		return await this.chatRepository.find({
+			relations: {
+				messages: true
+			},
+			where : {
+				sender_id: id
+			},
+			take: 30
+		})
+	}
 }
+
