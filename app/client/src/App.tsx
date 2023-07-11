@@ -1,14 +1,16 @@
 import React from 'react'
+import Chat from './Components/Chat'
+import Header from './Components/Header'
+import Sidebar from './Components/Sidebar'
+import './scss/main.scss'
 
 export default function App () {
 
-  const [counter, setCounter] = React.useState(1)
-
   return (
     <div>
-      <button onClick={() => setCounter(counter => counter * 1337)}>
-        {counter}
-      </button>
+      <Header />
+      <Sidebar />
+      {/* <Chat /> */}
     </div>
   )
 }
