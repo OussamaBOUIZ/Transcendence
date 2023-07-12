@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
 import Welcome from './SignWelcome.tsx'
-import "..scss/Sign.css"
+import "../scss/Sign.css"
 
 export default function Sign() {
 
