@@ -13,22 +13,13 @@ export default function Sidebar () {
     const allIcons = [
         {id: nanoid() ,value: <GoHomeFill />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <BsChatSquareFill />, style: "sidebar_button", active: true},
-        {id: nanoid() ,value: <FaUserFriends />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <FaGamepad />, style: "sidebar_button", active: false},
+        {id: nanoid() ,value: <FaUserFriends />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <IoMdSettings />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <FaSignOutAlt />, style: "sidebar_button logout", active: false}
     ]
 
     const [sdButtons, setSdButtons] = React.useState(allIcons);
-
-    // function toggle (id) {
-    //     setSdButtons(prevSdButtons => {
-    //         return (prevSdButtons.map(item => {
-    //                 return (item.id === id ? {...item, active: true} : {...item, active: false})
-    //             })
-    //         })
-    //     })
-    // }
 
     function toggle (id) {
         setSdButtons(prevSdButtons => prevSdButtons.map(item => {

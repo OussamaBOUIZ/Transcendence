@@ -1,0 +1,15 @@
+@import "./var.scss";
+
+div.chat_container {
+    background-color: red;
+    width: 90vw;
+    height: 84vh;
+    margin: auto 30px;
+    border-radius: 25px;
+    overflow: hidden;
+    div.chat_header {
+        height: 13%;
+        width: 100%;
+        background-color: antiquewhite;
+    }
+}
