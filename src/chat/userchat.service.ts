@@ -60,6 +60,7 @@ export class ChatGatewayService {
 		msg.user_chat = user_chat
 		await this.messageRepository.save(msg)
 	}
+
 	async loadMessage(user: User, sender: number) {
 		const receiverMsgs = await  this.getAllMessages(user.id)
 		const sendMsgs = await this.getAllMessages(sender)
@@ -79,5 +80,7 @@ export class ChatGatewayService {
 			take: 30
 		})
 	}
+
+
 }
 
