@@ -1,22 +1,22 @@
-import {Socket} from 'socket.io';
-import {ChatGatewayService} from "./userchat.service";
+// import {Socket} from 'socket.io';
+// import {ChatGatewayService} from "./userchat.service";
 
 
-type SocketIOMiddleWare = {
-    (client: Socket, next: (err?: Error) => void);
-};
+// type SocketIOMiddleWare = {
+//     (client: Socket, next: (err?: Error) => void);
+// };
 
 
-export const SocketAuthMiddleware = (
-    configService: ChatGatewayService,
-): SocketIOMiddleWare => {
-    return (client, next) => {
-        try {
-            const {authorization} = client.handshake.headers;
-            configService.isValidAuthHeader(authorization);
-            next();
-        } catch (error) {
-            next(error);
-        }
-    };
-};
+// export const SocketAuthMiddleware = (
+//     configService: ChatGatewayService,
+// ): SocketIOMiddleWare => {
+//     return (client, next) => {
+//         try {
+//             const {authorization} = client.handshake.headers;
+//             configService.isValidAuthHeader(authorization);
+//             next();
+//         } catch (error) {
+//             next(error);
+//         }
+//     };
+// };

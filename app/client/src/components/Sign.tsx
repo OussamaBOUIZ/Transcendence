@@ -2,8 +2,8 @@ import React, {useState} from "react"
 import {useEffect} from "react"
 import Welcome from './SignWelcome.tsx'
 import "../scss/sign.scss"
-import googleImg from "../Assets/icons/google.png"
-import logo42 from "../Assets/icons/42Logo.png"
+import googleImg from "../Assets/Icons/google.png"
+import logo42 from "../Assets/Icons/42Logo.png"
 
 export default function Sign() {
 
@@ -37,16 +37,7 @@ export default function Sign() {
     }
 
     function handleAuth(props: string) {
-        async function rediracte() {
-            console.log("start sending")
-            const response = await fetch(`/api/auth/${props}`, {
-                method: 'GET',
-            })
-            console.log(response);
-            const data = await response.json()
-            console.log(data)
-        }
-        rediracte()
+        window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }
 
     return (
