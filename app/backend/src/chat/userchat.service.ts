@@ -7,6 +7,7 @@ import {Repository} from "typeorm";
 import {MessageDto} from "../interfaces/interfaces";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
+import {Inbox_user} from "../databases/inbox_user.entity";
 
 
 @Injectable()
@@ -18,6 +19,7 @@ export class ChatGatewayService {
 		@InjectRepository(User) private userRepository: Repository<User>,
 		@InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
 		@InjectRepository(Message) private messageRepository: Repository<Message>,
+		@InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
 	) {
 	}
 
@@ -42,9 +44,10 @@ export class ChatGatewayService {
 		return await this.userRepository.findOneBy({id: Id})
 	}
 
-	async getMessages(user: User) {
+	// async getMessages(user: User) {
+	//
+	// }
 
-	}
 	async saveMessage(dto: MessageDto, user: User, sender: number) {
 		const user_chat = new User_chat()
 		const msg = new Message()
@@ -59,4 +62,57 @@ export class ChatGatewayService {
 		msg.user_chat = user_chat
 		await this.messageRepository.save(msg)
 	}
+
+	async getInboxBySenderId(senderId: number) : Promise<Inbox_user[] | undefined> {
+		return (await  this.inboxRepository.find({
+			relations: {
+				user: true
+			},
+			where: {
+				sender_id: senderId
+			},
+			take: 5
+		}))
+	}
+	async saveInbox(user: User, senderId: number, msgDto: MessageDto) {
+
+		let inbox : any
+		inbox = this.getInboxBySenderId(senderId)
+		if(typeof inbox === undefined) {
+			inbox.sender_id = msgDto.user.userId; // id of the receiver
+			inbox.lastMessage = msgDto.message;
+			inbox.CreatedAt = msgDto.timeSent
+			inbox.unseenMessages = 0
+			inbox.user = user;
+			this.inboxRepository.save(inbox)
+		}
+		else {
+			inbox.lastMessage = msgDto.message
+			inbox.CreatedAt = msgDto.timeSent
+			inbox.unseenMessages = 0;
+
+		}
+	}
+
+	async loadMessage(user: User, sender: number) {
+		const receiverMsgs = await  this.getAllMessages(user.id)
+		const sendMsgs = await this.getAllMessages(sender)
+
+		this.logger.log(sendMsgs)
+		this.logger.log(receiverMsgs)
+	}
+
+	async getAllMessages(id: number): Promise<User_chat[] | undefined> {
+		return await this.chatRepository.find({
+			relations: {
+				messages: true
+			},
+			where : {
+				sender_id: id
+			},
+			take: 30
+		})
+	}
+
+
 }

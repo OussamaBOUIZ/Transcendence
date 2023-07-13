@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import {IsNotEmpty, IsNotEmptyObject} from "class-validator";
 
 
@@ -22,6 +23,7 @@ export class MessageDto {
 		userName: string;
 		userId: number;
 	};
-	timeSent: string;
+	@Transform(({ value }) => new Date(value))
+	timeSent: Date;
 	message: string;
 }

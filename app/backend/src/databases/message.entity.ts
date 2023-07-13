@@ -13,6 +13,6 @@ export class Message extends BaseEntity {
     message: string
 
     @Column({type: "timestamp"})
-    CreatedAt: string
+    CreatedAt: Date
 }
 
