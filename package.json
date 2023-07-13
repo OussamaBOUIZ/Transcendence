@@ -7,8 +7,5 @@
   },
   "workspaces": [
     "app/*"
-  ],
-  "dependencies": {
-    "sass": "^1.63.6"
-  }
+  ]
 }
