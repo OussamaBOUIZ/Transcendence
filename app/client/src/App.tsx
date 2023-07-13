@@ -1,5 +1,5 @@
 import React from "react"
-import Sign from "./component/Sign"
+import Sign from "./components/Sign"
 
 export default function App() {
     return (
