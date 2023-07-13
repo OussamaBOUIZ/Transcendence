@@ -9,10 +9,10 @@ export default function App () {
   return (
     <div>
       <Header />
-      <section>
+      <main>
         <Sidebar />
         <Chat />
-      </section>
+      </main>
     </div>
   )
 }

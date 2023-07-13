@@ -1,4 +1,5 @@
 @import "./var.scss";
+@import "./mixins.scss";
 
 div.chat_container {
     background-color: orchid;
@@ -22,7 +23,7 @@ div.chat_container {
         // background-color: $primary-color;
         grid-area: a;
         display: flex;
-        padding: 20px;
+        padding: 10px;
         border-right: 0.5px solid $border-color;
         border-bottom: 0.5px solid $border-color;
         img {
@@ -51,6 +52,42 @@ div.chat_container {
     div.chat_list {
         background-color: salmon;   
         grid-area: l;
+        flex-direction: column;
+        section.online_now {
+            border-bottom: 1px solid $border-color;
+            h3 {
+                font-size: 22px;
+                margin: 8px;
+                font-weight: 600;
+            }
+            .content {
+                padding: 8px auto;
+                p {
+                    text-align: center;
+                    width: 80%;
+                    color: $text-grey-color;
+                    margin: 8px auto;
+                }
+            }
+        }
+        section.inbox {
+            nav {
+                display: flex;
+                padding: 0 8px;
+                button {
+                    border-bottom: 1px solid $border-color;
+                    width: 50%;
+                    padding: 8px;
+                    background: transparent;
+                }
+            }
+            aside {
+                @include center-styles;
+                p {
+                    text-align: center;
+                }
+            }
+        }
     }
     div.chat_overview{
         background-color: royalblue;

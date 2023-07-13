@@ -4,7 +4,9 @@
 * {
    margin: 0;
    padding: 0;  
+   border: 0;
    font-family: $font-style;
+   color: $text-color;
 }
 
 body {
@@ -13,7 +15,7 @@ body {
     height: 100vh;
 }
 
-section {
+main {
     display: flex;
     padding: 10px;
     align-items: center;
