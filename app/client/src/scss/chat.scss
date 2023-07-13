@@ -1,15 +1,66 @@
 @import "./var.scss";
 
 div.chat_container {
-    background-color: red;
+    background-color: orchid;
     width: 90vw;
     height: 84vh;
-    margin: auto 30px;
+
+    background: $primary-color;
+    box-shadow: -5px 7px 17px 0px rgba(255, 255, 255, 0.19);
+
+    margin: auto 20px;
     border-radius: 25px;
     overflow: hidden;
-    div.chat_header {
-        height: 13%;
-        width: 100%;
-        background-color: antiquewhite;
+    display: grid;
+    grid-template :  80px auto 100px / repeat(15, 1fr);
+    grid-template-areas: 
+        "a a a h h h h h h h h h o o o"
+        "l l l m m m m m m m m m o o o"
+        "l l l i i i i i i i i i o o o"
+    ;
+    section.chat_account {
+        // background-color: $primary-color;
+        grid-area: a;
+        display: flex;
+        padding: 20px;
+        border-right: 0.5px solid $border-color;
+        border-bottom: 0.5px solid $border-color;
+        img {
+            height: 60px;
+            width: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        figcaption {
+            margin-left: 20px;
+            p { color: $text-color; }
+            p.account_name {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: -8px;
+            }
+            p.my_account {
+                font-size: 14px;
+            }
+        }
+
+    }
+    section.chat_info {
+        grid-area: h;
+    }
+    div.chat_list {
+        background-color: salmon;   
+        grid-area: l;
+    }
+    div.chat_overview{
+        background-color: royalblue;
+        grid-area: o;
+    }
+    div.chat_input{
+        background-color: aqua;
+        grid-area: i;
+    }
+    div.chat_main {
+        grid-area: m;
     }
 }
