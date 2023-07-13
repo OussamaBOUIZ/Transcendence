@@ -50,13 +50,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.logger = new Logger(ChatGateway.name);
     }
 
-    @SubscribeMessage('message')
-    async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
-        let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
-        if (!user)
-            this.logger.log('todo handle if not exist!!')
-
-    }
+    // @SubscribeMessage('message')
+    // async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
+    //     let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
+    //     if (!user)
+    //         this.logger.log('todo handle if not exist!!')
+    //
+    // }
 
     @SubscribeMessage('SendMessage')
     async sendMessage(socket: Socket, data: MessageDto) {
@@ -74,6 +74,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.server.to(receiver.socketId).emit("message", data.message)
     }
 
+    @SubscribeMessage('loadMessages')
+    async allMessages(socket: Socket, data: MessageDto)
+    {
+        const receiver = await this.chatGatewayService.getUserById(data.user.userId)
+        if (!receiver)
+            console.log('todo: handle if the receiver not exist')
+
+        const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
+
+        await this.chatGatewayService.loadMessage(db_user, receiver.id)
+
+    }
 
     afterInit(client: Socket) {
         client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
@@ -82,13 +94,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async handleConnection(client: Socket) {
         const {authorization} = client.handshake.headers;
-
+        let db_user: User
         const user = this.chatGatewayService.getUser(authorization)
         console.log(user)
-        const db_user = new User()
-        db_user.email = user.email
-        db_user.socketId = client.id;
-
+        db_user = await this.userRepository.findOneBy({email: user.email})
+        if (db_user) {
+            db_user.socketId = client.id
+        }
+        else
+        {
+            db_user = new User()
+            db_user.email = user.email
+            db_user.socketId = client.id;
+        }
         await this.userRepository.save(db_user)
     }
 
