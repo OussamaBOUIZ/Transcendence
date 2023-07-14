@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Response } from 'express';
@@ -15,6 +15,7 @@ import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
 import { LocalGuard } from './local/localguard';
 import { MailTemplate } from './MailService/mailer.service';
+import { ViewAuthFilter } from 'src/Filter/filter';
 
 @Controller('auth')
 export class AuthController {
@@ -47,18 +48,19 @@ export class AuthController {
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {
-        console.log('YES WAS HERE');
+
     }
 
 
     @Get('42api')
+    @UseFilters(ViewAuthFilter)
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         this.authService.setResCookie(res, token);
         res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('42 Sucessful');
+        return 'yes';
     }
 
     @Post('signin') 
@@ -67,7 +69,7 @@ export class AuthController {
         const token = await this.authService.signToken(userData.user);
         this.authService.setResCookie(res, token);
         res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('local Sucessful');
+        return 'yes';
     }
     
     @Post('signup')
@@ -75,6 +77,6 @@ export class AuthController {
         const token = await this.authService.signup(userDto);
         this.authService.setResCookie(res, token);
         res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('local Sucessful');
+        return 'yes';
     }
 }
