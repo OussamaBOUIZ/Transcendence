@@ -131,11 +131,20 @@ div.chat_container {
                 padding: 5px 10px;
                 background: $input-background;
                 border-radius: 7px;
+                &::placeholder {
+                    color: $text-grey-color;
+                }
             }
         }
     }
     div.chat_overview{
         background: $overview-gradient;
         grid-area: o;
+        @include center-styles;
+        p {
+            width: 90%;
+            color: $text-grey-color;
+            text-align: center;
+        }
     }
 }
