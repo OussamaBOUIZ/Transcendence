@@ -59,21 +59,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     // }
 
     @SubscribeMessage('SendMessage')
-    async sendMessage(socket: Socket, data: MessageDto) {
-        const receiver = await this.chatGatewayService.getUserById(data.user.userId)
-        if (typeof receiver === undefined)
+    async sendMessage(socket: Socket, messageDto: MessageDto) {
+        const receiver = await this.chatGatewayService.getUserById(messageDto.user.userId)
+        if ( receiver === null)
             console.log('TODO : handle if the receiver not exist')
         this.logger.log({receiver})
         this.logger.log(socket.data.user.email)
         // find the sender by email
 
-        const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-        this.logger.log({db_user})
-        console.log(db_user.id)
-        await this.chatGatewayService.saveMessage(data, receiver, db_user.id)
+        const user = await this.userRepository.findOneBy({email: socket.data.user.email})
+        if (user === null)
+            return 'todo handle not authorized'
+        await this.chatGatewayService.saveMessage(messageDto, receiver, user.id)
         // save the last message in inbox table
-
-        this.server.to(receiver.socketId).emit("message", data.message)
+        this.chatGatewayService.saveInbox(receiver, user.id, messageDto)
+        this.server.to(receiver.socketId).emit("message", messageDto.message)
     }
 
     @SubscribeMessage('loadMessages')
@@ -95,25 +95,33 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     async handleConnection(client: Socket) {
+        this.logger.log('On Connection')
         const {authorization} = client.handshake.headers;
-        let db_user: User
-        const user = this.chatGatewayService.getUser(authorization)
-        console.log(user)
-        db_user = await this.userRepository.findOneBy({email: user.email})
-        if (db_user) {
-            db_user.socketId = client.id
+        let user: User
+        const userFromJwt = this.chatGatewayService.getUserFromJwt(authorization)
+        user = await this.userRepository.findOneBy({email: userFromJwt.email})
+        if (user) {
+            user.socketId = client.id
         }
         else
         {
-            db_user = new User()
-            db_user.email = user.email
-            db_user.socketId = client.id;
+            user = new User()
+            user.email = userFromJwt.email
+            user.socketId = client.id;
         }
-         await this.userRepository.save(db_user)
+        user.status = 'Online'
+        await this.userRepository.save(user)
     }
 
 
-    handleDisconnect(client: any) {
-        console.log('disconnected')
+    async handleDisconnect(client: Socket) {
+        const jwtUser = this.chatGatewayService.getUserFromJwt(client.handshake.headers.authorization)
+        console.log(jwtUser)
+        const user = await this.chatGatewayService.getUserByEmail(jwtUser.email)
+        if (user == null)
+            this.logger.log('user not exist in DB : handle disconnect')
+        user.status = 'Offline'
+        await this.userRepository.save(user)
+        this.logger.log('On Disconnect')
     }
 }

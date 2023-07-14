@@ -9,7 +9,6 @@ import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {Inbox_user} from "../databases/inbox_user.entity";
 
-
 @Injectable()
 export class ChatGatewayService {
 
@@ -25,7 +24,6 @@ export class ChatGatewayService {
 
 	private logger = new Logger(ChatGatewayService.name)
 
-
 	isValidAuthHeader(authorization: string) {
 		const token: string = authorization.split(' ')[1];
 		return this.jwt.verify(token, {
@@ -33,11 +31,15 @@ export class ChatGatewayService {
 		});
 	}
 
-	getUser(authorization: string) {
+	getUserFromJwt(authorization: string) {
 		const token: string = authorization.split(' ')[1];
 		return this.jwt.verify(token, {
 			secret: this.configService.get('JWT_SECRET')
 		});
+	}
+	async getUserByEmail(email: string) {
+		const user = await this.userRepository.findOneBy({email: email})
+		return user
 	}
 
 	async getUserById(Id: number) {
@@ -63,35 +65,33 @@ export class ChatGatewayService {
 		await this.messageRepository.save(msg)
 	}
 
-	async getInboxBySenderId(senderId: number) : Promise<Inbox_user[] | undefined> {
-		return (await  this.inboxRepository.find({
-			relations: {
-				user: true
-			},
-			where: {
-				sender_id: senderId
-			},
-			take: 5
+
+	async getInboxBySenderId(senderId: number, user: User) : Promise<Inbox_user | undefined> {
+		return (await  this.inboxRepository.findOneBy({
+			sender_id: senderId
 		}))
 	}
 	async saveInbox(user: User, senderId: number, msgDto: MessageDto) {
 
-		let inbox : any
-		inbox = this.getInboxBySenderId(senderId)
-		if(typeof inbox === undefined) {
-			inbox.sender_id = msgDto.user.userId; // id of the receiver
+		 let inbox : Inbox_user
+		inbox = await this.getInboxBySenderId(senderId, user)
+		console.log('inbox type', inbox)
+		console.log('msgDto type', msgDto.user.userId)
+		if(inbox === null) {
+			inbox = new Inbox_user()
+			inbox.sender_id = senderId; // id of the receiver
 			inbox.lastMessage = msgDto.message;
 			inbox.CreatedAt = msgDto.timeSent
 			inbox.unseenMessages = 0
 			inbox.user = user;
-			this.inboxRepository.save(inbox)
 		}
 		else {
 			inbox.lastMessage = msgDto.message
 			inbox.CreatedAt = msgDto.timeSent
-			inbox.unseenMessages = 0;
-
+			if (inbox.unseenMessages != 0)
+				inbox.unseenMessages += 1;
 		}
+		await this.inboxRepository.save(inbox)
 	}
 
 	async loadMessage(user: User, sender: number) {
