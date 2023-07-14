@@ -30,7 +30,7 @@ export default function Form({handleChange, formDataUp, setFormDataUp}) {
                 value={formDataUp.email}
                 ></input>
             <input
-                type='text'
+                type='password'
                 className="password"
                 placeholder='Password'
                 name='password'

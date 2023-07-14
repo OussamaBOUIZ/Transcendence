@@ -48,15 +48,19 @@ export default function Sign() {
 
     function handleSubmit() {
         async function sendFormData() {
+            const bodyResponse = SignX === "in" ? JSON.stringify({ formData }) : JSON.stringify({ formDataUp })
+            // const bodyResponse = SignX === "in" ? JSON.parse(form).formData : JSON.parse(form).formDataUp
+            console.log(bodyResponse);
+
             const response = await fetch(`/api/auth/sign${SignX}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    body: JSON.stringify({ formData }),
                 },
+                body: bodyResponse,
             })
             const data = await response.json()
-            console.log(data)
+            console.log(data);
         }
         sendFormData()
     }
@@ -74,6 +78,7 @@ export default function Sign() {
                             <button className='btn btn-google' onClick={() => handleAuth("google")}><img src={googleImg} alt="" /> Sign in with Google</button>
                             <button className='btn btn-42'onClick={() => handleAuth("42")}><img src={logo42} alt="" /> Sign in with 42 Netowrk</button>
                         </div>
+
 
     return (
         <div className="main">

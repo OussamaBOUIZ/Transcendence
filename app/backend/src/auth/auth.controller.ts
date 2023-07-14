@@ -65,8 +65,8 @@ export class AuthController {
 
     @Post('signin') 
     @UseGuards(LocalGuard)
-    async localSignIn(@Req() userData, @Res() res: Response) {
-        const token = await this.authService.signToken(userData.user);
+    async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
+        const token = await this.authService.signToken(userDto);
         this.authService.setResCookie(res, token);
         res.redirect('http://localhost:5173/');
         return res.status(HttpStatus.OK).send('local Sucessful');
@@ -74,6 +74,7 @@ export class AuthController {
     
     @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
+        console.log(userDto);
         const token = await this.authService.signup(userDto);
         this.authService.setResCookie(res, token);
         res.redirect('http://localhost:5173/');

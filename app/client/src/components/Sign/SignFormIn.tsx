@@ -13,7 +13,7 @@ export default function Form({ handleChange, formData, setFormData }) {
                 value={formData.username}
                 ></input>
             <input
-                type='text'
+                type='password'
                 className="password"
                 placeholder='Password'
                 name='password'
