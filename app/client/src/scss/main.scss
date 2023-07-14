@@ -8,6 +8,9 @@
    font-family: $font-style;
    color: $text-color;
 }
+*:focus {
+    outline : none;
+}
 
 body {
     background: linear-gradient(135deg, $bg-color-left 0%, $bg-color-right 100%);

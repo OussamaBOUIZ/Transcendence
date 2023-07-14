@@ -6,13 +6,13 @@ export default function Inbox () {
         <div>
             <section className="inbox">
                 <nav>
-                    <button>Messages<span></span></button>
+                    <button className="active">Messages<span></span></button>
                     <button>Channels<span></span></button>
                 </nav>
                 <aside>
                     <p>No DMs available Yet
                     Unlock a world of gaming
-                    exci    tement, by creating 
+                    excitement, by creating 
                     or joining existing ones
                     </p>
                 </aside>

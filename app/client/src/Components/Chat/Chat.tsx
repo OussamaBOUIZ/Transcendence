@@ -16,7 +16,7 @@ export default function Chat () {
             <ChatList />
             <ChatOverview />
             <ChatMain />
-            <ChatInput />
+            {/* <ChatInput /> */}
         </div>
     ));
 }
