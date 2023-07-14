@@ -13,7 +13,7 @@ import {
        const ctx = host.switchToHttp();
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();
-    
+       console.log('was redirected successfully');
        response.status(status).redirect('http://localhost:5173/');
      }
    }
