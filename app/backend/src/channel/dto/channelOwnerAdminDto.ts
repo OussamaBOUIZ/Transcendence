@@ -1,19 +1,18 @@
 import { IsEmail, IsNotEmpty, IsString} from 'class-validator';
-
-export class channelDto {
-    
+export class channelOwnerDto {
     @IsNotEmpty()
     @IsString()
     public channelName: string
 
     @IsNotEmpty()
-    @IsString()
-    public channelType: string
+    public newChannelOwner: number
+}
 
-    @IsString()
-    public channelPassword: string
-
-    @IsString()
+export class channelAdminDto {
     @IsNotEmpty()
-    public channelOwner: string
+    @IsString()
+    public channelName: string
+
+    @IsNotEmpty()
+    public newChannelAdmin: number
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,7 +19,7 @@ export class AuthService {
     async apisignin(user)
     {
         if(!user) {
-            throw new BadRequestException('Unauthenticated');
+            return null;
         }
         const userFound = await this.searchForEmail(user.email);
         if(!userFound)

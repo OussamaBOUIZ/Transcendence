@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ChannelModule } from './channel/channel.module';
 import { dataSourceOptions } from './datasource/data-source';
-import { ChatGatewayModule } from './chat/userchat.module';
 
 @Module({
   imports: [
@@ -15,7 +14,7 @@ import { ChatGatewayModule } from './chat/userchat.module';
   ConfigModule.forRoot({
     isGlobal: true,
   }),
-  ChatGatewayModule,
+  // ChatGatewayModule,
   MailerModule.forRoot({
     transport: {
       host: 'smtp-mail.outlook.com',

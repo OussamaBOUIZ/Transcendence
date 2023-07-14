@@ -2,3 +2,5 @@
 dist
 .env
 .idea/
+
+**/package-lock.json

@@ -9,9 +9,6 @@
     "app/*"
   ],
   "dependencies": {
-    "@nestjs/platform-socket.io": "^10.0.5",
-    "@nestjs/websockets": "^10.0.5",
-    "cors": "^2.8.5",
-    "pg": "^8.11.1"
+    "sass": "^1.63.6"
   }
 }

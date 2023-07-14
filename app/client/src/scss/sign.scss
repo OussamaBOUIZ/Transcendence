@@ -13,147 +13,134 @@ body {
     .content {
         display: flex;
         justify-content: center;
-        background: red;
+        // background: red;
         width: 50%;
         height: 100vh;
+        .container {
+            display: flex;
+            flex-direction: column;
+            // background: blue;
+            .welcome {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .hd {
+                    font-weight: 600;
+                    margin-top: 16.25rem;
+                    margin-bottom: 0rem;
+                }
+                .pr {
+                    font-weight: 300;
+                    margin-top: 0rem;
+                }
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.88rem;
+                margin-top: 1.5rem;
+                .bttn {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.25rem;
+                    .btn {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 29rem; height: 3.4rem;
+                        border-radius: 0.625rem;
+                        border: 1.5px solid #D3CCCC;
+                        cursor: pointer;
+                        background-color: white;
+                        gap: 0.625rem;
+                        img {
+                            width: 1.6875rem;
+                            height: 1.6875rem;
+                        }
+                    }
+                    .btn-42 {
+                        padding: 0.7375rem 6.88rem;
+                    }
+                    .btn-42:hover {
+                        border-color: black;
+                    }
+                    .btn-google:hover {
+                        border-top-color: rgb(234,65,49);
+                        border-left-color: rgb(251,189,4);
+                        border-bottom-color: rgb(48,170,82) ;
+                        border-right-color: #4085f4;
+                    }
+                }
+                .orContent {
+                    display: flex;
+                    align-items: center;
+                    gap: 1.3rem;
+                    .bar {
+                        width: 4.25rem;
+                        height: 2px;
+                        background: #D9D9D9;
+                    }
+                }
+                .form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.25rem;
+                    input {
+                        padding: 1.125rem 18.075rem 1.125rem 2.0625rem;
+                        align-items: center;
+                        border-radius: 0.625rem;
+                        border: 1.5px solid #D3CCCC;
+                    }
+                    .yourNameForm {
+                        display: flex;
+                        justify-content: space-between;
+                        input {
+                            padding: 1.125rem 2.5rem 1.125rem 2.0625rem;
+                        }
+                    }
+                }
+            }
+            .forget {
+                cursor: pointer;
+                color: #D11EA7;
+                font-size: 0.75rem;
+                font-weight: 500;
+                display: flex;
+                justify-content: flex-end;
+                margin-top: .5rem;
+            }
+            .submit {
+                margin-top: .5rem;
+                cursor: pointer;
+                border-radius: 1.875rem;
+                background: #710B8A;
+                border: none;
+                width: 29rem; height: 3.1rem;
+                color: white;
+                font-weight: 500;
+                span {
+                    font-weight: 500;
+                }
+            }
+            .signUp {
+                display: flex;
+                justify-content: center;
+                cursor: pointer;
+                margin-top: 1rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                span {
+                    color: #D11EA7;
+                }
+            }
+        }
     }
-}
-
-
-.cover {
-    width: 50%;
-    height: 100vh;
-    background: url("../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg") lightgray 50% / cover no-repeat;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    background: blue;
-}
-
-.welcome {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hd {
-    font-weight: 600;
-    font-size: 6.25rem;
-    margin-top: 13.25rem;
-    margin-bottom: 0rem;
-}
-.pr {
-    font-weight: 300;
-    margin-top: 0rem;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.88rem;
-    margin-top: 1.5rem;
-}
-
-.btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.7375rem 7.65625rem;
-    border-radius: 0.625rem;
-    border: 1.5px solid #D3CCCC;
-    cursor: pointer;
-    background-color: white;
-    gap: 0.625rem;
-}
-
-.btn-42 {
-    padding: 0.7375rem 6.88rem;
-}
-
-.bttn {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-img {
-    width: 1.6875rem;
-    height: 1.6875rem;
-}
-
-/* .btn {
-    width: min(435px, 100%);
-    min-height: 57px;
-    border: 2px solid
-      rgba(211.43749594688416, 203.50859820842743, 203.50859820842743, 1);
-    border-radius: 10px;
-    padding-left: 122.5px;
-    padding-right: 122.5px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  } */
-
-.orContent {
-    display: flex;
-    align-items: center;
-    gap: 1.3rem;
-}
-
-.bar {
-    width: 4.25rem;
-    height: 2px;
-    background: #D9D9D9;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.form > input {
-    padding: 1.125rem 14.115rem 1.125rem 2.0625rem;
-    align-items: center;
-    border-radius: 0.625rem;
-    border: 1.5px solid #D3CCCC;
-}
-
-.submit {
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
-    cursor: pointer;
-    border-radius: 1.875rem;
-    background: #710B8A;
-    border: none;
-    padding: 0.8125rem 5.115rem;
-    color: white;
-    font-weight: 500;
-}
-
-.forget {
-    cursor: pointer;
-    color: #D11EA7;
-    font-size: 0.75rem;
-    font-weight: 500;
-    background: yellow;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.signUp {
-    cursor: pointer;
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.signUp > span {
-    color: #D11EA7;
+    .cover {
+        width: 50%;
+        height: 100vh;
+        background-position: 50%;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
 }
