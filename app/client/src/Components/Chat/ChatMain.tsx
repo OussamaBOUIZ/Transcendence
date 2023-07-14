@@ -1,6 +1,7 @@
 import React from 'react'
 
 export default function ChatMain () {
+
     return (<div className="chat_main chat_main_init">
         <article>
             <h2>

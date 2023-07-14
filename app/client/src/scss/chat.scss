@@ -96,6 +96,22 @@ div.chat_container {
                     color: $text-grey-color;
                 }
             }
+            figure.message_oview {
+                // height: 70px;
+                background-color: red;
+                padding: 8px;
+                display: flex;
+                img {
+                    height: 50px;
+                    width : 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                figcaption {
+                    margin-left: 10px;
+                    
+                }
+            }
         }
     }
     div.chat_main.chat_main_init {
