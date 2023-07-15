@@ -1,6 +1,6 @@
 import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm"
-import {Message} from "./message.entity";
-import {User} from "./user.entity";
+import {Message} from "../message.entity";
+import {User} from "../user.entity";
 
 @Entity('User_chat')
 export class User_chat extends BaseEntity {

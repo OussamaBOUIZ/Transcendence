@@ -7,7 +7,6 @@ import {
     WebSocketServer
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
-import {JwtService} from "@nestjs/jwt";
 import {ChatGatewayService} from "./userchat.service"
 import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
@@ -15,9 +14,8 @@ import {Repository} from "typeorm";
 import {User} from 'src/databases/user.entity';
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
-import {SocketAuthMiddleware} from "./ws.mw";
-import {MessageDto, ReceiverDto} from "../interfaces/interfaces";
-import {json} from "stream/consumers";
+import {SocketAuthMiddleware} from "./websocket.middleware";
+import {MessageDto} from "../interfaces/interfaces";
 
 /**
  * RxJS :
@@ -61,7 +59,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage('SendMessage')
     async sendMessage(socket: Socket, messageDto: MessageDto) {
         const receiver = await this.chatGatewayService.getUserById(messageDto.user.userId)
-        if ( receiver === null)
+        if (receiver === null)
             console.log('TODO : handle if the receiver not exist')
         this.logger.log({receiver})
         this.logger.log(socket.data.user.email)
@@ -72,21 +70,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             return 'todo handle not authorized'
         await this.chatGatewayService.saveMessage(messageDto, receiver, user.id)
         // save the last message in inbox table
-        this.chatGatewayService.saveInbox(receiver, user.id, messageDto)
+        await this.chatGatewayService.saveInbox(receiver, user.id, messageDto)
         this.server.to(receiver.socketId).emit("message", messageDto.message)
     }
 
     @SubscribeMessage('loadMessages')
-    async allMessages(socket: Socket, data: MessageDto)
-    {
+    async allMessages(socket: Socket, data: MessageDto) {
         const receiver = await this.chatGatewayService.getUserById(data.user.userId)
         if (typeof receiver === undefined)
             console.log('todo: handle if the receiver not exist')
 
         const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-        if (typeof  db_user === undefined)
+        if (typeof db_user === undefined)
             console.log('todo: handle if the receiver not exist')
-       return  await this.chatGatewayService.loadMessage(db_user, receiver.id)
+        return await this.chatGatewayService.loadMessage(db_user, receiver.id)
     }
 
     afterInit(client: Socket) {
@@ -102,9 +99,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         user = await this.userRepository.findOneBy({email: userFromJwt.email})
         if (user) {
             user.socketId = client.id
-        }
-        else
-        {
+        } else {
             user = new User()
             user.email = userFromJwt.email
             user.socketId = client.id;
@@ -125,3 +120,4 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.logger.log('On Disconnect')
     }
 }
+

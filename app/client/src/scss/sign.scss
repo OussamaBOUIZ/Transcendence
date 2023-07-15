@@ -13,7 +13,7 @@ body {
     .content {
         display: flex;
         justify-content: center;
-        background: red;
+        //background: red;
         width: 50%;
         height: 100vh;
     }
@@ -29,7 +29,7 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    background: blue;
+    //background: blue;
 }
 
 .welcome {
@@ -142,7 +142,7 @@ img {
     color: #D11EA7;
     font-size: 0.75rem;
     font-weight: 500;
-    background: yellow;
+    //background: yellow;
     display: flex;
     justify-content: flex-end;
 }
