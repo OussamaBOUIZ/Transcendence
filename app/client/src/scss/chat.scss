@@ -173,7 +173,7 @@ div.chat_container {
                 margin-top: 30px;
                 gap: 25px;
                 padding: 0 25px;
-                margin-left: 50px; // should be fixed
+                margin-left: 40px; // should be fixed
                 button {    
                     &.secondary_btn {
                         @include secondary-button;

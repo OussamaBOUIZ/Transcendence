@@ -1,4 +1,5 @@
 import React from 'react'
+import ContactDetail from './ContactDetail';
 
 export default function ChatOverview () {
 
@@ -10,8 +11,9 @@ export default function ChatOverview () {
     ";
 
     return (<div className="chat_overview">
-        <p className="guide_text">
+        {/* <p className="guide_text">
             {guidingText}
-        </p>
+        </p> */}
+    <ContactDetail />        
     </div>);
 }
