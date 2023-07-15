@@ -53,11 +53,9 @@ export default function Sign() {
         const sendFormData = async () => {
         try {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            console.log("test")
-            console.log(response.data); // Optional: handle the response from the Nest.js server
+            window.alert(response.data);
         } catch (error) {
-            console.log("error")
-            console.error(error);
+            window.alert(error.response.data);
         }
         };
         sendFormData()
