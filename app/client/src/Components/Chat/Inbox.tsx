@@ -24,6 +24,10 @@ export default function Inbox () {
                     </aside>
                 }
                 <MessageOverview />
+                <MessageOverview current={true}/>
+                <MessageOverview />
+                <MessageOverview />
+                <MessageOverview />
             </section>
         </div>
     );

@@ -1,13 +1,14 @@
 import React from 'react'
 
-export default function MessageOverview () {
+export default function MessageOverview ({current}) {
     return (
-        <figure className="message_oview">
+        <figure className={`message_oview ${current ? "active" : ""}`}>
             <img src="./src/Assets/cat.jpg" alt="Cat pic" />
             <figcaption>
-                <h4>Elegant Tom</h4>
+                <h4>Elegant</h4>
                 <p>Nothing received</p>
             </figcaption>
+            <time>Yesterday</time>
         </figure>
     );
 }

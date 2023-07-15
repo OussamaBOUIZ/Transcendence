@@ -98,7 +98,6 @@ div.chat_container {
             }
             figure.message_oview {
                 // height: 70px;
-                background-color: red;
                 padding: 8px;
                 display: flex;
                 img {
@@ -109,7 +108,18 @@ div.chat_container {
                 }
                 figcaption {
                     margin-left: 10px;
+                    p {
+                        font-size: 12px;
+                    }
                     
+                }
+                time {
+                    font-size: 10px;
+                    margin-left: 10px;
+                }
+                &.active {
+                    background-color: $active-message-bg;
+                    border-left: 3px solid $border-color;
                 }
             }
         }
