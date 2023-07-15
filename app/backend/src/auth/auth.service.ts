@@ -9,6 +9,11 @@ import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 
+type tokenPayload = {
+    id: number,
+    email: string
+}
+
 @Injectable()
 export class AuthService {
 
@@ -106,5 +111,17 @@ export class AuthService {
             maxAge: 2592000000,
             secure: false,
         });
+    }
+    async retUserData(userToken: string)
+    {
+        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
+        const user: User = await this.userRepository.findOneBy({id: payload.id});
+        const userData = {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+        };
+        return JSON.stringify(userData);
     }
 }

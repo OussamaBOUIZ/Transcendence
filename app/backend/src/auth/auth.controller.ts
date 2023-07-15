@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
@@ -74,4 +74,11 @@ export class AuthController {
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/');
     }
+    @Get('getuser')
+    @UseGuards(JwtGuard)
+    async getuser(@Req() req: Request)
+    {
+        return await this.authService.retUserData(req.cookies['access_token']);   
+    }
+
 }
