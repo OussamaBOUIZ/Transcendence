@@ -1,3 +1,4 @@
+
 import { BadRequestException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -33,6 +34,9 @@ export class AuthService {
 
     async apiregisterUser(user)
     {
+        console.log('efjwevfwefwefwe')
+        console.log(user);
+        
         const newUser = new User();
         newUser.email = user.email;
         newUser.firstname = user.firstname;
@@ -60,7 +64,7 @@ export class AuthService {
         const userCorrect = await argon.verify(foundUser.password, password);
         if(!userCorrect)
             return null;
-        return foundUser;
+        return this.signToken(foundUser);
     }
 
     signToken(user: User)
@@ -68,7 +72,7 @@ export class AuthService {
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: user.id,
-            email: user.username
+            email: user.email
         }, {secret});
     }
 

@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
+import axios from 'axios'
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
@@ -47,23 +48,21 @@ export default function Sign() {
     
 
     function handleSubmit() {
-        async function sendFormData() {
-            const bodyResponse = SignX === "in" ? JSON.stringify({ formData }) : JSON.stringify({ formDataUp })
-            // const bodyResponse = SignX === "in" ? JSON.parse(form).formData : JSON.parse(form).formDataUp
-            console.log(bodyResponse);
-
-            const response = await fetch(`/api/auth/sign${SignX}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: bodyResponse,
-            })
-            const data = await response.json()
-            console.log(data);
+        const bodyResponse = SignX === "in" ? formData : formDataUp
+        console.log(bodyResponse);
+        const sendFormData = async () => {
+        try {
+            const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
+            console.log("test")
+            console.log(response.data); // Optional: handle the response from the Nest.js server
+        } catch (error) {
+            console.log("error")
+            console.error(error);
         }
+        };
         sendFormData()
     }
+
 
     function handleAuth(props: string) {
         window.location.replace(`http://localhost:3000/api/auth/${props}`)

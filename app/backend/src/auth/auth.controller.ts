@@ -35,8 +35,7 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(googlereq.user);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return 'ok'; 
+        return res.redirect('http://localhost:5173/');
     }
     
     @Get('test')
@@ -47,7 +46,6 @@ export class AuthController {
     @Get('42')
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {
-        console.log('YES WAS HERE');
     }
 
 
@@ -59,17 +57,15 @@ export class AuthController {
         if(!token)
             return res.redirect('http://localhost:5173/');
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('42 Sucessful');
+        return res.redirect('http://localhost:5173/');
     }
 
     @Post('signin') 
     @UseGuards(LocalGuard)
     async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        const token = await this.authService.signToken(userDto);
+        const token = await this.authService.validateUser(userDto.username, userDto.password);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('local Sucessful');
+        return res.redirect('http://localhost:5173/');
     }
     
     @Post('signup')
@@ -77,7 +73,6 @@ export class AuthController {
         console.log(userDto);
         const token = await this.authService.signup(userDto);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return res.status(HttpStatus.OK).send('local Sucessful');
+        return res.redirect('http://localhost:5173/');
     }
 }
