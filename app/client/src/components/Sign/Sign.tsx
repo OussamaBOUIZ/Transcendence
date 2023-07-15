@@ -1,6 +1,7 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
 import axios from 'axios'
+import Notification from "../Notification"
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
@@ -54,6 +55,7 @@ export default function Sign() {
         try {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
             window.alert(response.data);
+            // <Notification message={response.data} />
         } catch (error) {
             window.alert(error.response.data);
         }
@@ -76,9 +78,21 @@ export default function Sign() {
                             <button className='btn btn-42'onClick={() => handleAuth("42")}><img src={logo42} alt="" /> Sign in with 42 Netowrk</button>
                         </div>
 
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+    }, 5000); // Hide the element after 5 seconds (5000 milliseconds)
+
+    return () => {
+        clearTimeout(timer); // Clear the timer if the component unmounts before the timeout
+    };
+    }, []);
 
     return (
         <div className="main">
+            {isVisible && <Notification message={"Welcome"} />}
             <nav>
                 <h3>PongLogo</h3>
             </nav>
