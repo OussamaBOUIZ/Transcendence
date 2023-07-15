@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm"
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import { Muted_users } from "./muted_users.entity"
+import { Message } from "./message.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
@@ -27,9 +28,8 @@ export class Channel extends BaseEntity {
     @Column('int', {array: true, nullable: true})
     banned_users: number[]
 
+    @OneToMany(() => Message, (messages) => messages.channel)
+    messages: Message[]
     // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
     // muted: Muted_users[]
-
-    // @Column('int', {array: true, nullable: true})
-    // banned_users: number[]
 }

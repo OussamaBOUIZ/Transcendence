@@ -32,12 +32,12 @@ export class AuthController {
 
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
+    @UseFilters(ViewAuthFilter)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return 'ok'; 
+        return res.redirect('http://localhost:5173/');
     }
     
     @Get('test')
@@ -59,24 +59,13 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return 'yes';
+        return res.redirect('http://localhost:5173/');
     }
 
     @Post('signin') 
-    @UseGuards(LocalGuard)
-    async localSignIn(@Req() userData, @Res() res: Response) {
-        const token = await this.authService.signToken(userData.user);
-        this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return 'yes';
-    }
-    
-    @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
         const token = await this.authService.signup(userDto);
         this.authService.setResCookie(res, token);
-        res.redirect('http://localhost:5173/');
-        return 'yes';
+        return res.redirect('http://localhost:5173/');
     }
 }
