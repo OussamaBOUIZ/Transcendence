@@ -5,3 +5,22 @@
     justify-content: center;
     align-items: center;
 }
+@mixin rounded-button {
+    padding: 10px 25px;
+    border-radius: 23px;
+    font-size: 18px;
+}
+@mixin secondary-button {
+    @include rounded-button;
+    border-radius: 34px;
+    padding: 0px 25px;
+    border: 1px solid #FFFBFB;
+    background-color: transparent;
+}
+
+@mixin primary-button {
+    @include rounded-button;
+    border-radius: 34px;
+    background: #E72FD0;
+    box-shadow: 0px 0px 20px 0px #E62FD0;
+}

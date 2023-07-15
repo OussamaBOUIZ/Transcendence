@@ -4,6 +4,6 @@ import ChatMainInit from './ChatMainInit';
 export default function ChatMain () {
 
     return (
-        <ChatMainInit />
+            <ChatMainInit />
     );
 }

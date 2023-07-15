@@ -133,8 +133,10 @@ div.chat_container {
             text-align: center;
             width: 50%;
             margin-top: 50px;
+                @include center-styles;
+                flex-direction: column;
             h2 {
-                font-size: 30px;
+                font-size: 28px;
                 margin: 5px auto;
                 img {
                     position:relative;
@@ -144,6 +146,7 @@ div.chat_container {
             }
             p {
                 margin-top: 10px;
+                width: 90%;
             }
         }
         section.search_box {
@@ -159,6 +162,33 @@ div.chat_container {
                 border-radius: 7px;
                 &::placeholder {
                     color: $text-grey-color;
+                }
+            }
+        }
+        section.init_action_container {
+            @include center-styles;
+            flex-direction: column;
+            div.container {
+                display: flex;
+                margin-top: 30px;
+                gap: 25px;
+                padding: 0 25px;
+                margin-left: 50px; // should be fixed
+                button {    
+                    &.secondary_btn {
+                        @include secondary-button;
+                    }
+                    &.primary_btn {
+                        @include primary-button;
+                        @include center-styles;
+                        svg {
+                            fill: $text-color;
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 10px;
+                            margin-left: -10px;
+                        }
+                    }
                 }
             }
         }
