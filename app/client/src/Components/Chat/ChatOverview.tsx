@@ -10,10 +10,10 @@ export default function ChatOverview () {
     like-minded individuals\
     ";
 
-    return (<div className="chat_overview">
+    return (<div className="chat_overview"> 
         {/* <p className="guide_text">
             {guidingText}
         </p> */}
-    <ContactDetail />        
+    <ContactDetail />
     </div>);
 }

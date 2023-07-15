@@ -21,6 +21,6 @@
 @mixin primary-button {
     @include rounded-button;
     border-radius: 34px;
-    background: #E72FD0;
+    background: $primary-pink;
     box-shadow: 0px 0px 20px 0px #E62FD0;
 }
