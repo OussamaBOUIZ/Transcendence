@@ -83,9 +83,8 @@ export class AuthService {
 
     async signup(userdto: userSignUpDto)
     {
-
         const pass_hash = await argon.hash(userdto.password);
-        try {
+        try{
             const newUser = new User();
             newUser.email = userdto.email;
             newUser.firstname = userdto.firstname;
@@ -98,11 +97,10 @@ export class AuthService {
                 id: newUser.id,
                 email: newUser.email
             }, {secret});
+
         }
-        catch (error)
-        {
-            console.log(error);
-            process.exit(1);
+        catch (error){
+            return null;
         }
     }
     setResCookie(res: Response, token: string)
@@ -114,7 +112,7 @@ export class AuthService {
     }
     async retUserData(userToken: string)
     {
-        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
+        const payload = this.jwtService.decode(userToken) as tokenPayload;
         const user: User = await this.userRepository.findOneBy({id: payload.id});
         const userData = {
             id: user.id,
@@ -122,6 +120,6 @@ export class AuthService {
             lastname: user.lastname,
             username: user.username,
         };
-        return JSON.stringify(userData);
+        return userData;
     }
 }

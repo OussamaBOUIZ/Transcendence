@@ -1,11 +1,15 @@
 import React from "react"
 import Sign from "./components/Sign/Sign"
-import { BrowserRouter as Router, Route } from "react-router-dom"
+import Home from "./components/Home"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
 export default function App() {
     return (
-        <>
-            <Sign />
-        </>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Sign />} />
+                <Route path="/home" element={<Home />} />
+            </Routes>
+        </Router>
     )
 }

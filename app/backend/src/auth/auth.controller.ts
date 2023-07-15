@@ -35,7 +35,7 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(googlereq.user);
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.redirect('http://localhost:5173/home');
     }
     
     @Get('test')
@@ -55,9 +55,9 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if(!token)
-            return res.redirect('http://localhost:5173/');
+            return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.redirect('http://localhost:5173/home');
     }
 
     @Post('signin') 
@@ -65,14 +65,17 @@ export class AuthController {
     async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
         const token = await this.authService.validateUser(userDto.username, userDto.password);
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.status(200).send('user signed in successfully')
     }
     
     @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
+        console.log(userDto);
         const token = await this.authService.signup(userDto);
+        if(token === null)
+            return res.status(400).send(`email already exists`);
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.status(200).send('Please confirm your email, otherwise you can not join our application');
     }
     @Get('getuser')
     @UseGuards(JwtGuard)

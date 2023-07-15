@@ -60,11 +60,3 @@ export class User extends BaseEntity {
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
 }
-
-/*
-    const user1 = new User();
-    const Friend1 = new Friend();
-    const Friend2 = new Friend();
-    user1.friends = [friend1, friend2];
-    const user2 = new User();
- */
