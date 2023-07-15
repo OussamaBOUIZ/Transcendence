@@ -13,10 +13,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     handleConnection(client: Socket) {
-        const authToken: string = client.handshake.headers.authorization;
-        const user = this.channelservice.getUserFromJwt(authToken);
-        if(!user)
-            client.disconnect(true);
+        // const authToken: string = client.handshake.headers.authorization;
+        // const user = this.channelservice.getUserFromJwt(authToken);
+        console.log(client.id);
         
     }
 
@@ -25,8 +24,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         // console.log(`auth is ${client.handshake.headers.authorization}`);
     }
 
-    @SubscribeMessage('newmessage')
-    messageSend(@MessageBody() message: any)
+    @SubscribeMessage('channelMessage')
+    messageSend(@MessageBody() message: any, client: Socket, channelName: string)
     {
         
         this.server.emit('onMessage', {
@@ -34,5 +33,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             content: message
         });
     }
+
 }
 

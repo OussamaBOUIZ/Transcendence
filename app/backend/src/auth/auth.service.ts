@@ -1,3 +1,4 @@
+
 import { BadRequestException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -19,7 +20,7 @@ export class AuthService {
     async apisignin(user)
     {
         if(!user) {
-            throw new BadRequestException('Unauthenticated');
+            return null;
         }
         const userFound = await this.searchForEmail(user.email);
         if(!userFound)
@@ -33,6 +34,9 @@ export class AuthService {
 
     async apiregisterUser(user)
     {
+        console.log('efjwevfwefwefwe')
+        console.log(user);
+        
         const newUser = new User();
         newUser.email = user.email;
         newUser.firstname = user.firstname;
@@ -60,7 +64,7 @@ export class AuthService {
         const userCorrect = await argon.verify(foundUser.password, password);
         if(!userCorrect)
             return null;
-        return foundUser;
+        return this.signToken(foundUser);
     }
 
     signToken(user: User)
@@ -68,26 +72,33 @@ export class AuthService {
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: user.id,
-            email: user.username
+            email: user.email
         }, {secret});
     }
 
     async signup(userdto: userSignUpDto)
     {
-        const pass_hash = await argon.hash(userdto.password);
 
-        const newUser = new User();
-        newUser.email = userdto.email;
-        newUser.firstname = userdto.firstname;
-        newUser.lastname = userdto.lastname;
-        newUser.username = userdto.firstname[0] + userdto.lastname;
-        newUser.password = pass_hash;
-        await this.userRepository.save(newUser);
-        const secret = this.configService.get<string>('JWT_SECRET');
-        return this.jwtService.sign({
-            id: newUser.id,
-            email: newUser.email
-        }, {secret});
+        const pass_hash = await argon.hash(userdto.password);
+        try {
+            const newUser = new User();
+            newUser.email = userdto.email;
+            newUser.firstname = userdto.firstname;
+            newUser.lastname = userdto.lastname;
+            newUser.username = userdto.firstname[0] + userdto.lastname;
+            newUser.password = pass_hash;
+            await this.userRepository.save(newUser);
+            const secret = this.configService.get<string>('JWT_SECRET');
+            return this.jwtService.sign({
+                id: newUser.id,
+                email: newUser.email
+            }, {secret});
+        }
+        catch (error)
+        {
+            console.log(error);
+            process.exit(1);
+        }
     }
     setResCookie(res: Response, token: string)
     {
