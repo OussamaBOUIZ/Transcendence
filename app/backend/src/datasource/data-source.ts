@@ -1,7 +1,7 @@
 import {User} from "src/databases/user.entity";
 import {DataSource, DataSourceOptions} from "typeorm";
-import {Inbox_user} from "../databases/inbox/inbox_user.entity";
-import {User_chat} from "../databases/userchat/userchat.entity";
+import {Inbox_user} from "../databases/inbox_user.entity";
+import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import { Achievement } from "src/databases/achievement.entity";
 import { Channel } from "src/databases/channel.entity";

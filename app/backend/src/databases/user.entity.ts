@@ -1,6 +1,6 @@
 import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
-import {Inbox_user} from "./inbox/inbox_user.entity";
-import {User_chat} from "./userchat/userchat.entity";
+import {Inbox_user} from "./inbox_user.entity";
+import {User_chat} from "./userchat.entity";
 import { Friend } from "./friend.entity";
 import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";

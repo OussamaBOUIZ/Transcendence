@@ -5,11 +5,9 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
 import {Repository} from "typeorm";
 import {MessageDto} from "../interfaces/interfaces";
-import {User_chat} from "../databases/userchat/userchat.entity";
+import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
-import {Inbox_user} from "../databases/inbox/inbox_user.entity";
-import {UserchatRepositryService} from "../databases/userchat/userchatRepositry.service";
-import {InboxRepositoryService} from "../databases/inbox/inboxRepository.service";
+import {Inbox_user} from "../databases/inbox_user.entity";
 
 @Injectable()
 export class ChatGatewayService {
@@ -21,8 +19,6 @@ export class ChatGatewayService {
 		@InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
 		@InjectRepository(Message) private messageRepository: Repository<Message>,
 		@InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
-		private readonly inboxRepositoryService: InboxRepositoryService,
-		private readonly userChatService: UserchatRepositryService,
 	) {
 	}
 
@@ -68,12 +64,16 @@ export class ChatGatewayService {
 		await this.messageRepository.save(msg)
 	}
 
-
+	async getInboxBySenderId(senderId: number, user: User) : Promise<Inbox_user | undefined> {
+		return (await this.inboxRepository.findOneBy({
+			sender_id: senderId
+		}))
+	}
 
 	async saveInbox(user: User, senderId: number, msgDto: MessageDto) {
 
 		 let inbox : Inbox_user
-		inbox = await this.inboxRepositoryService.getInboxBySenderId(senderId, user)
+		inbox = await this.getInboxBySenderId(senderId, user)
 		console.log('inbox type', inbox)
 		console.log('msgDto type', msgDto.user.userId)
 		if(inbox === null) {
@@ -93,9 +93,21 @@ export class ChatGatewayService {
 		await this.inboxRepository.save(inbox)
 	}
 
+	async getAllMessages(id: number): Promise<User_chat[] | undefined> {
+		return await this.chatRepository.find({
+			relations: {
+				messages: true
+			},
+			where : {
+				sender_id: id
+			},
+			take: 30
+		})
+	}
+
 	async loadMessage(user: User, sender: number) {
-		const receiverMsgs = await  this.userChatService.getAllMessages(user.id)
-		const sendMsgs = await this.userChatService.getAllMessages(sender)
+		const receiverMsgs = await  this.getAllMessages(user.id)
+		const sendMsgs = await this.getAllMessages(sender)
 
 		this.logger.log(sendMsgs)
 		this.logger.log(receiverMsgs)

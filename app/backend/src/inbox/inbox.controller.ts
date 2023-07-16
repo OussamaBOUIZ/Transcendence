@@ -5,7 +5,6 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {ChatGatewayService} from 'src/chat/userchat.service';
 import {User} from 'src/databases/user.entity';
 import {Repository} from 'typeorm';
-import {InboxRepositoryService} from "../databases/inbox/inboxRepository.service";
 
 
 @Controller('inbox')
@@ -13,7 +12,6 @@ export class InboxController {
     constructor(
         private readonly chatService: ChatGatewayService,
         @InjectRepository(User) private userRepository: Repository<User>,
-        private readonly inboxRepository: InboxRepositoryService,
     ) {
     }
 
@@ -25,12 +23,12 @@ export class InboxController {
     ) {
         const userFromToken = this.chatService.isValidAuthHeader(req)
         if (userFromToken === null)
-            return 'not authorized';
+            return 'Not authorized';
         const user = await this.chatService.getUserByEmail(userFromToken.email)
         const sender = await this.chatService.getUserById(id)
         if (sender === null || user === null)
             return 'user does not exist'
         console.log(sender)
-        return await this.inboxRepository.getInboxBySenderId(sender.id, user)
+        return await this.chatService.getInboxBySenderId(sender.id, user)
     }
 }

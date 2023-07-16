@@ -5,10 +5,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
 import {JwtService} from "@nestjs/jwt";
 import {WsGuard} from "../auth/socketGuard/wsGuard";
-import {User_chat} from "../databases/userchat/userchat.entity";
+import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
-import {InboxRepositoryService} from "../databases/inbox/inboxRepository.service";
-import {UserchatRepositryService} from "../databases/userchat/userchatRepositry.service";
 
 
 @Module({
@@ -25,8 +23,7 @@ import {UserchatRepositryService} from "../databases/userchat/userchatRepositry.
     controllers: [],
     providers: [
         ChatGatewayService, ChatGateway,
-        JwtService, WsGuard, InboxRepositoryService,
-        InboxRepositoryService, UserchatRepositryService
+        JwtService, WsGuard,
     ]
 })
 
