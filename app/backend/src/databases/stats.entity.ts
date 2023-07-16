@@ -4,7 +4,7 @@ import { Achievement } from "./achievement.entity"
 
 @Entity('Stats')
 export class Stats extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
     
     // unidirectional

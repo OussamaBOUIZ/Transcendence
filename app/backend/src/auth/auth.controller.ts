@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
@@ -15,6 +15,8 @@ import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
 import { LocalGuard } from './local/localguard';
 import { MailTemplate } from './MailService/mailer.service';
+import { ViewAuthFilter } from 'src/Filter/filter';
+import { exce } from './Filter/uno';
 
 @Controller('auth')
 export class AuthController {
@@ -35,12 +37,12 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(googlereq.user);
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.redirect('http://localhost:5173/home');
     }
     
     @Get('test')
     test() {
-        this.mailTemp.sendEmail();
+        // this.mailTemp.sendEmail();
     }
 
     @Get('42')
@@ -55,9 +57,9 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if(!token)
-            return res.redirect('http://localhost:5173/');
+            return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/');
+        return res.redirect('http://localhost:5173/home');
     }
 
     @Post('signin') 
@@ -70,11 +72,21 @@ export class AuthController {
     
     @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        console.log(userDto);
+        console.log(userDto)
         const token = await this.authService.signup(userDto);
         if(token === null)
             return res.status(400).send(`email already exists`);
         this.authService.setResCookie(res, token);
+        // this.mailTemp.sendEmail(userDto.email);
         return res.status(200).send('Please confirm your email, otherwise you can not join our application');
     }
+    @Get('getuser')
+    @UseGuards(JwtGuard)
+    async getuser(@Req() req: Request)
+    {
+        console.log('getuser')
+        console.log(req.cookies['access_token']);
+        return await this.authService.retUserData(req.cookies['access_token'])
+    }
+
 }

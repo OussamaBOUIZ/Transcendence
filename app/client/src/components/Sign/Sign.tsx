@@ -10,6 +10,8 @@ import Form from './SignForm'
 import SignInImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg'
 import SignUpImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg'
 
+// axios.defaults.baseURL = 'http://localhost:3000/';
+
 export default function Sign() {
 
     const [formData, setFormData] = useState({
@@ -46,32 +48,23 @@ export default function Sign() {
     function handleClick() {
         setSignX(prev => (prev === "in" ? "up" : "in"));
     }
-    
-
-    const api = axios.create({
-        baseURL: 'http://localhost:3000',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
 
     function handleSubmit() {
         const bodyResponse = SignX === "in" ? formData : formDataUp
         console.log(bodyResponse);
         const sendFormData = async () => {
         try {
-            const response = await api.post(`/api/auth/sign${SignX}`, bodyResponse);
-            // console.log("bcuasdc")
-            // window.alert(response.data);
-            <Notification message={response.data} />
+            const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
+            window.location.replace(`http://localhost:5173/home`)
         } catch (error) {
-            window.alert(error);
+            error.response.data.message === undefined ?
+            window.alert(error.response.data) : 
+            window.alert(error.response.data.message)
         }
         };
         sendFormData()
     }
-
+ 
 
     function handleAuth(props: string) {
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
@@ -90,6 +83,7 @@ export default function Sign() {
 
     return (
         <div className="main">
+            <Notification message="welcome" />
             <nav>
                 <h3>PongLogo</h3>
             </nav>

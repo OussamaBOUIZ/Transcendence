@@ -2,7 +2,7 @@ import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinCo
 
 @Entity('Friend')
 export class Friend extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column()

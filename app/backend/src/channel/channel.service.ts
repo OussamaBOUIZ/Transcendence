@@ -8,11 +8,19 @@ import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { newUserDto } from './dto/newUserDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import * as argon from 'argon2'
+import { JwtService } from '@nestjs/jwt';
+import { type } from 'os';
+import { Message } from 'src/databases/message.entity';
 
+type tokenPayload = {
+    id: number,
+    email: string
+}
 @Injectable()
 export class ChannelService {
     constructor(@InjectRepository(Channel) private channelRepo: Repository<Channel>,
-    @InjectRepository(User) private userRepo: Repository<User>) {}
+    @InjectRepository(User) private userRepo: Repository<User>,
+    private readonly jwtService: JwtService) {}
 
     async channelUpdate(channelData: channelDto)
     {
@@ -153,5 +161,17 @@ export class ChannelService {
         channelFound.channel_admins.push(promoteUser.userId);
         channelFound.channel_users = channelFound.channel_users.filter((number) => number !== promoteUser.userId);
         this.channelRepo.save(channelFound);
+    }
+    async getUserFromJwt(userToken: string)
+    {
+        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
+        const user: User = await this.userRepo.findOneBy({id: payload.id});
+        return user;
+    }
+    async storeUserMessage(userMessage: string)
+    {
+        const message: Message = new Message();
+        message.message = userMessage;
+        message.CreatedAt 
     }
 }

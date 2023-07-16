@@ -36,6 +36,7 @@
 
 // @WebSocketGateway()
 // @UseGuards(WsGuard)
+// @UseFilter()
 // export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 //     @WebSocketServer() server: Server;
 //     private readonly logger: Logger;

@@ -6,16 +6,20 @@ import * as fs from 'fs'
 export class MailTemplate {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendEmail() {
-    const from: string = 'issamjmari098@gmail.com';
-    const to: string = 'oussamabouizgarne861@gmail.com';
-    const subject: string = 'greetings';
-    const htmlfile = fs.readFileSync('/Users/ijmari/Desktop/Transcendence/src/auth/htmlSources/file.html');
+  async sendEmail(toUser: string) {
+    const from: string = 'transcendenceproject2023@gmail.com';
+    const to: string = toUser;
+    const subject: string = 'Email confirmation';
+    const htmlfile = fs.readFileSync('/home/ijmari/Desktop/Transcendence/app/backend/src/auth/htmlSources/file.html', 'utf-8');
+    console.log(`to ${process.env.MAIL_USER}`);
+    console.log(`to ${process.env.MAIL_PASS}`);
+    console.log(`to ${subject}`);
     const v = await this.mailerService.sendMail({
       from, 
       to,
       subject,
       html: htmlfile
     });
+    console.log('HERE');
   }
 }
