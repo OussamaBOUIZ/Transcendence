@@ -1,10 +1,10 @@
 import {
-    OnGatewayConnection,
-    OnGatewayDisconnect,
-    OnGatewayInit,
-    SubscribeMessage,
-    WebSocketGateway,
-    WebSocketServer
+	OnGatewayConnection,
+	OnGatewayDisconnect,
+	OnGatewayInit,
+	SubscribeMessage,
+	WebSocketGateway,
+	WebSocketServer
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
 import {ChatGatewayService} from "./userchat.service"
@@ -36,88 +36,76 @@ import {MessageDto} from "../interfaces/interfaces";
 @WebSocketGateway()
 @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-    @WebSocketServer() server: Server;
-    private readonly logger: Logger;
+	@WebSocketServer() server: Server;
+	private readonly logger: Logger;
 
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-        private chatGatewayService: ChatGatewayService,
-        // private readonly jwt: JwtService,
-        private readonly configService: ConfigService
-    ) {
-        this.logger = new Logger(ChatGateway.name);
-    }
+	constructor(
+		@InjectRepository(User) private userRepository: Repository<User>,
+		private chatGatewayService: ChatGatewayService,
+		// private readonly jwt: JwtService,
+		private readonly configService: ConfigService
+	) {
+		this.logger = new Logger(ChatGateway.name);
+	}
 
-    // @SubscribeMessage('message')
-    // async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
-    //     let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
-    //     if (!user)
-    //         this.logger.log('todo handle if not exist!!')
-    //
-    // }
+	// @SubscribeMessage('message')
+	// async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
+	//     let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
+	//     if (!user)
+	//         this.logger.log('todo handle if not exist!!')
+	//
+	// }
 
-    @SubscribeMessage('SendMessage')
-    async sendMessage(socket: Socket, messageDto: MessageDto) {
-        const receiver = await this.chatGatewayService.getUserById(messageDto.user.userId)
-        if (receiver === null)
-            console.log('TODO : handle if the receiver not exist')
-        this.logger.log({receiver})
-        this.logger.log(socket.data.user.email)
-        // find the sender by email
+	@SubscribeMessage('SendMessage')
+	async sendMessage(socket: Socket, messageDto: MessageDto) {
+		const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
+		this.server.to(socketId).emit("message", messageDto.message)
+	}
 
-        const user = await this.userRepository.findOneBy({email: socket.data.user.email})
-        if (user === null)
-            return 'todo handle not authorized'
-        await this.chatGatewayService.saveMessage(messageDto, receiver, user.id)
-        // save the last message in inbox table
-        await this.chatGatewayService.saveInbox(receiver, user.id, messageDto)
-        this.server.to(receiver.socketId).emit("message", messageDto.message)
-    }
+	@SubscribeMessage('loadMessages')
+	async allMessages(socket: Socket, data: MessageDto) {
+		const receiver = await this.chatGatewayService.getUserById(data.user.userId)
+		if (typeof receiver === undefined)
+			console.log('todo: handle if the receiver not exist')
 
-    @SubscribeMessage('loadMessages')
-    async allMessages(socket: Socket, data: MessageDto) {
-        const receiver = await this.chatGatewayService.getUserById(data.user.userId)
-        if (typeof receiver === undefined)
-            console.log('todo: handle if the receiver not exist')
+		const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
+		if (typeof db_user === undefined)
+			console.log('todo: handle if the receiver not exist')
+		return await this.chatGatewayService.loadMessage(db_user, receiver.id)
+	}
 
-        const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-        if (typeof db_user === undefined)
-            console.log('todo: handle if the receiver not exist')
-        return await this.chatGatewayService.loadMessage(db_user, receiver.id)
-    }
+	afterInit(client: Socket) {
+		client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
+		console.log('after init called')
+	}
 
-    afterInit(client: Socket) {
-        client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
-        console.log('after init called')
-    }
-
-    async handleConnection(client: Socket) {
-        this.logger.log('On Connection')
-        const {authorization} = client.handshake.headers;
-        let user: User
-        const userFromJwt = this.chatGatewayService.getUserFromJwt(authorization)
-        user = await this.userRepository.findOneBy({email: userFromJwt.email})
-        if (user) {
-            user.socketId = client.id
-        } else {
-            user = new User()
-            user.email = userFromJwt.email
-            user.socketId = client.id;
-        }
-        user.status = 'Online'
-        await this.userRepository.save(user)
-    }
+	async handleConnection(client: Socket) {
+		this.logger.log('On Connection')
+		const {authorization} = client.handshake.headers;
+		let user: User
+		const userFromJwt = this.chatGatewayService.getUserFromJwt(authorization)
+		user = await this.userRepository.findOneBy({email: userFromJwt.email})
+		if (user) {
+			user.socketId = client.id
+		} else {
+			user = new User()
+			user.email = userFromJwt.email
+			user.socketId = client.id;
+		}
+		user.status = 'Online'
+		await this.userRepository.save(user)
+	}
 
 
-    async handleDisconnect(client: Socket) {
-        const jwtUser = this.chatGatewayService.getUserFromJwt(client.handshake.headers.authorization)
-        console.log(jwtUser)
-        const user = await this.chatGatewayService.getUserByEmail(jwtUser.email)
-        if (user == null)
-            this.logger.log('user not exist in DB : handle disconnect')
-        user.status = 'Offline'
-        await this.userRepository.save(user)
-        this.logger.log('On Disconnect')
-    }
+	async handleDisconnect(client: Socket) {
+		const jwtUser = this.chatGatewayService.getUserFromJwt(client.handshake.headers.authorization)
+		console.log(jwtUser)
+		const user = await this.chatGatewayService.getUserByEmail(jwtUser.email)
+		if (user == null)
+			this.logger.log('user not exist in DB : handle disconnect')
+		user.status = 'Offline'
+		await this.userRepository.save(user)
+		this.logger.log('On Disconnect')
+	}
 }
 

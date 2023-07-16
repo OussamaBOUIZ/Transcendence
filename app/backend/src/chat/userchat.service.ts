@@ -8,120 +8,160 @@ import {MessageDto} from "../interfaces/interfaces";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {Inbox_user} from "../databases/inbox_user.entity";
+import {Status} from "../interfaces/enums";
+import {Socket} from "socket.io";
 
 @Injectable()
 export class ChatGatewayService {
 
-	constructor(
-		private readonly jwt: JwtService,
-		private readonly configService: ConfigService,
-		@InjectRepository(User) private userRepository: Repository<User>,
-		@InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
-		@InjectRepository(Message) private messageRepository: Repository<Message>,
-		@InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
-	) {
-	}
+    0
+    private logger = new Logger(ChatGatewayService.name)
 
-	private logger = new Logger(ChatGatewayService.name)
+    constructor(
+        private readonly jwt: JwtService,
+        private readonly configService: ConfigService,
+        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
+        @InjectRepository(Message) private messageRepository: Repository<Message>,
+        @InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
+    ) {
+    }
 
-	isValidAuthHeader(authorization: string) {
-		const token: string = authorization.split(' ')[1];
-		return this.jwt.verify(token, {
-			secret: this.configService.get('JWT_SECRET')
-		});
-	}
+    isValidAuthHeader(authorization: string) {
+        const token: string = authorization.split(' ')[1];
+        return this.jwt.verify(token, {
+            secret: this.configService.get('JWT_SECRET')
+        });
+    }
 
-	getUserFromJwt(authorization: string) {
-		const token: string = authorization.split(' ')[1];
-		return this.jwt.verify(token, {
-			secret: this.configService.get('JWT_SECRET')
-		});
-	}
-	async getUserByEmail(email: string) {
-		return await this.userRepository.findOneBy({email: email})
-	}
+    getUserFromJwt(authorization: string) {
+        const token: string = authorization.split(' ')[1];
+        return this.jwt.verify(token, {
+            secret: this.configService.get('JWT_SECRET')
+        });
+    }
 
-	async getUserById(Id: number) {
-		return await this.userRepository.findOneBy({id: Id})
-	}
+    async getUserByEmail(email: string) {
+        return await this.userRepository.findOneBy({email: email})
+    }
 
-	// async getMessages(user: User) {
-	//
-	// }
+    // async getMessages(user: User) {
+    //
+    // }
 
-	async saveMessage(dto: MessageDto, user: User, sender: number) {
-		const user_chat = new User_chat()
-		const msg = new Message()
+    async getUserById(Id: number) {
+        return await this.userRepository.findOneBy({id: Id})
+    }
 
-		user_chat.sender_id = sender
-		user_chat.user = user
+    async saveMessage(dto: MessageDto, user: User, sender: number) {
+        const user_chat = new User_chat()
+        const msg = new Message()
 
-		await this.chatRepository.save(user_chat)
+        user_chat.sender_id = sender
+        user_chat.user = user
 
-		msg.message = dto.message
-		msg.CreatedAt = dto.timeSent
-		msg.user_chat = user_chat
-		await this.messageRepository.save(msg)
-	}
+        await this.chatRepository.save(user_chat)
 
-	async getInboxBySenderId(authorId: number, user: User) : Promise<Inbox_user[]> {
-		const author  = await this.userRepository.findOne({
-			relations: {
-				inbox_users: true
-			},
-			where: {
-				id: authorId,
+        msg.message = dto.message
+        msg.CreatedAt = dto.timeSent
+        msg.user_chat = user_chat
+        await this.messageRepository.save(msg)
+    }
 
-			}
-		})
+    async processMessage(socket: Socket, messageDto: MessageDto) {
+        const receiver = await this.getUserById(messageDto.user.userId)
+        if (receiver === null)
+            console.log('TODO : handle if the receiver not exist')
+        this.logger.log({receiver})
+        this.logger.log(socket.data.user.email)
+        // find the sender by email
 
-		return author.inbox_users
-	}
+        this.logger.log(socket.data.user.email)
+        const author = await this.userRepository.findOneBy({email: socket.data.user.email})
+        if (author === null)
+            return 'todo handle not authorized'
+        await this.saveMessage(messageDto, receiver, author.id)
+        // check status of receiver
+        // save the last message in inbox table
+        await this.saveInbox(receiver, author.id, messageDto)
+        return receiver.socketId
+    }
+    async getInboxBySenderId(senderid: number, receiver: User): Promise<Inbox_user> {
+        const tmp = await this.inboxRepository.findOne({
+            relations: {
+                user: true
+            },
+            where: {
+                sender_id: senderid,
+                user: {
+                    id: receiver.id
+                }
+            }
+        })
 
-	async saveInbox(user: User, senderId: number, msgDto: MessageDto) {
+        console.log(tmp)
 
-		 let inbox : Inbox_user
-		inbox = await this.getInboxBySenderId(senderId, user)
-		console.log('inbox type', inbox)
-		console.log('msgDto type', msgDto.user.userId)
-		if(inbox === null) {
-			inbox = new Inbox_user()
-			inbox.sender_id = senderId; // id of the receiver
-			inbox.lastMessage = msgDto.message;
-			inbox.CreatedAt = msgDto.timeSent
-			inbox.unseenMessages = 0
-			inbox.user = user;
-		}
-		else {
-			inbox.lastMessage = msgDto.message
-			inbox.CreatedAt = msgDto.timeSent
-			if (inbox.unseenMessages != 0)
-				inbox.unseenMessages += 1;
-		}
-		await this.inboxRepository.save(inbox)
-	}
+        return tmp;
+      /*  const author = await this.userRepository.findOne({
+            relations: {
+                inbox_users: true
+            },
+            where: {
+                id: receiver.id,
+                inbox_users: {
+                   sender_id: senderid
+                }
+            },
+`
+        })
+        console.log(author.inbox_users)
+        return author.inbox_users*/
+    }
 
-	async getAllMessages(id: number): Promise<User_chat[] | undefined> {
-		return await this.chatRepository.find({
-			relations: {
-				messages: true
-			},
-			where : {
-				sender_id: id
-			},
-			take: 30
-		})
-	}
+    async saveInbox(receiver: User, senderId: number, msgDto: MessageDto) {
+        let inbox: Inbox_user
+        console.log(receiver)
+        inbox = await this.getInboxBySenderId(senderId, receiver)
+        console.log('inbox:', inbox)
+        console.log('senderId: ', senderId)
+        if (inbox === undefined || inbox === null) {
+            inbox = new Inbox_user()
+            inbox.sender_id = senderId; // id of the receiver
+            inbox.lastMessage = msgDto.message;
+            inbox.CreatedAt = msgDto.timeSent
+            inbox.user = receiver;
+        } else {
+            inbox.lastMessage = msgDto.message
+            inbox.CreatedAt = msgDto.timeSent
+        }
+        // I assume that the receiver is on chat page
+        if (receiver.status != Status.Online)
+            inbox.unseenMessages = 0
+        else
+            inbox.unseenMessages += 1
+        await this.inboxRepository.save(inbox)
+    }
 
-	async loadMessage(user: User, sender: number) {
-		const receiverMsgs = await  this.getAllMessages(user.id)
-		const sendMsgs = await this.getAllMessages(sender)
 
-		this.logger.log(sendMsgs)
-		this.logger.log(receiverMsgs)
-	}
+    async getAllMessages(id: number): Promise<User_chat[] | undefined> {
+        return await this.chatRepository.find({
+            relations: {
+                messages: true
+            },
+            where: {
+                sender_id: id
+            },
+            take: 30
+        })
+    }
 
+    async loadMessage(user: User, sender: number) {
+        const receiverMsgs = await this.getAllMessages(user.id)
+        const sendMsgs = await this.getAllMessages(sender)
 
+        this.logger.log(sendMsgs)
+        this.logger.log(receiverMsgs)
+    }
 
 
 }
