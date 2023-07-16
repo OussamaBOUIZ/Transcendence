@@ -10,14 +10,16 @@ export class MailTemplate {
     const from: string = 'transcendenceproject2023@gmail.com';
     const to: string = toUser;
     const subject: string = 'Email confirmation';
-    const htmlfile = fs.readFileSync('/Users/ijmari/Desktop/Transcendence/src/auth/htmlSources/file.html');
-    console.log('YES');
+    const htmlfile = fs.readFileSync('/home/ijmari/Desktop/Transcendence/app/backend/src/auth/htmlSources/file.html', 'utf-8');
+    console.log(`to ${process.env.MAIL_USER}`);
+    console.log(`to ${process.env.MAIL_PASS}`);
+    console.log(`to ${subject}`);
     const v = await this.mailerService.sendMail({
       from, 
       to,
       subject,
       html: htmlfile
     });
-    console.log(v);
+    console.log('HERE');
   }
 }

@@ -12,11 +12,10 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         console.log(`Init gateway`)
     }
 
-    handleConnection(client: Socket) {
-        // const authToken: string = client.handshake.headers.authorization;
-        // const user = this.channelservice.getUserFromJwt(authToken);
-        console.log(client.id);
-        
+    async handleConnection(client: Socket) {
+        const authToken: string = client.handshake.headers.authorization;
+        const user = await this.channelservice.getUserFromJwt(authToken);
+        user.socketId = client.id;
     }
 
 
@@ -35,4 +34,3 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
 }
-
