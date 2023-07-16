@@ -48,16 +48,25 @@ export default function Sign() {
     }
     
 
+    const api = axios.create({
+        baseURL: 'http://localhost:3000',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+
     function handleSubmit() {
         const bodyResponse = SignX === "in" ? formData : formDataUp
         console.log(bodyResponse);
         const sendFormData = async () => {
         try {
-            const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            window.alert(response.data);
-            // <Notification message={response.data} />
+            const response = await api.post(`/api/auth/sign${SignX}`, bodyResponse);
+            // console.log("bcuasdc")
+            // window.alert(response.data);
+            <Notification message={response.data} />
         } catch (error) {
-            window.alert(error.response.data);
+            window.alert(error);
         }
         };
         sendFormData()
@@ -78,21 +87,9 @@ export default function Sign() {
                             <button className='btn btn-42'onClick={() => handleAuth("42")}><img src={logo42} alt="" /> Sign in with 42 Netowrk</button>
                         </div>
 
-    const [isVisible, setIsVisible] = useState(true);
-
-    useEffect(() => {
-    const timer = setTimeout(() => {
-        setIsVisible(false);
-    }, 5000); // Hide the element after 5 seconds (5000 milliseconds)
-
-    return () => {
-        clearTimeout(timer); // Clear the timer if the component unmounts before the timeout
-    };
-    }, []);
 
     return (
         <div className="main">
-            {isVisible && <Notification message={"Welcome"} />}
             <nav>
                 <h3>PongLogo</h3>
             </nav>
