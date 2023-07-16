@@ -64,10 +64,18 @@ export class ChatGatewayService {
 		await this.messageRepository.save(msg)
 	}
 
-	async getInboxBySenderId(senderId: number, user: User) : Promise<Inbox_user | undefined> {
-		return (await this.inboxRepository.findOneBy({
-			sender_id: senderId
-		}))
+	async getInboxBySenderId(authorId: number, user: User) : Promise<Inbox_user[]> {
+		const author  = await this.userRepository.findOne({
+			relations: {
+				inbox_users: true
+			},
+			where: {
+				id: authorId,
+
+			}
+		})
+
+		return author.inbox_users
 	}
 
 	async saveInbox(user: User, senderId: number, msgDto: MessageDto) {

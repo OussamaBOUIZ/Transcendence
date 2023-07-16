@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Module, ValidationPipe} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatGatewayService } from 'src/chat/userchat.service';
 import { ChatGatewayModule } from 'src/chat/userchat.module';
@@ -12,10 +12,14 @@ import { WsGuard } from 'src/auth/socketGuard/wsGuard';
 import { User_chat } from 'src/databases/userchat.entity';
 import { Message } from 'src/databases/message.entity';
 import { Inbox_user } from 'src/databases/inbox_user.entity';
+import {APP_PIPE} from "@nestjs/core";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user])],
   controllers: [InboxController],
-  providers: [InboxService, ChatGatewayService, ChatGateway, JwtService],
+  providers: [InboxService, ChatGatewayService, ChatGateway, JwtService,  {
+    provide: APP_PIPE,
+    useClass: ValidationPipe,
+  }],
 })
 export class InboxModule {}
