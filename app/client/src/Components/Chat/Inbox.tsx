@@ -1,10 +1,9 @@
 import React from 'react'
 import MessageOverview from './MessageOverview';
-
+import { nanoid } from 'nanoid';
 
 export default function Inbox () {
     const initState = false;
-
     return (
         <div>
             <section className="inbox">
@@ -23,6 +22,7 @@ export default function Inbox () {
                         </p>
                     </aside>
                 }
+                <MessageOverview />
                 <MessageOverview />
                 <MessageOverview current={true}/>
                 <MessageOverview />

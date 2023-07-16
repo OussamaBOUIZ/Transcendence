@@ -19,6 +19,13 @@ div.chat_container {
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
+    &.dm_case {
+        grid-template-areas: 
+        "a a a h h h h h h h h h o o o"
+        "l l l m m m m m m m m m o o o"
+        "l l l i i i i i i i i i o o o"
+    ;   
+    }
     section.chat_account {
         grid-area: a;
         display: flex;
@@ -121,6 +128,36 @@ div.chat_container {
                     border-left: 3px solid $border-color;
                 }
             }
+        }
+    }
+    header.chat_header {
+        grid-area: h;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // background-color: red;
+        padding: 10px 25px;
+        border-bottom: .5px solid $border-color;
+        figure {
+            display: flex;
+            img {
+                @include avatar-styling;
+            }
+            figcaption {
+                margin-left: 20px;
+                p {
+                    font-size: 12px;
+                    font-weight: 200;
+                    margin-top: 5px;
+                }
+            }
+        }
+        button {
+            @include primary-button;
+
+            font-size: 16px;
+            padding: 10px 20px;
+            display: inline-block;
         }
     }
     div.chat_main.chat_main_init {
@@ -275,6 +312,30 @@ div.chat_container {
                         margin-right: 15px;
                     }
                 }
+            }
+        }
+    }
+    form.chat_input {
+        grid-area: i;
+        background-color: red;
+        border-top: 0.5px solid #F7BAF8;
+background: #3D1764;
+        @include center-styles;
+        // justify-content: space-around;
+        input {
+            border-radius: 5px;
+            &[type="text"] {
+                    width: 80%;
+                    padding: 8px 10px;
+                    background: #643D7F;
+                &::placeholder {
+                    color : $text-light-color;
+                }
+            }
+            &[type="submit"]{
+                padding: 8px 20px;
+                margin-left: 10px;
+                background: #E62FD0;
             }
         }
     }

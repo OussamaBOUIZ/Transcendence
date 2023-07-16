@@ -24,3 +24,10 @@
     background: $primary-pink;
     box-shadow: 0px 0px 20px 0px #E62FD0;
 }
+
+
+@mixin avatar-styling {
+    height: 60px;
+    width: 60px;
+    border-radius: 100%;
+}
