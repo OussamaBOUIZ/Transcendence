@@ -4,7 +4,7 @@ import { Channel } from "./channel.entity";
 
 @Entity('Message')
 export class Message extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @ManyToOne(() => User_chat, (user_chat) => user_chat.messages)

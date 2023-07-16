@@ -9,7 +9,7 @@ import { Stats } from "./stats.entity";
 
 @Entity('User')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({nullable: true})
@@ -32,6 +32,9 @@ export class User extends BaseEntity {
 
     @Column({unique: true, nullable: true})
     email: string
+
+    @Column({ type: 'boolean', default: false })
+    isEmailComfirmed: boolean
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean

@@ -28,7 +28,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     messageSend(@MessageBody() message: any, client: Socket, channelName: string)
     {
         
-        this.server.emit('onMessage', {
+        this.server.emit('school channel', {
             msg: 'new message',
             content: message
         });

@@ -15,18 +15,15 @@ export default function Home() {
 
     useEffect(() => {
         const getUserData = async () => {
-                    const response = await axios.get("/api/auth/getuser");
-                    setUserData(response.data);
-                console.log('AAAAAAAAAAAAAAAAAAAA');
-                console.log(response.data)
-                console.log('AAAAAAAAAAAAAAAAAAA');
+            const response = await axios.get("/api/auth/getuser");
+            setUserData(response.data);
         }
         getUserData()
     }, [])
 
     return (
         <div className="welcome">
-            <h1>Hi {UserDataa.username}</h1>
+            <h1>Hi {UserData.username} with id {UserData.id} and name {UserData.firstname} </h1>
             <h3 className="hd">Welcome to your Home</h3>
         </div>
     )

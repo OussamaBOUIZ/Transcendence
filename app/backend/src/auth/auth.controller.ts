@@ -40,7 +40,7 @@ export class AuthController {
     
     @Get('test')
     test() {
-        this.mailTemp.sendEmail();
+        // this.mailTemp.sendEmail();
     }
 
     @Get('42')
@@ -70,18 +70,18 @@ export class AuthController {
     
     @Post('signup')
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        console.log(userDto);
+        console.log('YESSSSSS')
         const token = await this.authService.signup(userDto);
         if(token === null)
             return res.status(400).send(`email already exists`);
-        this.authService.setResCookie(res, token);
+        this.mailTemp.sendEmail(userDto.email);
         return res.status(200).send('Please confirm your email, otherwise you can not join our application');
     }
     @Get('getuser')
     @UseGuards(JwtGuard)
     async getuser(@Req() req: Request)
     {
-        return await this.authService.retUserData(req.cookies['access_token']);   
+        return await this.authService.retUserData(req.cookies['access_token'])
     }
 
 }

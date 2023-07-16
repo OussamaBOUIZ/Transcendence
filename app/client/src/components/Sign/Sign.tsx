@@ -45,17 +45,26 @@ export default function Sign() {
     function handleClick() {
         setSignX(prev => (prev === "in" ? "up" : "in"));
     }
-    
+    const axiosInstance = axios.create({
+        baseURL: "http://localhost:3000",
+      });
+      console.log('BEFOOORE:')
+      console.log(axiosInstance.defaults)
 
     function handleSubmit() {
         const bodyResponse = SignX === "in" ? formData : formDataUp
         console.log(bodyResponse);
         const sendFormData = async () => {
         try {
-            const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            window.alert(response.data);
+            console.log(`location host is ${location.host}`);
+            console.log('AFTER:')
+            console.log(axiosInstance.defaults)
+            const response = await axiosInstance.post(`/api/auth/sign${SignX}`, bodyResponse);
+            console.log(response);
+            window.alert(response.data)
+           
         } catch (error) {
-            window.alert(error.response.data);
+            window.alert(error.data);
         }
         };
         sendFormData()

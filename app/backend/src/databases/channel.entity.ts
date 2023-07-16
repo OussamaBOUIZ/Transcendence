@@ -4,7 +4,7 @@ import { Message } from "./message.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({unique: true})
