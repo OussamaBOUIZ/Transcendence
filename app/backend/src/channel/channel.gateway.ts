@@ -1,6 +1,7 @@
 import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import {Server, Socket} from "socket.io"
 import { ChannelService } from "./channel.service";
+import { Message } from "src/databases/message.entity";
 
 @WebSocketGateway()
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -24,10 +25,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     @SubscribeMessage('channelMessage')
-    messageSend(@MessageBody() message: any, client: Socket, channelName: string)
+    messageSend(@MessageBody() newMessage: any, client: Socket, channelName: string)
     {
+        const message: Message = new Message();
         
-        this.server.emit('school channel', {
+        this.server.emit('sendMessage', {
             msg: 'new message',
             content: message
         });

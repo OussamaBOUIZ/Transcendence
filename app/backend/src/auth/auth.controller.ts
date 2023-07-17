@@ -57,6 +57,7 @@ export class AuthController {
         if(!token)
             return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
+        console.log('YES');
         return res.redirect('http://localhost:5173/home');
     }
 
