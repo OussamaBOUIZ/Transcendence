@@ -90,23 +90,33 @@ export class ChannelService {
         else
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
-    async addToPublicChannel(newUser: newUserDto)
+    async addToChannel(newUser: newUserDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
-        if(!channelFound)
-            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!channelFound.channel_users)
-            channelFound.channel_users = [];
-        if(channelFound.channel_users.includes(newUser.channelNewUser))
-            throw new HttpException('conflict', HttpStatus.CONFLICT);
-        if(!channelFound.channel_owners.includes(newUser.channelNewUser)
-        && !channelFound.channel_admins.includes(newUser.channelNewUser))
+        if(channelFound.channel_type === 'public')
         {
+            if(!channelFound.channel_users)
+                channelFound.channel_users = [];
             channelFound.channel_users.push(newUser.channelNewUser);
-            this.channelRepo.save(channelFound);
         }
-        else
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        if(channelFound.channel_type === 'protected')
+        {
+            if(!channelFound.channel_users)
+                channelFound.channel_users = [];
+            if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
+                return null;
+            channelFound.channel_users.push(newUser.channelNewUser);
+        }
+        this.channelRepo.save(channelFound);
+        return await this.channelRepo.find({
+            relations: {
+                messages: true
+            },
+            where: {
+                channel_name: newUser.channelName
+            },
+            take: 30
+        });
     }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
@@ -168,10 +178,14 @@ export class ChannelService {
         const user: User = await this.userRepo.findOneBy({id: payload.id});
         return user;
     }
-    async storeUserMessage(userMessage: string)
+    async storeChannelMessage(userMessage: string, channelName: string)
     {
-        const message: Message = new Message();
-        message.message = userMessage;
-        message.CreatedAt 
+        const newMessage: Message = new Message();
+        newMessage.message = userMessage;
+        const channel: Channel = await this.channelRepo.findOneBy({channel_name: channelName});
+        if(!channel.messages)
+            channel.messages = [];
+        channel.messages.push(newMessage);
+        this.channelRepo.save(channel);
     }
 }

@@ -27,20 +27,6 @@ export class ChannelController {
         this.channelservice.setChannelAdmin(channelAdminData);
         return res.status(HttpStatus.CREATED).send('new channel admin was set');
     }
-    @Post('adduser')
-    async addChannelUser(@Body() addedUserData: newUserDto, @Res() res: Response) 
-    {
-        if(addedUserData.channelType === 'protected')
-        {
-            await this.channelservice.addToProtectedChannel(addedUserData);
-            return res.status(HttpStatus.CREATED).send('new channel user was set');
-        }
-        if(addedUserData.channelType === 'public')
-        {
-            await this.channelservice.addToPublicChannel(addedUserData);
-            return res.status(HttpStatus.CREATED).send('new channel user was set');
-        }
-    }
     @Post('kickuser')
     async kickUserFromChannel(@Body() userKick: UserOperationDto, @Res() res: Response)
     {

@@ -51,6 +51,7 @@ export default function Sign() {
     }
 
     function handleSubmit() {
+        sessionStorage.setItem('i')
         setNotif("")
         const bodyResponse = SignX === "in" ? formData : formDataUp
         const sendFormData = async () => {
