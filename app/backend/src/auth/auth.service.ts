@@ -39,8 +39,6 @@ export class AuthService {
 
     async apiregisterUser(user)
     {
-        console.log('efjwevfwefwefwe')
-        console.log(user);
         
         const newUser = new User();
         newUser.email = user.email;

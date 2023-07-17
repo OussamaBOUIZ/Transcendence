@@ -58,7 +58,6 @@ export default function Sign() {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
             setNotif(error.response.data)
         } catch (error) {
-            console.log(typeof error.response.data);
             error.response.data.message === undefined ?
             setNotif(error.response.data) : 
             setNotif(error.response.data.message)

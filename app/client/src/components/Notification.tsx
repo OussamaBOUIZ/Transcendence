@@ -4,7 +4,6 @@ import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
 
 export default function Notification({ message }) {
-	console.log(message)
 
 	const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
@@ -12,7 +11,6 @@ export default function Notification({ message }) {
     const roundTimeBarDiv = document.querySelector('.round-time-bar div')
 
     const handleAnimationEnd = () => {
-		console.log("YES")
       setIsAnimationFinished(true)
     };
 
@@ -29,12 +27,10 @@ export default function Notification({ message }) {
 				<div className="rectangle">
 					<div className="notification-text">
 						< BsFillInfoCircleFill />
-						{/* if (typeof message === "object") {
-							for (auto m: message) (
-
-							)
-						} */}
-						{message}
+						{
+							message.length === 1 ? <p>{message}</p> :
+							<p>form is incorrect</p>
+						}
 					</div>
 				</div>
 				<div className="round-time-bar" data-style="smooth" style={{ '--duration': 6 }}>

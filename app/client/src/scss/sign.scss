@@ -143,17 +143,8 @@ body {
                 font-size: clamp(0.9rem, 0.9vw, 1.1rem);
                 font-weight: 500;
                 span {
+                    // font-size: clamp(0.7rem, 0.9vw, 0.85rem);
                     font-weight: 500;
-                }
-            }
-            .submit:hover {
-                transform: scale(0.9);
-                overflow: hidden;
-                animation: scale-up-center 0.4s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-            }
-            @keyframes scale-up-center {
-                100% {
-                        transform: scale(1);
                 }
             }
   
