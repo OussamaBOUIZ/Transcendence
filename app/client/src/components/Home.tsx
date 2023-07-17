@@ -14,9 +14,17 @@ export default function Home() {
     })
 
     useEffect(() => {
+        console.log("here")
         const getUserData = async () => {
-            const response = await axios.get("/api/auth/getuser");
-            setUserData(response.data);
+            try {
+                const response = await axios.get("/api/auth/getuser");
+                console.log(response.data)
+                setUserData(response.data);
+            }
+            catch (error) {
+                console.log(error)
+            }
+
         }
         getUserData()
     }, [])

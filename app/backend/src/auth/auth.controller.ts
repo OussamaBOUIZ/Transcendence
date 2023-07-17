@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
@@ -15,6 +15,8 @@ import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
 import { LocalGuard } from './local/localguard';
 import { MailTemplate } from './MailService/mailer.service';
+import { ViewAuthFilter } from 'src/Filter/filter';
+import { FormCheck } from './Filter/uno';
 
 @Controller('auth')
 export class AuthController {
@@ -70,11 +72,12 @@ export class AuthController {
     }
     
     @Post('signup')
+    // @UseFilters(FormCheck)
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        console.log('YESSSSSS')
-        const token = await this.authService.signup(userDto);
-        if(token === null)
-            return res.status(400).send(`email already exists`);
+        // const token = await this.authService.signup(userDto);
+        // if(token === null)
+        //     return res.status(400).send(`email already exists`);
+        // this.authService.setResCookie(res, token);
         this.mailTemp.sendEmail(userDto.email);
         return res.status(200).send('Please confirm your email, otherwise you can not join our application');
     }
@@ -84,5 +87,4 @@ export class AuthController {
     {
         return await this.authService.retUserData(req.cookies['access_token'])
     }
-
 }
