@@ -10,8 +10,15 @@ import {
    import { UnauthorizedException } from '@nestjs/common';
       
    @Catch(BadRequestException)
-   export class exce implements ExceptionFilter {
+   export class FormCheck implements ExceptionFilter {
      catch(exception: HttpException, host: ArgumentsHost) {
+      const ctx = host.switchToHttp();
+      const response = ctx.getResponse<Response>();
+      const status = exception.getStatus();
+      const str: string = exception.getResponse().toString();
+      // const res = JSON.parse(str);
+      console.log(str);
+      return response.status(status).send(exception.message);
      }
    }
    

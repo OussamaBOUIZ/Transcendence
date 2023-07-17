@@ -4,19 +4,27 @@ body {
 }
 
 .main {
+    // background: red;
     display: flex;
+    width: 100%;
     height: 100vh;
+    flex-wrap: wrap;
+    gap: 0.01em;
+    position: relactive;
     nav {
         // background: red;
         position: absolute;
-        margin-left: 3.75rem;
-        margin-top: 2.938rem;
+        left: 5%;
+        top: 2.5%;
     }
     .content {
+        // background: red;
         display: flex;
         justify-content: center;
         width: 50%;
         height: 100%;
+        flex-basis: 450px;
+        flex-grow: 999999;
         .container {
             display: flex;
             flex-direction: column;
@@ -25,6 +33,7 @@ body {
             width: 50%;
             height: 100%;
             max-width: 30rem;
+            min-width: 300px;
             .welcome {
                 // background: green;
                 display: flex;
@@ -32,11 +41,15 @@ body {
                 align-items: center;
                 width: 100%;
                 .hd {
+                    // background: red;
+                    text-align: center;
                     font-weight: 600;
                     margin-top: 0rem;
                     margin-bottom: 0rem;
                 }
                 .pr {
+                    // background: yellow;
+                    text-align: center;
                     font-weight: 300;
                     margin-top: 0rem;
                 }
@@ -63,7 +76,7 @@ body {
                         border-radius: 0.625rem;
                         border: 1.5px solid #D3CCCC;
                         min-height: 4.625em;
-                        font-size: 0.75rem;
+                        font-size: clamp(0.7rem, 0.9vw, 0.85rem);
                         cursor: pointer;
                         img {
                             width: 1.6875em;
@@ -113,7 +126,7 @@ body {
             .forget {
                 cursor: pointer;
                 color: #D11EA7;
-                font-size: 0.75rem;
+                font-size: clamp(0.7rem, 0.9vw, 0.8rem);
                 font-weight: 500;
                 display: flex;
                 justify-content: flex-end;
@@ -127,11 +140,23 @@ body {
                 border: none;
                 height: 3.1rem;
                 color: white;
+                font-size: clamp(0.9rem, 0.9vw, 1.1rem);
                 font-weight: 500;
                 span {
                     font-weight: 500;
                 }
             }
+            .submit:hover {
+                transform: scale(0.9);
+                overflow: hidden;
+                animation: scale-up-center 0.4s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+            }
+            @keyframes scale-up-center {
+                100% {
+                        transform: scale(1);
+                }
+            }
+  
             .signUp {
                 display: flex;
                 justify-content: center;
@@ -146,6 +171,8 @@ body {
         }
     }
     .cover {
+        flex-basis: 50vw;
+        flex-grow: 1;
         width: 50%;
         height: 100vh;
         background-position: 50%;

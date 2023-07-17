@@ -4,6 +4,7 @@ import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
 
 export default function Notification({ message }) {
+	console.log(message)
 
 	const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
@@ -28,6 +29,11 @@ export default function Notification({ message }) {
 				<div className="rectangle">
 					<div className="notification-text">
 						< BsFillInfoCircleFill />
+						{/* if (typeof message === "object") {
+							for (auto m: message) (
+
+							)
+						} */}
 						{message}
 					</div>
 				</div>

@@ -1,6 +1,7 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
 import axios from 'axios'
+// import ButtonPlay from './ButtonPlay'
 import Notification from "../Notification"
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
@@ -9,8 +10,6 @@ import logo42 from "../../Assets/Icons/42Logo.png"
 import Form from './SignForm'
 import SignInImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg'
 import SignUpImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg'
-
-// axios.defaults.baseURL = 'http://localhost:3000/';
 
 export default function Sign() {
 
@@ -25,6 +24,8 @@ export default function Sign() {
         email: "",
         password: ""
     })
+
+    const [notif, setNotif] = useState("")
 
     const [SignX, setSignX] = useState("in")
 
@@ -50,21 +51,21 @@ export default function Sign() {
     }
 
     function handleSubmit() {
+        setNotif("")
         const bodyResponse = SignX === "in" ? formData : formDataUp
-        console.log(bodyResponse);
         const sendFormData = async () => {
         try {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            window.location.replace(`http://localhost:5173/home`)
+            setNotif(error.response.data)
         } catch (error) {
+            console.log(typeof error.response.data);
             error.response.data.message === undefined ?
-            window.alert(error.response.data) : 
-            window.alert(error.response.data.message)
+            setNotif(error.response.data) : 
+            setNotif(error.response.data.message)
         }
         };
         sendFormData()
     }
- 
 
     function handleAuth(props: string) {
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
@@ -83,7 +84,7 @@ export default function Sign() {
 
     return (
         <div className="main">
-            <Notification message="welcome" />
+           {notif && <Notification message={notif} />}
             <nav>
                 <h3>PongLogo</h3>
             </nav>
@@ -103,6 +104,7 @@ export default function Sign() {
                         />
                     </main>
                     {SignX === "in" && <span className="forget"><p>Forget password?</p></span>}
+                    {/* <ButtonPlay onClick={handleSubmit} content={`sign ${SignX}`} /> */}
                     <button className='submit' onClick={handleSubmit}>
                         {
                             SignX === "in" ?
