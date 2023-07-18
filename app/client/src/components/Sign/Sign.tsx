@@ -51,13 +51,12 @@ export default function Sign() {
     }
 
     function handleSubmit() {
-        sessionStorage.setItem('i')
         setNotif("")
         const bodyResponse = SignX === "in" ? formData : formDataUp
         const sendFormData = async () => {
         try {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            setNotif(error.response.data)
+            setNotif(response.data)
         } catch (error) {
             console.log(typeof error.response.data);
             error.response.data.message === undefined ?

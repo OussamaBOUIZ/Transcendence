@@ -11,16 +11,14 @@ import * as argon from 'argon2'
 import { JwtService } from '@nestjs/jwt';
 import { type } from 'os';
 import { Message } from 'src/databases/message.entity';
+import { UserService } from 'src/user/user.service';
 
-type tokenPayload = {
-    id: number,
-    email: string
-}
+
 @Injectable()
 export class ChannelService {
     constructor(@InjectRepository(Channel) private channelRepo: Repository<Channel>,
-    @InjectRepository(User) private userRepo: Repository<User>,
-    private readonly jwtService: JwtService) {}
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService) {}
 
     async channelUpdate(channelData: channelDto)
     {
@@ -32,7 +30,7 @@ export class ChannelService {
             newChannel.channel_type = channelData.channelType;
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
-            const userFound = await this.userRepo.findOneBy({username: channelData.channelOwner});
+            const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channel_owners = [];
             newChannel.channel_owners.push(userFound.id);
             this.channelRepo.save(newChannel);
@@ -171,12 +169,6 @@ export class ChannelService {
         channelFound.channel_admins.push(promoteUser.userId);
         channelFound.channel_users = channelFound.channel_users.filter((number) => number !== promoteUser.userId);
         this.channelRepo.save(channelFound);
-    }
-    async getUserFromJwt(userToken: string)
-    {
-        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        const user: User = await this.userRepo.findOneBy({id: payload.id});
-        return user;
     }
     async storeChannelMessage(userMessage: string, channelName: string)
     {

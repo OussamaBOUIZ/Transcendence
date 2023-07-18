@@ -7,10 +7,10 @@ export class MailTemplate {
   constructor(private readonly mailerService: MailerService) {}
 
   async sendEmail(toUser: string) {
-    const from: string = 'issamjmari098@gmail.com';
+    const from: string = 'transcendencePro2023@outlook.com';
     const to: string = toUser;
     const subject: string = 'Email confirmation';
-    const htmlfile = fs.readFileSync('/home/ijmari/Desktop/Transcendence/app/backend/src/auth/htmlSources/file.html', 'utf-8');
+    const htmlfile = fs.readFileSync('/Users/ijmari/Desktop/Transcendence/app/backend/src/auth/htmlSources/file.html', 'utf-8');
     console.log(`${to}`);
     const v = await this.mailerService.sendMail({
       from, 

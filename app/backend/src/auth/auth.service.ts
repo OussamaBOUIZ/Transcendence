@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
+import { UserService } from 'src/user/user.service';
 
 type tokenPayload = {
     id: number,
@@ -16,10 +17,9 @@ type tokenPayload = {
 
 @Injectable()
 export class AuthService {
-
-    constructor(@InjectRepository (User) private userRepository: Repository<User>
-    , private readonly jwtService: JwtService
-    , private readonly configService: ConfigService)
+    constructor(private readonly jwtService: JwtService
+    , private readonly configService: ConfigService
+    , private readonly userService: UserService)
     {}
 
     async apisignin(user)
@@ -47,7 +47,7 @@ export class AuthService {
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
         newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
-        await this.userRepository.save(newUser);
+        await this.userService.saveUser(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: newUser.id,
@@ -55,19 +55,19 @@ export class AuthService {
     }
     async searchForEmail(email)
     {
-        const user = await this.userRepository.findOneBy({email: email});
+        const user = await this.userService.findUserByEmail(email);
         if(user)
             return user;
         return null;
     }
 
-    async validateUser(username: string, password: string)
+    async validateUser(email: string, password: string)
     {
-        const foundUser = await this.userRepository.findOneBy({username: username});
+        const foundUser = await this.userService.findUserByEmail(email);
         if(!foundUser)
             return null;
         const userCorrect = await argon.verify(foundUser.password, password);
-        if(!userCorrect)
+        if(!userCorrect || !foundUser.isEmailComfirmed)
             return null;
         return this.signToken(foundUser);
     }
@@ -91,7 +91,7 @@ export class AuthService {
             newUser.lastname = userdto.lastname;
             newUser.username = userdto.firstname[0] + userdto.lastname;
             newUser.password = pass_hash;
-            await this.userRepository.save(newUser);
+            await this.userService.saveUser(newUser);
             const secret = this.configService.get<string>('JWT_SECRET');
             return this.jwtService.sign({
                 id: newUser.id,
@@ -113,7 +113,7 @@ export class AuthService {
     async retUserData(userToken: string)
     {
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        const user: User = await this.userRepository.findOneBy({id: payload.id});
+        const user: User = await await this.userService.findUserByEmail(payload.email);
         const userData = {
             id: user.id,
             firstname: user.firstname,
