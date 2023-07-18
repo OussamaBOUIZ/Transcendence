@@ -13,7 +13,7 @@ export const SocketAuthMiddleware = (
     return (client, next) => {
         try {
             const {authorization} = client.handshake.headers;
-            configService.isValidAuthHeader(authorization);
+            client.data.user = configService.isValidAuthHeader(authorization);
             next();
         } catch (error) {
             next(error);

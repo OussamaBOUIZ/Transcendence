@@ -10,21 +10,21 @@ import {Message} from "../databases/message.entity";
 
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([User, User_chat, Message]),
-        // JwtModule.registerAsync({
-        // useFactory: async (configService: ConfigService) => ({
-        //     global: true,
-        //     secret: configService.get('JWT_SECRET'),
-        // }),
-        // inject: [ConfigService],
-        // })
-    ],
-    controllers: [],
-    providers: [
-        ChatGatewayService, ChatGateway,
-        JwtService, WsGuard,
-    ]
+	imports: [
+		TypeOrmModule.forFeature([User, User_chat, Message]),
+		// JwtModule.registerAsync({
+		// useFactory: async (configService: ConfigService) => ({
+		//     global: true,
+		//     secret: configService.get('JWT_SECRET'),
+		// }),
+		// inject: [ConfigService],
+		// })
+	],
+	controllers: [],
+	providers: [
+		ChatGatewayService, ChatGateway,
+		JwtService, WsGuard,
+	]
 })
 
 export class ChatGatewayModule {

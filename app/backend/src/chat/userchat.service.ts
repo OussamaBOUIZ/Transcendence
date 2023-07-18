@@ -3,7 +3,7 @@ import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
-import {Repository} from "typeorm";
+import {MoreThan, Repository} from "typeorm";
 import {MessageDto} from "../interfaces/interfaces";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
@@ -82,6 +82,7 @@ export class ChatGatewayService {
             return 'todo handle not authorized'
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
+        if (receiver.isActive === false)
         // save the last message in inbox table
         await this.saveInbox(receiver, author.id, messageDto)
         return receiver.socketId
@@ -136,7 +137,7 @@ export class ChatGatewayService {
         }
         // I assume that the receiver is on chat page
         if (receiver.status != Status.Online)
-            inbox.unseenMessages = 0
+            inbox.unseenMessages = 1
         else
             inbox.unseenMessages += 1
         await this.inboxRepository.save(inbox)
@@ -158,10 +159,19 @@ export class ChatGatewayService {
     async loadMessage(user: User, sender: number) {
         const receiverMsgs = await this.getAllMessages(user.id)
         const sendMsgs = await this.getAllMessages(sender)
-
         this.logger.log(sendMsgs)
         this.logger.log(receiverMsgs)
     }
 
+    async getUserInboxByUnseenMessage(user: User) {
+       return await this.inboxRepository.findAndCount({
+           relations: {user: true},
+           select: ["unseenMessages"],
+           where: {
+               user: {id: user.id},
+               unseenMessages: MoreThan(0),
+           }
+        })
+    }
 
 }

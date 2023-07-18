@@ -48,14 +48,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger = new Logger(ChatGateway.name);
 	}
 
-	// @SubscribeMessage('message')
-	// async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
-	//     let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
-	//     if (!user)
-	//         this.logger.log('todo handle if not exist!!')
-	//
-	// }
-
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
@@ -65,11 +57,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('loadMessages')
 	async allMessages(socket: Socket, data: MessageDto) {
 		const receiver = await this.chatGatewayService.getUserById(data.user.userId)
-		if (typeof receiver === undefined)
+		if (receiver === null)
 			console.log('todo: handle if the receiver not exist')
 
 		const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-		if (typeof db_user === undefined)
+		if (db_user === null)
 			console.log('todo: handle if the receiver not exist')
 		return await this.chatGatewayService.loadMessage(db_user, receiver.id)
 	}
@@ -81,29 +73,28 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	async handleConnection(client: Socket) {
 		this.logger.log('On Connection')
-		const {authorization} = client.handshake.headers;
+		this.logger.log(client.data.user.email)
 		let user: User
-		const userFromJwt = this.chatGatewayService.getUserFromJwt(authorization)
-		user = await this.userRepository.findOneBy({email: userFromJwt.email})
-		if (user) {
-			user.socketId = client.id
-		} else {
-			user = new User()
-			user.email = userFromJwt.email
-			user.socketId = client.id;
-		}
-		user.status = 'Online'
+		user = await this.userRepository.findOneBy({email: client.data.user.email})
+		const inbox = await  this.chatGatewayService.getUserInboxByUnseenMessage(user)
+		console.log(inbox[0])
+		if (inbox[1] > 0)
+			console.log('emit client side (User has unseen Messages)')
+		this.logger.log({user})
+		if (!user)
+			console.log('no such user or deleted');
+		user.socketId = client.id
+		user.isActive = true
 		await this.userRepository.save(user)
 	}
 
 
 	async handleDisconnect(client: Socket) {
-		const jwtUser = this.chatGatewayService.getUserFromJwt(client.handshake.headers.authorization)
-		console.log(jwtUser)
-		const user = await this.chatGatewayService.getUserByEmail(jwtUser.email)
+		const user = await this.chatGatewayService.getUserByEmail(client.data.user.email)
 		if (user == null)
 			this.logger.log('user not exist in DB : handle disconnect')
-		user.status = 'Offline'
+
+		user.isActive = false
 		await this.userRepository.save(user)
 		this.logger.log('On Disconnect')
 	}

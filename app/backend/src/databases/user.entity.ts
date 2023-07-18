@@ -15,13 +15,17 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     socketId: string
 
+
     @Column({default: 'Offline'})
     status: string
+
+    @Column({default: false})
+    isActive: boolean
 
     @Column({nullable: true})
     firstname: string
 
-    @Column({nullable: true})
+    @Column({nullable: true })
     lastname: string
 
     @Column({nullable: true})
