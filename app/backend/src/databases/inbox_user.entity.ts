@@ -3,7 +3,7 @@ import {User} from "./user.entity";
 
 @Entity('Inbox_user')
 export class Inbox_user extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column()

@@ -9,7 +9,7 @@ import { Stats } from "./stats.entity";
 
 @Entity('User')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({nullable: true})
@@ -40,6 +40,9 @@ export class User extends BaseEntity {
     @Column({unique: true, nullable: true})
     email: string
 
+    @Column({ type: 'boolean', default: false})
+    isEmailComfirmed: boolean
+
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
@@ -67,11 +70,3 @@ export class User extends BaseEntity {
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
 }
-
-/*
-    const user1 = new User();
-    const Friend1 = new Friend();
-    const Friend2 = new Friend();
-    user1.friends = [friend1, friend2];
-    const user2 = new User();
- */

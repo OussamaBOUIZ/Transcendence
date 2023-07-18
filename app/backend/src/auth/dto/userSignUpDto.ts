@@ -1,5 +1,6 @@
 
 import { IsEmail, IsNotEmpty, IsNumber, IsString, IsStrongPassword} from 'class-validator';
+import { Unique } from 'typeorm';
 
 export class userSignUpDto {
 

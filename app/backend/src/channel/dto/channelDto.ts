@@ -15,5 +15,5 @@ export class channelDto {
 
     @IsString()
     @IsNotEmpty()
-    public channelOwner: string
+    public channelOwner: number
 }

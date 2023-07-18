@@ -4,7 +4,7 @@ import {User} from "./user.entity";
 
 @Entity('User_chat')
 export class User_chat extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @ManyToOne(() => User, (user) => user.user_chat)
