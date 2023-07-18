@@ -25,12 +25,13 @@ export default function Notification({ message }) {
 		<>
 			{!isAnimationFinished && (<div className="NotifContainer">
 				<div className="rectangle">
-					<div className="notification-text">
-						< BsFillInfoCircleFill />
-						{
-							message.length === 1 ? <p>{message}</p> :
-							<p>form is incorrect</p>
-						}
+				<div className="notification-text">
+					<BsFillInfoCircleFill />
+					{
+						typeof message === 'string' || message.length === 1 ?
+						(<p>{message}</p>) :
+						(<p>Form is incorrect</p>)
+					}
 					</div>
 				</div>
 				<div className="round-time-bar" data-style="smooth" style={{ '--duration': 6 }}>

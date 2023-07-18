@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
 import axios from 'axios'
-// import ButtonPlay from './ButtonPlay'
+import ButtonPlay from './ButtonPlay'
 import Notification from "../Notification"
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
@@ -51,15 +51,16 @@ export default function Sign() {
     }
 
     function handleSubmit() {
+        console.log("cdscdsz")
         setNotif("")
         const bodyResponse = SignX === "in" ? formData : formDataUp
         const sendFormData = async () => {
         try {
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            setNotif(error.response.data)
+            SignX === "up" ? setNotif(response.data) : window.location.replace("http://localhost:5173/home")
         } catch (error) {
             error.response.data.message === undefined ?
-            setNotif(error.response.data) : 
+            setNotif(error.response.data) :
             setNotif(error.response.data.message)
         }
         };
@@ -96,6 +97,7 @@ export default function Sign() {
                         <Form
                             SignX = {SignX}
                             handleChange={handleChange}
+                            handleSubmit={handleSubmit}
                             formData={formData}
                             setFormData={setFormData}
                             formDataUp={formDataUp}
@@ -104,7 +106,7 @@ export default function Sign() {
                     </main>
                     {SignX === "in" && <span className="forget"><p>Forget password?</p></span>}
                     {/* <ButtonPlay onClick={handleSubmit} content={`sign ${SignX}`} /> */}
-                    <button className='submit' onClick={handleSubmit}>
+                    <button className='submit' onClick={handleSubmit} >
                         {
                             SignX === "in" ?
                             <span>sign in</span> :

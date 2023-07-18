@@ -1,6 +1,6 @@
 body {
     margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins";
 }
 
 .main {
@@ -10,7 +10,7 @@ body {
     height: 100vh;
     flex-wrap: wrap;
     gap: 0.01em;
-    position: relactive;
+    position: relative;
     nav {
         // background: red;
         position: absolute;
@@ -74,13 +74,18 @@ body {
                         gap: 0.625rem;
                         background-color: white;
                         border-radius: 0.625rem;
-                        border: 1.5px solid #D3CCCC;
+                        border: solid 1.5px #D3CCCC;
+                        transition: border-width 0.4s linear;
                         min-height: 4.625em;
                         font-size: clamp(0.7rem, 0.9vw, 0.85rem);
                         cursor: pointer;
                         img {
                             width: 1.6875em;
                         }
+                    }
+                    .btn:hover {
+                        border-width: 3px;
+                        // border-color: black;
                     }
                     .btn-42:hover {
                         border-color: black;
@@ -133,6 +138,7 @@ body {
                 margin-top: .5rem;
             }
             .submit {
+                font-family: "Poppins";
                 margin-top: .5rem;
                 cursor: pointer;
                 border-radius: 1.875rem;
@@ -143,7 +149,7 @@ body {
                 font-size: clamp(0.9rem, 0.9vw, 1.1rem);
                 font-weight: 500;
                 span {
-                    // font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+                    font-size: clamp(1rem, 1vw, 1.3rem);
                     font-weight: 500;
                 }
             }
@@ -164,10 +170,16 @@ body {
     .cover {
         flex-basis: 50vw;
         flex-grow: 1;
+        display: none;
         width: 50%;
         height: 100vh;
         background-position: 50%;
         background-size: cover;
         background-repeat: no-repeat;
+    }
+    @media (min-width: 900px) {
+        .cover {
+            display: block;
+        }
     }
 }

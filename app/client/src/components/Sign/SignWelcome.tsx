@@ -5,8 +5,8 @@ export default function Welcome({ SignX }) {
         <div className="welcome">
         {
             SignX === "in" ?
-            <p className="hd" style={{fontSize: "clamp(4.5rem, 6vw, 7.2rem)"}}>Hi there!</p> :
-            <p className="hd" style={{fontSize: "clamp(3.2rem, 4.5vw, 5.5rem)"}}>Get Started</p>
+            <p className="hd" style={{fontSize: "clamp(4.3rem, 5.8vw, 7rem)"}}>Hi there!</p> :
+            <p className="hd" style={{fontSize: "clamp(3.2rem, 4.3vw, 5.1rem)"}}>Get Started</p>
         }
         {
             SignX === "in" ?

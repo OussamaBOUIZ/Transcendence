@@ -73,12 +73,12 @@ export class AuthController {
     @Post('signup')
     // @UseFilters(FormCheck)
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        // const token = await this.authService.signup(userDto);
-        // if(token === null)
-        //     return res.status(400).send(`email already exists`);
-        // this.authService.setResCookie(res, token);
-        this.mailTemp.sendEmail(userDto.email);
-        return res.status(200).send('Please confirm your email, otherwise you can not join our application');
+        const token = await this.authService.signup(userDto);
+        if(token === null)
+            return res.status(400).send(`email already exists`);
+        this.authService.setResCookie(res, token);
+        await this.mailTemp.sendEmail(userDto.email);
+        return res.status(200).send('Please confirm your email');
     }
     @Get('getuser')
     @UseGuards(JwtGuard)
