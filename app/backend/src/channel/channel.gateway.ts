@@ -8,6 +8,7 @@ import { Channel } from "src/databases/channel.entity";
 import { newUserDto } from "./dto/newUserDto";
 import { UserService } from "src/user/user.service";
 import { channelDto } from "./dto/channelDto";
+import { channelMessageDto } from "./dto/channelMessageDto";
 
 @WebSocketGateway()
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -38,22 +39,33 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         client.disconnect();
     }
     @SubscribeMessage('joinchannel')
-    joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
+    async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
-        const message = this.channelservice.addToChannel(newUser);
-        console.log('messages are:')
-        console.log(message);
-        this.server.emit('joined_channel', {message});
+        client.join(newUser.channelName);
+        const message = await this.channelservice.addToChannel(newUser);
+        if(message === null)
+        {
+            this.server.emit('exception', {error: 'user did not provide password in a protected channel'});
+            return null;
+        }
+        for(let a = 0; a < message.length; a++)
+        {
+            console.log(message[a].messages);
+        }
+        // this.server.emit('joined_channel', {message});
     }
 
     @SubscribeMessage('channelMessage')
-    async messageSend(@MessageBody() newMessage: any, channelName: string)
+    async messageSend(@MessageBody() newMessage: channelMessageDto)
     {
-        this.channelservice.storeChannelMessage(newMessage, channelName);
-        this.server.to(channelName).emit('sendChannelMessage', {
-            msg: 'new message',
-            content: newMessage
-        });
+        console.log(newMessage.message)
+        console.log(newMessage.channelName)
+        await this.channelservice.storeChannelMessage(newMessage.message, newMessage.channelName);
+        // this.server.to(newMessage.channelName).emit('sendChannelMessage', {
+        //     msg: 'new message',
+        //     content: newMessage
+        // });
     }
 
 }
+

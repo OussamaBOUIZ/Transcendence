@@ -17,6 +17,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class ChannelService {
     constructor(@InjectRepository(Channel) private channelRepo: Repository<Channel>,
+    @InjectRepository(Message) private messageRepo: Repository<Message>,
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
@@ -102,10 +103,13 @@ export class ChannelService {
             if(!channelFound.channel_users)
                 channelFound.channel_users = [];
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
+            {
+                console.log('here null');
                 return null;
+            }
             channelFound.channel_users.push(newUser.channelNewUser);
         }
-        this.channelRepo.save(channelFound);
+        await this.channelRepo.save(channelFound);
         return await this.channelRepo.find({
             relations: {
                 messages: true
@@ -172,12 +176,10 @@ export class ChannelService {
     }
     async storeChannelMessage(userMessage: string, channelName: string)
     {
-        const newMessage: Message = new Message();
-        newMessage.message = userMessage;
         const channel: Channel = await this.channelRepo.findOneBy({channel_name: channelName});
-        if(!channel.messages)
-            channel.messages = [];
-        channel.messages.push(newMessage);
-        this.channelRepo.save(channel);
+        const newMessage: Message = this.messageRepo.create({message: userMessage});
+        newMessage.channel = channel;
+        await this.messageRepo.save(newMessage);
     }
 }
+ 
