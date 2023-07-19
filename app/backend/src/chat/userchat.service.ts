@@ -10,6 +10,7 @@ import {Message} from "../databases/message.entity";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {Status} from "../interfaces/enums";
 import {Socket} from "socket.io";
+import {InboxService} from "../inbox/inbox.service";
 
 @Injectable()
 export class ChatGatewayService {
@@ -20,19 +21,20 @@ export class ChatGatewayService {
     constructor(
         private readonly jwt: JwtService,
         private readonly configService: ConfigService,
+        private readonly inboxService: InboxService,
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
         @InjectRepository(Message) private messageRepository: Repository<Message>,
-        @InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
+        // @InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>,
     ) {
     }
 
-    isValidAuthHeader(authorization: string) {
-        const token: string = authorization.split(' ')[1];
-        return this.jwt.verify(token, {
-            secret: this.configService.get('JWT_SECRET')
-        });
-    }
+    // isValidAuthHeader(authorization: string) {
+    //     const token: string = authorization.split(' ')[1];
+    //     return this.jwt.verify(token, {
+    //         secret: this.configService.get('JWT_SECRET')
+    //     });
+    // }
 
     getUserFromJwt(authorization: string) {
         const token: string = authorization.split(' ')[1];
@@ -44,10 +46,6 @@ export class ChatGatewayService {
     async getUserByEmail(email: string) {
         return await this.userRepository.findOneBy({email: email})
     }
-
-    // async getMessages(user: User) {
-    //
-    // }
 
     async getUserById(Id: number) {
         return await this.userRepository.findOneBy({id: Id})
@@ -84,65 +82,9 @@ export class ChatGatewayService {
         // check status of receiver
         if (receiver.isActive === false)
         // save the last message in inbox table
-        await this.saveInbox(receiver, author.id, messageDto)
+        await this.inboxService.saveInbox(receiver, author.id, messageDto)
         return receiver.socketId
     }
-    async getInboxBySenderId(senderid: number, receiver: User): Promise<Inbox_user> {
-        const tmp = await this.inboxRepository.findOne({
-            relations: {
-                user: true
-            },
-            where: {
-                sender_id: senderid,
-                user: {
-                    id: receiver.id
-                }
-            }
-        })
-
-        console.log(tmp)
-
-        return tmp;
-      /*  const author = await this.userRepository.findOne({
-            relations: {
-                inbox_users: true
-            },
-            where: {
-                id: receiver.id,
-                inbox_users: {
-                   sender_id: senderid
-                }
-            },
-`
-        })
-        console.log(author.inbox_users)
-        return author.inbox_users*/
-    }
-
-    async saveInbox(receiver: User, senderId: number, msgDto: MessageDto) {
-        let inbox: Inbox_user
-        console.log(receiver)
-        inbox = await this.getInboxBySenderId(senderId, receiver)
-        console.log('inbox:', inbox)
-        console.log('senderId: ', senderId)
-        if (inbox === undefined || inbox === null) {
-            inbox = new Inbox_user()
-            inbox.sender_id = senderId; // id of the receiver
-            inbox.lastMessage = msgDto.message;
-            inbox.CreatedAt = msgDto.timeSent
-            inbox.user = receiver;
-        } else {
-            inbox.lastMessage = msgDto.message
-            inbox.CreatedAt = msgDto.timeSent
-        }
-        // I assume that the receiver is on chat page
-        if (receiver.status != Status.Online)
-            inbox.unseenMessages = 1
-        else
-            inbox.unseenMessages += 1
-        await this.inboxRepository.save(inbox)
-    }
-
 
     async getAllMessages(id: number): Promise<User_chat[] | undefined> {
         return await this.chatRepository.find({
@@ -163,15 +105,6 @@ export class ChatGatewayService {
         this.logger.log(receiverMsgs)
     }
 
-    async getUserInboxByUnseenMessage(user: User) {
-       return await this.inboxRepository.findAndCount({
-           relations: {user: true},
-           select: ["unseenMessages"],
-           where: {
-               user: {id: user.id},
-               unseenMessages: MoreThan(0),
-           }
-        })
-    }
+
 
 }

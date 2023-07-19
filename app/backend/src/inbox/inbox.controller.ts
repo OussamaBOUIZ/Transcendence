@@ -15,12 +15,16 @@ import {ChatGatewayService} from 'src/chat/userchat.service';
 import {User} from 'src/databases/user.entity';
 import {Repository} from 'typeorm';
 import {classToPlain, serialize} from "class-transformer";
+import {UserService} from "../user/user.service";
+import {InboxService} from "./inbox.service";
 
 
 @Controller('inbox')
 export class InboxController {
     constructor(
         private readonly chatService: ChatGatewayService,
+        private readonly userService: UserService,
+        private readonly inboxService: InboxService,
         @InjectRepository(User) private userRepository: Repository<User>,
     ) {
     }
@@ -32,14 +36,14 @@ export class InboxController {
         @Headers('authorization') req: string,
         @Param('id', ParseIntPipe) id: number,
     ) {
-        const userFromToken = this.chatService.isValidAuthHeader(req)
-        if (userFromToken === null)
+        const user = await this.userService.getUserFromJwt(req)
+        if (user === null)
             return 'Not authorized';
-        const user = await this.chatService.getUserByEmail(userFromToken.email)
+        // const user = await this.chatService.getUserByEmail(userFromToken.email)
         const author = await this.chatService.getUserById(id)
-        if (author === null || user === null)
+        if (author === null)
             return 'user does not exist'
         console.log(user)
-        return await this.chatService.getInboxBySenderId(author.id, user)
+        return await this.inboxService.getInboxBySenderId(author.id, user)
     }
 }

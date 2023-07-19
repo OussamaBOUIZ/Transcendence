@@ -7,6 +7,7 @@ import {JwtService} from "@nestjs/jwt";
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
+import {UserService} from "../user/user.service";
 
 
 @Module({
@@ -23,7 +24,7 @@ import {Message} from "../databases/message.entity";
 	controllers: [],
 	providers: [
 		ChatGatewayService, ChatGateway,
-		JwtService, WsGuard,
+		JwtService, WsGuard, UserService
 	]
 })
 

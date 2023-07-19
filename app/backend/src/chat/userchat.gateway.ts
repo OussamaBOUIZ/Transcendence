@@ -16,6 +16,8 @@ import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./websocket.middleware";
 import {MessageDto} from "../interfaces/interfaces";
+import {InboxService} from "../inbox/inbox.service";
+import {UserService} from "../user/user.service";
 
 /**
  * RxJS :
@@ -42,6 +44,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	constructor(
 		@InjectRepository(User) private userRepository: Repository<User>,
 		private chatGatewayService: ChatGatewayService,
+		private inboxService: InboxService,
+		private userService: UserService,
 		// private readonly jwt: JwtService,
 		private readonly configService: ConfigService
 	) {
@@ -67,7 +71,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	afterInit(client: Socket) {
-		client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
+		client.use(SocketAuthMiddleware(this.userService) as any)
 		console.log('after init called')
 	}
 
@@ -76,7 +80,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger.log(client.data.user.email)
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
-		const inbox = await  this.chatGatewayService.getUserInboxByUnseenMessage(user)
+		const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
 		console.log(inbox[0])
 		if (inbox[1] > 0)
 			console.log('emit client side (User has unseen Messages)')
