@@ -6,17 +6,17 @@ import ChatMain from './ChatMain';
 import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
+import ChatHeader from './ChatHeader';
 
 export default function Chat () {
 
     return ((
-        <div className="chat_container dm_case">
+        <div className="chat_container">
             <ChatAccount />
             <ChatInfo />
             <ChatList />
             <ChatOverview />
             <ChatMain />
-            <ChatInput />
         </div>
     ));
 }
