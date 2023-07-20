@@ -14,8 +14,6 @@ import {InboxService} from "../inbox/inbox.service";
 
 @Injectable()
 export class ChatGatewayService {
-
-    0
     private logger = new Logger(ChatGatewayService.name)
 
     constructor(

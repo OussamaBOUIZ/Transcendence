@@ -8,11 +8,14 @@ import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {UserService} from "../user/user.service";
+import { chatController } from './userchat.controller';
+import {InboxService} from "../inbox/inbox.service";
+import {Inbox_user} from "../databases/inbox_user.entity";
 
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, User_chat, Message]),
+		TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user]),
 		// JwtModule.registerAsync({
 		// useFactory: async (configService: ConfigService) => ({
 		//     global: true,
@@ -21,10 +24,10 @@ import {UserService} from "../user/user.service";
 		// inject: [ConfigService],
 		// })
 	],
-	controllers: [],
+	controllers: [chatController],
 	providers: [
 		ChatGatewayService, ChatGateway,
-		JwtService, WsGuard, UserService
+		JwtService, WsGuard, UserService, InboxService
 	]
 })
 

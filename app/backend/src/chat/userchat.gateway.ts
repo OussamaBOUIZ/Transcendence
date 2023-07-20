@@ -58,17 +58,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.server.to(socketId).emit("message", messageDto.message)
 	}
 
-	@SubscribeMessage('loadMessages')
-	async allMessages(socket: Socket, data: MessageDto) {
-		const receiver = await this.chatGatewayService.getUserById(data.user.userId)
-		if (receiver === null)
-			console.log('todo: handle if the receiver not exist')
-
-		const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-		if (db_user === null)
-			console.log('todo: handle if the receiver not exist')
-		return await this.chatGatewayService.loadMessage(db_user, receiver.id)
-	}
+	// @SubscribeMessage('loadMessages')
+	// async allMessages(socket: Socket, data: MessageDto) {
+	// 	const receiver = await this.chatGatewayService.getUserById(data.user.userId)
+	// 	if (receiver === null)
+	// 		console.log('todo: handle if the receiver not exist')
+	//
+	// 	const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
+	// 	if (db_user === null)
+	// 		console.log('todo: handle if the receiver not exist')
+	// 	return await this.chatGatewayService.loadMessage(db_user, receiver.id)
+	// }
 
 	afterInit(client: Socket) {
 		client.use(SocketAuthMiddleware(this.userService) as any)

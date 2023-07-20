@@ -6,6 +6,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ChannelModule } from './channel/channel.module';
 import { dataSourceOptions } from './datasource/data-source';
 import { InboxModule } from './inbox/inbox.module';
+import {ChatGatewayModule} from "./chat/userchat.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { InboxModule } from './inbox/inbox.module';
     AuthModule,
     InboxModule,
     ChannelModule,
+    ChatGatewayModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
