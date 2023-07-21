@@ -127,6 +127,7 @@ div.chat_container {
     div.chat_main {
         grid-area: m;
         display: grid;
+        height: inherit;
         grid-template-rows: 80px auto 90px;
         header.chat_header {
             grid-row: 1/2;
