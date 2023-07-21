@@ -34,7 +34,7 @@ export class ChannelService {
             const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channel_owners = [];
             newChannel.channel_owners.push(userFound.id);
-            this.channelRepo.save(newChannel);
+            await this.channelRepo.save(newChannel);
         }
         else
         {
@@ -44,9 +44,7 @@ export class ChannelService {
                 channelFound.channel_type = channelData.channelType;
             if(channelFound.channel_type === 'protected' && channelData.channelPassword !== channelFound.channel_password)
                 channelFound.channel_password = channelData.channelPassword;
-            else if (channelFound.channel_type !== 'protected')
-                channelFound.channel_password = null;
-            this.channelRepo.save(channelFound);
+            await this.channelRepo.save(channelFound);
         }
     }
     async setChannelOwner(channelOwner: channelOwnerDto)
@@ -69,26 +67,6 @@ export class ChannelService {
         channelFound.channel_admins.push(channelAdmin.newChannelAdmin);
         this.channelRepo.save(channelFound);
     }
-    async addToProtectedChannel(newUser: newUserDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
-        if(!channelFound)
-            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-        if(!channelFound.channel_users)
-            channelFound.channel_users = [];
-        if(channelFound.channel_users.includes(newUser.channelNewUser))
-            throw new HttpException('conflict', HttpStatus.CONFLICT);
-        if(!channelFound.channel_owners.includes(newUser.channelNewUser)
-        && !channelFound.channel_admins.includes(newUser.channelNewUser))
-        {
-            channelFound.channel_users.push(newUser.channelNewUser);
-            this.channelRepo.save(channelFound);
-        }
-        else
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
     async addToChannel(newUser: newUserDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
@@ -96,6 +74,8 @@ export class ChannelService {
         {
             if(!channelFound.channel_users)
                 channelFound.channel_users = [];
+            if(channelFound.channel_users.includes(newUser.channelNewUser))
+                return 'user already exists in channel';
             channelFound.channel_users.push(newUser.channelNewUser);
         }
         if(channelFound.channel_type === 'protected')
@@ -103,10 +83,9 @@ export class ChannelService {
             if(!channelFound.channel_users)
                 channelFound.channel_users = [];
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
-            {
-                console.log('here null');
-                return null;
-            }
+                return 'provided password is incorrect'
+            if(channelFound.channel_users.includes(newUser.channelNewUser))
+                return 'user already exists in channel';
             channelFound.channel_users.push(newUser.channelNewUser);
         }
         await this.channelRepo.save(channelFound);
@@ -123,41 +102,17 @@ export class ChannelService {
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
-        if(!channelFound)
-            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!channelFound.channel_users)
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-        if(!channelFound.channel_users.includes(kickUser.userId))
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-        if(!channelFound.channel_owners.includes(kickUser.userId)
-        && !channelFound.channel_admins.includes(kickUser.userId))
-        {
-            channelFound.channel_users = channelFound.channel_users.filter((number) => number !== kickUser.userId);
-            this.channelRepo.save(channelFound);
-        }
-        else
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== kickUser.userId);
+        await this.channelRepo.save(channelFound);
     }
     async banUserFromChannel(banUser: UserOperationDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: banUser.channelName});
-        if(!channelFound)
-            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!channelFound.channel_users)
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-        if(!channelFound.channel_users.includes(banUser.userId))
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
         channelFound.channel_users = channelFound.channel_users.filter((number) => number !== banUser.userId);
-        if(!channelFound.channel_owners.includes(banUser.userId)
-        && !channelFound.channel_admins.includes(banUser.userId))
-        {
-            if(!channelFound.banned_users)
-                channelFound.banned_users = [];
-            channelFound.banned_users.push(banUser.userId);
-            this.channelRepo.save(channelFound);
-        }
-        else
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        if(!channelFound.banned_users)
+            channelFound.banned_users = [];
+        channelFound.banned_users.push(banUser.userId);
+        await this.channelRepo.save(channelFound);
     }
     async promoteUserToAdmin(promoteUser: UserOperationDto)
     {

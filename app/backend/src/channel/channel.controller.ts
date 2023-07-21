@@ -27,18 +27,6 @@ export class ChannelController {
         this.channelservice.setChannelAdmin(channelAdminData);
         return res.status(HttpStatus.CREATED).send('new channel admin was set');
     }
-    @Post('kickuser')
-    async kickUserFromChannel(@Body() userKick: UserOperationDto, @Res() res: Response)
-    {
-        await this.channelservice.kickUserFromChannel(userKick);
-        return res.status(HttpStatus.NO_CONTENT).send('user was kicked from channel');
-    }
-    @Post('banuser')
-    async banUserFromChannel(@Body() banUser: UserOperationDto, @Res() res: Response)
-    {
-        await this.channelservice.banUserFromChannel(banUser);
-        return res.status(HttpStatus.NO_CONTENT).send('user was kicked from channel');
-    }
     @Post('promoteuser')
     async promoteUserFromChannel(@Body() promoteUser: UserOperationDto, @Res() res: Response)
     {

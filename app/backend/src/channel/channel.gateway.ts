@@ -9,6 +9,7 @@ import { newUserDto } from "./dto/newUserDto";
 import { UserService } from "src/user/user.service";
 import { channelDto } from "./dto/channelDto";
 import { channelMessageDto } from "./dto/channelMessageDto";
+import { UserOperationDto } from "./dto/operateUserDto";
 
 @WebSocketGateway()
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -38,33 +39,42 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     handleDisconnect(client: Socket) {
         client.disconnect();
     }
+
+    @SubscribeMessage('banuser')
+    async banuser(@MessageBody() user: UserOperationDto, @ConnectedSocket() client: Socket)
+    {
+        client.leave(user.channelName);
+        await this.channelservice.banUserFromChannel(user);
+    }
+
+    @SubscribeMessage('kickuser')
+    async kickuser(@MessageBody() user: UserOperationDto, @ConnectedSocket() client: Socket)
+    {
+        client.leave(user.channelName);
+        await this.channelservice.kickUserFromChannel(user);
+    }
+
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
         client.join(newUser.channelName);
-        const message = await this.channelservice.addToChannel(newUser);
-        if(message === null)
+        let channelFound = await this.channelservice.addToChannel(newUser);
+        if(typeof channelFound === 'string')
         {
-            this.server.emit('exception', {error: 'user did not provide password in a protected channel'});
+            this.server.emit('exception', {error: channelFound});
             return null;
         }
-        for(let a = 0; a < message.length; a++)
-        {
-            console.log(message[a].messages);
-        }
-        // this.server.emit('joined_channel', {message});
+        this.server.emit('userJoined', channelFound[0].messages);
     }
 
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto)
     {
-        console.log(newMessage.message)
-        console.log(newMessage.channelName)
         await this.channelservice.storeChannelMessage(newMessage.message, newMessage.channelName);
-        // this.server.to(newMessage.channelName).emit('sendChannelMessage', {
-        //     msg: 'new message',
-        //     content: newMessage
-        // });
+        this.server.to(newMessage.channelName).emit('sendChannelMessage', {
+            msg: 'new message',
+            content: newMessage
+        });
     }
 
 }
