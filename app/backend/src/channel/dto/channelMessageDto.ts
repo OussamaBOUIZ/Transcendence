@@ -10,4 +10,8 @@ export class channelMessageDto {
     @IsNotEmpty()
     @IsString()
     public channelName: string
+
+    @IsNotEmpty()
+    @IsNumber()
+    public fromUser: number
 }

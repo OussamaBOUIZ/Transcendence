@@ -40,4 +40,9 @@ export class UserService {
         const user: User = await this.userRepo.findOneBy({id: payload.id});
         return user;
     }
+    async deleteUserFromDB(id: number)
+    {
+        const user: User = await this.userRepo.findOneBy({id: id});
+        await this.userRepo.remove(user);
+    }
 }

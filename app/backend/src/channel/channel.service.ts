@@ -12,12 +12,14 @@ import { JwtService } from '@nestjs/jwt';
 import { type } from 'os';
 import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
+import { Muted_users } from 'src/databases/muted_users.entity';
 
 
 @Injectable()
 export class ChannelService {
     constructor(@InjectRepository(Channel) private channelRepo: Repository<Channel>,
     @InjectRepository(Message) private messageRepo: Repository<Message>,
+    @InjectRepository(Muted_users) private muteRepo: Repository<Muted_users>,
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
@@ -135,6 +137,14 @@ export class ChannelService {
         const newMessage: Message = this.messageRepo.create({message: userMessage});
         newMessage.channel = channel;
         await this.messageRepo.save(newMessage);
+    }
+    async muteUserFromChannel(muteUser: UserOperationDto)
+    {
+        const channel: Channel = await this.channelRepo.findOneBy({channel_name: muteUser.channelName});
+        const mute = new Muted_users();
+        mute.channel = channel;
+        mute.user_id = muteUser.userId;
+        await this.muteRepo.save(mute);
     }
 }
  

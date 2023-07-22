@@ -10,6 +10,7 @@ import { UserService } from "src/user/user.service";
 import { channelDto } from "./dto/channelDto";
 import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
+import { muteUserDto } from "./dto/muteUserDto";
 
 @WebSocketGateway()
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -38,6 +39,18 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
     handleDisconnect(client: Socket) {
         client.disconnect();
+    }
+
+    unmuteUser(user: muteUserDto)
+    {
+
+    }
+    @SubscribeMessage('muteuser')
+    async muteuser(@MessageBody() user: muteUserDto, @ConnectedSocket() client: Socket)
+    {
+        await this.channelservice.muteUserFromChannel(user);
+        setTimeout(this.unmuteUser, user.minutes * 60000, user);
+        this.server.emit('userMuted', `user was muted from channel ${user.channelName}`)
     }
 
     @SubscribeMessage('banuser')

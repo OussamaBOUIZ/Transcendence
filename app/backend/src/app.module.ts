@@ -5,12 +5,14 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ChannelModule } from './channel/channel.module';
 import { dataSourceOptions } from './datasource/data-source';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions), 
   AuthModule,
   ChannelModule,
+  UserModule,
   ConfigModule.forRoot({
     isGlobal: true,
   }),

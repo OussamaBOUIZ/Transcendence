@@ -8,6 +8,7 @@ import { Channel } from "src/databases/channel.entity";
 import { Match_history } from "src/databases/match_history.entity";
 import { Friend } from "src/databases/friend.entity";
 import { Stats } from "src/databases/stats.entity";
+import { Muted_users } from "src/databases/muted_users.entity";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
@@ -19,7 +20,7 @@ export const dataSourceOptions: DataSourceOptions = {
     entities: [
       Achievement, Channel,
        Friend, Match_history,
-      //  Muted_users, 
+       Muted_users, 
        Stats,
        User, Inbox_user
        , User_chat, Message
