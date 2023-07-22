@@ -16,6 +16,8 @@ export class Message extends BaseEntity {
     @Column()
     message: string
 
+    @Column()
+    sender_id: number
     // @Column({type: "timestamp"})
     // CreatedAt: string
 }

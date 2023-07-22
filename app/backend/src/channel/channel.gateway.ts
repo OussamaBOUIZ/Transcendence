@@ -45,6 +45,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     {
         client.leave(user.channelName);
         await this.channelservice.banUserFromChannel(user);
+        this.server.emit('userBanned', `user was banned from channel ${user.channelName}`);
     }
 
     @SubscribeMessage('kickuser')
@@ -52,6 +53,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     {
         client.leave(user.channelName);
         await this.channelservice.kickUserFromChannel(user);
+        this.server.emit('userBanned', `user was kicked from channel ${user.channelName}`);
     }
 
     @SubscribeMessage('joinchannel')
