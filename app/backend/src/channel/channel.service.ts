@@ -13,6 +13,8 @@ import { type } from 'os';
 import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
+import { muteUserDto } from './dto/muteUserDto';
+import {Server} from "socket.io"
 
 
 @Injectable()
@@ -131,20 +133,34 @@ export class ChannelService {
         channelFound.channel_users = channelFound.channel_users.filter((number) => number !== promoteUser.userId);
         this.channelRepo.save(channelFound);
     }
-    async storeChannelMessage(userMessage: string, channelName: string)
+    async storeChannelMessage(userMessage: string, channel: Channel)
     {
-        const channel: Channel = await this.channelRepo.findOneBy({channel_name: channelName});
         const newMessage: Message = this.messageRepo.create({message: userMessage});
         newMessage.channel = channel;
         await this.messageRepo.save(newMessage);
     }
-    async muteUserFromChannel(muteUser: UserOperationDto)
+    async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)
     {
-        const channel: Channel = await this.channelRepo.findOneBy({channel_name: muteUser.channelName});
         const mute = new Muted_users();
         mute.channel = channel;
         mute.user_id = muteUser.userId;
         await this.muteRepo.save(mute);
+    }
+    async unmuteUser(userId: number)
+    {
+        const mutedUser: Muted_users = await this.muteRepo.findOneBy({user_id: userId});
+        await this.muteRepo.remove(mutedUser);
+    }
+    async getChannel(channelName: string)
+    {
+        return await this.channelRepo.findOneBy({channel_name: channelName});
+    }
+    async userIsMuted(userId: number)
+    {
+        const muted = await this.muteRepo.findOneBy({user_id: userId});
+        if(muted)
+            return true;
+        return false;
     }
 }
  

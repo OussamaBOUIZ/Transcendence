@@ -9,9 +9,6 @@ export class Muted_users extends BaseEntity {
     @Column()
     user_id: number
 
-    @Column({type: 'date'})
-    muteDate: Date;
-
     @ManyToOne(() => Channel, (channel) => channel.muted)
     channel: Channel
 }

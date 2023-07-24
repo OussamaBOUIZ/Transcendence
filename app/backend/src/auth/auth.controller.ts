@@ -34,6 +34,7 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
+        console.log(`token ${token}`)
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
     }
@@ -54,7 +55,7 @@ export class AuthController {
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
-        console.log(token);
+        console.log(`token ${token}`)
         if(!token)
             return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);

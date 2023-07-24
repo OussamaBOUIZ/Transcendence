@@ -1,16 +1,12 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import {Server, Socket} from "socket.io"
 import { ChannelService } from "./channel.service";
-import { Body} from '@nestjs/common';
-import { Message } from "src/databases/message.entity";
-import { User } from "src/databases/user.entity";
-import { Channel } from "src/databases/channel.entity";
 import { newUserDto } from "./dto/newUserDto";
 import { UserService } from "src/user/user.service";
-import { channelDto } from "./dto/channelDto";
 import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
+import { Channel } from "src/databases/channel.entity";
 
 @WebSocketGateway()
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -33,7 +29,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
-        this.userService.saveUser(user);
+        await this.userService.saveUser(user);
     }
 
 
@@ -41,15 +37,18 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         client.disconnect();
     }
 
-    unmuteUser(user: muteUserDto)
+    async unmuteUser(userId: number, channelservice: ChannelService, server: Server)
     {
-
+        channelservice.unmuteUser(userId);
+        server.emit('Unmuted', 'user was unmuted');
     }
+
     @SubscribeMessage('muteuser')
     async muteuser(@MessageBody() user: muteUserDto, @ConnectedSocket() client: Socket)
     {
-        await this.channelservice.muteUserFromChannel(user);
-        setTimeout(this.unmuteUser, user.minutes * 60000, user);
+        const channel = await this.channelservice.getChannel(user.channelName);
+        await this.channelservice.muteUserFromChannel(user, channel);
+        setTimeout(this.unmuteUser, user.minutes * 60000, user.userId, this.channelservice, this.server);
         this.server.emit('userMuted', `user was muted from channel ${user.channelName}`)
     }
 
@@ -66,7 +65,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     {
         client.leave(user.channelName);
         await this.channelservice.kickUserFromChannel(user);
-        this.server.emit('userBanned', `user was kicked from channel ${user.channelName}`);
+        this.server.emit('userKicked', `user was kicked from channel ${user.channelName}`);
     }
 
     @SubscribeMessage('joinchannel')
@@ -77,7 +76,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(typeof channelFound === 'string')
         {
             this.server.emit('exception', {error: channelFound});
-            return null;
+            return ;
         }
         this.server.emit('userJoined', channelFound[0].messages);
     }
@@ -85,7 +84,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto)
     {
-        await this.channelservice.storeChannelMessage(newMessage.message, newMessage.channelName);
+        if(this.channelservice.userIsMuted(newMessage.fromUser))
+        {
+            this.server.emit('userIsMuted', 'user is muted from the channel');
+            return ;
+        }
+        const channel: Channel = await this.channelservice.getChannel(newMessage.channelName);
+        await this.channelservice.storeChannelMessage(newMessage.message, channel);
         this.server.to(newMessage.channelName).emit('sendChannelMessage', {
             msg: 'new message',
             content: newMessage
