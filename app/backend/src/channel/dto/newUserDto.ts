@@ -14,6 +14,5 @@ export class newUserDto {
     public channelNewUser: number
     
     @IsString()
-    @IsNotEmpty()
     public providedPass: string
 }
