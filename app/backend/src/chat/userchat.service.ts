@@ -9,6 +9,7 @@ import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
+import {use} from "passport";
 
 @Injectable()
 export class ChatGatewayService {
@@ -77,29 +78,31 @@ export class ChatGatewayService {
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
         if (receiver.isActive === false)
-        // save the last message in inbox table
-        await this.inboxService.saveInbox(receiver, author.id, messageDto)
+            // save the last message in inbox table
+            await this.inboxService.saveInbox(receiver, author.id, messageDto)
         return receiver.socketId
     }
 
-    async getAllMessages(id: number): Promise<User_chat[] | undefined> {
+    async getAllMessages(senderId: number, userId: number): Promise<User_chat[] | undefined> {
         return await this.chatRepository.find({
+            select: {messages: true},
             relations: {
-                messages: true
+                messages: true,
+                user: true
             },
             where: {
-                sender_id: id
+                sender_id: senderId,
+                user: {id: userId}
             },
             take: 30
         })
     }
 
     async loadMessage(user: User, sender: number) {
-        const receiverMsgs = await this.getAllMessages(user.id)
-        const sendMsgs  = await this.getAllMessages(sender)
-        return {receiverMsgs, sendMsgs}
+        const receiverMsgs = await this.getAllMessages(user.id, sender)
+        const senderMsgs = await this.getAllMessages(sender, user.id)
+        return {receiverMsgs, senderMsgs}
     }
-
 
 
 }

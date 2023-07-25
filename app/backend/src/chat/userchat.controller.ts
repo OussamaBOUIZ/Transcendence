@@ -16,15 +16,10 @@ export class chatController {
         @Param('id', ParseIntPipe) id: number,
     ) {
         const user = await this.userRepository.getUserFromJwt(auth)
-        // const receiver = await this.chatService.getUserById(data.user.userId)
-        // if (receiver === null)
-        //     console.log('todo: handle if the receiver not exist')
-        //
-        // )
+
         if (user === null)
             console.log('todo: handle if the receiver not exist')
         return await this.chatService.loadMessage(user, id)
-        // return this.chatService.loadMessage()
     }
 
 }

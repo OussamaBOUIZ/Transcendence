@@ -19,7 +19,6 @@ export const SocketAuthMiddleware = (
             client.data.user = await userService.getUserFromJwt(authorization);
             if (client.data.user == null)
                 throw new UnauthorizedException()
-            console.log('clien jwt ', client.data.user)
             next();
         } catch (error) {
             next(error);
