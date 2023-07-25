@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ChannelModule } from './channel/channel.module';
+// import { ChannelModule } from './channel/channel.module';
 import { dataSourceOptions } from './datasource/data-source';
 import { InboxModule } from './inbox/inbox.module';
 import {ChatGatewayModule} from "./chat/userchat.module";
@@ -13,7 +13,7 @@ import {ChatGatewayModule} from "./chat/userchat.module";
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     InboxModule,
-    ChannelModule,
+    // ChannelModule,
     ChatGatewayModule,
     ConfigModule.forRoot({
       isGlobal: true,

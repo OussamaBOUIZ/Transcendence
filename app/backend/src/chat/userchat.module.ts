@@ -11,6 +11,7 @@ import {UserService} from "../user/user.service";
 import { chatController } from './userchat.controller';
 import {InboxService} from "../inbox/inbox.service";
 import {Inbox_user} from "../databases/inbox_user.entity";
+import {SocketAuthMiddleware} from "./websocket.middleware";
 
 
 @Module({
@@ -27,7 +28,7 @@ import {Inbox_user} from "../databases/inbox_user.entity";
 	controllers: [chatController],
 	providers: [
 		ChatGatewayService, ChatGateway,
-		JwtService, WsGuard, UserService, InboxService
+		JwtService, WsGuard, UserService, InboxService,
 	]
 })
 

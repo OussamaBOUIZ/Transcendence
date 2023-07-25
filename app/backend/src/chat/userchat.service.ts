@@ -3,12 +3,10 @@ import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
-import {MoreThan, Repository} from "typeorm";
+import {Repository} from "typeorm";
 import {MessageDto} from "../interfaces/interfaces";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
-import {Inbox_user} from "../databases/inbox_user.entity";
-import {Status} from "../interfaces/enums";
 import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
 
@@ -98,9 +96,8 @@ export class ChatGatewayService {
 
     async loadMessage(user: User, sender: number) {
         const receiverMsgs = await this.getAllMessages(user.id)
-        const sendMsgs = await this.getAllMessages(sender)
-        this.logger.log(sendMsgs)
-        this.logger.log(receiverMsgs)
+        const sendMsgs  = await this.getAllMessages(sender)
+        return {receiverMsgs, sendMsgs}
     }
 
 

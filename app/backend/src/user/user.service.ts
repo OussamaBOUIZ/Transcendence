@@ -32,8 +32,6 @@ export class UserService {
 
     async getUserFromJwt(userToken: string)
     {
-        console.log('user token: ')
-        console.log(userToken);
         if(!userToken)
             return null;
         const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;

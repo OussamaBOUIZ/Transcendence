@@ -16,8 +16,7 @@ import {UserService} from "../user/user.service";
 	imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user])],
 	controllers: [InboxController],
 	providers: [
-		InboxService, ChatGatewayService,
-		ChatGateway, JwtService,
+		InboxService, ChatGatewayService, JwtService,
 		{
 			provide: APP_PIPE,
 			useClass: ValidationPipe,

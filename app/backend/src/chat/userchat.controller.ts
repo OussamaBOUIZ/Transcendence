@@ -10,7 +10,7 @@ export class chatController {
     ) {
     }
 
-    @Get(':id')
+    @Get(':id') // receiver id
     async getMessages(
         @Headers('authorization') auth: string,
         @Param('id', ParseIntPipe) id: number,

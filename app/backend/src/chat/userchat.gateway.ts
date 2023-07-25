@@ -35,7 +35,7 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway()
+@WebSocketGateway(1337)
 @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
@@ -70,8 +70,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	// 	return await this.chatGatewayService.loadMessage(db_user, receiver.id)
 	// }
 
-	afterInit(client: Socket) {
-		client.use(SocketAuthMiddleware(this.userService) as any)
+	async afterInit(client: Socket) {
+		await client.use(SocketAuthMiddleware(this.userService) as any)
 		console.log('after init called')
 	}
 
@@ -81,10 +81,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
-		console.log(inbox[0])
 		if (inbox[1] > 0)
 			console.log('emit client side (User has unseen Messages)')
-		this.logger.log({user})
 		if (!user)
 			console.log('no such user or deleted');
 		user.socketId = client.id
