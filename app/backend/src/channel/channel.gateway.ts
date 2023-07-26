@@ -47,7 +47,12 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     async muteuser(@MessageBody() user: muteUserDto, @ConnectedSocket() client: Socket)
     {
         const channel = await this.channelservice.getChannel(user.channelName);
-        await this.channelservice.muteUserFromChannel(user, channel);
+        const muted = await this.channelservice.muteUserFromChannel(user, channel);
+        if(typeof muted === 'string')
+        {
+            this.server.emit('exception', 'user already muted');
+            return ;
+        }
         setTimeout(this.unmuteUser, user.minutes * 60000, user.userId, this.channelservice, this.server);
         this.server.emit('userMuted', `user was muted from channel ${user.channelName}`)
     }

@@ -141,6 +141,9 @@ export class ChannelService {
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)
     {
+        const mutedUser: Muted_users = await this.muteRepo.findOneBy({user_id: muteUser.userId});
+        if(mutedUser)
+            return 'already muted';
         const mute = new Muted_users();
         mute.channel = channel;
         mute.user_id = muteUser.userId;
