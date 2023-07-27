@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/databases/user.entity';
-import { Repository } from 'typeorm';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
@@ -48,7 +47,7 @@ export class AuthService {
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
         newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
-        createAchievements(newUser);
+        this.achievementService.createAchievements(newUser);
         await this.userService.saveUser(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
@@ -94,6 +93,7 @@ export class AuthService {
             newUser.username = userdto.firstname[0] + userdto.lastname;
             newUser.password = pass_hash;
             await this.userService.saveUser(newUser);
+            this.achievementService.createAchievements(newUser);
             const secret = this.configService.get<string>('JWT_SECRET');
             return this.jwtService.sign({
                 id: newUser.id,

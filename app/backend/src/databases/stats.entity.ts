@@ -10,13 +10,13 @@ export class Stats extends BaseEntity {
     @OneToMany(() => Achievement, (achievement) => achievement.stat, {nullable: true})
     achievements: Achievement[]
     
-    @Column()
+    @Column({nullable: true})
     wins: number
     
-    @Column()
+    @Column({nullable: true})
     losses: number
 
-    @Column()
+    @Column({nullable: true})
     xp: number
 
     @Column({default: 0})

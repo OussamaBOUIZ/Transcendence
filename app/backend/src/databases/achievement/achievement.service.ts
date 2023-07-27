@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "../user.entity";
 import { Achievement } from "./achievement.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Stats } from "../stats.entity";
 
 
 type myMap = {
@@ -9,6 +12,9 @@ type myMap = {
 
 @Injectable()
 export class AchievementService {
+    constructor(@InjectRepository(Achievement) private readonly achieveRepo: Repository<Achievement>
+    , @InjectRepository(Stats) private readonly statRepo: Repository<Stats>
+    , @InjectRepository(User) private readonly userRepo: Repository<User>) {}
     fillAchievements(map: myMap)
     {
         map['Pong member'] = 'became part of our game';
@@ -31,6 +37,10 @@ export class AchievementService {
         let map: myMap = {};
         this.fillAchievements(map);
         const keys = Object.keys(map);
+        const stat: Stats = new Stats();
+        await this.statRepo.save(stat);
+        user.stat = stat;
+        await this.userRepo.save(user);
         for(let i = 0; i < 14; i++)
         {
             const newAchievement = new Achievement();
@@ -39,6 +49,8 @@ export class AchievementService {
             if(i === 0)
                 newAchievement.is_achieved = true;
             newAchievement.stat = user.stat;
+            newAchievement.user_id = user.id;
+            await this.achieveRepo.save(newAchievement);       
         }
     }
 }

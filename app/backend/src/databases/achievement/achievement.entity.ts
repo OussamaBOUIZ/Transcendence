@@ -22,6 +22,6 @@ export class Achievement extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_achieved: boolean
     
-    @Column()
+    @Column({nullable: true})
     user_id: number
 }

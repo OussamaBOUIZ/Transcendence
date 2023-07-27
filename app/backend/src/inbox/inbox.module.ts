@@ -11,9 +11,10 @@ import {Message} from 'src/databases/message.entity';
 import {Inbox_user} from 'src/databases/inbox_user.entity';
 import {APP_PIPE} from "@nestjs/core";
 import {UserService} from "../user/user.service";
+import { Achievement } from 'src/databases/achievement/achievement.entity';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user])],
+	imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user, Achievement])],
 	controllers: [InboxController],
 	providers: [
 		InboxService, ChatGatewayService, JwtService,

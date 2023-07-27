@@ -3,6 +3,7 @@ import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { Achievement } from 'src/databases/achievement/achievement.entity';
 
 type tokenPayload = {
     id: number,
@@ -11,7 +12,8 @@ type tokenPayload = {
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository (User) private userRepo: Repository<User>
+    constructor(@InjectRepository (User) private userRepo: Repository<User>,
+    @InjectRepository (Achievement) private achieveRepo: Repository<Achievement>
     , private readonly jwtService: JwtService) {}
 
     async saveUser(user: User)
@@ -42,5 +44,25 @@ export class UserService {
     {
         const user: User = await this.userRepo.findOneBy({id: id});
         await this.userRepo.remove(user);
+    }
+    async getAchievement(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                stat: {
+                    achievements: true,
+                },
+            }
+        });
+        return user.stat.achievements;
+    }
+    async getLastThreeAchievements(id: number)
+    {
+        const achieved = await this.achieveRepo.find({
+            where: {is_achieved: true, user_id: id}
+        })
+        const firstThree = achieved.slice(0, 3);
+        return firstThree;
     }
 }

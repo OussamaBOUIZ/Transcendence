@@ -12,11 +12,12 @@ import { chatController } from './userchat.controller';
 import {InboxService} from "../inbox/inbox.service";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {SocketAuthMiddleware} from "./websocket.middleware";
+import { Achievement } from "src/databases/achievement/achievement.entity";
 
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user]),
+		TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user, Achievement]),
 		// JwtModule.registerAsync({
 		// useFactory: async (configService: ConfigService) => ({
 		//     global: true,
