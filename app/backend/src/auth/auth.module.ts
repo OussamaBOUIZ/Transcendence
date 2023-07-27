@@ -12,6 +12,7 @@ import { JwtStrategy } from './jwt/jwtStrategy';
 import { PassportModule } from '@nestjs/passport';
 import { MailTemplate } from './MailService/mailer.service';
 import { UserService } from 'src/user/user.service';
+import { AchievementService } from 'src/databases/achievement/achievement.service';
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
     global: true,
@@ -24,7 +25,8 @@ const jwtFactory = {
   imports: [HttpModule, TypeOrmModule.forFeature([User]),
    JwtModule.registerAsync(jwtFactory), PassportModule,
 ],
-  providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy, MailTemplate, UserService],
+  providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy
+    , MailTemplate, UserService, AchievementService],
 })
 
 export class AuthModule {

@@ -1,6 +1,6 @@
 
 import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
-import { Stats } from "./stats.entity"
+import { Stats } from "../stats.entity"
 
 @Entity('Achievement')
 export class Achievement extends BaseEntity {
@@ -12,9 +12,6 @@ export class Achievement extends BaseEntity {
     
     @ManyToOne(() => Stats , (stat) => stat.achievements, {nullable: true})
     stat: Stats
-
-    @Column()
-    badge_icon: string
     
     @Column()
     badge_name: string
