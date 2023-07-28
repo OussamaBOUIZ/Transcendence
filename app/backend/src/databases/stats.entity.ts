@@ -13,10 +13,13 @@ export class Stats extends BaseEntity {
     
     @Column()
     wins: number
-    
+
     @Column()
     losses: number
-    
-    @Column()
+
+    @Column({default: 0})
+    xp: number
+
+    @Column({default: 0})
     ladder_level: number
 }
