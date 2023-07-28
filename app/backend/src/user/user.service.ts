@@ -1,9 +1,8 @@
-import {Injectable, UseGuards} from '@nestjs/common';
-import {User} from 'src/databases/user.entity';
-import {Repository} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm';
-import {JwtService} from '@nestjs/jwt';
-import {JwtGuard} from "../auth/jwt/jwtGuard";
+import { Injectable } from '@nestjs/common';
+import { User } from 'src/databases/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 type tokenPayload = {
     id: number,
@@ -12,7 +11,8 @@ type tokenPayload = {
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository (User) private userRepo: Repository<User>
+    constructor(@InjectRepository (User) private userRepo: Repository<User>,
+    @InjectRepository (Achievement) private achieveRepo: Repository<Achievement>
     , private readonly jwtService: JwtService) {}
 
     async saveUser(user: User)
@@ -67,5 +67,25 @@ export class UserService {
     }
     getLeaderBoard() {
 
+    }
+    async getAchievement(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                stat: {
+                    achievements: true,
+                },
+            }
+        });
+        return user.stat.achievements;
+    }
+    async getLastThreeAchievements(id: number)
+    {
+        const achieved = await this.achieveRepo.find({
+            where: {is_achieved: true, user_id: id}
+        })
+        const firstThree = achieved.slice(0, 3);
+        return firstThree;
     }
 }

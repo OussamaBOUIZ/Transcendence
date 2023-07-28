@@ -4,11 +4,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/databases/user.entity';
-import { Repository } from 'typeorm';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
+import { AchievementService } from 'src/databases/achievement/achievement.service';
 
 type tokenPayload = {
     id: number,
@@ -19,7 +19,8 @@ type tokenPayload = {
 export class AuthService {
     constructor(private readonly jwtService: JwtService
     , private readonly configService: ConfigService
-    , private readonly userService: UserService)
+    , private readonly userService: UserService
+    , private readonly achievementService: AchievementService)
     {}
 
     async apisignin(user)
@@ -39,7 +40,6 @@ export class AuthService {
 
     async apiregisterUser(user)
     {
-        console.log('efjwevfwefwefwe')
         console.log(user);
         
         const newUser = new User();
@@ -47,6 +47,7 @@ export class AuthService {
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
         newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
+        this.achievementService.createAchievements(newUser);
         await this.userService.saveUser(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
@@ -92,6 +93,7 @@ export class AuthService {
             newUser.username = userdto.firstname[0] + userdto.lastname;
             newUser.password = pass_hash;
             await this.userService.saveUser(newUser);
+            this.achievementService.createAchievements(newUser);
             const secret = this.configService.get<string>('JWT_SECRET');
             return this.jwtService.sign({
                 id: newUser.id,

@@ -1,23 +1,22 @@
 
 import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
-import { Achievement } from "./achievement.entity"
+import { Achievement } from "./achievement/achievement.entity"
 
 @Entity('Stats')
 export class Stats extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
-    
-    // unidirectional
+
     @OneToMany(() => Achievement, (achievement) => achievement.stat, {nullable: true})
     achievements: Achievement[]
     
-    @Column()
+    @Column({default: 0})
     wins: number
-
-    @Column()
+    
+    @Column({default: 0})
     losses: number
 
-    @Column({default: 0})
+    @Column({nullable: true})
     xp: number
 
     @Column({default: 0})

@@ -34,7 +34,6 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
-        console.log(`token ${token}`)
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
     }
