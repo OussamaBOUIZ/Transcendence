@@ -74,7 +74,7 @@ export class AuthController {
         if(token === null)
             return res.status(400).send(`email already exists`);
         this.authService.setResCookie(res, token);
-        this.mailTemp.sendEmail(userDto.email);
+        // this.mailTemp.sendEmail(userDto.email);
         return res.status(200).send('Please confirm your email');
     }
     @Get('getuser')

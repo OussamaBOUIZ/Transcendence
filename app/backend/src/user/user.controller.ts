@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Header, Param, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Delete, Get, Header, Param, Post, Query, Res, StreamableFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import {Response} from 'express'
 import { createReadStream, existsSync } from 'fs';
@@ -31,5 +31,17 @@ export class UserController {
         const imagePath = path.join(process.cwd(), 'src/images', filename);
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
+    }
+    @Get('onlinefriends/:id')
+    async getOnlineFriends(@Param('id') id: number)
+    {
+        return await this.userService.onlineFriends(id);
+    }
+    @Post('addfriend/:id')
+    async addFriend(@Param('id') id: number, @Query('friendId') friendId: number, @Res() res: Response)
+    {
+        await this.userService.addFriend(id, friendId);
+        return res.status(201).send(`user has ${friendId} as a friend now`);
+        
     }
 }

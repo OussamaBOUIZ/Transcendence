@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
+import { Friend } from 'src/databases/friend.entity';
 
 type tokenPayload = {
     id: number,
@@ -12,8 +13,9 @@ type tokenPayload = {
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository (User) private userRepo: Repository<User>,
-    @InjectRepository (Achievement) private achieveRepo: Repository<Achievement>
+    constructor(@InjectRepository (User) private userRepo: Repository<User>
+    , @InjectRepository (Achievement) private achieveRepo: Repository<Achievement>
+    , @InjectRepository (Friend) private friendRepo: Repository<Friend>
     , private readonly jwtService: JwtService) {}
 
     async saveUser(user: User)
@@ -64,5 +66,27 @@ export class UserService {
         })
         const firstThree = achieved.slice(0, 3);
         return firstThree;
+    }
+    async onlineFriends(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                friends: true,
+            }
+        });
+        const friends: Friend[] = user.friends.filter((friend) => friend.status === 'Offline').splice(0, 4);
+        return friends;
+
+    }
+    async addFriend(userId: number, friendId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+        });
+        const newFriend = new Friend();
+        newFriend.user = user;
+        newFriend.friend_id = friendId;
+        await this.friendRepo.save(newFriend);
     }
 }
