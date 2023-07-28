@@ -42,6 +42,10 @@ export class UserController {
     {
         await this.userService.addFriend(id, friendId);
         return res.status(201).send(`user has ${friendId} as a friend now`);
-        
+    }
+    @Get('allfriends/:id')
+    async getAllFriends(@Param('id') id: number)
+    {
+        return await this.userService.AllFriends(id);
     }
 }

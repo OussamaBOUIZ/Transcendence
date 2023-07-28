@@ -6,7 +6,6 @@ import {Message} from "../databases/message.entity";
 import { Achievement } from "src/databases/achievement/achievement.entity";
 import { Channel } from "src/databases/channel.entity";
 import { Match_history } from "src/databases/match_history.entity";
-import { Friend } from "src/databases/friend.entity";
 import { Stats } from "src/databases/stats.entity";
 import { Muted_users } from "src/databases/muted_users.entity";
 
@@ -18,13 +17,14 @@ export const dataSourceOptions: DataSourceOptions = {
     password: '123',
     database: 'PingPong', //  PingPong
     entities: [
-      Achievement, Channel,
-       Friend, Match_history,
+      Achievement, Channel, 
+      Match_history,
        Muted_users, 
        Stats,
        User, Inbox_user
        , User_chat, Message
     ],
     synchronize: true,
+    logging: true,
 }
 new DataSource(dataSourceOptions);

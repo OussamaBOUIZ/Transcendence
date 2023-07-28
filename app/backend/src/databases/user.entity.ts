@@ -1,8 +1,6 @@
-import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
+import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
-import { Friend } from "./friend.entity";
-import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
 
@@ -46,8 +44,12 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    @OneToMany(() => Friend, (friend) => friend.user , {nullable: true})
-    friends: Friend[]
+    @ManyToMany(() => User, user => user.friends)
+    @JoinTable()
+    friends: User[];
+
+    @ManyToMany(() => User, user => user.friends)
+    friendOf: User[];
 
     @Column('int', {array: true, nullable: true})
     blocked_users: number[]

@@ -16,7 +16,7 @@ import { AchievementService } from 'src/databases/achievement/achievement.servic
 import { AchievementModule } from 'src/databases/achievement/achievement.module';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
 import { Stats } from 'src/databases/stats.entity';
-import { Friend } from 'src/databases/friend.entity';
+
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
     global: true,
@@ -26,7 +26,7 @@ const jwtFactory = {
 };
 @Module({
   controllers: [AuthController],
-  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, Friend]),
+  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats]),
    JwtModule.registerAsync(jwtFactory), PassportModule ],
   providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy
     , MailTemplate, UserService, AchievementService],
