@@ -68,7 +68,7 @@ export class AuthService {
         if(!foundUser)
             return null;
         const userCorrect = await argon.verify(foundUser.password, password);
-        if(!userCorrect || !foundUser.isEmailComfirmed)
+        if(!userCorrect || !foundUser.isEmailConfirmed)
             return null;
         return this.signToken(foundUser);
     }

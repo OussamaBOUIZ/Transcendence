@@ -26,7 +26,6 @@ import {UserService} from "../user/user.service";
  observers when new data arrives
  * Observer: consumers of data streams emitted by observables,
  *
- *
  */
 /**
  * todo :
@@ -35,7 +34,7 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway(1337)
+@WebSocketGateway(1313)
 @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;

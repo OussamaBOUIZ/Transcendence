@@ -5,10 +5,11 @@ import { User } from 'src/databases/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
+import {Stats} from "../databases/stats.entity";
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User, Achievement, Stats])],
   controllers: [UserController],
-  providers: [UserService, JwtService],
-  imports: [TypeOrmModule.forFeature([User, Achievement])]
+  providers: [UserService, JwtService]
 })
 export class UserModule {}

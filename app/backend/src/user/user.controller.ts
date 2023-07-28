@@ -1,5 +1,5 @@
-import { Controller, Delete, Get, Header, Param, Res, StreamableFile } from '@nestjs/common';
-import {Controller, Request, Get, Param, ParseIntPipe, UseGuards} from '@nestjs/common';
+
+import {Controller, Request, Header, Get,Delete, Param, ParseIntPipe, UseGuards, StreamableFile} from '@nestjs/common';
 import { UserService } from './user.service';
 import {Response} from 'express'
 import { createReadStream, existsSync } from 'fs';
@@ -12,19 +12,21 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Delete('delete/:id')
-    async deleteUser(@Param('id') userId: number)
+    async deleteUser(@Param('id') userId: number) // return success
     {
-        await await this.userService.deleteUserFromDB(userId);
+        await this.userService.deleteUserFromDB(userId);
     }
+
     @Get('achievements/:id')
-    async getAchievements(@Param('id') id: number)
-    {
+    async getAchievements(@Param('id') id: number) {
         return await this.userService.getAchievement(id);
-    // @Delete('delete/:id')
-    // async deleteUser(@Param('id') userId: number)
-    // {
-    //     await this.userService.deleteUserFromDB(userId);
-    // }
+    }
+
+    @Get('leaders')
+    async getGameLeaders() {
+        return this.userService.getLeaderBoard()
+    }
+
     @Get(':id')
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
@@ -44,7 +46,7 @@ export class UserController {
     }
     @Get('achievement/image/:id')
     @Header('Content-Type', 'image/png')
-    async getAchievementImage(@Param('id') id: number)
+    async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
         const filename = id + '.png';
         const imagePath = path.join(process.cwd(), 'src/images', filename);

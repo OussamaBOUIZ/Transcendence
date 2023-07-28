@@ -41,7 +41,7 @@ export class User extends BaseEntity {
     email: string
 
     @Column({ type: 'boolean', default: false})
-    isEmailComfirmed: boolean
+    isEmailConfirmed: boolean
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
@@ -57,7 +57,7 @@ export class User extends BaseEntity {
     @JoinTable()
     joined_channels: Channel[]
 
-    @OneToOne(() => Stats, {nullable: true})
+    @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
     stat: Stats
 
