@@ -11,7 +11,7 @@ export class UserController {
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number)
     {
-        await this.userService.deleteUserFromDB(userId);
+        await await this.userService.deleteUserFromDB(userId);
     }
     @Get('achievements/:id')
     async getAchievements(@Param('id') id: number)
