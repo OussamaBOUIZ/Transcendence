@@ -5,6 +5,7 @@ import { Friend } from "./friend.entity";
 import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
+import {Exclude} from "class-transformer";
 
 
 @Entity('User')
@@ -14,7 +15,6 @@ export class User extends BaseEntity {
 
     @Column({nullable: true})
     socketId: string
-
 
     @Column({default: 'Offline'})
     status: string
@@ -31,6 +31,7 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     username: string
 
+    @Exclude()
     @Column({nullable: true})
     password: string
 

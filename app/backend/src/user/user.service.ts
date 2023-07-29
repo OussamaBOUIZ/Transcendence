@@ -5,6 +5,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
+import {Match_history} from "../databases/match_history.entity";
 
 type tokenPayload = {
     id: number,
@@ -17,6 +18,7 @@ export class UserService {
         @InjectRepository(Stats) private statsRepo: Repository<Stats>,
         @InjectRepository(User) private userRepo: Repository<User>,
         @InjectRepository(Achievement) private achieveRepo: Repository<Achievement>,
+        @InjectRepository(Match_history) private matchHistoryRepo: Repository<Match_history>,
         private readonly jwtService: JwtService
     ) {
     }
@@ -37,7 +39,27 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        return await this.userRepo.findOneBy({id: payload.id});
+        return await this.userRepo.findOneBy({email: payload.email});
+    }
+
+    async getMatchHistory(userId: number): Promise<Match_history[]> {
+        return await  this.matchHistoryRepo.find({
+            relations: {
+                opponent: true,
+            },
+            select: {
+                opponent: {
+                    id: true,
+                    username: true,
+                }
+            } ,
+            where: {
+                user: {
+                    id: userId
+                }
+            },
+            take: 4
+        })
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
