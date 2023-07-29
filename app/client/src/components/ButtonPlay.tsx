@@ -1,4 +1,4 @@
-import "../../scss/ButtonPlay.scss"
+import "../scss/ButtonPlay.scss"
 import { Suspense, useState } from "react";
 import { motion, MotionConfig, useMotionValue } from "framer-motion";
 import { Shapes } from "./Shapes";

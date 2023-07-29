@@ -1,8 +1,7 @@
 import React, {useState} from "react"
 import {useEffect} from "react"
 import axios from 'axios'
-import ButtonPlay from './ButtonPlay'
-import Notification from "../Notification"
+import Notification from "../../components/Notification"
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
@@ -85,9 +84,6 @@ export default function Sign() {
     return (
         <div className="main">
            {notif && <Notification message={notif} />}
-            <nav>
-                <h3>PongLogo</h3>
-            </nav>
             <div className='content'>
                 <div className='container'>
                     <Welcome SignX={SignX} />

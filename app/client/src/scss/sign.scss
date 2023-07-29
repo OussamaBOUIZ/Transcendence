@@ -1,6 +1,14 @@
 body {
     margin: 0 auto;
     font-family: "Poppins";
+    .logo {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        position: absolute;
+        left: 5%;
+        top: 2.5%;
+    }
 }
 
 .main {
@@ -11,12 +19,6 @@ body {
     flex-wrap: wrap;
     gap: 0.01em;
     position: relative;
-    nav {
-        // background: red;
-        position: absolute;
-        left: 5%;
-        top: 2.5%;
-    }
     .content {
         // background: red;
         display: flex;
