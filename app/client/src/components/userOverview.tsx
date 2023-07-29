@@ -6,7 +6,7 @@ import ProfileImage from './profileImage';
 import ContentBar from './contentBar';
 import Achievements from './achievements';
 
-export default function UserOverview () {
+export default function UserOverview ({UserData}) {
 
     const level = 70
     return (
@@ -16,8 +16,8 @@ export default function UserOverview () {
                 <figure className="contact">
                     <ProfileImage userData="" size="big" />
                     <figcaption>
-                        <span>Oussama</span>
-                        <span>Ouazize</span>
+                        <span>{UserData?.firstname}</span>
+                        <span>{UserData?.lastname}</span>
                         <p>level 14</p>
                         <div className="level_bar">
                             <div className="level-bar-fill" style={{ width: `${level}%` }}></div>

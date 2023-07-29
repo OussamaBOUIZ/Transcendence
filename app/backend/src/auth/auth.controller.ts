@@ -13,7 +13,6 @@ import { FortyTwoGuard } from './42api/42guard';
 import { AuthGuard } from '@nestjs/passport';
 import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
-import { LocalGuard } from './local/localguard';
 import { MailTemplate } from './MailService/mailer.service';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { FormCheck } from './Filter/uno';
@@ -22,7 +21,6 @@ import { FormCheck } from './Filter/uno';
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
-        @InjectRepository(User) private userRepository: Repository<User>,
         private readonly authService: AuthService,
         private readonly mailTemp: MailTemplate) {}
 
@@ -56,6 +54,7 @@ export class AuthController {
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
+        console.log(`token ${token}`)
         if(!token)
             return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
@@ -63,27 +62,19 @@ export class AuthController {
     }
 
     @Post('signin') 
-    @UseGuards(LocalGuard)
     async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        const token = await this.authService.validateUser(userDto.username, userDto.password);
+        const token = await this.authService.validateUser(userDto.email, userDto.password);
         this.authService.setResCookie(res, token);
         return res.status(200).send('user signed in successfully')
     }
     
     @Post('signup')
-    // @UseFilters(FormCheck)
     async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
         const token = await this.authService.signup(userDto);
         if(token === null)
             return res.status(400).send(`email already exists`);
         this.authService.setResCookie(res, token);
-        await this.mailTemp.sendEmail(userDto.email);
+        // this.mailTemp.sendEmail(userDto.email);
         return res.status(200).send('Please confirm your email');
-    }
-    @Get('getuser')
-    @UseGuards(JwtGuard)
-    async getuser(@Req() req: Request)
-    {
-        return await this.authService.retUserData(req.cookies['access_token'])
     }
 }

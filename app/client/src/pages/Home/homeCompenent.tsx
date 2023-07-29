@@ -1,36 +1,17 @@
 import React from 'react';
 import {useState, useEffect} from "react";
+import axios from 'axios';
 import Character from "../../Assets/character.png"
 import ButtonPlay from '../../components/ButtonPlay'
 import RankContent from "../../components/rankContent"
 import ContentBar from "../../components/contentBar"
 import History from "../../components/history";
 import "../../scss/homeCompenent.scss";
+import { getLeaders } from "../../hooks/getLeaders"
 
 
-export default function HomeCompenent() {
-        // let UserData:
-        const [UserData, setUserData] = useState({
-            id: 0,
-            firstname: "",
-            lastname: "",
-            username: "oouazize"
-        })
-    
-        useEffect(() => {
-            const getUserData = async () => {
-                try {
-                    const response = await axios.get("/api/auth/getuser");
-                    setUserData(response.data);
-                }
-                catch (error) {
-                    console.log(error)
-                }
-    
-            }
-            getUserData()
-        }, [])
-
+export default function HomeCompenent({ UserData }) {
+        const { leaders } = getLeaders();
 
     return (
         <>
@@ -60,23 +41,25 @@ export default function HomeCompenent() {
                     <p>Leaderboard</p>
                     <div className="board">
                         <div className="rank rank2">
-                            <RankContent size="medium" />
+                            {/* <RankContent size="medium" /> */}
+                            <RankContent userData={leaders[1]} size="medium" Rank={2} />
                         </div>
                         <div className="rank rank1">
-                            <RankContent size="medium"/>
+                            {/* <RankContent size="medium" /> */}
+                            <RankContent userData={leaders[0]} size="medium" Rank={1} />
                         </div>
                         <div className="rank rank3">
-                            <RankContent size="medium" />
+                            {/* <RankContent size="medium" /> */}
+                            <RankContent userData={leaders[2]} size="medium" Rank={3} />
                         </div>
                     </div>
                 </div>
                 <div className="item GameHistory">
                     <p>Game History</p>
                     <div className="games">
-                        <ContentBar content={<History />} />
-                        <ContentBar content={<History />} />
-                        <ContentBar content={<History />} />
-                        {/* <ContentBar content={<History />} /> */}
+                        <ContentBar content={<History userData={UserData}/>} />
+                        <ContentBar content={<History userData={UserData}/>} />
+                        <ContentBar content={<History userData={UserData}/>} />
                     </div>
                 </div>
             </div>

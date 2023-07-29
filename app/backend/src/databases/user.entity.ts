@@ -1,10 +1,9 @@
-import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
+import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
-import { Friend } from "./friend.entity";
-import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
+import { Channel } from "diagnostics_channel";
 
 
 @Entity('User')
@@ -15,10 +14,17 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     socketId: string
 
+
+    @Column({default: 'Offline'})
+    status: string
+
+    @Column({default: false})
+    isActive: boolean
+
     @Column({nullable: true})
     firstname: string
 
-    @Column({nullable: true})
+    @Column({nullable: true })
     lastname: string
 
     @Column({nullable: true})
@@ -33,24 +39,27 @@ export class User extends BaseEntity {
     @Column({unique: true, nullable: true})
     email: string
 
-    // @Column({ type: 'boolean', default: false })
-    // isEmailComfirmed: boolean
+    @Column({ type: 'boolean', default: false})
+    isEmailConfirmed: boolean
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    @ManyToOne (() => Friend, {nullable: true})
+    @ManyToMany(() => User, user => user.friends)
     @JoinTable()
-    friends: Friend[]
+    friends: User[];
+
+    @ManyToMany(() => User, user => user.friends)
+    friendOf: User[];
 
     @Column('int', {array: true, nullable: true})
     blocked_users: number[]
 
-    @ManyToOne(() => Channel, {nullable: true})
-    @JoinTable()
-    joined_channels: Channel[]
+    // @ManyToOne(() => Channel, {nullable: true})
+    // @JoinTable()
+    // joined_channels: Channel []
 
-    @OneToOne(() => Stats, {nullable: true})
+    @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
     stat: Stats
 

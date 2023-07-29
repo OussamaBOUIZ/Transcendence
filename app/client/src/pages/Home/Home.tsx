@@ -1,18 +1,19 @@
-import React, {useEffect} from "react"
-import {useState} from "react"
-import axios from "axios"
+import React from "react";
 import "../../scss/home.scss";
-import SideBar from "../../components/Sidebar"
+import SideBar from "../../components/Sidebar";
 import HomeCompenent from "./homeCompenent";
 import UserOverview from "../../components/userOverview";
+import { useFetchUserData } from "../../hooks/useFetchUserData";
 
 export default function Home() {
 
-    return (
-        <div className="Home">
-            <SideBar />
-            <HomeCompenent />
-            <UserOverview />
-        </div>
-    )
+    const { userData } = useFetchUserData();
+
+  return (
+    <div className="Home">
+      <SideBar />
+      <HomeCompenent UserData={userData} />
+      <UserOverview UserData={userData} />
+    </div>
+  );
 }

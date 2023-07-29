@@ -30,6 +30,7 @@ export class Channel extends BaseEntity {
 
     @OneToMany(() => Message, (messages) => messages.channel)
     messages: Message[]
-    // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
-    // muted: Muted_users[]
+
+    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
+    muted: Muted_users[]
 }
