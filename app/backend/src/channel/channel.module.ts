@@ -10,9 +10,10 @@ import { UserService } from '../user/user.service';
 import { Message } from 'src/databases/message.entity';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
+import {Stats} from "../databases/stats.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Message, Muted_users, Achievement])],
+  imports: [TypeOrmModule.forFeature([User, Channel, Message, Muted_users, Achievement, Stats])],
   controllers: [ChannelController],
   providers: [ChannelService, ChannelGateway, JwtService, UserService]
 })

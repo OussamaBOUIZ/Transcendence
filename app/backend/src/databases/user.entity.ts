@@ -3,6 +3,7 @@ import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
+import { Channel } from "diagnostics_channel";
 
 
 @Entity('User')
@@ -39,7 +40,7 @@ export class User extends BaseEntity {
     email: string
 
     @Column({ type: 'boolean', default: false})
-    isEmailComfirmed: boolean
+    isEmailConfirmed: boolean
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
@@ -54,7 +55,11 @@ export class User extends BaseEntity {
     @Column('int', {array: true, nullable: true})
     blocked_users: number[]
 
-    @OneToOne(() => Stats, {nullable: true})
+    @ManyToOne(() => Channel, {nullable: true})
+    @JoinTable()
+    joined_channels: Channel []
+
+    @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
     stat: Stats
 

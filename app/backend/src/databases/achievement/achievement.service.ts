@@ -39,6 +39,7 @@ export class AchievementService {
         this.fillAchievements(map);
         const keys = Object.keys(map);
         const stat: Stats = new Stats();
+        stat.user = user;
         await this.statRepo.save(stat);
         user.stat = stat;
         await this.userService.saveUser(user);
