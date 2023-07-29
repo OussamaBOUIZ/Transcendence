@@ -1,7 +1,6 @@
 import React, {useEffect} from "react"
 import axios from "axios"
 import "../scss/profileImage.scss"
-import "../scss/var.scss"
 
 export default function ProfileImage({userData, size}) {
       return (

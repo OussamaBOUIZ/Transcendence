@@ -4,6 +4,7 @@ import axios from "axios"
 import "../../scss/home.scss";
 import SideBar from "../../components/Sidebar"
 import HomeCompenent from "./homeCompenent";
+import UserOverview from "../../components/userOverview";
 
 export default function Home() {
 
@@ -11,6 +12,7 @@ export default function Home() {
         <div className="Home">
             <SideBar />
             <HomeCompenent />
+            <UserOverview />
         </div>
     )
 }
