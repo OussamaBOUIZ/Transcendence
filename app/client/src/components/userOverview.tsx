@@ -1,12 +1,12 @@
-import React from 'react'
 import "../scss/userOverview.scss";
-import profileLogo from "../Assets/DreamShaper_32_young_pale_skinny_white_man_white_and_blue_hair_1.jpeg"
 import Achieve from "../Assets/Isometric_Fantasy_3d_vray_render_antiquities_black_statue_liqu_2.jpeg"
 import ProfileImage from './profileImage';
-import ContentBar from './contentBar';
-import Achievements from './achievements';
+import { getStats } from "../hooks/getStats";
 
 export default function UserOverview ({UserData}) {
+    console.log(UserData)
+    // const { Stats } = getStats(UserData);
+    // console.log(Stats)
 
     const level = 70
     return (
@@ -27,15 +27,15 @@ export default function UserOverview ({UserData}) {
                     <div className="results">
                         <figcaption className="results-item">
                             <p>Games</p>
-                            <h5>45</h5>
+                            <h5>32</h5>
                         </figcaption>
                         <figcaption className="results-item">
                             <p>Wins</p>
-                            <h5>29</h5>
+                            <h5>56</h5>
                         </figcaption>
                         <figcaption className="results-item">
                             <p>Losses</p>
-                            <h5>16</h5>
+                            <h5>1</h5>
                         </figcaption>
                     </div>
                     <h2>Achievements</h2>

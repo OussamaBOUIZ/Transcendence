@@ -1,5 +1,4 @@
-import React, {useState} from "react"
-import {useEffect} from "react"
+import {useState} from "react"
 import axios from 'axios'
 import Notification from "../../components/Notification"
 import Welcome from './SignWelcome'
@@ -66,6 +65,7 @@ export default function Sign() {
         sendFormData()
     }
 
+    
     function handleAuth(props: string) {
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }

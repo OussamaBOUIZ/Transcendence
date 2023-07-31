@@ -9,12 +9,15 @@ export default function History({userData}) {
     const opponent = "ijmari"
 
     return (
-        <div className="history">
-            <ProfileImage userData={userData} size="small" />
-            <span>{userData?.username}</span>
-            <span className="score">{score}</span>
-            <span>{opponent}</span>
-            <ProfileImage userData={userData} size="small" />
+        <div className="contentBar">
+            <div className="history">
+                <ProfileImage userData={userData} size="small" />
+                <span>{userData?.username}</span>
+                <span className="score">{score}</span>
+                <span>{opponent}</span>
+                <ProfileImage userData={userData} size="small" />
+            </div>
         </div>
+        
     )
 }
