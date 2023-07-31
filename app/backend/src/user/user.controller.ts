@@ -1,9 +1,10 @@
-import { Controller, Request ,Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile } from '@nestjs/common';
+import { Controller, Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile, Req, Headers, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
-import {Response} from 'express'
+import {Request, Response} from 'express'
 import { createReadStream, existsSync } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -33,8 +34,7 @@ export class UserController {
 
     @Get('stats/:userId')
     async getStatsById(
-        @Param('userId', ParseIntPipe) id: number,
-        @Request () req
+        @Param('userId', ParseIntPipe) id: number
     ) {
        return await this.userService.getStatsById(id)
     }
@@ -67,5 +67,35 @@ export class UserController {
     async getAllFriends(@Param('id') id: number)
     {
         return await this.userService.AllFriends(id);
+    }
+    // @Get('generate2fa/:id')
+    // @UseGuards(JwtGuard)
+    // generate2faForUser(@Param('id') id: number, @Req() req: Request)
+    // {
+    //     const data = await this.userService.generate2fa(id);
+
+    // }
+
+    @Post('2fa/turn-on/:id')
+    @UseGuards(JwtGuard)
+    async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        user.is_two_factor = true;
+        await this.userService.saveUser(user);
+    }
+
+    @Post('2fa/login/')
+    @UseGuards(JwtGuard)
+    async login2fa(@Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const isCodeValid = this.userService.isUserAuthValid(
+            req.body.token,
+            user
+        );
+        if(!isCodeValid)
+            return res.status(400).send('two factor token is invalid');
+        return res.redirect('http://localhost:5173/home');
     }
 }

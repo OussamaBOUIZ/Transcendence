@@ -15,13 +15,16 @@ import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
 import { MailTemplate } from './MailService/mailer.service';
 import { ViewAuthFilter } from 'src/Filter/filter';
-import { FormCheck } from './Filter/uno';
+import { authenticator } from 'otplib';
+import {toDataURL, toFileStream} from "qrcode"
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
         private readonly authService: AuthService,
+        private readonly userService: UserService,
         private readonly mailTemp: MailTemplate) {}
 
 
@@ -34,6 +37,16 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
+        const user = await this.userService.userHasAuth(googlereq.user.email);
+        if(user)
+        {
+            const data2fa = this.authService.otpsetup(user);
+            user.two_factor_secret = data2fa.secret;
+            user.otpPathUrl = data2fa.otpPathUrl;
+            await this.userService.saveUser(user);
+            res.setHeader('content-type','image/png');
+            return toFileStream(res, user.otpPathUrl);
+        }
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
     }
@@ -54,28 +67,28 @@ export class AuthController {
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
-        console.log(`token ${token}`)
         if(!token)
             return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
+        const user = await this.userService.userHasAuth(fortyTworeq.user.email);
+        if(user)
+        {
+            const data2fa = this.authService.otpsetup(user);
+            user.two_factor_secret = data2fa.secret;
+            user.otpPathUrl = data2fa.otpPathUrl;
+            await this.userService.saveUser(user);
+            return res.redirect('http://localhost:5173/auth');
+
+        }
         return res.redirect('http://localhost:5173/home');
     }
 
-    @Post('signin') 
-    async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        const token = await this.authService.validateUser(userDto.email, userDto.password);
-        this.authService.setResCookie(res, token);
-        return res.status(200).send('user signed in successfully')
-    }
-    
-    @Post('signup')
-    async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        const token = await this.authService.signup(userDto);
-        if(token === null)
-            return res.status(400).send(`email already exists`);
-        this.authService.setResCookie(res, token);
-        // this.mailTemp.sendEmail(userDto.email);
-        return res.status(200).send('Please confirm your email');
+    @Get('qrcode')
+    @UseGuards(JwtGuard)
+    async getQrCode(@Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        return toDataURL(user.otpPathUrl);
     }
     @Get('getuser')
     @UseGuards(JwtGuard)

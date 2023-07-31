@@ -5,6 +5,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
+import { authenticator } from 'otplib';
 
 type tokenPayload = {
     id: number,
@@ -33,6 +34,15 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async userHasAuth(email: string)
+    {
+        const user = await this.userRepo.findOne({
+            where: {email: email}
+        });
+        if(user.is_two_factor === true)
+            return user;
+        return null;
+    }
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
             return null;
@@ -136,5 +146,25 @@ export class UserService {
         });
         user.friends.push(friend);
         await this.userRepo.save(user);
+    }
+    async generate2fa(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        user.two_factor_secret = secret;
+        user.otpPathUrl = otpPathUrl;
+        await this.userRepo.save(user);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+    isUserAuthValid(access_token: string, user: User)
+    {
+        console.log(access_token, user.two_factor_secret);
+        return authenticator.verify({
+            token: access_token,
+            secret: user.two_factor_secret
+        })
     }
 }

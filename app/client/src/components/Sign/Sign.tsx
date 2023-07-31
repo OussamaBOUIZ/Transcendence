@@ -55,6 +55,7 @@ export default function Sign() {
         const bodyResponse = SignX === "in" ? formData : formDataUp
         const sendFormData = async () => {
         try {
+            
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
             setNotif(response.data)
         } catch (error) {
@@ -68,6 +69,7 @@ export default function Sign() {
     }
 
     function handleAuth(props: string) {
+        console.log(`props ${props}`)
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }
 

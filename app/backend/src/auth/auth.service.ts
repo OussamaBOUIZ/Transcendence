@@ -9,6 +9,7 @@ import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { AchievementService } from 'src/databases/achievement/achievement.service';
+import {authenticator} from 'otplib'
 
 type tokenPayload = {
     id: number,
@@ -73,6 +74,15 @@ export class AuthService {
         return this.signToken(foundUser);
     }
 
+    otpsetup(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
     signToken(user: User)
     {
         const secret = this.configService.get<string>('JWT_SECRET');
@@ -114,8 +124,7 @@ export class AuthService {
     }
     async retUserData(userToken: string)
     {
-        const payload = this.jwtService.decode(userToken) as tokenPayload;
-        const user: User = await await this.userService.findUserByEmail(payload.email);
+        const user = await this.userService.getUserFromJwt(userToken);
         const userData = {
             id: user.id,
             firstname: user.firstname,
