@@ -1,13 +1,13 @@
 import React from 'react'
 
-export default function ChatHeader () {
+export default function ChatHeader ({username, online}) {
     return (
         <header className='chat_header'>
             <figure>
                 <img src="./src/Assets/cat1.jpg" alt="cat.jpg" />
                 <figcaption>
-                    <h4>ELEGANT TOM</h4>
-                    <p>online</p>
+                    <h4>{username}</h4>
+                    <p>{online ? "online" : ""}</p>
                 </figcaption>
             </figure>
                 <button>

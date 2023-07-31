@@ -167,21 +167,23 @@ div.chat_container {
             height: 90px;
             border-top: 0.5px solid #F7BAF8;
             @include center-styles;
-            input {
+            textarea {
                 border-radius: 5px;
-                &[type="text"] {
-                        width: 80%;
-                        padding: 8px 10px;
-                        background: #643D7F;
-                    &::placeholder {
-                        color : $text-light-color;
-                    }
+                width: 80%;
+                height: 1.5em;
+                padding: 8px 10px;
+                background: #643D7F;
+                scrollbar-color: transparent;
+                scrollbar-width: 2px;
+                &::placeholder {
+                    color : $text-light-color;
                 }
-                &[type="submit"]{
-                    padding: 8px 20px;
-                    margin-left: 10px;
-                    background: #E62FD0;
-                }
+            }
+            button {
+                border-radius: 5px;
+                padding: 8px 20px;
+                margin-left: 10px;
+                background: #E62FD0;
             }
         }  
         // &.chat_main_init { // to be corrected 
