@@ -89,7 +89,7 @@ export class UserController {
 
     // }
 
-    @Post('2fa/turn-on/:id')
+    @Get('2fa/turn-on/:id')
     @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
@@ -100,6 +100,18 @@ export class UserController {
         user.is_two_factor = true;
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
+    }
+
+    @Get('2fa/turn-off/:id')
+    @UseGuards(JwtGuard)
+    async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        user.two_factor_secret = null;
+        user.otpPathUrl = null;
+        user.is_two_factor = false;
+        await this.userService.saveUser(user);
+        return res.status(200).send('two factor was turned off')
     }
 
     @Post('2fa/login/')
