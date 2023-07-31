@@ -22,17 +22,6 @@ export class UserService {
     ) {
     }
 
-    async retUserData(userToken: string)
-    {
-        const user = await this.getUserFromJwt(userToken);
-        const userData = {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            username: user.username,
-        };
-        return userData;
-    }
     async saveUser(user: User) {
         await this.userRepo.save(user);
     }
@@ -42,6 +31,7 @@ export class UserService {
     }
 
     async findUserById(id: number): Promise<User> {
+        console.log(id);
         return await this.userRepo.findOneBy({id: id});
     }
 
@@ -57,7 +47,7 @@ export class UserService {
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
             return null;
-        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
+        const payload = this.jwtService.decode(userToken) as tokenPayload;
         return await this.userRepo.findOneBy({id: payload.id});
     }
 
@@ -88,7 +78,7 @@ export class UserService {
                 user: true
             },
             order: {
-                xp: 'DESC'
+                ladder_level: 'DESC'
             },
             take: 3,
             select: {
@@ -170,6 +160,17 @@ export class UserService {
             otpPathUrl
         }
     }
+
+    otpsetup(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+
     isUserAuthValid(access_token: string, user: User)
     {
         console.log(access_token, user.two_factor_secret);

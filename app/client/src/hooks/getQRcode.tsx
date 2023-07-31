@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import axios from 'axios';
 
 export const getQRcode = () => {
+  console.log('YEYYEYEYEYYE')
     const [QRcode, setQRcode] = useState("");
     
     useEffect(() => {

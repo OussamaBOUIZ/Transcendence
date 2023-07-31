@@ -39,8 +39,13 @@ export default function Auth() {
         const sendCode = async () => {
             if (isNumeric && collectedCode.length === 6) {
                 try {
-                    await axios.post("/api/user/2fa/login", collectedCode);
+                    const collected = {
+                        token: collectedCode,
+                    }
+                    await axios.post("/api/user/2fa/login", collected);
+                    window.location.replace('/home');
                 } catch (error) {
+                    console.log("error")
                     console.log(error);
                 }
             } else {
@@ -85,8 +90,9 @@ export default function Auth() {
         <div className="verify-container" >
             <div className="verification">
                 <div className="title">
-                    <p>Scan QR code</p>
-                    <p><span>scan and put the code to verify your account</span></p>
+                    <p>Authenticate your account</p>
+                    <p><span>To get the token, scan the QR code below</span></p>
+                    <p><span>or submit a token if you already have one</span></p>
                 </div>
                 <div className="qr-code-container">
                     <img src={QRcode} alt="qr-code" />
