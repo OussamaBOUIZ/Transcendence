@@ -11,47 +11,52 @@ import { AuthService } from 'src/auth/auth.service';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @Get()
+    async getUserData(@Req() req: Request)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const userData = {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+        };
+        return userData;
+    }
     @Delete('delete/:id')
-    @UseGuards(JwtGuard)
     async deleteUser(@Param('id') userId: number) // return success
     {
         await this.userService.deleteUserFromDB(userId);
+        return 'success';
     }
 
     @Get('achievements/:id')
-    @UseGuards(JwtGuard)
     async getAchievements(@Param('id') id: number) {
         return await this.userService.getAchievement(id);
     }
 
     @Get('leaders')
-    @UseGuards(JwtGuard)
     async getGameLeaders() {
         return this.userService.getLeaderBoard()
     }
 
-    @Get()
-    @UseGuards(JwtGuard)
-    async getuser(@Req() req: Request)
-    {
-        return await this.userService.retUserData(req.cookies['access_token'])
+    @Get(':id')
+    async getUserById(@Param('id', ParseIntPipe) id: number) {
+        return await this.userService.findUserById(id)
     }
 
     @Get('stats/:userId')
-    @UseGuards(JwtGuard)
     async getStatsById(
         @Param('userId', ParseIntPipe) id: number
     ) {
        return await this.userService.getStatsById(id)
     }
     @Get('achievement/firstThree/:id')
-    @UseGuards(JwtGuard)
     async getLastThree(@Param('id') id: number)
     {
         return await this.userService.getLastThreeAchievements(id);
     }
     @Get('achievement/image/:id')
-    @UseGuards(JwtGuard)
     @Header('Content-Type', 'image/png')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
@@ -61,20 +66,17 @@ export class UserController {
         return new StreamableFile(fileContent);
     }
     @Get('onlinefriends/:id')
-    @UseGuards(JwtGuard)
     async getOnlineFriends(@Param('id') id: number)
     {
         return await this.userService.onlineFriends(id);
     }
     @Post('addfriend/:id')
-    @UseGuards(JwtGuard)
     async addFriend(@Param('id') id: number, @Query('friendId') friendId: number, @Res() res: Response)
     {
         await this.userService.addFriend(id, friendId);
         return res.status(201).send(`user has ${friendId} as a friend now`);
     }
     @Get('allfriends/:id')
-    @UseGuards(JwtGuard)
     async getAllFriends(@Param('id') id: number)
     {
         return await this.userService.AllFriends(id);
@@ -88,25 +90,30 @@ export class UserController {
     // }
 
     @Post('2fa/turn-on/:id')
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
+        const data2fa = this.userService.otpsetup(user);
+        user.two_factor_secret = data2fa.secret;
+        user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
         await this.userService.saveUser(user);
+        return res.status(200).send('two factor was turned on')
     }
 
     @Post('2fa/login/')
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
     {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token'])
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
             user
         );
+        console.log(isCodeValid);
         if(!isCodeValid)
             return res.status(400).send('two factor token is invalid');
-        return res.redirect('http://localhost:5173/home');
+        return res.status(200).send('correct two factor token');
     }
 }

@@ -74,15 +74,6 @@ export class AuthService {
         return this.signToken(foundUser);
     }
 
-    otpsetup(user: User)
-    {
-        const secret = authenticator.generateSecret();
-        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
-        return {
-            secret,
-            otpPathUrl
-        }
-    }
     signToken(user: User)
     {
         const secret = this.configService.get<string>('JWT_SECRET');

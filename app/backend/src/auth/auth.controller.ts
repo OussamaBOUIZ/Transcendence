@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
@@ -39,21 +39,9 @@ export class AuthController {
         const token = await this.authService.apisignin(googlereq.user);
         const user = await this.userService.userHasAuth(googlereq.user.email);
         if(user)
-        {
-            const data2fa = this.authService.otpsetup(user);
-            user.two_factor_secret = data2fa.secret;
-            user.otpPathUrl = data2fa.otpPathUrl;
-            await this.userService.saveUser(user);
-            res.setHeader('content-type','image/png');
-            return toFileStream(res, user.otpPathUrl);
-        }
+            return res.redirect('http://localhost:5173/auth');
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
-    }
-    
-    @Get('test')
-    test() {
-        // this.mailTemp.sendEmail();
     }
 
     @Get('42')
@@ -69,17 +57,11 @@ export class AuthController {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if(!token)
             return res.redirect('http://localhost:5173/home');
+        console.log(token)
         this.authService.setResCookie(res, token);
         const user = await this.userService.userHasAuth(fortyTworeq.user.email);
         if(user)
-        {
-            const data2fa = this.authService.otpsetup(user);
-            user.two_factor_secret = data2fa.secret;
-            user.otpPathUrl = data2fa.otpPathUrl;
-            await this.userService.saveUser(user);
             return res.redirect('http://localhost:5173/auth');
-
-        }
         return res.redirect('http://localhost:5173/home');
     }
 
@@ -88,6 +70,8 @@ export class AuthController {
     async getQrCode(@Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        return toDataURL(user.otpPathUrl);
+        const path = await toDataURL(user.otpPathUrl);
+        console.log(path);
+        return res.status(200).send(path);
     }
 }
