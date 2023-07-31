@@ -45,6 +45,12 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
+    @Column({nullable: true})
+    two_factor_secret: string
+
+    @Column({nullable: true})
+    otpPathUrl: string
+
     @ManyToMany(() => User, user => user.friends)
     @JoinTable()
     friends: User[];

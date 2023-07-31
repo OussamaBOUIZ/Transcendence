@@ -24,6 +24,6 @@ export const dataSourceOptions: DataSourceOptions = {
        User, Inbox_user
        , User_chat, Message
     ],
-    synchronize: true,
+    synchronize: true
 }
 new DataSource(dataSourceOptions);
