@@ -4,6 +4,7 @@ import { ChannelService } from './channel.service';
 import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { newUserDto } from './dto/newUserDto';
+import { UserOperationDto } from './dto/operateUserDto';
 
 @Controller('channel')
 export class ChannelController {
@@ -26,19 +27,11 @@ export class ChannelController {
         this.channelservice.setChannelAdmin(channelAdminData);
         return res.status(HttpStatus.CREATED).send('new channel admin was set');
     }
-    @Post('adduser')
-    async addChannelUser(@Body() addedUserData: newUserDto, @Res() res: Response) 
+    @Post('promoteuser')
+    async promoteUserFromChannel(@Body() promoteUser: UserOperationDto, @Res() res: Response)
     {
-        if(addedUserData.channelType === 'protected')
-        {
-            await this.channelservice.checkProtectedPass(addedUserData);
-            return res.status(HttpStatus.CREATED).send('new channel user was set');
-        }
-        if(addedUserData.channelType === 'public')
-        {
-            await this.channelservice.addToPublicChannel(addedUserData);
-            return res.status(HttpStatus.CREATED).send('new channel user was set');
-        }
+        await this.channelservice.promoteUserToAdmin(promoteUser);
+        return res.status(HttpStatus.CREATED).send('user was promoted successfully');
     }
 
 }

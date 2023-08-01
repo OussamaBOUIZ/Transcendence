@@ -1,25 +1,32 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+
+import { BadRequestException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/databases/user.entity';
-import { Repository } from 'typeorm';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
+import { UserService } from 'src/user/user.service';
+import { AchievementService } from 'src/databases/achievement/achievement.service';
+
+type tokenPayload = {
+    id: number,
+    email: string
+}
 
 @Injectable()
 export class AuthService {
-
-    constructor(@InjectRepository (User) private userRepository: Repository<User>
-    , private readonly jwtService: JwtService
-    , private readonly configService: ConfigService)
+    constructor(private readonly jwtService: JwtService
+    , private readonly configService: ConfigService
+    , private readonly userService: UserService
+    , private readonly achievementService: AchievementService)
     {}
 
     async apisignin(user)
     {
         if(!user) {
-            throw new BadRequestException('Unauthenticated');
+            return null;
         }
         const userFound = await this.searchForEmail(user.email);
         if(!userFound)
@@ -33,12 +40,15 @@ export class AuthService {
 
     async apiregisterUser(user)
     {
+        console.log(user);
+        
         const newUser = new User();
         newUser.email = user.email;
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
         newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
-        await this.userRepository.save(newUser);
+        this.achievementService.createAchievements(newUser);
+        await this.userService.saveUser(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: newUser.id,
@@ -46,21 +56,21 @@ export class AuthService {
     }
     async searchForEmail(email)
     {
-        const user = await this.userRepository.findOneBy({email: email});
+        const user = await this.userService.findUserByEmail(email);
         if(user)
             return user;
         return null;
     }
 
-    async validateUser(username: string, password: string)
+    async validateUser(email: string, password: string)
     {
-        const foundUser = await this.userRepository.findOneBy({username: username});
+        const foundUser = await this.userService.findUserByEmail(email);
         if(!foundUser)
             return null;
         const userCorrect = await argon.verify(foundUser.password, password);
-        if(!userCorrect)
+        if(!userCorrect || !foundUser.isEmailConfirmed)
             return null;
-        return foundUser;
+        return this.signToken(foundUser);
     }
 
     signToken(user: User)
@@ -68,26 +78,32 @@ export class AuthService {
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: user.id,
-            email: user.username
+            email: user.email
         }, {secret});
     }
 
     async signup(userdto: userSignUpDto)
     {
         const pass_hash = await argon.hash(userdto.password);
+        try{
+            const newUser = new User();
+            newUser.email = userdto.email;
+            newUser.firstname = userdto.firstname;
+            newUser.lastname = userdto.lastname;
+            newUser.username = userdto.firstname[0] + userdto.lastname;
+            newUser.password = pass_hash;
+            await this.userService.saveUser(newUser);
+            this.achievementService.createAchievements(newUser);
+            const secret = this.configService.get<string>('JWT_SECRET');
+            return this.jwtService.sign({
+                id: newUser.id,
+                email: newUser.email
+            }, {secret});
 
-        const newUser = new User();
-        newUser.email = userdto.email;
-        newUser.firstname = userdto.firstname;
-        newUser.lastname = userdto.lastname;
-        newUser.username = userdto.firstname[0] + userdto.lastname;
-        newUser.password = pass_hash;
-        await this.userRepository.save(newUser);
-        const secret = this.configService.get<string>('JWT_SECRET');
-        return this.jwtService.sign({
-            id: newUser.id,
-            email: newUser.email
-        }, {secret});
+        }
+        catch (error){
+            return null;
+        }
     }
     setResCookie(res: Response, token: string)
     {
@@ -95,5 +111,17 @@ export class AuthService {
             maxAge: 2592000000,
             secure: false,
         });
+    }
+    async retUserData(userToken: string)
+    {
+        const payload = this.jwtService.decode(userToken) as tokenPayload;
+        const user: User = await await this.userService.findUserByEmail(payload.email);
+        const userData = {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+        };
+        return userData;
     }
 }

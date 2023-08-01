@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm"
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import { Muted_users } from "./muted_users.entity"
+import { Message } from "./message.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({unique: true})
@@ -27,12 +28,9 @@ export class Channel extends BaseEntity {
     @Column('int', {array: true, nullable: true})
     banned_users: number[]
 
-    // @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
-    // muted: Muted_users[]
+    @OneToMany(() => Message, (messages) => messages.channel)
+    messages: Message[]
 
-    // @Column()
-    // direct_messages: string
-
-    // @Column()
-    // access_profiles: string
+    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
+    muted: Muted_users[]
 }

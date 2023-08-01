@@ -3,11 +3,12 @@ import {DataSource, DataSourceOptions} from "typeorm";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
-import { Achievement } from "src/databases/achievement.entity";
+import { Achievement } from "src/databases/achievement/achievement.entity";
 import { Channel } from "src/databases/channel.entity";
 import { Match_history } from "src/databases/match_history.entity";
 import { Friend } from "src/databases/friend.entity";
 import { Stats } from "src/databases/stats.entity";
+import { Muted_users } from "src/databases/muted_users.entity";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
@@ -19,7 +20,7 @@ export const dataSourceOptions: DataSourceOptions = {
     entities: [
       Achievement, Channel,
        Friend, Match_history,
-      //  Muted_users, 
+       Muted_users, 
        Stats,
        User, Inbox_user
        , User_chat, Message

@@ -1,23 +1,23 @@
 import {
-    OnGatewayConnection,
-    OnGatewayDisconnect,
-    OnGatewayInit,
-    SubscribeMessage,
-    WebSocketGateway,
-    WebSocketServer
+	OnGatewayConnection,
+	OnGatewayDisconnect,
+	OnGatewayInit,
+	SubscribeMessage,
+	WebSocketGateway,
+	WebSocketServer
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
-import {ChatGatewayService} from "./userchat.service";
-import {JwtService} from "@nestjs/jwt";
+import {ChatGatewayService} from "./userchat.service"
 import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {User} from 'src/databases/user.entity';
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
-import {SocketAuthMiddleware} from "./ws.mw";
-import {MessageDto, ReceiverDto} from "../interfaces/interfaces";
-import {json} from "stream/consumers";
+import {SocketAuthMiddleware} from "./websocket.middleware";
+import {MessageDto} from "../interfaces/interfaces";
+import {InboxService} from "../inbox/inbox.service";
+import {UserService} from "../user/user.service";
 
 /**
  * RxJS :
@@ -25,7 +25,6 @@ import {json} from "stream/consumers";
  * ? Observable - An object responsible for handling data streams and notifying
  observers when new data arrives
  * Observer: consumers of data streams emitted by observables,
- *
  *
  */
 /**
@@ -35,58 +34,70 @@ import {json} from "stream/consumers";
  *
  */
 
-@WebSocketGateway()
+@WebSocketGateway(1313)
 @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-    @WebSocketServer() server: Server;
-    private readonly logger: Logger;
+	@WebSocketServer() server: Server;
+	private readonly logger: Logger;
 
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-        private chatGatewayService: ChatGatewayService,
-        // private readonly jwt: JwtService,
-        private readonly configService: ConfigService
-    ) {
-        this.logger = new Logger(ChatGateway.name);
-    }
+	constructor(
+		@InjectRepository(User) private userRepository: Repository<User>,
+		private chatGatewayService: ChatGatewayService,
+		private inboxService: InboxService,
+		private userService: UserService,
+		// private readonly jwt: JwtService,
+		private readonly configService: ConfigService
+	) {
+		this.logger = new Logger(ChatGateway.name);
+	}
 
-    @SubscribeMessage('message')
-    async loadMessages(socket: Socket, data: { Receiver: ReceiverDto }) {
-        let user = await this.chatGatewayService.getUserById(data.Receiver.userId)
-        if (!user)
-            this.logger.log('todo handle if not exist!!')
+	@SubscribeMessage('SendMessage')
+	async sendMessage(socket: Socket, messageDto: MessageDto) {
+		const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
+		this.server.to(socketId).emit("message", messageDto.message)
+	}
 
-    }
+	// @SubscribeMessage('loadMessages')
+	// async allMessages(socket: Socket, data: MessageDto) {
+	// 	const receiver = await this.chatGatewayService.getUserById(data.user.userId)
+	// 	if (receiver === null)
+	// 		console.log('todo: handle if the receiver not exist')
+	//
+	// 	const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
+	// 	if (db_user === null)
+	// 		console.log('todo: handle if the receiver not exist')
+	// 	return await this.chatGatewayService.loadMessage(db_user, receiver.id)
+	// }
 
-    @SubscribeMessage('SendMessage')
-    async sendMessage(socket: Socket, data: MessageDto) {
-        let receiver = await this.chatGatewayService.getUserById(data.user.userId)
-        if (!receiver)
-            console.log('TODO : handle if the receiver not exist')
-        this.logger.log({receiver})
-        this.logger.log({sender: socket.data.user})
-        console.log(socket.data.user.id)
-        await this.chatGatewayService.saveMessage(data, receiver, socket.data.user.id)
-        this.server.to(receiver.socketId).emit("message", data.message)
-    }
+	async afterInit(client: Socket) {
+		await client.use(SocketAuthMiddleware(this.userService) as any)
+		console.log('after init called')
+	}
+
+	async handleConnection(client: Socket) {
+		this.logger.log('On Connection')
+		this.logger.log(client.data.user.email)
+		let user: User
+		user = await this.userRepository.findOneBy({email: client.data.user.email})
+		const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
+		if (inbox[1] > 0)
+			console.log('emit client side (User has unseen Messages)')
+		if (!user)
+			console.log('no such user or deleted');
+		user.socketId = client.id
+		user.isActive = true
+		await this.userRepository.save(user)
+	}
 
 
-    afterInit(client: Socket) {
-        client.use(SocketAuthMiddleware(this.chatGatewayService) as any)
-        console.log('after init called')
-    }
+	async handleDisconnect(client: Socket) {
+		const user = await this.chatGatewayService.getUserByEmail(client.data.user.email)
+		if (user == null)
+			this.logger.log('user not exist in DB : handle disconnect')
 
-    async handleConnection(client: Socket) {
-        const {authorization} = client.handshake.headers;
-
-        const user = this.chatGatewayService.getUser(authorization)
-        user.socketId = client.id
-        await this.userRepository.save(user)
-    }
-
-
-    handleDisconnect(client: any) {
-        console.log('disconnected')
-    }
+		user.isActive = false
+		await this.userRepository.save(user)
+		this.logger.log('On Disconnect')
+	}
 }
 

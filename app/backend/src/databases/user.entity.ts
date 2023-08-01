@@ -5,25 +5,33 @@ import { Friend } from "./friend.entity";
 import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
+import {Exclude} from "class-transformer";
 
 
 @Entity('User')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({nullable: true})
     socketId: string
 
+    @Column({default: 'Offline'})
+    status: string
+
+    @Column({default: false})
+    isActive: boolean
+
     @Column({nullable: true})
     firstname: string
 
-    @Column({nullable: true})
+    @Column({nullable: true })
     lastname: string
 
     @Column({nullable: true})
     username: string
 
+    @Exclude()
     @Column({nullable: true})
     password: string
 
@@ -32,6 +40,9 @@ export class User extends BaseEntity {
 
     @Column({unique: true, nullable: true})
     email: string
+
+    @Column({ type: 'boolean', default: false})
+    isEmailConfirmed: boolean
 
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
@@ -47,7 +58,7 @@ export class User extends BaseEntity {
     @JoinTable()
     joined_channels: Channel[]
 
-    @OneToOne(() => Stats, {nullable: true})
+    @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
     stat: Stats
 
@@ -60,11 +71,3 @@ export class User extends BaseEntity {
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
 }
-
-/*
-    const user1 = new User();
-    const Friend1 = new Friend();
-    const Friend2 = new Friend();
-    user1.friends = [friend1, friend2];
-    const user2 = new User();
- */
