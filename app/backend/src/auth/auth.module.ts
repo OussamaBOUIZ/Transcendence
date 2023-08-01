@@ -16,6 +16,9 @@ import { AchievementService } from 'src/databases/achievement/achievement.servic
 import { AchievementModule } from 'src/databases/achievement/achievement.module';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
 import { Stats } from 'src/databases/stats.entity';
+import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
+import { BlockedTokenList } from 'src/databases/BlockedTokenList/BlockedTokenList.entity';
+import { RequestProvider } from './jwt/ExecutionContext';
 
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
@@ -26,10 +29,10 @@ const jwtFactory = {
 };
 @Module({
   controllers: [AuthController],
-  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats]),
+  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, BlockedTokenList]),
    JwtModule.registerAsync(jwtFactory), PassportModule ],
   providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy
-    , MailTemplate, UserService, AchievementService],
+    , MailTemplate, UserService, AchievementService, BlockedTokenlistService, RequestProvider],
 })
 
 export class AuthModule {

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class TokenBlacklist {
+export class BlockedTokenList {
   @PrimaryGeneratedColumn()
   id: number;
 
