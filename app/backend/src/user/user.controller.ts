@@ -139,11 +139,13 @@ export class UserController {
 
     @Get('logout/:id')
     @UseGuards(JwtGuard)
-    async logout(@Param('id') id: number, @Req() req: Request, @Headers('Authorization') authtoken: string)
+    async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
+        const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
-        const payload = this.jwt.verify(authtoken.split(' ')[1], {secret: process.env.JWT_SECRET});
+        const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
         const till = payload.iat + 86400;
-        await this.BlockedTokenService.blacklistToken(authtoken.split[1](), till * 1000)
+        await this.BlockedTokenService.blacklistToken(token, till * 1000);
+        return res.redirect('http://localhost:5137/');
     }
 }

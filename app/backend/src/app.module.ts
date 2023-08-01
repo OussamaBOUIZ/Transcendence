@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { InboxModule } from './inbox/inbox.module';
 import { ChannelModule } from './channel/channel.module';
 import { ChatGatewayModule } from './chat/userchat.module';
+import {ScheduleModule} from '@nestjs/schedule'
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ChatGatewayModule } from './chat/userchat.module';
       }
     },
    }),
+   ScheduleModule.forRoot(),
 ],
   providers: []
 })
