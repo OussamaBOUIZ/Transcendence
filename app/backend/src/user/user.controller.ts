@@ -1,19 +1,27 @@
-import { Controller, Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile, Req, Headers, BadRequestException } from '@nestjs/common';
+import { Controller, Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile, Req, Headers, BadRequestException, ConsoleLogger } from '@nestjs/common';
 import { UserService } from './user.service';
 import {Request, Response} from 'express'
 import { createReadStream, existsSync } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
 import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService
+        , private readonly jwt: JwtService
+        , private readonly BlockedTokenService: BlockedTokenlistService) {}
 
     @Get()
+    @UseGuards(JwtGuard)
     async getUserData(@Req() req: Request)
     {
+        console.log('HEERE');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -127,5 +135,15 @@ export class UserController {
         if(!isCodeValid)
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
+    }
+
+    @Get('logout/:id')
+    @UseGuards(JwtGuard)
+    async logout(@Param('id') id: number, @Req() req: Request, @Headers('Authorization') authtoken: string)
+    {
+        const user = await this.userService.findUserById(id);
+        const payload = this.jwt.verify(authtoken.split(' ')[1], {secret: process.env.JWT_SECRET});
+        const till = payload.iat + 86400;
+        await this.BlockedTokenService.blacklistToken(authtoken.split[1](), till * 1000)
     }
 }
