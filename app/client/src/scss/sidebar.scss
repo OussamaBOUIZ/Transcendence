@@ -11,7 +11,6 @@ div.backgroundShadow {
     filter: blur(125px);
 }
 div.sidebar {
-    // background-color: white;
     width: 70px;
     height: 80vh;
     margin-top: 6%;
@@ -28,23 +27,22 @@ div.sidebar {
     div.sidebar-shadow {
         @include center-styles;
         background-color: $sdb-color;
-        // z-index: 0;
         padding: 5px;
         border-radius: 10px;
-        width: 2.2rem;
-        height: 2.2rem;
-        margin: 0.8rem;
+        width: 3em;
+        height: 3em;
+        margin: 0.8em;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
         div.sidebar_button {
             @include center-styles;
             padding: 5px;
             border-radius: 10px;
-            width: 80%;
-            height: 80%;
+            width: 100%;
+            height: 100%;
             * {
                 display: block;
-                width: 90%;
-                height: 90%;
+                width: 80%;
+                height: 80%;
                 fill: white;
             }
         }

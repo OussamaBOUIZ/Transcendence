@@ -2,8 +2,8 @@ import "../../scss/auth.scss";
 // import QRcode from "../../Assets/qr-code.png";
 import axios from "axios"
 import {useState} from "react"
-import Notification from "../../components/Notification"
-import { getQRcode } from "../../hooks/getQRcode"
+import Notification from "../../Components/Notification"
+import { getQRcode } from "../../Hooks/getQRcode"
 
 
 export default function Auth() {

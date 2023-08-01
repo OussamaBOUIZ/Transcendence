@@ -25,9 +25,12 @@
     display: grid;
     margin: 6% 2% 2.4% 3%;
     width: 70%;
-    grid-gap: 10px;
-    grid-template-rows: 0.9fr 0.8fr 1fr;
-    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 0.6rem;
+    grid-template: 0.9fr 0.8fr 1fr / repeat(6, 1fr);
+    grid-template-areas: 
+    "battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal"
+    "theBeast theBeast SpiderGround SpiderGround BrightGround BrightGround"
+    "Leaderboard Leaderboard Leaderboard GameHistory GameHistory GameHistory";
     z-index: 1;
     .item {
         background-color: #59189A;
@@ -44,19 +47,21 @@
         padding: 1rem 2rem;
     }
     .battleRoyal {
-        grid-column: 1 / -1;
-        // grid-row: 1 / 3;
+        grid-area: battleRoyal;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
         position: relative;
         border-radius: 1rem;
         .cover {
+            position: relative;
             width: 100%;
             height: 100%;
             border-radius: 1rem;
             background-image: url("../Assets/Vintage_Style_Photography_ping_pong_table_dark_night_forest_bi_2.jpeg"), linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 58.33%);
-            background-position: -2.5px -503px;
+            // background-position: -2.5px -503px;
+            background-position: center 70%;
             opacity: 0.6;
-            background-size: 102% 396.258%;
+            // background-size: 102% 396.258%;
+            background-size: cover;
             background-repeat: no-repeat;
         }
         img {
@@ -94,8 +99,9 @@
                 background: #E72FD0;
                 border-radius: 1.5625rem;
                 border: none;
-                box-shadow: 0px 0px 20px 0px #E72FD0;                    width: 9.5rem;
-                height: 3.375rem;
+                box-shadow: 0px 0px 20px 0px #E72FD0;
+                width: 9.5rem;
+                padding: .65rem 0;
                 color: white;
                 span {
                     font-size: 1.375rem;
@@ -106,34 +112,30 @@
     }
     
     .theBeast {
+        grid-area: theBeast;
         background-image: url("../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_0.jpeg"),;
         background-size: cover;
         background-repeat: no-repeat;
-        grid-column: 1 / span 2;
-        // grid-row: 3 / span 2;
     }
     .SpiderGround {
+        grid-area: SpiderGround;
         background-image: url("../Assets/DreamShaper_32_young_pale_skinny_white_man_white_and_blue_hair_1.jpeg"),;
         background-position: 0 -33px ;
         background-size: cover;
         background-repeat: no-repeat;
-        grid-column: 3 / span 2;
-        // grid-row: 3 / span 2;
     }
     .BrightGround {
+        grid-area: BrightGround;
         background-image: url("../Assets/DreamShaper_32_young_pale_white_man_black_and_yellow_hair_ping_2.jpeg"),;
         background-size: cover;
         background-repeat: no-repeat;
-        grid-column: 5 / span 2;
-        // grid-row: 3 / span 2;
     }
     
     .Leaderboard {
+        grid-area: Leaderboard;
         background-image: url("../Assets/Leaderboard.png");
         background-size: cover;
         background-repeat: no-repeat;
-        grid-column: 1 / 4;
-        // grid-row: 5 / -1;
         display: flex;
         flex-direction: column;
         p {
@@ -163,6 +165,7 @@
                         color: #FFF;
                         font-size: 0.625rem;
                         font-weight: 400;
+                        text-transform: lowercase;
                     }
                 }
             }
@@ -173,11 +176,10 @@
     }
     
     .GameHistory {
+        grid-area: GameHistory;
         background-image: url("../Assets/GameHistory.png");
         background-size: cover;
         background-repeat: no-repeat;
-        grid-column: 4 / -1;
-        // grid-row: 5 / -1;
         display: flex;
         flex-direction: column;
         p {

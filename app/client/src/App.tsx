@@ -1,6 +1,7 @@
-import Sign from "./pages/Sign/Sign"
-import Home from "./pages/Home/Home"
-import Auth from "./pages/Auth/Auth"
+import Sign from "./Pages/Sign/Sign"
+import Home from "./Pages/Home/Home"
+import Auth from "./Pages/Auth/Auth"
+import "./scss/app.scss"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
 export default function App() {

@@ -16,7 +16,7 @@ export const useFetchUserData = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/user");
-        setUserData(response.data); // Assuming the API response is in the correct format
+        setUserData(response.data);
       } catch (error) {
         console.log(error);
       }
