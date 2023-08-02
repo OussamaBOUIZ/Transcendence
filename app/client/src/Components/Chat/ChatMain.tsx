@@ -3,10 +3,10 @@ import ChatMainInit from './ChatMainInit';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
 import ChatWindow from './ChatWindow';
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
 
-const socket = io.connect("http:://localhost:3001")
+// const socket = io.connect("http:://localhost:3001")
 
 export default function ChatMain () {
     const [currentMessage, setCurrentMessage] = React.useState("")
