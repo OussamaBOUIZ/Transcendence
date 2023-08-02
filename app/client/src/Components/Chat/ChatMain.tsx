@@ -10,12 +10,12 @@ import ChatWindow from './ChatWindow';
 
 export default function ChatMain () {
     const [currentMessage, setCurrentMessage] = React.useState("")
-    function handleSubmit(e) {
+    function handleSubmit(e:any) {
         e.preventDefault()
         console.log(e.target.value)
     }
 
-    function handleChange(e) {
+    function handleChange(e:any) {
         setCurrentMessage(e.target.value)
     }
 
@@ -25,10 +25,15 @@ export default function ChatMain () {
              username="ELEGANT TOM"
              online={true}
              />
+
+
              <section className="chat_window">
-            <div className="message_bubble">
+            <span className="message incoming">
                 Hello how're you doing
-            </div>
+            </span>
+            <span className="message outgoing">
+                I am good! and you
+            </span>
         </section>
              <form className="chat_input" onSubmit={handleSubmit}>
                 <textarea 
