@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {User} from 'src/databases/user.entity';
 import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -23,12 +23,45 @@ export class UserService {
     ) {
     }
 
+    async blockUser(userId: number, user: User) {
+        const blockedUser = await this.userRepo.findOne({
+            where: {id: userId}
+        })
+        if (!blockedUser)
+            throw new HttpException('user not found', HttpStatus.NOT_FOUND)
+        if (user.id == userId) {
+            throw new HttpException('You can not block yourself', HttpStatus.BAD_REQUEST)
+        }
+        if (!user.blocked_users)
+            user.blocked_users = []
+
+        user.blocked_users = [...user.blocked_users, blockedUser]
+        console.log(await this.userRepo.save(user))
+    }
+
     async saveUser(user: User) {
         await this.userRepo.save(user);
     }
 
     async findUserByEmail(email: string): Promise<User> {
         return await this.userRepo.findOneBy({email: email});
+    }
+
+    async getBlockedUsers(userId: number) {
+        return await this.userRepo.find({
+            select: {
+                id: true,
+                blocked_users: {
+                    id: true
+                },
+            },
+            relations: {
+                blocked_users: true,
+            },
+            where : {
+                id: userId,
+            }
+        })
     }
 
     async findUserById(id: number): Promise<User> {
@@ -39,7 +72,7 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        return await this.userRepo.findOneBy({email: payload.email}) ;
+        return await this.userRepo.findOneBy({email: payload.email});
     }
 
     decodeJwtCode(userToken: string) {
@@ -49,7 +82,7 @@ export class UserService {
     }
 
     async getMatchHistory(userId: number): Promise<Match_history[]> {
-        return await  this.matchHistoryRepo.find({
+        return await this.matchHistoryRepo.find({
             relations: {
                 opponent: true,
             },
@@ -58,7 +91,7 @@ export class UserService {
                     id: true,
                     username: true,
                 }
-            } ,
+            },
             where: {
                 user: {
                     id: userId

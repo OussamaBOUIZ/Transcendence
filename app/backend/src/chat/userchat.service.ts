@@ -10,6 +10,7 @@ import {Message} from "../databases/message.entity";
 import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
 import {use} from "passport";
+import {UserService} from "../user/user.service";
 
 @Injectable()
 export class ChatGatewayService {
@@ -19,6 +20,7 @@ export class ChatGatewayService {
         private readonly jwt: JwtService,
         private readonly configService: ConfigService,
         private readonly inboxService: InboxService,
+        private readonly userService: UserService,
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(User_chat) private chatRepository: Repository<User_chat>,
         @InjectRepository(Message) private messageRepository: Repository<Message>,
@@ -75,11 +77,13 @@ export class ChatGatewayService {
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
         if (author === null)
             return 'todo handle not authorized'
+        if (author.id === receiver.id)
+            return 'you cannot send message to your self?'
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
-        if (receiver.isActive === false)
-            // save the last message in inbox table
+        if (receiver.isActive === false) {// save the last message in inbox table
             await this.inboxService.saveInbox(receiver, author.id, messageDto)
+        }
         return receiver.socketId
     }
 

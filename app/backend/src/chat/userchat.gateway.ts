@@ -55,11 +55,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage('SendMessage')
-	async sendMessage(socket: Socket, messageDto: any) {
-		// const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
-		this.server.emit("message", {
-			msg: 'hello13'
-		})
+	async sendMessage(socket: Socket, messageDto: MessageDto) {
+		const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
+		this.server.to(socketId).emit("message", messageDto.message)
 	}
 
 	// @SubscribeMessage('loadMessages')
@@ -75,33 +73,33 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	// }
 
 	async afterInit(client: Socket) {
-		// await client.use(SocketAuthMiddleware(this.userService) as any)
+		await client.use(SocketAuthMiddleware(this.userService) as any)
 		console.log('after init called')
 	}
 
 	async handleConnection(client: Socket) {
-		// this.logger.log('On Connection')
-		// this.logger.log(client.data.user.email)
-		// let user: User
-		// user = await this.userRepository.findOneBy({email: client.data.user.email})
-		// const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
-		// if (inbox[1] > 0)
-		// 	console.log('emit client side (User has unseen Messages)')
-		// if (!user)
-		// 	console.log('no such user or deleted');
-		// user.socketId = client.id
-		// user.isActive = true
-		// await this.userRepository.save(user)
+		this.logger.log('On Connection')
+		this.logger.log(client.data.user.email)
+		let user: User
+		user = await this.userRepository.findOneBy({email: client.data.user.email})
+		const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
+		if (inbox[1] > 0)
+			console.log('emit client side (User has unseen Messages)')
+		if (!user)
+			console.log('no such user or deleted');
+		user.socketId = client.id
+		user.isActive = true
+		await this.userRepository.save(user)
 	}
 
 
 	async handleDisconnect(client: Socket) {
-		// const user = await this.chatGatewayService.getUserByEmail(client.data.user.email)
-		// if (user == null)
-		// 	this.logger.log('user not exist in DB : handle disconnect')
-		//
-		// user.isActive = false
-		// await this.userRepository.save(user)
+		const user = await this.chatGatewayService.getUserByEmail(client.data.user.email)
+		if (user == null)
+			this.logger.log('user not exist in DB : handle disconnect')
+
+		user.isActive = false
+		await this.userRepository.save(user)
 		this.logger.log('On Disconnect')
 	}
 }

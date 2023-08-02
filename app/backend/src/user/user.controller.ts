@@ -8,11 +8,13 @@ import {
     ParseIntPipe,
     UseGuards,
     StreamableFile,
-    Req, UnauthorizedException
+    UnauthorizedException,
+    Post, Req, Res, HttpStatus,
+
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import {Request} from 'express'
-import { createReadStream, existsSync } from 'fs';
+import {raw, Request, Response} from 'express'
+import { createReadStream } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
 import {Match_history} from "../databases/match_history.entity";
@@ -37,10 +39,32 @@ export class UserController {
     async getGameLeaders() {
         return this.userService.getLeaderBoard()
     }
-
     @Get(':id')
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
+    }
+
+    @Get('block/:userId')
+    async getBlockedUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request
+    )
+    {
+        const user = await this.userService.findUserByEmail(req.user["email"])
+        const User1 =  await this.userService.getBlockedUsers(user.id)
+        return await this.userService.getBlockedUsers(userId)
+    }
+    @Post('block/:userId')
+    async blockUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request,
+        @Res() res: Response
+    ) {
+        // console.log(req.user['email'], "ok")
+        const user = await this.userService.findUserByEmail(req.user['email'])
+        console.log(user.id, userId)
+        await this.userService.blockUser(userId, user)
+        return res.status(HttpStatus.OK).send('the user blocked ')
     }
 
     @Get()
