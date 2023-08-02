@@ -39,7 +39,13 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        return await this.userRepo.findOneBy({email: payload.email});
+        return await this.userRepo.findOneBy({email: payload.email}) ;
+    }
+
+    decodeJwtCode(userToken: string) {
+        if (!userToken)
+            return null
+        return this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload
     }
 
     async getMatchHistory(userId: number): Promise<Match_history[]> {

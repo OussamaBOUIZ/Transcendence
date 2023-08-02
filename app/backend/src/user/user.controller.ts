@@ -8,7 +8,7 @@ import {
     ParseIntPipe,
     UseGuards,
     StreamableFile,
-    Req
+    Req, UnauthorizedException
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {Request} from 'express'
@@ -44,9 +44,15 @@ export class UserController {
     }
 
     @Get()
-    async getUser(@Req() req: Request)
+    async getUserFromJwt(@Req() req: Request)
     {
-        return await this.userService.getUserFromJwt(req.cookies['access_token'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
+        if (!user)
+            throw new UnauthorizedException()
+        return {
+            id: user.id,
+            username: user.username,
+        }
     }
 
     @Get('picture/:id')
