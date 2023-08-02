@@ -1,0 +1,40 @@
+@import './var.scss';
+@import './mixins.scss';
+
+div.sidebar {
+    background-color: white;
+    width: 60px;
+    height: 80vh;
+    // margin-top: 56px;
+    margin-left: 10px;
+    border-radius: 25px;
+    border: 0.5px solid rgba(255, 255, 255, 0.30);
+    background: radial-gradient(552.73% 50% at 50.00% 50.00%, rgba(76, 11, 91, 0.35) 0.24%, rgba(48, 13, 85, 0.70) 100%);
+    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.10);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding:  16px 0px;
+
+    div.sidebar_button {
+        @include center-styles;
+        background-color: $sdb-color;
+        padding: 5px;
+        border-radius: 10px;
+        width: 26px;
+        height: 26px;
+        margin: 10px;
+        * {
+            display: block;
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+    }
+    div.logout {
+       margin-top: auto;
+    }
+    div.active {
+        background : $sdb-gradient;
+    }
+}
