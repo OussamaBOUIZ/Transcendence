@@ -1,36 +1,37 @@
 import React from 'react'
-import ChatMainInit from './ChatMainInit';
 import ChatHeader from './ChatHeader';
-import ChatInput from './ChatInput';
-import ChatWindow from './ChatWindow';
 import {io} from 'socket.io-client'
 
 
-// const socket: any = io.connect("http:://localhost:1313")
-// const socket = io("http:://localhost:1313")
 export default function ChatMain () {
     const [currentMessage, setCurrentMessage] = React.useState("")
+    // const [currentMessageObj, setCurrentMessageObj] = React.useState({
+    //     userId: ,
+    //     creationDate:null,
+    //     message: ""
+    // })
+
     const [receivedMessage , setReceivedMessage] = React.useState("")
     const socket= React.useRef()
 
-    function handleSubmit(e) {
+    function handleSubmit(e: React.SyntheticEvent<EventTarget>): void {
 
         e.preventDefault()
-        console.log(e.target.value)
+        console.log(currentMessage)
+        setCurrentMessage("")
     }
-    function handleChange(e) {
+
+    function handleChange(e: React.SyntheticEvent<EventTarget>):void {
         setCurrentMessage(e.target.value)
     }
 
     React.useEffect(() => {
         socket.current = io("ws://localhost:1313");
-        socket.current.emit("SendMessage", "j")
+        socket.current.emit("SendMessage")
         socket.current.on("message", (data) => {
             console.log(data)
             setReceivedMessage(data.msg);
-            // console.log("-----------------")
             console.log(receivedMessage)
-            // console.log("-----------------")
         });
     }, []);
 
@@ -40,11 +41,14 @@ export default function ChatMain () {
              username="ELEGANT TOM"
              online={true}
              />
+
              <section className="chat_window">
-            <div className="message_bubble">
-                Hello how're you doing
-            </div>
-        </section>
+                <div className="message_bubble">
+                    Hello how're you doingg
+                </div>
+            </section>
+
+
              <form className="chat_input" onSubmit={handleSubmit}>
                 <textarea 
                 placeholder="Type something"
