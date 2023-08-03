@@ -4,7 +4,7 @@ import losses from "../Assets/Icons/losses.svg"
 import wins from "../Assets/Icons/wins.svg"
 import friendsIcon from "../Assets/Icons/group.svg"
 
-export default function ProfileImage({ user }) {
+export default function FriendsCard({ user }) {
 
     const {allFriends} = getAllFriends(user?.id);
 
