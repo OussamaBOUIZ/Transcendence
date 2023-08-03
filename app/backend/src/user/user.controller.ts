@@ -9,7 +9,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile, Query,
+    Post, Req, Res, HttpStatus, UploadedFile, Query, Headers,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
