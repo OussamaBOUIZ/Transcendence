@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const useFetchUserData = () => {
+export const getUserData = () => {
   // const initialUserData = {
   //   id: 0,
   //   firstname: "",

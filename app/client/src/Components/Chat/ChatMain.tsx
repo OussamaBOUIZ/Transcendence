@@ -1,6 +1,8 @@
 import React from 'react'
 import ChatHeader from './ChatHeader';
 import {io} from 'socket.io-client'
+import {MessageData} from "../../../../global/Interfaces"
+import { getUserData } from '../../Hooks/getUserData';
 
 
 export default function ChatMain () {
@@ -10,6 +12,8 @@ export default function ChatMain () {
     //     creationDate:null,
     //     message: ""
     // })
+    // const {userData} = getUserData()
+    // console.log(userData)
 
     const [receivedMessage , setReceivedMessage] = React.useState("")
     const socket= React.useRef()
@@ -28,10 +32,9 @@ export default function ChatMain () {
     React.useEffect(() => {
         socket.current = io("ws://localhost:1313");
         socket.current.emit("SendMessage")
-        socket.current.on("message", (data) => {
-            console.log(data)
-            setReceivedMessage(data.msg);
-            console.log(receivedMessage)
+        socket.current.on("message", (inMessage: string) => {
+            console.log(inMessage)
+            setReceivedMessage(inMessage);
         });
     }, []);
 
