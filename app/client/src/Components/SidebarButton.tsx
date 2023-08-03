@@ -1,9 +1,13 @@
 import React from 'react'
 
-export default function SidebarButton ({className, children, toggle}) {
+export default function SidebarButton ({className, id, children, toggle}) {
     return (
-        <div className={className} onClick={toggle}>
-        {children}
-        </div>
+        <>
+            <div className={`sidebar-shadow ${className}`}>
+                <div className={`${className} ${id}`} onClick={toggle}>
+                    {children}
+                </div>
+            </div>
+        </>
     );
 }

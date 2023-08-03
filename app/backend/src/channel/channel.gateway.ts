@@ -19,6 +19,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         console.log(`Init gateway`)
     }
 
+        // io.on('connection', {})
     async handleConnection(client: Socket) {
         console.log(client.id);
         const authToken: string = client.handshake.headers.authorization;

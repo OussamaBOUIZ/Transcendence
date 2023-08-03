@@ -1,6 +1,15 @@
+@import "./mixins.scss";
+@import "./var.scss";
+
 body {
-    margin: 0 auto;
-    font-family: 'Poppins', sans-serif;
+    .logo {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        position: absolute;
+        left: 5%;
+        top: 2.5%;
+    }
 }
 
 .main {
@@ -10,13 +19,7 @@ body {
     height: 100vh;
     flex-wrap: wrap;
     gap: 0.01em;
-    position: relactive;
-    nav {
-        // background: red;
-        position: absolute;
-        left: 5%;
-        top: 2.5%;
-    }
+    position: relative;
     .content {
         // background: red;
         display: flex;
@@ -26,9 +29,7 @@ body {
         flex-basis: 450px;
         flex-grow: 999999;
         .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            @include center-columns;
             // background: blue;
             width: 50%;
             height: 100%;
@@ -57,9 +58,7 @@ body {
             main {
                 // background: red;
                 width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                @include center-columns;
                 gap: 1.88rem;
                 margin-top: 1.5rem;
                 .bttn {
@@ -68,19 +67,22 @@ body {
                     width: 100%;
                     gap: 1.25rem;
                     .btn {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
+                        @include center-styles;
                         gap: 0.625rem;
                         background-color: white;
                         border-radius: 0.625rem;
-                        border: 1.5px solid #D3CCCC;
+                        border: solid 1.5px #D3CCCC;
+                        transition: border-width 0.4s linear;
                         min-height: 4.625em;
                         font-size: clamp(0.7rem, 0.9vw, 0.85rem);
                         cursor: pointer;
                         img {
                             width: 1.6875em;
                         }
+                    }
+                    .btn:hover {
+                        border-width: 3px;
+                        // border-color: black;
                     }
                     .btn-42:hover {
                         border-color: black;
@@ -133,6 +135,7 @@ body {
                 margin-top: .5rem;
             }
             .submit {
+                font-family: "Poppins";
                 margin-top: .5rem;
                 cursor: pointer;
                 border-radius: 1.875rem;
@@ -143,17 +146,8 @@ body {
                 font-size: clamp(0.9rem, 0.9vw, 1.1rem);
                 font-weight: 500;
                 span {
+                    font-size: clamp(1rem, 1vw, 1.3rem);
                     font-weight: 500;
-                }
-            }
-            .submit:hover {
-                transform: scale(0.9);
-                overflow: hidden;
-                animation: scale-up-center 0.4s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-            }
-            @keyframes scale-up-center {
-                100% {
-                        transform: scale(1);
                 }
             }
   
@@ -173,10 +167,16 @@ body {
     .cover {
         flex-basis: 50vw;
         flex-grow: 1;
+        display: none;
         width: 50%;
         height: 100vh;
         background-position: 50%;
         background-size: cover;
         background-repeat: no-repeat;
+    }
+    @media (min-width: 900px) {
+        .cover {
+            display: block;
+        }
     }
 }

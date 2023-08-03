@@ -25,6 +25,7 @@ $text-light-color: #DAD6D6;
 $input-background : rgba(171, 171, 171, 0.28);
 $active-message-bg: #531F8A;
 $primary-pink: #E72FD0;
+$bar-background: #350D5C;
 
 
 
@@ -32,3 +33,16 @@ $primary-pink: #E72FD0;
 $font-style :'Poppins', sans-serif;
 $logo-font-size: 25px;
 $logo-font-weight: 600;
+
+/* PROFILE IMAGE SIZE */
+$profileWidthSmall: 2.4375rem; 
+$profileHeightSmall: 2.5rem; 
+
+$profileWidthRegular: 2.9375rem; 
+$profileHeightRegular: 3rem; 
+
+$profileWidthMedium: 3.25rem; 
+$profileHeightMedium: 3.36019rem;
+
+$profileWidthBig: 7.375rem; 
+$profileHeightBig: 7.625rem; 

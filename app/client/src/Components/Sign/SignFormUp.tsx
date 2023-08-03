@@ -1,6 +1,11 @@
 import React, {useState} from "react"
 
-export default function Form({handleChange, formDataUp, setFormDataUp}) {
+export default function Form({handleChange, handleSubmit, formDataUp, setFormDataUp}) {
+    function handleEnter(event) {
+        console.log(event)
+        if (event.key === 'Enter')
+            handleSubmit()
+    }
     return (
         <>
             <div className="yourNameForm">
@@ -10,6 +15,7 @@ export default function Form({handleChange, formDataUp, setFormDataUp}) {
                     placeholder='First name'
                     name='firstname'
                     onChange={handleChange}
+                    onKeyUp={handleEnter}
                     value={formDataUp.firstname}
                     ></input>
                 <input
@@ -18,6 +24,7 @@ export default function Form({handleChange, formDataUp, setFormDataUp}) {
                     placeholder='Last name'
                     name='lastname'
                     onChange={handleChange}
+                    onKeyUp={handleEnter}
                     value={formDataUp.lastname}
                     ></input>
             </div>
@@ -27,6 +34,7 @@ export default function Form({handleChange, formDataUp, setFormDataUp}) {
                 placeholder= "Email"
                 name="email"
                 onChange={handleChange}
+                onKeyUp={handleEnter}
                 value={formDataUp.email}
                 ></input>
             <input
@@ -35,6 +43,7 @@ export default function Form({handleChange, formDataUp, setFormDataUp}) {
                 placeholder='Password'
                 name='password'
                 onChange={handleChange}
+                onKeyUp={handleEnter}
                 value={formDataUp.password}
                 ></input>
         </>

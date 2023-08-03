@@ -1,0 +1,38 @@
+@import "./var.scss";
+@import "./mixins.scss";
+
+.profileImage {
+    @include center-styles;
+    padding: 0.3125rem;
+    border-radius: 1rem;
+    background: rgba(21, 4, 39, 0.50);
+    box-shadow: 0px 0px 100px 0px rgba(255, 255, 255, 0.10) inset;
+    .userImage {
+        width: 90%;
+        height: 90%;
+        border-radius: 1rem;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        box-shadow: 0px 0px 1px 0px rgba(255, 255, 255, 0.50) inset;
+    }
+}
+.small {
+    width: $profileWidthSmall;
+    height: $profileHeightSmall;
+}
+
+.regular {
+    width: $profileWidthRegular;
+    height: $profileHeightRegular;
+}
+  
+.medium {
+    width: $profileWidthMedium;
+    height: $profileHeightMedium;
+}
+  
+.big {
+    width: $profileWidthBig;
+    height: $profileHeightBig;
+}

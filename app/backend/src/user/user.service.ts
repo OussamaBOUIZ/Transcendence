@@ -6,6 +6,7 @@ import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import {Match_history} from "../databases/match_history.entity";
+import { authenticator } from 'otplib';
 
 type tokenPayload = {
     id: number,
@@ -67,14 +68,24 @@ export class UserService {
     }
 
     async findUserById(id: number): Promise<User> {
+        console.log(id);
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async userHasAuth(email: string)
+    {
+        const user = await this.userRepo.findOne({
+            where: {email: email}
+        });
+        if(user.is_two_factor === true)
+            return user;
+        return null;
+    }
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
             return null;
-        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        return await this.userRepo.findOneBy({email: payload.email});
+        const payload = this.jwtService.decode(userToken) as tokenPayload;
+        return await this.userRepo.findOneBy({id: payload.id});
     }
 
     decodeJwtCode(userToken: string) {
@@ -138,7 +149,7 @@ export class UserService {
                     id: true,
                     username: true
                 }
-            }
+            } 
         })
     }
 
@@ -159,5 +170,76 @@ export class UserService {
             where: {is_achieved: true, user_id: id}
         })
         return achieved.slice(0, 3);
+    }
+    async onlineFriends(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                friends: {
+                    stat: true,
+                },
+            }
+        });
+        const friends: User[] = user.friends.filter((friend) => friend.status === 'Online').splice(0, 4);
+        return friends;
+
+    }
+    async AllFriends(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                friends: {
+                    stat: true,
+                }
+            }
+        });
+        return user; 
+    }
+    async addFriend(userId: number, friendId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+            relations: {
+                friends: true,
+            }
+        });
+        const friend = await this.userRepo.findOne({
+            where: {id: friendId},
+        });
+        user.friends.push(friend);
+        await this.userRepo.save(user);
+    }
+    async generate2fa(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        user.two_factor_secret = secret;
+        user.otpPathUrl = otpPathUrl;
+        await this.userRepo.save(user);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+
+    otpsetup(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+
+    isUserAuthValid(access_token: string, user: User)
+    {
+        console.log(access_token, user.two_factor_secret);
+        return authenticator.verify({
+            token: access_token,
+            secret: user.two_factor_secret
+        })
     }
 }

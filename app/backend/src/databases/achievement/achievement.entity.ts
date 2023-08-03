@@ -7,9 +7,6 @@ export class Achievement extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
     
-    // @OneToOne(() => User)
-    // user: User
-    
     @ManyToOne(() => Stats , (stat) => stat.achievements, {nullable: true})
     stat: Stats
     

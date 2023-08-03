@@ -1,7 +1,10 @@
 import React from "react"
 
-export default function Form({ handleChange, formData, setFormData }) {
-
+export default function Form({ handleChange, handleSubmit, formData, setFormData }) {
+    function handleEnter(event) {
+        if (event.key === 'Enter')
+            handleSubmit()
+    }
     return (
         <>
             <input
@@ -9,6 +12,7 @@ export default function Form({ handleChange, formData, setFormData }) {
                 className="username"
                 placeholder='Username'
                 name='username'
+                onKeyUp={handleEnter}
                 onChange={handleChange}
                 value={formData.username}
                 ></input>
@@ -17,6 +21,7 @@ export default function Form({ handleChange, formData, setFormData }) {
                 className="password"
                 placeholder='Password'
                 name='password'
+                onKeyUp={handleEnter}
                 onChange={handleChange}
                 value={formData.password}
                 ></input>

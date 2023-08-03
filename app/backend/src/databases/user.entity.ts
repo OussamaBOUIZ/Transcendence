@@ -12,8 +12,6 @@ import {
 } from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
-import { Friend } from "./friend.entity";
-import { Channel } from "./channel.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
 import {Exclude} from "class-transformer";
@@ -58,20 +56,23 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    @ManyToMany(() => User, user => user.friends) // todo : change user.friends to user.friendOf ?!
-    @JoinTable()
-    friends: User[];
+    @Column({nullable: true})
+    two_factor_secret: string
+
+    @Column({nullable: true})
+    otpPathUrl: string
 
     @ManyToMany(() => User, user => user.friends)
-    friendOf: User[];
+    @JoinTable()
+    friends: User[];
 
     @ManyToMany(type => User, user => user.blocked_users, {nullable: true})
     @JoinTable()
     blocked_users: User[]
 
-    @ManyToOne(() => Channel, {nullable: true})
-    @JoinTable()
-    joined_channels: Channel[]
+    // @ManyToOne(() => Channel, {nullable: true})
+    // @JoinTable()
+    // joined_channels: Channel []
 
     @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
