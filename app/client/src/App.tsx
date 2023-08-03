@@ -1,5 +1,6 @@
 import Sign from "./Pages/Sign/Sign"
 import Home from "./Pages/Home/Home"
+import Profile from "./Pages/Profile/Profile"
 import Auth from "./Pages/Auth/Auth"
 import "./scss/app.scss"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
@@ -12,6 +13,7 @@ export default function App() {
                 <Route path="/" element={<Sign />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </Router>
     )

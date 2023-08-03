@@ -46,42 +46,43 @@
         font-weight: 900;
         padding: 1rem 2rem;
     }
+    
     .battleRoyal {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
         grid-area: battleRoyal;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
-        position: relative;
-        border-radius: 1rem;
         .cover {
-            position: relative;
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            border-radius: 1rem;
-            background-image: url("../Assets/Vintage_Style_Photography_ping_pong_table_dark_night_forest_bi_2.jpeg"), linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 58.33%);
-            // background-position: -2.5px -503px;
-            background-position: center 70%;
-            opacity: 0.6;
-            // background-size: 102% 396.258%;
-            background-size: cover;
+            background-image: url("../Assets/Vintage_Style_Photography_ping_pong_table_dark_night_forest_bi_2.jpeg");
+            background-position: -2.5px -503px;
+            background-size: 102% 396.258%;
+            opacity: .6;
             background-repeat: no-repeat;
+            border-radius: 1rem;
         }
         img {
-            width: 21.4375rem;
-            height: 23.8125rem;
+            width: 21.4375em;
+            height: 23.8125em;
             position: absolute;
-            left: 73.9%;
+            right: 0;
             bottom: 0;
         }
         .BattleRoyalCover {
-            position: absolute;
-            top: 0;
             height: 100%;
-            margin-left: 6rem;
+            margin-left: 6em;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            z-index: 1;
             span {
                 color: white;
-                font-size: 3.75rem;
+                font-size: clamp(1.6rem, 3vw, 3.75rem);
                 font-style: italic;
                 font-weight: 900;
             } 
@@ -89,20 +90,21 @@
                 margin-top: 0;
                 color: #EEE;
                 font-size: 1.25rem;
+                font-size: clamp(.5rem, 1vw, 1.25rem);
                 font-weight: 300;
             }
             .PlayButton {
                 font-family: "Poppins";
-                margin-top: .5rem;
+                margin-top: .6em;
                 cursor: pointer;
-                border-radius: 1.875rem;
                 background: #E72FD0;
-                border-radius: 1.5625rem;
+                border-radius: 1.5625em;
                 border: none;
                 box-shadow: 0px 0px 20px 0px #E72FD0;
-                width: 9.5rem;
-                padding: .65rem 0;
+                width: 0;
+                padding: .7em 5em;
                 color: white;
+                @include center-styles;
                 span {
                     font-size: 1.375rem;
                     font-weight: 600;
@@ -154,9 +156,7 @@
                 height: 100%;
                 background: var(--linear, linear-gradient(222deg, #270C42 0%, #270C42 0.01%, #3F1A64 100%));                    border-radius: 1.5625rem 1.5625rem 0rem 0rem;
                 .rankContent {
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
+                    @include center-columns;
                     margin-top: -50px;
                     span > h4 {
                         margin-bottom: 0;

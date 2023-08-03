@@ -1,7 +1,11 @@
-@import './var.scss';
-
 @mixin center-styles {
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+@mixin center-columns {
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }

@@ -21,7 +21,6 @@ export class UserController {
     @UseGuards(JwtGuard)
     async getUserData(@Req() req: Request)
     {
-        console.log('HEERE');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -65,11 +64,11 @@ export class UserController {
         return await this.userService.getLastThreeAchievements(id);
     }
     @Get('achievement/image/:id')
-    @Header('Content-Type', 'image/png')
+    @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
-        const filename = id + '.png';
-        const imagePath = path.join(process.cwd(), 'src/images', filename);
+        const filename = id + '.jpg';
+        const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
     }

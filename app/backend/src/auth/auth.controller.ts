@@ -37,7 +37,6 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
-        console.log(token);
         const user = await this.userService.userHasAuth(googlereq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');
@@ -56,10 +55,8 @@ export class AuthController {
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
-        console.log(token);
         if(!token)
             return res.redirect('http://localhost:5173/home');
-        console.log(token)
         this.authService.setResCookie(res, token);
         const user = await this.userService.userHasAuth(fortyTworeq.user.email);
         if(user)
@@ -73,7 +70,6 @@ export class AuthController {
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const path = await toDataURL(user.otpPathUrl);
-        console.log(path);
         return res.status(200).send(path);
     }
 }

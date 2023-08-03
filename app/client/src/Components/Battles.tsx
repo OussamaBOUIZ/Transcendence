@@ -1,4 +1,4 @@
-import Character from "../Assets/character.png";
+import Character from "../Assets/character.png"
 
 export default function LeaderBoard() {
     return (
@@ -9,7 +9,7 @@ export default function LeaderBoard() {
                 <div className="BattleRoyalCover" >
                     <span>Battle Royal</span>
                     <p>Play the game and get extra coins in our Battle Royal</p>
-                   <button className='PlayButton' ><span>Play</span></button>
+                    <button className='PlayButton' ><span>Play</span></button>
                 </div>
             </div>
             <div className="item theBeast">

@@ -1,7 +1,7 @@
-import React from "react"
 import History from "./history";
 
 export default function GameHistory({UserData}) {
+
       return (
         <div className="item GameHistory">
             <p>Game History</p>
@@ -13,5 +13,3 @@ export default function GameHistory({UserData}) {
         </div>
     )
 }
-
-
