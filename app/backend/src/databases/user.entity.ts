@@ -1,9 +1,20 @@
-import {BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn
+} from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
-import { Channel } from "diagnostics_channel";
+import {Exclude} from "class-transformer";
 
 
 @Entity('User')
@@ -13,7 +24,6 @@ export class User extends BaseEntity {
 
     @Column({nullable: true})
     socketId: string
-
 
     @Column({default: 'Offline'})
     status: string
@@ -30,6 +40,7 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     username: string
 
+    @Exclude()
     @Column({nullable: true})
     password: string
 
@@ -58,8 +69,9 @@ export class User extends BaseEntity {
     @ManyToMany(() => User, user => user.friends)
     friendOf: User[];
 
-    @Column('int', {array: true, nullable: true})
-    blocked_users: number[]
+    @ManyToMany(type => User, user => user.blocked_users, {nullable: true})
+    @JoinTable()
+    blocked_users: User[]
 
     // @ManyToOne(() => Channel, {nullable: true})
     // @JoinTable()

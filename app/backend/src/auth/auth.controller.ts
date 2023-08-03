@@ -3,7 +3,6 @@ import { Body, Controller, Get, Headers, HttpStatus, Post, Query, Redirect, Req,
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
-import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { GoogleAuthGuard } from './googleapi/googleguard';
@@ -49,8 +48,6 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {
     }
-
-
     @Get('42api')
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)

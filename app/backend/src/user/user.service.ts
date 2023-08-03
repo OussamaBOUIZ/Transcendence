@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {User} from 'src/databases/user.entity';
 import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import { authenticator } from 'otplib';
+import {Match_history} from "../databases/match_history.entity";
 
 type tokenPayload = {
     id: number,
@@ -18,8 +19,25 @@ export class UserService {
         @InjectRepository(Stats) private statsRepo: Repository<Stats>,
         @InjectRepository(User) private userRepo: Repository<User>,
         @InjectRepository(Achievement) private achieveRepo: Repository<Achievement>,
+        @InjectRepository(Match_history) private matchHistoryRepo: Repository<Match_history>,
         private readonly jwtService: JwtService
     ) {
+    }
+
+    async blockUser(userId: number, user: User) {
+        const blockedUser = await this.userRepo.findOne({
+            where: {id: userId}
+        })
+        if (!blockedUser)
+            throw new HttpException('user not found', HttpStatus.NOT_FOUND)
+        if (user.id == userId) {
+            throw new HttpException('You can not block yourself', HttpStatus.BAD_REQUEST)
+        }
+        if (!user.blocked_users)
+            user.blocked_users = []
+
+        user.blocked_users = [...user.blocked_users, blockedUser]
+        console.log(await this.userRepo.save(user))
     }
 
     async saveUser(user: User) {
@@ -28,6 +46,25 @@ export class UserService {
 
     async findUserByEmail(email: string): Promise<User> {
         return await this.userRepo.findOneBy({email: email});
+    }
+
+    async getBlockedUsers(userId: number) {
+        return await this.userRepo.findOne({
+            select: {
+                id: true,
+                username: true,
+                blocked_users: {
+                    id: true,
+                    username: true
+                },
+            },
+            relations: {
+                blocked_users: true,
+            },
+            where : {
+                id: userId,
+            }
+        })
     }
 
     async findUserById(id: number): Promise<User> {
@@ -49,6 +86,32 @@ export class UserService {
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
         return await this.userRepo.findOneBy({id: payload.id});
+    }
+
+    decodeJwtCode(userToken: string) {
+        if (!userToken)
+            return null
+        return this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload
+    }
+
+    async getMatchHistory(userId: number): Promise<Match_history[]> {
+        return await this.matchHistoryRepo.find({
+            relations: {
+                opponent: true,
+            },
+            select: {
+                opponent: {
+                    id: true,
+                    username: true,
+                }
+            },
+            where: {
+                user: {
+                    id: userId
+                }
+            },
+            take: 4
+        })
     }
 
     async deleteUserFromDB(id: number): Promise<void> {

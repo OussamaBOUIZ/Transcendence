@@ -1,14 +1,24 @@
-import { Controller, Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile, Req, Headers, BadRequestException, ConsoleLogger } from '@nestjs/common';
+import {
+    Controller,
+    Header,
+    Get,
+    Delete,
+    Param,
+    ParseIntPipe,
+    UseGuards,
+    StreamableFile,
+    UnauthorizedException,
+    Post, Req, Res, HttpStatus, UploadedFile, Query,
+
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import {Request, Response} from 'express'
-import { createReadStream, existsSync } from 'fs';
+import {Request, Response, raw} from 'express'
+import { createReadStream } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
-import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
+import {Match_history} from "../databases/match_history.entity";
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -53,12 +63,63 @@ export class UserController {
         return await this.userService.findUserById(id)
     }
 
-    @Get('stats/:userId')
-    async getStatsById(
-        @Param('userId', ParseIntPipe) id: number
+    @Get('block/:userId')
+    async getBlockedUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request
+    )
+    {
+        const user = await this.userService.findUserByEmail(req.user["email"])
+        const User1 =  await this.userService.getBlockedUsers(user.id)
+        return await this.userService.getBlockedUsers(userId)
+    }
+    @Post('block/:userId')
+    async blockUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request,
+        @Res() res: Response
     ) {
+        // console.log(req.user['email'], "ok")
+        const user = await this.userService.findUserByEmail(req.user['email'])
+        console.log(user.id, userId)
+        await this.userService.blockUser(userId, user)
+        return res.status(HttpStatus.OK).send('the user blocked ')
+    }
+
+    @Get()
+    async getUserFromJwt(@Req() req: Request)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
+        if (!user)
+            throw new UnauthorizedException()
+        return {
+            id: user.id,
+            username: user.username,
+        }
+    }
+
+
+    // @Post('/:userId/uploadImage')
+    // uploadImage(
+    //     @Param('userId', ParseIntPipe) id: number,
+    //     @UploadedFile() image
+    // ) {
+    //
+    // }
+    @Get('image/:id')
+    @Header('Content-Type', 'image/png')
+    async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>
+    {
+        const filename = id + '.png';
+        const imagePath = path.join(process.cwd(), 'src/usersImage', filename);
+        const fileContent = createReadStream(imagePath)
+        return new StreamableFile(fileContent);
+    }
+    @Get('stats/:userId')
+    async getStatsById( @Param('userId', ParseIntPipe) id: number) {
        return await this.userService.getStatsById(id)
     }
+
     @Get('achievement/firstThree/:id')
     async getLastThree(@Param('id') id: number)
     {
@@ -95,7 +156,10 @@ export class UserController {
     // {
     //     const data = await this.userService.generate2fa(id);
 
-    // }
+    @Get('game/history/:userId')
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Match_history[]> {
+        return await this.userService.getMatchHistory(userId)
+    }
 
     @Get('2fa/turn-on/:id')
     @UseGuards(JwtGuard)
