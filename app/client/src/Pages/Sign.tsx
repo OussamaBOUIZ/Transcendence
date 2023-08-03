@@ -1,15 +1,13 @@
 import React, {useState} from "react"
-import {useEffect} from "react"
 import axios from 'axios'
-import ButtonPlay from './ButtonPlay'
-import Notification from "../Notification"
-import Welcome from './SignWelcome'
-import "../../scss/sign.scss"
-import googleImg from "../../Assets/Icons/google.png"
-import logo42 from "../../Assets/Icons/42Logo.png"
-import Form from './SignForm'
-import SignInImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg'
-import SignUpImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg'
+import Notification from "../Components/Notification"
+import Welcome from '../Components/SignWelcome'
+import "../scss/sign.scss"
+import googleImg from "../Assets/Icons/google.png"
+import logo42 from "../Assets/Icons/42Logo.png"
+import Form from '../Components/SignForm'
+import SignInImage from '../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg'
+import SignUpImage from '../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg'
 
 export default function Sign() {
 
