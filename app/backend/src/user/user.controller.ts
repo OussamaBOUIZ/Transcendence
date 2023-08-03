@@ -8,11 +8,13 @@ import {
     ParseIntPipe,
     UseGuards,
     StreamableFile,
-    Req, UnauthorizedException
+    UnauthorizedException,
+    Post, Req, Res, HttpStatus, UploadedFile,
+
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import {Request} from 'express'
-import { createReadStream, existsSync } from 'fs';
+import {raw, Request, Response} from 'express'
+import { createReadStream } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
 import {Match_history} from "../databases/match_history.entity";
@@ -43,6 +45,29 @@ export class UserController {
         return await this.userService.findUserById(id)
     }
 
+    @Get('block/:userId')
+    async getBlockedUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request
+    )
+    {
+        const user = await this.userService.findUserByEmail(req.user["email"])
+        const User1 =  await this.userService.getBlockedUsers(user.id)
+        return await this.userService.getBlockedUsers(userId)
+    }
+    @Post('block/:userId')
+    async blockUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request,
+        @Res() res: Response
+    ) {
+        // console.log(req.user['email'], "ok")
+        const user = await this.userService.findUserByEmail(req.user['email'])
+        console.log(user.id, userId)
+        await this.userService.blockUser(userId, user)
+        return res.status(HttpStatus.OK).send('the user blocked ')
+    }
+
     @Get()
     async getUserFromJwt(@Req() req: Request)
     {
@@ -55,12 +80,21 @@ export class UserController {
         }
     }
 
-    @Get('picture/:id')
+
+    // @Post('/:userId/uploadImage')
+    // uploadImage(
+    //     @Param('userId', ParseIntPipe) id: number,
+    //     @UploadedFile() image
+    // ) {
+    //
+    // }
+    @Get('image/:id')
+    @Header('Content-Type', 'image/png')
     async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>
     {
         const filename = id + '.png';
-        const imagePath = path.join(process.cwd(), 'src/images', filename);
-        const fileContent = createReadStream(imagePath);
+        const imagePath = path.join(process.cwd(), 'src/usersImage', filename);
+        const fileContent = createReadStream(imagePath)
         return new StreamableFile(fileContent);
     }
     @Get('stats/:userId')
