@@ -1,18 +1,15 @@
-import React from 'react'
-import Chat from './Components/Chat/Chat'
-import Header from './Components/Header'
-import Sidebar from './Components/Sidebar'
-import './scss/main.scss'
+import React from "react"
+import Sign from "./components/Sign/Sign"
+import Home from "./components/Home"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
-export default function App () {
-
-  return (
-    <div>
-      <Header />
-      <main>
-        <Sidebar />
-        <Chat />
-      </main>
-    </div>
-  )
+export default function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Sign />} />
+                <Route path="/home" element={<Home />} />
+            </Routes>
+        </Router>
+    )
 }

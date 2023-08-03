@@ -9,7 +9,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus,
+    Post, Req, Res, HttpStatus, UploadedFile,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -39,6 +39,7 @@ export class UserController {
     async getGameLeaders() {
         return this.userService.getLeaderBoard()
     }
+
     @Get(':id')
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
@@ -79,12 +80,21 @@ export class UserController {
         }
     }
 
-    @Get('picture/:id')
+
+    // @Post('/:userId/uploadImage')
+    // uploadImage(
+    //     @Param('userId', ParseIntPipe) id: number,
+    //     @UploadedFile() image
+    // ) {
+    //
+    // }
+    @Get('image/:id')
+    @Header('Content-Type', 'image/png')
     async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>
     {
         const filename = id + '.png';
-        const imagePath = path.join(process.cwd(), 'src/images', filename);
-        const fileContent = createReadStream(imagePath);
+        const imagePath = path.join(process.cwd(), 'src/usersImage', filename);
+        const fileContent = createReadStream(imagePath)
         return new StreamableFile(fileContent);
     }
     @Get('stats/:userId')

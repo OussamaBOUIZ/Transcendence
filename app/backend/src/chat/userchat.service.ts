@@ -11,6 +11,7 @@ import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
 import {use} from "passport";
 import {UserService} from "../user/user.service";
+import {WsException} from "@nestjs/websockets";
 
 @Injectable()
 export class ChatGatewayService {
@@ -65,25 +66,52 @@ export class ChatGatewayService {
         await this.messageRepository.save(msg)
     }
 
+    async isReceiverInBlocked(userId: number, receiverId: number) : Promise<boolean>
+    {
+        const blockedUser =  await this.userService.getBlockedUsers(userId)
+        let isBlocked: boolean = false
+        blockedUser.blocked_users.forEach(
+            (value) => {
+                if (value.id === receiverId)
+                {
+                    isBlocked = true
+                    return
+                }
+            }
+        )
+
+        return isBlocked
+    }
     async processMessage(socket: Socket, messageDto: MessageDto) {
         const receiver = await this.getUserById(messageDto.user.userId)
-        if (receiver === null)
-            console.log('TODO : handle if the receiver not exist')
-        this.logger.log({receiver})
-        this.logger.log(socket.data.user.email)
+        // if (receiver === null)
+        //     console.log('TODO : handle if the receiver not exist')
+        // this.logger.log({receiver})
+        // this.logger.log(socket.data.user.email)
         // find the sender by email
 
-        this.logger.log(socket.data.user.email)
+        // this.logger.log(socket.data.user.email)
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
-        if (author === null)
-            return 'todo handle not authorized'
+        if (!author || !receiver) {
+            throw {
+                msg: 'Invalid sender or receiver',
+                socket: author.socketId
+            }
+        }
+        console.log(author.username, receiver.username)
         if (author.id === receiver.id)
-            return 'you cannot send message to your self?'
+            throw {
+                msg: 'You cannot send message to your self?',
+                socket: author.socketId
+            }
+        if (await this.isReceiverInBlocked(author.id, receiver.id) === true || await this.isReceiverInBlocked(receiver.id, author.id) == true)
+            throw {
+                msg: 'the user blocked',
+                socket: author.socketId
+            }
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
-        if (receiver.isActive === false) {// save the last message in inbox table
-            await this.inboxService.saveInbox(receiver, author.id, messageDto)
-        }
+        await this.inboxService.saveInbox(receiver, author.id, messageDto)
         return receiver.socketId
     }
 

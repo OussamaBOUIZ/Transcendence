@@ -48,11 +48,13 @@ export class UserService {
     }
 
     async getBlockedUsers(userId: number) {
-        return await this.userRepo.find({
+        return await this.userRepo.findOne({
             select: {
                 id: true,
+                username: true,
                 blocked_users: {
-                    id: true
+                    id: true,
+                    username: true
                 },
             },
             relations: {
