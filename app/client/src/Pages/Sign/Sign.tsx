@@ -92,13 +92,13 @@ export default function Sign() {
                     <Welcome SignX={SignX} />
                         {ButtonsAuth}
                 </div> */}
-                <div
+                {/* <div
                     className='cover'
                     // style={SignX === "in" ?
                     // {backgroundImage: `url(${SignInImage})`} :
                     // {backgroundImage: `url(${SignUpImage})`}}>
                     >
-                </div>
+                </div> */}
             </div>
         </div>
     )
