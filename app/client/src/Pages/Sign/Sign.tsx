@@ -79,6 +79,7 @@ export default function Sign() {
                         </div>
     const ButtonsAuth = <div className='bttn'>
                             <button className='btn btn-google' onClick={() => handleAuth("google")}><img src={googleImg} alt="" /> Sign in with Google</button>
+                            {orContent}
                             <button className='btn btn-42'onClick={() => handleAuth("42")}><img src={logo42} alt="" /> Sign in with 42 Netowrk</button>
                         </div>
 
@@ -87,44 +88,17 @@ export default function Sign() {
         <div className="main">
            {notif && <Notification message={notif} />}
             <div className='content'>
-                <div className='container'>
+                {/* <div className='container'>
                     <Welcome SignX={SignX} />
-                    <main>
                         {ButtonsAuth}
-                        {orContent}
-                        <Form
-                            SignX = {SignX}
-                            handleChange={handleChange}
-                            handleSubmit={handleSubmit}
-                            formData={formData}
-                            setFormData={setFormData}
-                            formDataUp={formDataUp}
-                            setFormDataUp={setFormDataUp}
-                        />
-                    </main>
-                    {SignX === "in" && <span className="forget"><p>Forget password?</p></span>}
-                    {/* <ButtonPlay onClick={handleSubmit} content={`sign ${SignX}`} /> */}
-                    <button className='submit' onClick={handleSubmit} >
-                        {
-                            SignX === "in" ?
-                            <span>sign in</span> :
-                            <span>sign up</span>
-                        }
-                    </button>
-                    <div className="signUp" onClick={handleClick} >
-                        {
-                            SignX === "in" ?
-                            <p>Don't you have an account? <span>sign up</span></p> :
-                            <p>Already have an account? <span>sign in</span></p>
-                        }
-                    </div>
+                </div> */}
+                <div
+                    className='cover'
+                    // style={SignX === "in" ?
+                    // {backgroundImage: `url(${SignInImage})`} :
+                    // {backgroundImage: `url(${SignUpImage})`}}>
+                    >
                 </div>
-            </div>
-            <div
-                className='cover'
-                style={SignX === "in" ?
-                {backgroundImage: `url(${SignInImage})`} :
-                {backgroundImage: `url(${SignUpImage})`}}>
             </div>
         </div>
     )
