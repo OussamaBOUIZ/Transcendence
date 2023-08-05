@@ -1,6 +1,6 @@
 import {useState} from "react"
 import axios from 'axios'
-import Notification from "../../components/Notification"
+import Notification from "../../Components/Notification"
 import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"

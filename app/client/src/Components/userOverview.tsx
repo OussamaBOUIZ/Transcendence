@@ -1,7 +1,7 @@
 import "../scss/userOverview.scss";
 import Achieve from "../Assets/Isometric_Fantasy_3d_vray_render_antiquities_black_statue_liqu_2.jpeg"
 import ProfileImage from './profileImage';
-import { getStats } from "../hooks/getStats";
+import { getStats } from "../Hooks/getStats";
 
 export default function UserOverview ({UserData}) {
     console.log(UserData)

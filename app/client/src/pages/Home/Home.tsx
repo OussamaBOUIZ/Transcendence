@@ -1,9 +1,9 @@
 import "../../scss/home.scss";
-import SideBar from "../../components/Sidebar";
+import SideBar from "../../Components/Sidebar";
 import HomeCompenent from "./homeCompenent";
-import UserOverview from "../../components/userOverview";
-import { useFetchUserData } from "../../hooks/useFetchUserData";
-import { getLeaders } from "../../hooks/getLeaders"
+import UserOverview from "../../Components/userOverview";
+import { useFetchUserData } from "../../Hooks/useFetchUserData";
+import { getLeaders } from "../../Hooks/getLeaders"
 
 export default function Home() {
 

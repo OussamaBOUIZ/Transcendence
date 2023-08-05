@@ -11,13 +11,8 @@ import '../scss/sidebar.scss'
 
 export default function Sidebar () {
     const allIcons = [
-<<<<<<< HEAD:app/client/src/components/Sidebar.tsx
-        {id: nanoid() ,value: <GoHomeFill />, style: "sidebar_button", active: true},
-        {id: nanoid() ,value: <BsChatSquareFill />, style: "sidebar_button", active: false},
-=======
         {id: nanoid() ,value: <GoHomeFill />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <BsChatSquareFill />, style: "sidebar_button", active: true},
->>>>>>> c17289cd3a1bc26ecbe751bfe3743cc05c39f1cc:app/client/src/Components/Sidebar.tsx
         {id: nanoid() ,value: <FaGamepad />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <FaUserFriends />, style: "sidebar_button", active: false},
         {id: nanoid() ,value: <IoMdSettings />, style: "sidebar_button", active: false},
@@ -36,12 +31,7 @@ export default function Sidebar () {
         return (
             <SidebarButton 
             key={icon.id} 
-<<<<<<< HEAD:app/client/src/components/Sidebar.tsx
-            className={`${icon.style}`}
-            id={`${icon.active ? "active" : ""}`}
-=======
             className={`${icon.style} ${icon.active ? "active" : ""}`}
->>>>>>> c17289cd3a1bc26ecbe751bfe3743cc05c39f1cc:app/client/src/Components/Sidebar.tsx
             toggle={() => toggle(icon.id)}
             >
                 {icon.value}
@@ -49,17 +39,8 @@ export default function Sidebar () {
         )
     })
     return (
-<<<<<<< HEAD:app/client/src/components/Sidebar.tsx
-        <>
-            <div className='backgroundShadow'></div>
-            <div className="sidebar">
-                {sidebarButtons}
-            </div>
-        </>
-=======
         <div className="sidebar">
             {sidebarButtons}
         </div>
->>>>>>> c17289cd3a1bc26ecbe751bfe3743cc05c39f1cc:app/client/src/Components/Sidebar.tsx
     );
 }

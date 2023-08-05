@@ -1,7 +1,7 @@
 import "../../scss/homeCompenent.scss";
-import GameHistory from '../../components/gameHistory';
-import LeaderBoard from '../../components/leaderBoard';
-import Battles from '../../components/Battles';
+import GameHistory from '../../Components/gameHistory';
+import LeaderBoard from '../../Components/leaderBoard';
+import Battles from '../../Components/Battles';
 
 export default function HomeCompenent({ UserData , Leaders}) {
 
