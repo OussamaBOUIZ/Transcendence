@@ -1,11 +1,11 @@
 import "../../scss/home.scss";
 import SideBar from "../../Components/Sidebar";
 import ProfileComponent from "./ProfileComponent";
-import { useFetchUserData } from "../../Hooks/useFetchUserData";
+import { getUserData } from "../../Hooks/getUserData";
 
 export default function Profile() {
 
-  const { userData } = useFetchUserData();
+  const { userData } = getUserData();
 
   return (
     <div className="Home">

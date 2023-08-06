@@ -8,34 +8,36 @@ import {nanoid} from 'nanoid'
 
 
 import '../scss/sidebar.scss'
+import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 
 export default function Sidebar () {
     const allIcons = [
-        {id: nanoid() ,value: <GoHomeFill />, style: "sidebar_button", active: true},
-        {id: nanoid() ,value: <BsChatSquareFill />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaGamepad />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaUserFriends />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <IoMdSettings />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaSignOutAlt />, style: "sidebar_button logout", active: false}
+        {id: nanoid() ,value: <GoHomeFill />, link:"/",style: "sidebar_button", active: true},
+        {id: nanoid() ,value: <BsChatSquareFill />, link:"/chat",style: "sidebar_button", active: false},
+        {id: nanoid() ,value: <FaGamepad />, link:"/game",style: "sidebar_button", active: false},
+        {id: nanoid() ,value: <FaUserFriends />, link:"/friends",style: "sidebar_button", active: false},
+        {id: nanoid() ,value: <IoMdSettings />, link:"/settings",style: "sidebar_button", active: false},
+        {id: nanoid() ,value: <FaSignOutAlt />, link:"/logout",style: "sidebar_button logout", active: false}
     ]
 
     const [sdButtons, setSdButtons] = React.useState(allIcons);
 
-    function toggle (id) {
+    function toggle (id: string) {
         setSdButtons(prevSdButtons => prevSdButtons.map(item => {
             return item.id === id ? {...item, active: true} : {...item, active: false}
         }))
     }
     
-    const sidebarButtons = sdButtons.map(icon => {
+    const sidebarButtons = sdButtons.map(item => {
         return (
             <SidebarButton 
-            key={icon.id} 
-            className={`${icon.style}`}
-            id={`${icon.active ? "active" : ""}`}
-            toggle={() => toggle(icon.id)}
+            key={item.id} 
+            className={`${item.style}`}
+            id={`${item.active ? "active" : ""}`}
+            toggle={() => toggle(item.id)}
+            to={item.link}
             >
-                {icon.value}
+                {item.value}
             </SidebarButton> 
         )
     })
