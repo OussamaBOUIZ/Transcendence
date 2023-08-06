@@ -1,0 +1,32 @@
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RoutesResolver] AuthController {/api/auth}: +3ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/auth/google, GET} route +3ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/auth/google/callback, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/auth/42, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/auth/42api, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/auth/qrcode, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RoutesResolver] InboxController {/api/inbox}: +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/inbox/:id, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RoutesResolver] ChannelController {/api/channel}: +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/channel/update, POST} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/channel/setowner, POST} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/channel/setadmin, POST} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/channel/promoteuser, POST} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RoutesResolver] UserController {/api/user}: +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/delete/:id, DELETE} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/achievements/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/leaders, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/stats/:userId, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/achievement/firstThree/:id, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/achievement/image/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/onlinefriends/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/addfriend/:id, POST} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/allfriends/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/2fa/turn-on/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/2fa/turn-off/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/2fa/login, POST} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/user/logout/:id, GET} route +1ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RoutesResolver] chatController {/api/Chat}: +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [RouterExplorer] Mapped {/api/Chat/:id, GET} route +0ms
+app:dev: [Nest] 37912  - 08/02/2023, 3:27:11 PM     LOG [NestApplication] Nest application successfully started +5m

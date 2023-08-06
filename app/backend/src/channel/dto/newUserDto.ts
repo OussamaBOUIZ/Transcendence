@@ -7,10 +7,6 @@ export class newUserDto {
     public channelName: string
 
     @IsNotEmpty()
-    @IsString()
-    public channelType: string
-
-    @IsNotEmpty()
     public channelNewUser: number
     
     @IsString()

@@ -1,0 +1,48 @@
+/* GRADIENT VARIABLES */
+$bg-color-left: #340D5B; 
+$bg-color-right : #450C61;
+$sdb-gradient: linear-gradient(360deg, #E72FD0 0%, #8B3DD9 100%);
+$primary-color: #3E186567;
+$border-color:#F7BAF8;
+$overview-gradient: var(--radial-purple, radial-gradient(58.23% 57.63% at 47.72% 47.11%, #7426C4 0%, #341057 100%));
+$achievement-bg-gradient: radial-gradient(71.32% 71.31% at 50.00% 50.00%, #7A2DC7 0%, rgba(122, 45, 199, 0.00) 100%);
+
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/ 
+
+/*BOX SHADOWS */
+$square-avatar-border: 5px solid rgba(255, 255, 255, 0.10);
+
+/* COLORS VARIABLES */
+$text-color: #fff;
+$sdb-color: #15042780;
+$text-grey-color: rgba(218, 218, 218, 0.50);
+$text-pink-color: #FEC9FF;
+$text-light-color: #DAD6D6;
+$input-background : rgba(171, 171, 171, 0.28);
+$active-message-bg: #531F8A;
+$primary-pink: #E72FD0;
+$bar-background: #350D5C;
+
+
+
+/* FONTS VARIABLES */
+$font-style :'Poppins', sans-serif;
+$logo-font-size: 25px;
+$logo-font-weight: 600;
+
+/* PROFILE IMAGE SIZE */
+$profileWidthSmall: 2.4375rem; 
+$profileHeightSmall: 2.5rem; 
+
+$profileWidthRegular: 2.9375rem; 
+$profileHeightRegular: 3rem; 
+
+$profileWidthMedium: 3.25rem; 
+$profileHeightMedium: 3.36019rem;
+
+$profileWidthBig: 7.375rem; 
+$profileHeightBig: 7.625rem; 

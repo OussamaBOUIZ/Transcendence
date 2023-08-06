@@ -13,10 +13,10 @@ export class Message extends BaseEntity {
     @ManyToOne(() => Channel, (channel) => channel.messages)
     channel: Channel
 
-    @Column()
+    @Column({nullable: true})
     message: string
 
     @Column({type: "timestamp"})
-    CreatedAt: string
+    CreatedAt: Date
 }
 

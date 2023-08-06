@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+    font-family: "Poppins";
+}
+
+body {
+    margin: 0 auto;
+    .logo {
+        width: 10em;
+        position: absolute;
+        left: 5em;
+        top: 0;
+    }
+}

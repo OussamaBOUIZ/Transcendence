@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpStatus, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
@@ -13,17 +13,18 @@ import { FortyTwoGuard } from './42api/42guard';
 import { AuthGuard } from '@nestjs/passport';
 import { userSignInDto } from './dto/userSignInDto';
 import { userSignUpDto } from './dto/userSignUpDto';
-import { LocalGuard } from './local/localguard';
 import { MailTemplate } from './MailService/mailer.service';
 import { ViewAuthFilter } from 'src/Filter/filter';
-import { FormCheck } from './Filter/uno';
+import { authenticator } from 'otplib';
+import {toDataURL, toFileStream} from "qrcode"
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
-        @InjectRepository(User) private userRepository: Repository<User>,
         private readonly authService: AuthService,
+        private readonly userService: UserService,
         private readonly mailTemp: MailTemplate) {}
 
 
@@ -36,13 +37,11 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
+        const user = await this.userService.userHasAuth(googlereq.user.email);
+        if(user)
+            return res.redirect('http://localhost:5173/auth');
         this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
-    }
-    
-    @Get('test')
-    test() {
-        // this.mailTemp.sendEmail();
     }
 
     @Get('42')
@@ -59,31 +58,18 @@ export class AuthController {
         if(!token)
             return res.redirect('http://localhost:5173/home');
         this.authService.setResCookie(res, token);
+        const user = await this.userService.userHasAuth(fortyTworeq.user.email);
+        if(user)
+            return res.redirect('http://localhost:5173/auth');
         return res.redirect('http://localhost:5173/home');
     }
 
-    @Post('signin') 
-    @UseGuards(LocalGuard)
-    async localSignIn(@Body() userDto: userSignInDto, @Res() res: Response) {
-        const token = await this.authService.validateUser(userDto.username, userDto.password);
-        this.authService.setResCookie(res, token);
-        return res.status(200).send('user signed in successfully')
-    }
-    
-    @Post('signup')
-    // @UseFilters(FormCheck)
-    async localSignUp(@Body() userDto: userSignUpDto, @Res() res: Response) {
-        const token = await this.authService.signup(userDto);
-        if(token === null)
-            return res.status(400).send(`email already exists`);
-        this.authService.setResCookie(res, token);
-        await this.mailTemp.sendEmail(userDto.email);
-        return res.status(200).send('Please confirm your email');
-    }
-    @Get('getuser')
+    @Get('qrcode')
     @UseGuards(JwtGuard)
-    async getuser(@Req() req: Request)
+    async getQrCode(@Req() req: Request, @Res() res: Response)
     {
-        return await this.authService.retUserData(req.cookies['access_token'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const path = await toDataURL(user.otpPathUrl);
+        return res.status(200).send(path);
     }
 }
