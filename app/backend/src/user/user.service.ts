@@ -7,6 +7,7 @@ import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import {Match_history} from "../databases/match_history.entity";
 import { authenticator } from 'otplib';
+import { StatsDto } from './dto/stats-dto';
 
 type tokenPayload = {
     id: number,
@@ -242,4 +243,33 @@ export class UserService {
             secret: user.two_factor_secret
         })
     }
+
+
+    async addUserStat(statDto: StatsDto, userReq: any) {
+		
+		const user = await this.userRepo.findOne({
+			where: {
+				email : userReq['email']
+			},
+			relations: {
+				stat: true
+			}, 
+			select: {
+				id: true,
+			}
+		})
+		if (!user || user.stat)
+			throw new HttpException('User Not found Or failed to create stat' , HttpStatus.NOT_FOUND)
+
+
+		user.stat.losses += statDto.losses
+		user.stat.wins += statDto.wins
+		user.stat.ladder_level += statDto.ladder_level
+		user.stat.xp += statDto.xp
+
+	
+		await this.userRepo.save(user)
+    }
+
+
 }
