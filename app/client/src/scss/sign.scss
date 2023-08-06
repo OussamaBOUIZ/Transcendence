@@ -1,101 +1,117 @@
 @import "./mixins.scss";
 @import "./var.scss";
 
-    .logo {
-        color: white;
-        font-size: 1.2rem;
-        font-weight: 600;
-        position: absolute;
-        left: 5%;
-        top: 2.5%;
-    }
-
 .main {
     @include center-styles;
-    background: blue;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    .bg {
+        width: 100%;
+        height: 100%;
+        filter: brightness(40%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        @media (max-width: 800px) {
+            filter: brightness(100%);
+        }
+    }
     .content {
-        background: red;
         width: 90%;
-        // height: 10%;
-        // .container {
-        //     @include center-columns;
-        //     justify-content: center;
-        //     width: 50%;
-        //     height: 100%;
-        //     max-width: 30rem;
-        //     min-width: 300px;
-        //     background: blue;
-        //     .welcome {
-        //         // background: green;
-        //         display: flex;
-        //         flex-direction: column;
-        //         align-items: center;
-        //         width: 100%;
-        //         .hd {
-        //             // background: red;
-        //             text-align: center;
-        //             font-weight: 600;
-        //             margin-top: 0rem;
-        //             margin-bottom: 0rem;
-        //         }
-        //         .pr {
-        //             // background: yellow;
-        //             text-align: center;
-        //             font-weight: 300;
-        //             margin-top: 0rem;
-        //         }
-        //     }
-        //     .bttn {
-        //         @include center-columns;
-        //         // background: red;
-        //         width: 100%;
-        //         gap: 1.25rem;
-        //         .btn {
-        //             @include center-styles;
-        //             width: 100%;
-        //             gap: 0.625rem;
-        //             background-color: white;
-        //             border-radius: 0.625rem;
-        //             border: solid 2px #bebebe;
-        //             transition: border-width 0.4s ease-in;
-        //             min-height: 4.625em;
-        //             font-size: clamp(0.7rem, 0.9vw, 0.85rem);
-        //             cursor: pointer;
-        //             img {
-        //                 width: 1.6875em;
-        //             }
-        //         }
-        //         .btn:hover {
-        //             border-width: 2.5px;
-        //             border-color: black;
-        //         }
-        //     }
-        //     .orContent {
-        //         display: flex;
-        //         align-items: center;
-        //         gap: 1.3rem;
-        //         .bar {
-        //             width: 4.25rem;
-        //             height: 2px;
-        //             background: #D9D9D9;
-        //         }
-        //     }
-        // }
-        // .cover {
-        //     flex-basis: 50vw;
-        //     flex-grow: 1;
-        //     height: 100vh;
-        //     // background-position: 50%;
-        //     // background-size: cover;
-        //     // background-repeat: no-repeat;
-        //     // background: blue;
-        // }
-        // @media (min-width: 900px) {
-        //     .cover {
-        //         display: block;
-        //     }
-        // }
+        height: 90%;
+        display: flex;
+        z-index: 1;
+        border-radius: 1rem;
+        border: none;
+        .container {
+            @include center-columns;
+            width: 40%;
+            height: 100%;
+            max-width: 30rem;
+            min-width: 20rem;
+            padding: 2em;
+            background-color: white;
+            border-radius: 1rem 0 0 1rem;
+            border: none;
+            @media (max-width: 800px) {
+                width: 100%;
+                max-width: none;
+                padding: 5em;
+                border-radius: 1rem;
+            }
+            @media (max-width: 500px) {
+                padding: 1em;
+            }
+            .welcome {
+                @include center-columns;
+                width: 100%;
+                img {
+                    width: 12em;
+                }
+                .hd {
+                    text-align: center;
+                    font-weight: 600;
+                    margin-top: 0rem;
+                    margin-bottom: 0rem;
+                }
+                .pr {
+                    text-align: center;
+                    font-weight: 300;
+                    margin-top: 0rem;
+                }
+            }
+            .bttn {
+                @include center-columns;
+                width: 90%;
+                gap: 1em;
+                margin-top: 1em;
+                .orContent {
+                    display: flex;
+                    align-items: center;
+                    gap: 1.3rem;
+                    .bar {
+                        width: 4.25rem;
+                        height: 2px;
+                        background: #D9D9D9;
+                    }
+                }
+                .btn {
+                    @include center-styles;
+                    width: 100%;
+                    gap: 0.625rem;
+                    background-color: white;
+                    border-radius: 0.625rem;
+                    border: solid 2px #bebebe;
+                    transition: border-width 0.4s ease-in;
+                    min-height: 4.625em;
+                    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+                    cursor: pointer;
+                    img {
+                        width: 1.6875em;
+                    }
+                }
+                .btn:hover {
+                    border-width: 2.5px;
+                    border-color: black;
+                }
+            }
+        }
+        .cover {
+            width: 70%;
+            flex-grow: 1;
+            height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius:  0 1rem 1rem 0;
+            border: none;
+            @media (max-width: 800px) {
+                width: 0;
+            }
+        }
+    }
+    @media (max-width: 1280px) {
+        @include center-columns;
     }
 }

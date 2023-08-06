@@ -1,5 +1,5 @@
 import { getAllFriends } from "../Hooks/getAllFriends"
-import image from "../Assets/DreamShaper_32_young_pale_skinny_white_man_white_and_blue_hair_1.jpeg"
+import image from "../Assets/SpiderGround.jpeg"
 import losses from "../Assets/Icons/losses.svg"
 import wins from "../Assets/Icons/wins.svg"
 import friendsIcon from "../Assets/Icons/group.svg"
@@ -13,7 +13,7 @@ export default function FriendsCard({ user }) {
             <div className="friend-item" key={friend.username}>
                 <div className="userImage">
                     <img src={image} alt="" />
-                    <div className="status"></div>
+                    <div className={`status ${friend.status}`}></div>
                 </div>
                 <div className="friend-name">
                     <p>{friend.firstname + " " + friend.lastname}</p>

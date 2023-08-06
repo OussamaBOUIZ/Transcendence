@@ -23,7 +23,9 @@
 }
 .homeCompenent {
     display: grid;
-    margin: 6% 2% 2.4% 3%;
+    margin-left: 2%;
+    margin-top: 6%;
+    height: 80%;
     width: 70%;
     grid-gap: 0.6rem;
     grid-template: 0.9fr 0.8fr 1fr / repeat(6, 1fr);
@@ -68,7 +70,7 @@
         }
         img {
             width: 21.4375em;
-            height: 23.8125em;
+            height: 100%;
             position: absolute;
             right: 0;
             bottom: 0;
@@ -115,20 +117,20 @@
     
     .theBeast {
         grid-area: theBeast;
-        background-image: url("../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_0.jpeg"),;
+        background-image: url("../Assets/TheBeast.jpeg"),;
         background-size: cover;
         background-repeat: no-repeat;
     }
     .SpiderGround {
         grid-area: SpiderGround;
-        background-image: url("../Assets/DreamShaper_32_young_pale_skinny_white_man_white_and_blue_hair_1.jpeg"),;
+        background-image: url("../Assets/SpiderGround.jpeg"),;
         background-position: 0 -33px ;
         background-size: cover;
         background-repeat: no-repeat;
     }
     .BrightGround {
         grid-area: BrightGround;
-        background-image: url("../Assets/DreamShaper_32_young_pale_white_man_black_and_yellow_hair_ping_2.jpeg"),;
+        background-image: url("../Assets/BrightGround.jpeg"),;
         background-size: cover;
         background-repeat: no-repeat;
     }

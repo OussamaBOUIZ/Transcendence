@@ -136,6 +136,7 @@ export class UserService {
     }
     async addFriend(userId: number, friendId: number)
     {
+        console.log(userId);
         const user = await this.userRepo.findOne({
             where: {id: userId},
             relations: {

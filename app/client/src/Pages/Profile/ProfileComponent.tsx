@@ -10,11 +10,11 @@ import { useEffect } from "react";
 
 export default function ProfileCompenent({UserData}) {
 
-    
     useEffect(() => {
         const SendRequest = async () => {
             try {
-                await axios.post(`api/user/addfriend/${UserData?.id}?friendId=3`, null)
+                if(UserData)
+                    await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
             }
             catch (err) {
                 console.log("error : adding an existing friend")
