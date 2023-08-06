@@ -7,9 +7,9 @@ import { userWinDto } from './dto/userWinDto';
 export class gameController {
     constructor(private readonly gameService: gameService) {}
 
-    @Post('levelUpdate')
+    @Post('gameUpdate')
     async updateLevel(@Body() updateLevel: userWinDto)
     {
-        await this.gameService.levelUpdate(updateLevel);
+        await this.gameService.gameUpdate(updateLevel);
     }
 }

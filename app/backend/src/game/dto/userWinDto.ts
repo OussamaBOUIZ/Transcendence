@@ -9,4 +9,16 @@ export class userWinDto {
     @IsNotEmpty()
     @IsNumber()
     wonXp: number
+
+    @IsNotEmpty()
+    @IsString()
+    gameName: string
+
+    @IsNotEmpty()
+    @IsNumber()
+    userLevel: number
+
+    @IsNotEmpty()
+    @IsNumber()
+    opponentLevel: number
 }

@@ -55,4 +55,39 @@ export class AchievementService {
             await this.achieveRepo.save(newAchievement);       
         }
     }
+    async unlockAchievement(badge_name: string)
+    {
+        const achievement = await this.achieveRepo.findOne({
+            where: {
+                badge_name: badge_name,
+            }
+        });
+        achievement.is_achieved === true;
+        await this.achieveRepo.save(achievement);
+    }
+    async setUnderdogAchievement()
+    {
+        await this.unlockAchievement('underdog');
+    }
+    async setLevelAchievement(oldlevel: number, level: number)
+    {
+        if(oldlevel === level) return ;
+        if(level === 5)
+            await this.unlockAchievement('Pong veteran');
+        else if(level === 15)
+            await this.unlockAchievement('Pong pro');
+        else if(level === 25)
+            await this.unlockAchievement('Pong master');
+    }
+    async setGameAchievement(gameType: string)
+    {
+        if(gameType === 'Battle royal')
+            await this.unlockAchievement('Battle royal winner');
+        else if(gameType === 'The beast')
+            await this.unlockAchievement('The beast winner');
+        else if(gameType === 'bright')
+            await this.unlockAchievement('bright winner');
+        else if(gameType === 'spider')
+            await this.unlockAchievement('spider winner');
+    }
 }
