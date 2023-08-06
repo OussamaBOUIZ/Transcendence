@@ -9,7 +9,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile, Query, Headers,
+    Post, Req, Res, HttpStatus, UploadedFile, Query, Headers, Body, Patch,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -20,6 +20,7 @@ import {JwtGuard} from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
 import {Match_history} from "../databases/match_history.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
+import { StatsDto } from './dto/stats-dto';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -209,5 +210,10 @@ export class UserController {
         const payload = this.jwt.verify(authtoken.split(' ')[1], {secret: process.env.JWT_SECRET});
         const till = payload.iat + 86400;
         await this.BlockedTokenService.blacklistToken(authtoken.split[1](), till * 1000)
+    }
+
+    @Patch('stat/add') 
+    async addUserStat (@Query() statDto: StatsDto, @Req() req: Request) {
+       await this.userService.addUserStat(statDto, req.user)
     }
 }
