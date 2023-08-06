@@ -3,15 +3,25 @@ import SideBar from "../../Components/Sidebar";
 import FriendsComponent from "./FriendsComponent";
 import { getUserData } from "../../Hooks/getUserData";
 import GlobalLeaderBoard from "../../Components/GlobalLeaderBoard";
+import { getLeaders } from "../../Hooks/getLeaders";
 
 export default function Friends() {
 
   const { userData } = getUserData();
+  const { leaders } = getLeaders();
 
   if (!userData) {
     return (
+        <div className="Home">
+        <SideBar />
+      </div>
+    )
+  }
+  if (!leaders) {
+    return (
       <div className="Home">
-      <SideBar />
+        <SideBar />
+        <FriendsComponent UserData={userData} />
       </div>
     )
   }
@@ -20,7 +30,7 @@ export default function Friends() {
     <div className="Home">
       <SideBar />
       <FriendsComponent UserData={userData} />
-      {/* <GlobalLeaderBoard /> */}
+      <GlobalLeaderBoard Leaders={leaders}/>
     </div>
   );
 }

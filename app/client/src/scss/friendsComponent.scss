@@ -84,3 +84,75 @@
         }
     }
 }
+.Leaderboard {
+    grid-area: Leaderboard;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.25rem 0 0 1.25rem;
+    border: .5px solid rgba(0, 0, 0, 0.05);
+    background: radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
+    box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+    width: 25%;
+    height: 90%;
+    overflow: hidden;
+    p {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: white;
+        margin: 1rem;
+    }
+    .board {
+        width: 100%;
+        height: 15%;
+        margin-top: 30%;
+        display: flex;
+        align-items: flex-end;
+        .rank {
+            width: 34%;
+            height: 100%;
+            background: #270C42;
+            border-radius: 1.5625rem 1.5625rem 0rem 0rem;
+            .rankContent {
+                @include center-columns;
+                margin-top: -50px;
+                span > h4 {
+                    margin-bottom: 0;
+                }
+                span {
+                    color: #FFF;
+                    font-size: 0.625rem;
+                    font-weight: 400;
+                    text-transform: lowercase;
+                }
+            }
+        }
+        .rank2, .rank3 {
+            height: 80%;
+        }
+    }
+    .topEleven {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding-bottom: 1rem;
+        height: 70%;
+        background: #270C42;
+        .topRank {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 5em;
+            p {
+                font-weight: 400;
+                font-size: 0.625rem;
+                margin-left: 5em;
+            }
+            span {
+                margin-left: auto;
+                p {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
