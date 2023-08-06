@@ -258,17 +258,17 @@ export class UserService {
 				id: true,
 			}
 		})
-		if (!user || user.stat)
+
+		console.log(user)
+		if (!user || !user.stat)
 			throw new HttpException('User Not found Or failed to create stat' , HttpStatus.NOT_FOUND)
 
 
-		user.stat.losses += statDto.losses
-		user.stat.wins += statDto.wins
+		user.stat.losses = user.stat.losses + statDto.losses
+		user.stat.wins = user.stat.wins + statDto.wins
 		user.stat.ladder_level += statDto.ladder_level
 		user.stat.xp += statDto.xp
-
-	
-		await this.userRepo.save(user)
+		await this.statsRepo.save(user.stat)
     }
 
 
