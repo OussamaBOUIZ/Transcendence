@@ -10,6 +10,6 @@ export class gameController {
     @Post('gameUpdate')
     async updateLevel(@Body() updateLevel: userWinDto)
     {
-        await this.gameService.gameUpdate(updateLevel);
+        await this.gameService.userGameDataUpdate(updateLevel);
     }
 }

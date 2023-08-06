@@ -12,7 +12,7 @@ export class gameService {
     private readonly userService: UserService,
     private readonly achievementService: AchievementService){}
 
-    async gameUpdate(userWinData: userWinDto)
+    async userGameDataUpdate(userWinData: userWinDto)
     {
         await this.achievementService.setGameAchievement(userWinData.gameName);
         const user = await this.userService.getAchievement(userWinData.userId);
@@ -26,4 +26,5 @@ export class gameService {
         await this.achievementService.setLevelAchievement(oldLevel, user.stat.ladder_level);
         await this.userService.saveStat(user.stat);
     }
+    async 
 }
