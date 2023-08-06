@@ -1,4 +1,4 @@
-import "../../scss/profileCompenent.scss";
+import "../../scss/profileComponent.scss";
 import GameHistory from "../../Components/gameHistory";
 import profileImage from "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg"
 import StarRank from "../../Components/starRank";
@@ -8,13 +8,13 @@ import axios from "axios";
 import { useEffect } from "react";
 
 
-export default function ProfileCompenent({UserData}) {
+export default function ProfileComponent({UserData}) {
 
     useEffect(() => {
         const SendRequest = async () => {
             try {
-                if(UserData)
-                    await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
+                console.log("fcweds")
+                await axios.post(`api/user/addfriend/${UserData.id}?friendId=2`, null)
             }
             catch (err) {
                 console.log("error : adding an existing friend")
@@ -23,13 +23,10 @@ export default function ProfileCompenent({UserData}) {
         }
         SendRequest();
     }, [])
-    
-    if (!UserData) {
-        return null;
-    }
+
     const level = 70
     return (
-        <div className="profileCompenent">
+        <div className="profileComponent">
             <div className="item ProfileCard">
                 <div className="image">
                     <img src={profileImage} alt="" />

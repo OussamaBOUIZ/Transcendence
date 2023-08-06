@@ -1,24 +1,26 @@
 import "../../scss/home.scss";
 import SideBar from "../../Components/Sidebar";
-import ProfileComponent from "./ProfileComponent";
+import FriendsComponent from "./FriendsComponent";
 import { getUserData } from "../../Hooks/getUserData";
+import GlobalLeaderBoard from "../../Components/GlobalLeaderBoard";
 
-export default function Profile() {
+export default function Friends() {
 
   const { userData } = getUserData();
 
   if (!userData) {
     return (
       <div className="Home">
-        <SideBar />
+      <SideBar />
       </div>
-    );
+    )
   }
-  
+
   return (
     <div className="Home">
       <SideBar />
-      <ProfileComponent UserData={userData} />
+      <FriendsComponent UserData={userData} />
+      {/* <GlobalLeaderBoard /> */}
     </div>
   );
 }

@@ -130,6 +130,21 @@ export class UserService {
                 friends: {
                     stat: true,
                 }
+            },
+            select: {
+                id: true,
+                friends: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
+                    username: true,
+                    status: true,
+                    stat: {
+                        wins: true,
+                        losses: true,
+                        ladder_level: true,
+                    }
+                },
             }
         });
         return user; 

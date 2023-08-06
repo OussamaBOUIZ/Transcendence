@@ -19,7 +19,7 @@ export default function ProfileImage({image, id, size}) {
             </div>
         )
     }
-      return (
+    return (
         <div onClick={handleClick} className={`profileImage ${size}`}>
             <div
             className="userImage"

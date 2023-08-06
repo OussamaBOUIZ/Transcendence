@@ -1,0 +1,86 @@
+@import "../scss/var.scss";
+@import "../scss/mixins.scss";
+
+.friendsComponent {
+    margin: 6% 2% 4.6% 3%;
+    width: 70%;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    color: white;
+    p {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    .friends-list {
+        display: flex;
+        width: 100%;
+        gap: 5em;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+            width: .4em;
+            border-radius: 6em;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 6em;
+        }
+        .friend-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 22.4375rem;
+            height: 14.0625rem;
+            border-radius: 1rem;
+            padding: 0.4em;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
+            header {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                height: 50%;
+                width: 100%;
+                // background-color: green;
+                .text-item {
+                    display: flex;
+                    flex-direction: column;
+                    // background-color: red;
+                    h2, p {
+                        margin: 0;
+                        font-size: 1rem;
+                        font-weight: 500;
+                    }
+                    h2 {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                    }
+                    span {
+                        font-size: 1rem;
+                        color: $primary-pink;
+                        font-weight: 600;
+                    }
+                }
+                .level-item {
+                    @include center-columns;
+                    p {
+                        margin: 0;
+                        font-size: 1rem;
+                        font-weight: 600;
+                    }
+                }
+            }
+            main {
+                border-radius: 1rem;
+                background: rgba(0, 0, 0, 0.30);
+                @include center-columns;
+                p {
+                    font-size: .875rem;
+                    margin: 0;
+                }
+                padding: 0.625rem 1.25rem;
+            }
+        }
+    }
+}

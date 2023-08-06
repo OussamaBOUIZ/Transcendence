@@ -1,7 +1,7 @@
 @import "../scss/var.scss";
 @import "../scss/mixins.scss";
 
-.profileCompenent {
+.profileComponent {
     display: grid;
     margin: 6% 2% 4.6% 3%;
     width: 85%;
@@ -281,7 +281,7 @@
 }
 
 @media (max-width: 1500px) {
-    .profileCompenent {
+    .profileComponent {
         .ProfileCard {
             margin: 0;
         }
