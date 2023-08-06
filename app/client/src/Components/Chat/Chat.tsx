@@ -7,6 +7,7 @@ import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import ChatHeader from './ChatHeader';
+import ChatMainInit from './ChatMainInit';
 
 export default function Chat () {
 
@@ -16,7 +17,7 @@ export default function Chat () {
             <ChatInfo />
             <ChatList />
             <ChatOverview />
-            <ChatMain />
+            <ChatMainInit />
         </div>
     ));
 }
