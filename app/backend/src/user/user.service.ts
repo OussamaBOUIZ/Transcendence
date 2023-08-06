@@ -43,6 +43,9 @@ export class UserService {
     async saveUser(user: User) {
         await this.userRepo.save(user);
     }
+    async saveStat(stat: Stats) {
+        await this.statsRepo.save(stat);
+    }
 
     async findUserByEmail(email: string): Promise<User> {
         return await this.userRepo.findOneBy({email: email});
@@ -68,7 +71,6 @@ export class UserService {
     }
 
     async findUserById(id: number): Promise<User> {
-        console.log(id);
         return await this.userRepo.findOneBy({id: id});
     }
 
@@ -96,15 +98,15 @@ export class UserService {
 
     async getMatchHistory(userId: number): Promise<Match_history[]> {
         return await this.matchHistoryRepo.find({
-            relations: {
-                opponent: true,
-            },
-            select: {
-                opponent: {
-                    id: true,
-                    username: true,
-                }
-            },
+            // relations: {
+            //     opponent: true,
+            // },
+            // select: {
+            //     opponent: {
+            //         id: true,
+            //         username: true,
+            //     }
+            // },
             where: {
                 user: {
                     id: userId
@@ -112,6 +114,19 @@ export class UserService {
             },
             take: 4
         })
+    }
+    async getFriendLastGame(friendId: number)
+    {
+        const match = await this.matchHistoryRepo.findOne({
+            where: {
+              opponent: friendId  
+            },
+            select: {
+                user_score: true,
+                opponent_score: true,
+            }
+        });
+        return match;
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
@@ -162,7 +177,7 @@ export class UserService {
                 },
             }
         });
-        return user.stat.achievements;
+        return user;
     }
 
     async getLastThreeAchievements(id: number) {
@@ -193,6 +208,19 @@ export class UserService {
                 friends: {
                     stat: true,
                 }
+            },
+            select: {
+                id: true,
+                friends: {
+                    firstname: true,
+                    lastname: true,
+                    username: true,
+                    status: true,
+                    stat: {
+                        wins: true,
+                        losses: true,
+                    }
+                },
             }
         });
         return user; 

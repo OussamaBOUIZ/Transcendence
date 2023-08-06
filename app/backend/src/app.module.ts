@@ -10,6 +10,7 @@ import { InboxModule } from './inbox/inbox.module';
 import { ChannelModule } from './channel/channel.module';
 import { ChatGatewayModule } from './chat/userchat.module';
 import {ScheduleModule} from '@nestjs/schedule'
+import { gameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import {ScheduleModule} from '@nestjs/schedule'
   ConfigModule.forRoot({
     isGlobal: true,
   }),
+  gameModule,
   ChatGatewayModule,
   MailerModule.forRoot({
     transport: {

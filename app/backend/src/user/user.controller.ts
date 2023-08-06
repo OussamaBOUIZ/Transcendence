@@ -150,11 +150,11 @@ export class UserController {
     {
         return await this.userService.AllFriends(id);
     }
-    // @Get('generate2fa/:id')
-    // @UseGuards(JwtGuard)
-    // generate2faForUser(@Param('id') id: number, @Req() req: Request)
-    // {
-    //     const data = await this.userService.generate2fa(id);
+    @Get('friendLastGame/:friendId')
+    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number)
+    {   
+        return await this.userService.getFriendLastGame(friendId);
+    }
 
     @Get('game/history/:userId')
     async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Match_history[]> {
