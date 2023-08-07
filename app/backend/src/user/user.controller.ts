@@ -19,7 +19,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import {raw, Request, Response} from 'express'
-import { createReadStream } from 'fs';
+import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
@@ -31,25 +31,34 @@ import { searchDto } from './game-history-dto/search-dto';
 import {diskStorage} from 'multer'
 import { Observable, of } from 'rxjs';
 import { isNumber } from 'class-validator';
+import { extname } from 'path';
 
 enum FileValidationErrors {
     UNSUPPORTED_FILE_TYPE
 }
 
-const multerConfig = () => ({
+const multerConfig =   () => ({
 	storage: diskStorage({
 		destination: './uploads/usersImage',
-		filename: (req: any, file: any, cb: any) => {†
-            if (!isNumber(req.params['userId'])) {
-                cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+		filename: async (req: any, file: any, cb: any) => {
+            const supportedExt = ['.png', '.jpeg', ['.jpg'] ]
+            if (isNaN(parseInt(req.params['userId'], 10)))
+                return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+
+            console.log(file)
+            if (!supportedExt.includes(extname(file.originalname)))
+               return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+			console.log('jjjjjsjjsjjsj')
+            const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+            try {
+                await fsPromises.access(filename)
+                cb(new HttpException(`Wrong Http Method`, HttpStatus.METHOD_NOT_ALLOWED))
             }
-            if (!file.mimeType.match(/\/(jpg|jpeg|png)$/))
-            cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
-			const extention = path.parse(file.originalname).ext
-			// const filename = userId + extention
-        
-			cb(null, `${req.params['userId']}${extention}`)
-		} 
+            catch (e) {
+                cb(null, filename)
+            }
+        } 
 	})
 })
 
@@ -68,9 +77,10 @@ export class UserController {
 	uploadImage (
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: true,
             validators: [
-                new FileTypeValidator({fileType: '.(png|jpeg|jpg'}),
-                new MaxFileSizeValidator({maxSize: 1024})
+                new FileTypeValidator({fileType: '.(png|jpeg|jpg)'}),
+                new MaxFileSizeValidator({maxSize: 1024}),
             ]
         })) image : Express.Multer.File
 	) : Observable<Object>
