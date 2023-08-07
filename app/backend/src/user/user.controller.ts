@@ -11,8 +11,10 @@ import {
     StreamableFile,
     UnauthorizedException,
     UseInterceptors,
-    Post, Req, Res, HttpStatus, UploadedFile, Body, Patch, HttpCode, Query,
-
+    Post, Req, Res, HttpStatus, 
+    UploadedFile, Body, Patch, HttpCode, Query,
+    HttpException, ParseFilePipe, FileTypeValidator,
+    MaxFileSizeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -28,19 +30,29 @@ import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import {diskStorage} from 'multer'
 import { Observable, of } from 'rxjs';
+import { isNumber } from 'class-validator';
 
+enum FileValidationErrors {
+    UNSUPPORTED_FILE_TYPE
+}
 
-const multerConfig = (userId: String) => ({
+const multerConfig = () => ({
 	storage: diskStorage({
-		destination: '../usersImage',
-		filename: (req, file, cb) => {
-			console.log(file.originalname)
+		destination: './uploads/usersImage',
+		filename: (req: any, file: any, cb: any) => {†
+            if (!isNumber(req.params['userId'])) {
+                cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+            }
+            if (!file.mimeType.match(/\/(jpg|jpeg|png)$/))
+            cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
 			const extention = path.parse(file.originalname).ext
 			// const filename = userId + extention
-			cb(null, `${file.originalname}${extention}`)
+        
+			cb(null, `${req.params['userId']}${extention}`)
 		} 
 	})
 })
+
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
@@ -51,11 +63,16 @@ export class UserController {
 	)  {
     }
 
-	@Post('uploadf')
-	@UseInterceptors(FileInterceptor('image', multerConfig('userId')))
+	@Post('/:userId/uploadf')
+	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	uploadImage (
 		@Param('userId', ParseIntPipe) id: number,
-		@UploadedFile() image : Express.Multer.File
+		@UploadedFile(new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({fileType: '.(png|jpeg|jpg'}),
+                new MaxFileSizeValidator({maxSize: 1024})
+            ]
+        })) image : Express.Multer.File
 	) : Observable<Object>
 	 {
 			console.log(image)
