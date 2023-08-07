@@ -25,37 +25,34 @@ export default function GlobalLeaderBoard({Leaders}) {
         return (
             <>
                 <div className={`topRank`} >
-                    <StarRank RankNumber={4} />
-                    <p>{user.userData.user.firstname + " " + user.userData.user.lastname}</p>
+                    <StarRank RankNumber={4} color="#A0A0A0" />
+                    <p>{user.userData.user.username}</p>
                     <span><p>{`level 0`}</p></span>
                 </div>
                 <div className={`topRank`} >
-                    <StarRank RankNumber={4} />
-                    <p>{user.userData.user.firstname + " " + user.userData.user.lastname}</p>
+                    <StarRank RankNumber={4} color="#A0A0A0" />
+                    <p>{user.userData.user.username}</p>
                     <span><p>{`level 0`}</p></span>
                 </div>
                 <div className={`topRank`} >
-                    <StarRank RankNumber={4} />
-                    <p>{user.userData.user.firstname + " " + user.userData.user.lastname}</p>
-                    <span><p>{`level 0`}</p></span>
-                </div>
-                <div className={`topRank`} >
-                    <StarRank RankNumber={4} />
-                    <p>{user.userData.user.firstname + " " + user.userData.user.lastname}</p>
+                    <StarRank RankNumber={4} color="#A0A0A0" />
+                    <p>{user.userData.user.username}</p>
                     <span><p>{`level 0`}</p></span>
                 </div>
             </>
         )
     })
 
+    console.log(users.length)
+
     return (
-        <div className="item Leaderboard">
+        <div className="globalLeaderboard">
             <p>Leaderboard</p>
             <div className="board">
                 {ThreeUsers}
             </div>
             <div className="topEleven">
-                {topEleven}
+                {users.length < 12 && topEleven}
             </div>
         </div>
     )

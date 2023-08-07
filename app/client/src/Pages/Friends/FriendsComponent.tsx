@@ -383,7 +383,7 @@ export default function FriendsComponent({UserData}) {
         <div className="friendsComponent">
             <p>My friends</p>
             <div className="friends-list">
-                {FriendsToggle}
+                {allFriends && FriendsToggle}
             </div>
         </div>
     )

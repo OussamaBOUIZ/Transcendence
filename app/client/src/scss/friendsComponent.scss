@@ -84,7 +84,7 @@
         }
     }
 }
-.Leaderboard {
+.globalLeaderboard {
     grid-area: Leaderboard;
     display: flex;
     flex-direction: column;
@@ -133,10 +133,12 @@
     .topEleven {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-        padding-bottom: 1rem;
+        justify-content: flex-start;
+        gap: .5em;
         height: 70%;
+        padding: 1em 0;
         background: #270C42;
+        overflow: hidden;
         .topRank {
             display: flex;
             justify-content: flex-start;

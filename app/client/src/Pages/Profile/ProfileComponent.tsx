@@ -30,7 +30,7 @@ export default function ProfileComponent({UserData}) {
             <div className="item ProfileCard">
                 <div className="image">
                     <img src={profileImage} alt="" />
-                    <StarRank RankNumber={1}/>
+                    <StarRank RankNumber={1} color="#E72FD0" />
                 </div>
                 <h2>{UserData.firstname + " " + UserData.lastname}</h2>
                 <p>{UserData.username}</p>
