@@ -2,8 +2,9 @@ import "../../scss/homeComponent.scss";
 import GameHistory from '../../Components/gameHistory';
 import LeaderBoard from '../../Components/leaderBoard';
 import Battles from '../../Components/Battles';
+import {User, Leaders} from "../../../../global/Interfaces"
 
-export default function HomeComponent({ UserData , Leaders}) {
+export default function HomeComponent({ UserData , Leaders} : {UserData: User, Leaders: Leaders[]}) {
 
     return (
         <>

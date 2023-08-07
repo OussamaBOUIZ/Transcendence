@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {User} from "../../../global/Interfaces"
 
-export const getUserData = () => {
+export const getUserData = (): User | null => {
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<User | null>(null);
 
   const getUserImage = async (id: number) => {
     try {
@@ -19,7 +20,7 @@ export const getUserData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/user");
+        const response = await axios.get<User>("/api/user");
         const image = await getUserImage(response.data.id)
         setUserData({...response.data, image});
       } catch (error) {
@@ -30,5 +31,5 @@ export const getUserData = () => {
     fetchData();
   }, []);
 
-  return { userData };
+  return userData;
 };

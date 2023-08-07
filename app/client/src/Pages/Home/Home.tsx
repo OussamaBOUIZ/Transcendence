@@ -7,8 +7,8 @@ import { getLeaders } from "../../Hooks/getLeaders"
 
 export default function Home() {
 
-    const { userData } = getUserData();
-    const { leaders } = getLeaders();
+    const userData = getUserData();
+    const leaders = getLeaders();
 
     if (!userData && !leaders)
       return null;

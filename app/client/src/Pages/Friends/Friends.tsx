@@ -7,8 +7,9 @@ import { getLeaders } from "../../Hooks/getLeaders";
 
 export default function Friends() {
 
-  const { userData } = getUserData();
-  const { leaders } = getLeaders();
+  const userData = getUserData();
+  const leaders = getLeaders();
+
 
   if (!userData) {
     return (

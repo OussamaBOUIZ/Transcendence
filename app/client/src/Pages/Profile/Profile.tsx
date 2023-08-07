@@ -5,7 +5,7 @@ import { getUserData } from "../../Hooks/getUserData";
 
 export default function Profile() {
 
-  const { userData } = getUserData();
+  const userData = getUserData();
 
   if (!userData) {
     return (

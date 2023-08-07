@@ -1,11 +1,12 @@
 import "../../scss/friendsComponent.scss";
 import { getAllFriends } from "../../Hooks/getAllFriends"
 import ProfileImage from "../../Components/profileImage";
+import {User} from "../../../../global/Interfaces"
 
 
-export default function FriendsComponent({UserData}) {
+export default function FriendsComponent({UserData} : {UserData: User}) {
 
-    const {allFriends} = getAllFriends(UserData?.id);
+    const allFriends = getAllFriends(UserData?.id);
 
     const FriendsMessage = <div className="friend-empty">
         <p>Looks like you're new here and you don't have any friends yet</p>

@@ -1,8 +1,9 @@
 import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
 import StarRank from "./starRank";
+import { Leaders } from "../../../global/Interfaces";
 
-export default function GlobalLeaderBoard({Leaders}) {
+export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 
     const users = [
         {id: nanoid(), rank: 2, userData: Leaders[1], size: "medium"},

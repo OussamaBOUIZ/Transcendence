@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useState, useEffect } from "react";
+import {Achievement} from "../../../global/Interfaces"
 
-export const getAllAchievements = (id: number) => {
-  const [allAchievements, setAllAchievements] = useState([]);
+export const getAllAchievements = (id: number): Achievement[] | [] => {
+  const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
 
-  const getData = async (id: number) => {
+  const getData = async (id: number): Promise<Achievement[] | []> => {
     try {
       const res = await axios.get(`/api/user/achievements/${id}`);
       return res.data;
@@ -42,5 +43,5 @@ export const getAllAchievements = (id: number) => {
     fetchAchievements();
   }, []);
 
-  return { allAchievements };
+  return allAchievements;
 };

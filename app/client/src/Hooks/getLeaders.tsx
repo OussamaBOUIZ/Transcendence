@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react";
 import axios from 'axios';
+import {Leaders} from "../../../global/Interfaces"
 
 export const getLeaders = () => {
-    const [leaders, setLeaders] = useState<any[]>([]);
+    const [leaders, setLeaders] = useState<Leaders[]>([]);
     
     useEffect(() => {
         const getInfo = async () => {
@@ -16,5 +17,5 @@ export const getLeaders = () => {
         getInfo();
       }, []);
 
-    return { leaders }
+    return leaders;
 }

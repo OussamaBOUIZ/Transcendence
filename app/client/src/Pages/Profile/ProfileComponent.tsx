@@ -6,9 +6,10 @@ import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
 import { useEffect } from "react";
+import {User} from "../../../../global/Interfaces"
 
 
-export default function ProfileComponent({UserData}) {
+export default function ProfileComponent({UserData}: {UserData: User}) {
 
     useEffect(() => {
         const SendRequest = async () => {

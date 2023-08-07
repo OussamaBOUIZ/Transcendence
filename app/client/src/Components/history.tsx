@@ -1,9 +1,8 @@
-import React from "react";
-import { useState } from "react"
 import ProfileImage from "./profileImage";
+import {User} from "../../../global/Interfaces"
 import "../scss/history.scss";
 
-export default function History({userData}) {
+export default function History({userData}: {userData: User}) {
     const score = "3-0"
     const opponent = "ijmari"
 
