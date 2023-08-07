@@ -20,7 +20,7 @@ export default function ChatMainInit () {
             callToAction: <ChannelInitAction />
         }
     ]
-    const index = 1;
+    const index = 0;
     return (
         <div className="chat_main chat_main_init">
             <article>

@@ -3,10 +3,11 @@ import {ConfigService} from '@nestjs/config';
 import {JwtService} from '@nestjs/jwt';
 import {User} from 'src/databases/user.entity';
 import * as argon from 'argon2'
-import {userSignUpDto} from './dto/userSignUpDto';
-import {Response} from 'express';
-import {UserService} from 'src/user/user.service';
-import {AchievementService} from 'src/databases/achievement/achievement.service';
+import { userSignUpDto } from './dto/userSignUpDto';
+import { Response } from 'express';
+import { UserService } from 'src/user/user.service';
+import { AchievementService } from 'src/databases/achievement/achievement.service';
+import {authenticator} from 'otplib'
 
 type tokenPayload = {
     id: number,
@@ -46,8 +47,8 @@ export class AuthService {
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
         newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
-        await this.achievementService.createAchievements(newUser);
         await this.userService.saveUser(newUser);
+        this.achievementService.createAchievements(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign({
             id: newUser.id,
@@ -110,16 +111,5 @@ export class AuthService {
             maxAge: 2592000000,
             secure: false,
         });
-    }
-    async retUserData(userToken: string)
-    {
-        const payload = this.jwtService.decode(userToken) as tokenPayload;
-        const user: User = await this.userService.findUserByEmail(payload.email);
-        return {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            username: user.username,
-        };
     }
 }

@@ -1,0 +1,114 @@
+@import "../scss/var.scss";
+@import "../scss/mixins.scss";
+
+div.user_overview {
+    color: white;
+    background: $overview-gradient;
+    grid-area: o;
+    margin-left: auto;
+    width: 22.45%;
+    height: 95%;
+    &.chat_overview_init {
+        @include center-styles; 
+        p {
+            width: 90%;
+            color: $text-grey-color;
+            text-align: center;
+        }
+    }
+    div.contact_details_container {
+        // background: red;
+        padding: 25px 20px;
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        figure.contact {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            img {
+                width: 85px;
+                height: 85px;
+                border-radius: 16px;
+                margin-left: -10px;
+                margin-right: 8px;
+                border: $square-avatar-border;
+            }
+            figcaption {
+                // background: red;
+                display: flex;
+                flex-direction: column;
+                // justify-content: center;
+                margin-left: 10px;
+                margin-bottom: 5px;
+                span {
+                    font-size: 1.875rem;
+                    font-style: italic;
+                    font-weight: 700;
+                    // background: blue;
+                    margin-bottom: 0;
+
+                }
+                p {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                }
+                .level_bar {
+                    width: 100%;
+                    height: 0.4rem;
+                    position: relative;
+                    background-color: $bar-background;
+                    border-radius: 1rem;
+                    box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+                    .level-bar-fill {
+                        position: absolute;
+                        left: 0;
+                        height: 100%;
+                        background-color: $primary-pink;
+                        border-radius: 1rem;
+                    }
+                }
+            }
+        }
+        div.results {
+            display: flex;
+            background-color: red;
+            margin: 25px -20px 25px auto;
+            justify-content: space-around;
+            padding: 20px;
+            border-radius: 25px 0px 0px 100px;
+            border: 0.5px solid rgba(255, 255, 255, 0.25);
+            border-right: 0;
+            background: $achievement-bg-gradient;
+            figcaption.results-item {
+                text-align: center;
+                p {
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+            }
+        }
+        div.achievement-container {
+            figure.achievement {
+                background-color: red;
+                margin: 8px auto;
+                display: flex;
+                padding: 3px 8px;
+                align-items: center;
+                border-radius: 16px;
+                border: 0.5px solid rgba(0, 0, 0, 0.05);
+                background: rgba(0, 0, 0, 0.20);
+                box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+                img.achievement-icon {
+                    width: 40px;
+                    height: 40px;
+                    border: $square-avatar-border;
+                    border-radius: 16px;
+                    margin-right: 15px;
+                }
+            }
+        }
+    }
+}

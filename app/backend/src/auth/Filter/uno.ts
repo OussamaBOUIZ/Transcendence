@@ -17,7 +17,6 @@ import {
       const status = exception.getStatus();
       const str: string = exception.getResponse().toString();
       // const res = JSON.parse(str);
-      console.log(str);
       return response.status(status).send(exception.message);
      }
    }

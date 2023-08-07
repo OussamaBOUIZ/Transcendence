@@ -6,6 +6,8 @@ import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import {Match_history} from "../databases/match_history.entity";
+import { authenticator } from 'otplib';
+import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import { use } from 'passport';
@@ -73,11 +75,20 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async userHasAuth(email: string)
+    {
+        const user = await this.userRepo.findOne({
+            where: {email: email}
+        });
+        if(user.is_two_factor === true)
+            return user;
+        return null;
+    }
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
             return null;
-        const payload = this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload;
-        return await this.userRepo.findOneBy({email: payload.email});
+        const payload = this.jwtService.decode(userToken) as tokenPayload;
+        return await this.userRepo.findOneBy({id: payload.id});
     }
 
     decodeJwtCode(userToken: string) {
@@ -107,7 +118,7 @@ export class UserService {
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
-        const user: User = await this.userRepo.findOneByOrFail({id: id});
+        const user: User = await this.userRepo.findOneBy({id: id});
         await this.userRepo.remove(user);
     }
 
@@ -180,13 +191,113 @@ export class UserService {
         })
         return achieved.slice(0, 3);
     }
+    async onlineFriends(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                friends: {
+                    stat: true,
+                },
+            }
+        });
+        const friends: User[] = user.friends.filter((friend) => friend.status === 'Online').splice(0, 4);
+        return friends;
+
+    }
+    async AllFriends(id: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                friends: {
+                    stat: true,
+                }
+            }
+        });
+        return user;
+    }
+    async addFriend(userId: number, friendId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+            relations: {
+                friends: true,
+            }
+        });
+        const friend = await this.userRepo.findOne({
+            where: {id: friendId},
+        });
+        user.friends.push(friend);
+        await this.userRepo.save(user);
+    }
+    async generate2fa(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        user.two_factor_secret = secret;
+        user.otpPathUrl = otpPathUrl;
+        await this.userRepo.save(user);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+
+    otpsetup(user: User)
+    {
+        const secret = authenticator.generateSecret();
+        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        return {
+            secret,
+            otpPathUrl
+        }
+    }
+
+    isUserAuthValid(access_token: string, user: User)
+    {
+        console.log(access_token, user.two_factor_secret);
+        return authenticator.verify({
+            token: access_token,
+            secret: user.two_factor_secret
+        })
+    }
+
+
+    async addUserStat(statDto: StatsDto, userReq: any) {
+
+		const user = await this.userRepo.findOne({
+			where: {
+				email : userReq['email']
+			},
+			relations: {
+				stat: true
+			},
+			select: {
+				id: true,
+			}
+		})
+
+		console.log(user)
+		if (!user || !user.stat)
+			throw new HttpException('User Not found Or failed to create stat' , HttpStatus.NOT_FOUND)
+
+
+		user.stat.losses = user.stat.losses + statDto.losses
+		user.stat.wins = user.stat.wins + statDto.wins
+		user.stat.ladder_level += statDto.ladder_level
+		user.stat.xp += statDto.xp
+		await this.statsRepo.save(user.stat)
+    }
+
+
 
     async   addGameHistory(gameHistoryDto: GameHistoryDto) {
 
         let match_history = new Match_history()
         match_history.opponent_score = gameHistoryDto.opponent_score
         match_history.user_score = gameHistoryDto.user_score
- 
+
 		try {
         	match_history.opponent = await this.findUserById(gameHistoryDto.opponentId)
             console.log(match_history.opponent)
@@ -206,7 +317,7 @@ export class UserService {
 			    user.match_history = [...user.match_history, match_history]
 			await this.matchHistoryRepo.save(match_history)
 		}
-		catch(e) { 
+		catch(e) {
             console.log(e)
 			throw new HttpException("The User Not found", HttpStatus.NOT_FOUND)
 		}

@@ -1,0 +1,294 @@
+@import "../scss/var.scss";
+@import "../scss/mixins.scss";
+
+.profileCompenent {
+    display: grid;
+    margin: 6% 2% 2.4% 3%;
+    width: 85%;
+    grid-template: 1fr 0.9fr / 0.75fr 1fr;
+    grid-template-areas:
+    "profile history"
+    "friends achievements";
+    grid-gap: 50px;
+    color: white;
+    .item {
+        border-radius: 1rem;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 58.33%), rgba(89, 24, 154, 0.50);
+    }
+    .ProfileCard {
+        grid-area: profile;
+        margin: 0 5em;
+        @include center-columns;
+        justify-content: flex-start;
+        color: white;
+        padding-top: 1.75em;
+        .image {
+            position: relative;
+            img {
+                width: 9.5em;
+                height: 9.5em;
+                border-radius: 6em;
+                border: 1px solid white;
+            }
+            .starRank {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+        }
+        h2 {
+            margin: 0;
+            text-transform: uppercase;
+        }
+        p {
+            margin-top: 0;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .level_bar {
+            width: 40%;
+            height: 0.4rem;
+            position: relative;
+            background-color: $bar-background;
+            border-radius: 1em;
+            box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+            .level-bar-fill {
+                position: absolute;
+                left: 0;
+                height: 100%;
+                background-color: $primary-pink;
+                border-radius: 1em;
+            }
+        }
+        .footer {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            button {
+                flex-grow: 1;
+                padding: 0.875em 3em;
+                border-radius: 0 0 0 1em;
+                border: none;
+                font-weight: 500;
+            }
+            .DM {
+                border-radius: 0 0 1em 0;
+                background: $primary-pink;
+                color: white
+            }
+        }
+    }
+    .GameHistory {
+        background-image: url("../Assets/GameHistory.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        grid-area: history;
+        display: flex;
+        flex-direction: column;
+        p {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin: 1rem;
+        }
+        .games {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+            grid-gap: 5px;
+            justify-items: center;
+            padding-bottom: 5px;
+        }
+    }
+    .friendsCard {
+        grid-area: friends;
+        overflow: hidden;
+        @include center-columns;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 90%;
+            margin-bottom: .4em;
+            p {
+                font-size: 1.625rem;
+                font-weight: 700;
+                margin-top: .7em;
+                margin-bottom: 0;
+            }
+            .NbFriends {
+                display: flex;
+                span {
+                    margin-left: .5em;
+                }
+            }
+        }
+        .all-friends-list {
+            overflow-y: auto;
+            overflow-x: hidden;
+            width: 100%;
+            height: 80%;
+            @include center-columns;
+            gap: 8px;
+            margin-right: 1em;
+            &::-webkit-scrollbar {
+                width: .4em;
+                border-radius: 6em;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #EAEAEA;
+                border-radius: 6em;
+            }
+            .friend-item {
+                margin-left: 1.4em;
+                width: 90%;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                flex-grow: 1;
+                gap: .4em;
+                padding: .4em;
+                border-radius: 1em;
+                background: rgba(0, 0, 0, 0.20);
+                .userImage {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    img {
+                        width: 2.4em;
+                        height: 2.4em;
+                        border-radius: 6em;
+                    }
+                    .status {
+                        width: .9em;
+                        height: .9em;
+                        border-radius: 6em;
+                        background: rgb(0, 255, 13);
+                        position: absolute;
+                        top: .1em;
+                        right: -.1em;
+                    }
+                }
+                span {
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    text-transform: lowercase;
+                }
+                .friend-name {
+                    width: 30%;
+                    font-size: 0.75rem;
+                    p {
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        margin: 0;
+                    }
+                    span {
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+        }
+    }
+    .achievementCard {
+        grid-area: achievements;
+        overflow: hidden;
+        @include center-columns;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 90%;
+            margin-bottom: .4em;
+            p {
+                font-size: 1.625rem;
+                font-weight: 700;
+                margin-top: .7em;
+                margin-bottom: 0;
+            }
+            .NbAchived {
+                display: flex;
+                span {
+                    margin-left: .5em;
+                }
+            }
+        }
+        .all-awards-list {
+            overflow-y: auto;
+            overflow-x: hidden;
+            width: 100%;
+            height: 80%;
+            display: flex;
+            flex-wrap: wrap;
+            row-gap: 8px;
+            margin-right: 1em;
+            &::-webkit-scrollbar {
+                width: .4em;
+                border-radius: 6em;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #EAEAEA;
+                border-radius: 6em;
+            }
+            .award-item {
+                margin-left: 1.4em;
+                margin-right: 1em;
+                width: 45%;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                flex-grow: 1;
+                gap: .4em;
+                padding: .4em 1em;
+                border-radius: 1em;
+                background: rgba(0, 0, 0, 0.20);
+                .achievement-name {
+                    width: 50%;
+                    margin-left: 1em;
+                    font-size: 0.75rem;
+                    p {
+                        text-transform: uppercase;
+                        font-weight: 700;
+                        margin: 0;
+                    }
+                    span {
+                        font-size: 0.75rem;
+                    }
+                }
+                .lock span {
+                    display: flex;
+                    gap: .4em;
+                    width: 30%;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    img {
+                        width: 1em;
+                    }
+                }
+            }
+            .false {
+                color: #a7a7a7;
+            }
+        }
+    }
+}
+
+@media (max-width: 1500px) {
+    .profileCompenent {
+        .ProfileCard {
+            margin: 0;
+        }
+    }
+}
+
+// @media (max-width: 1330px) {
+//     .profileCompenent {
+//         grid-template: 1fr / 1fr;
+//         grid-template-areas:
+//         "profile"
+//         "history"
+//         "friends"
+//         "achievements";
+//     }
+// }
