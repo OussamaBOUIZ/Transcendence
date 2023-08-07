@@ -10,9 +10,11 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
+    UseInterceptors,
     Post, Req, Res, HttpStatus, UploadedFile, Body, Patch, HttpCode, Query,
 
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import {raw, Request, Response} from 'express'
 import { createReadStream } from 'fs';
@@ -24,14 +26,41 @@ import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedT
 import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
+import {diskStorage} from 'multer'
+import { Observable, of } from 'rxjs';
 
+
+const multerConfig = (userId: String) => ({
+	storage: diskStorage({
+		destination: '../usersImage',
+		filename: (req, file, cb) => {
+			console.log(file.originalname)
+			const extention = path.parse(file.originalname).ext
+			// const filename = userId + extention
+			cb(null, `${file.originalname}${extention}`)
+		} 
+	})
+})
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
-    constructor(private readonly userService: UserService
-        , private readonly jwt: JwtService
-        , private readonly BlockedTokenService: BlockedTokenlistService) {}
+    constructor(
+		private readonly userService: UserService,
+		private readonly jwt: JwtService,
+		private readonly BlockedTokenService: BlockedTokenlistService
+	)  {
+    }
 
+	@Post('uploadf')
+	@UseInterceptors(FileInterceptor('image', multerConfig('userId')))
+	uploadImage (
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile() image : Express.Multer.File
+	) : Observable<Object>
+	 {
+			console.log(image)
+			return of({imagePath: image.path})
+	}
     @Get()
     @UseGuards(JwtGuard)
     async getUserData(@Req() req: Request)
@@ -103,13 +132,7 @@ export class UserController {
     }
 
 
-    // @Post('/:userId/uploadImage')
-    // uploadImage(
-    //     @Param('userId', ParseIntPipe) id: number,
-    //     @UploadedFile() image
-    // ) {
-    //
-    // }
+   
     @Get('image/:id')
     @Header('Content-Type', 'image/png')
     async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>

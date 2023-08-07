@@ -1,7 +1,7 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {User} from 'src/databases/user.entity';
-import {ILike, Like, Repository} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm';
+import { ILike, Like, Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm'
 import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
