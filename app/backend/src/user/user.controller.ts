@@ -2,6 +2,7 @@
 import {
     Controller,
     Header,
+    Headers,
     Get,
     Delete,
     Param,
