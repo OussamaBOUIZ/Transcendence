@@ -8,45 +8,32 @@ import {nanoid} from 'nanoid'
 
 
 import '../scss/sidebar.scss'
-import { Link } from '../../../../node_modules/react-router-dom/dist/index'
+import { isHtmlElement } from '../../../../node_modules/react-router-dom/dist/dom'
 
 export default function Sidebar () {
     const allIcons = [
-        {id: nanoid() ,value: <GoHomeFill />, link:"/",style: "sidebar_button", active: true},
-        {id: nanoid() ,value: <BsChatSquareFill />, link:"/chat",style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaGamepad />, link:"/game",style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaUserFriends />, link:"/friends",style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <IoMdSettings />, link:"/settings",style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaSignOutAlt />, link:"/logout",style: "sidebar_button logout", active: false}
+        {id: nanoid() ,to:"/",value: <GoHomeFill />},
+        {id: nanoid() ,to:"/chat",value: <BsChatSquareFill />},
+        {id: nanoid() ,to:"/game",value: <FaGamepad />},
+        {id: nanoid() ,to:"/friends",value: <FaUserFriends />},
+        {id: nanoid() ,to:"/settings",value: <IoMdSettings />},
+        {id: nanoid() ,to:"/logout",value: <FaSignOutAlt />}
     ]
 
-    const [sdButtons, setSdButtons] = React.useState(allIcons);
-
-    function toggle (id: string) {
-        setSdButtons(prevSdButtons => prevSdButtons.map(item => {
-            return item.id === id ? {...item, active: true} : {...item, active: false}
-        }))
-    }
-    
-    const sidebarButtons = sdButtons.map(item => {
+    const sidebarButtons = allIcons.map(icon => {
         return (
-            <SidebarButton 
-            key={item.id} 
-            className={`${item.style}`}
-            id={`${item.active ? "active" : ""}`}
-            toggle={() => toggle(item.id)}
-            to={item.link}
+            <SidebarButton
+            key={icon.id} 
+            className="sidebar_button"
+            to={icon.to}
             >
-                {item.value}
+                {icon.value}
             </SidebarButton> 
         )
     })
     return (
-        <>
-            <div className='backgroundShadow'></div>
-            <div className="sidebar">
-                {sidebarButtons}
-            </div>
-        </>
+        <div className="sidebar">
+            {sidebarButtons}
+        </div>
     );
 }

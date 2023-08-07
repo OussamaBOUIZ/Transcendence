@@ -1,4 +1,11 @@
+@import './var.scss';
+
+
 .flex-sp {
     display: flex;
     justify-content: space-between;
+}
+
+.active-link {
+    background-color: $sdb-gradient;
 }

@@ -27,6 +27,12 @@ import Settings from './Pages/Settings/Settings'
 // }
 import './scss/utils.scss'
 
+function Friends () {
+  return (
+    <h1>Friends Page</h1>
+  )
+}
+
 export default function App () {
   return (
     <BrowserRouter>
@@ -39,7 +45,7 @@ export default function App () {
         <Route path="/chat" element={<Chat />}/>
         <Route path="/sign" element={<Sign />} />
         <Route path="/game" element={<Game />} />
-        {/* <Route path="/friends" element={<Friends />} /> */}
+        <Route path="/friends" element={<Friends />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
       </main>
