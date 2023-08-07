@@ -79,7 +79,6 @@ export class ChatGatewayService {
                 }
             }
         )
-
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {

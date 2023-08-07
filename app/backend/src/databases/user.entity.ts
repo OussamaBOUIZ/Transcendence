@@ -58,7 +58,7 @@ export class User extends BaseEntity {
     @Column({ type: 'boolean', default: false })
     is_two_factor: boolean
 
-    @ManyToMany(() => User, user => user.friends) // todo : change user.friends to user.friendOf ?!
+    @ManyToMany(() => User, user => user.friendOf) // todo : change user.friends to user.friendOf ?!
     @JoinTable()
     friends: User[];
 

@@ -9,7 +9,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile,
+    Post, Req, Res, HttpStatus, UploadedFile, Body, Patch, HttpCode, Query,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -18,6 +18,8 @@ import { createReadStream } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
 import {Match_history} from "../databases/match_history.entity";
+import { GameHistoryDto } from './game-history-dto/game-history-dto';
+import { searchDto } from './game-history-dto/search-dto';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -68,7 +70,7 @@ export class UserController {
         return res.status(HttpStatus.OK).send('the user blocked ')
     }
 
-    @Get()
+    @Get('user')
     async getUserFromJwt(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
@@ -122,4 +124,23 @@ export class UserController {
         return await this.userService.getMatchHistory(userId)
     }
 
+
+    @Post('gameHistory/add')
+    @HttpCode(HttpStatus.CREATED)
+    async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
+        console.log(gameHistoryDto)
+        await this.userService.addGameHistory(gameHistoryDto)
+        return {
+            Message: "The content is created"
+        }
+    }
+
+ 
+    @Get()
+    async   searchForUser(@Query() dto: searchDto) {
+        const {username} = dto
+        console.log(username)
+        return this.userService.searchUser(username)
+        console.log(username);
+    }
 }

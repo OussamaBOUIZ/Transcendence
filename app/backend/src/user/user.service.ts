@@ -1,11 +1,14 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {User} from 'src/databases/user.entity';
-import {Repository} from 'typeorm';
+import {ILike, Like, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {JwtService} from '@nestjs/jwt';
 import {Achievement} from "../databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import {Match_history} from "../databases/match_history.entity";
+import { GameHistoryDto } from './game-history-dto/game-history-dto';
+import { searchDto } from './game-history-dto/search-dto';
+import { use } from 'passport';
 
 type tokenPayload = {
     id: number,
@@ -104,7 +107,7 @@ export class UserService {
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
-        const user: User = await this.userRepo.findOneBy({id: id});
+        const user: User = await this.userRepo.findOneByOrFail({id: id});
         await this.userRepo.remove(user);
     }
 
@@ -142,6 +145,23 @@ export class UserService {
         })
     }
 
+
+    async searchUser(username: string) {
+        return await this.userRepo.find({
+            where: {
+                username: ILike(`${username}%`)
+            },
+            select: {
+                id: true,
+                username: true,
+                firstname: true,
+                lastname: true
+            }
+        })
+    }
+
+
+
     async getAchievement(id: number) {
         const user = await this.userRepo.findOne({
             where: {id: id},
@@ -160,4 +180,35 @@ export class UserService {
         })
         return achieved.slice(0, 3);
     }
+
+    async   addGameHistory(gameHistoryDto: GameHistoryDto) {
+
+        let match_history = new Match_history()
+        match_history.opponent_score = gameHistoryDto.opponent_score
+        match_history.user_score = gameHistoryDto.user_score
+ 
+		try {
+        	match_history.opponent = await this.findUserById(gameHistoryDto.opponentId)
+            console.log(match_history.opponent)
+			let user = await this.findUserById(gameHistoryDto.userId)
+            console.log(user)
+            const history = await this.userRepo.find({
+                relations: {
+                    match_history: true
+                },
+                where: {
+                    id: gameHistoryDto.userId
+                }
+            })
+            if (!history['match_history'])
+                user.match_history = [match_history]
+            else
+			    user.match_history = [...user.match_history, match_history]
+			await this.matchHistoryRepo.save(match_history)
+		}
+		catch(e) { 
+            console.log(e)
+			throw new HttpException("The User Not found", HttpStatus.NOT_FOUND)
+		}
+	}
 }
