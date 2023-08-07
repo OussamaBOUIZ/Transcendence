@@ -15,6 +15,7 @@
     .friends-list {
         display: flex;
         width: 100%;
+        height: 100%;
         gap: 5em;
         flex-wrap: wrap;
         overflow-y: auto;
@@ -26,6 +27,27 @@
         &::-webkit-scrollbar-thumb {
             background-color: transparent;
             border-radius: 6em;
+        }
+        .friend-empty {
+            @include center-columns;
+            justify-content: center;
+            width: 100%;
+            gap: .3em;
+            p {
+                margin: 0;
+                font-weight: 700;
+                text-align: center;
+            }
+            p:nth-child(1) {
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+            p:nth-child(2) {
+                font-size: 1.325rem;
+                span {
+                    color: $primary-pink;
+                }
+            }
         }
         .friend-item {
             display: flex;
@@ -95,13 +117,18 @@
     width: 25%;
     height: 90%;
     overflow: hidden;
+    position: relative;
     p {
         font-size: 1.4rem;
         font-weight: 700;
         color: white;
         margin: 1rem;
     }
+    .svgIcons {
+        position: absolute;
+    }
     .board {
+        z-index: 1;
         width: 100%;
         height: 15%;
         margin-top: 30%;
@@ -134,6 +161,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        z-index: 2;
         gap: .5em;
         height: 70%;
         padding: 1em 0;
