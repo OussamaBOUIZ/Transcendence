@@ -19,8 +19,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -37,8 +37,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -55,8 +55,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -73,8 +73,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -91,8 +91,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -109,8 +109,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -127,8 +127,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -145,8 +145,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -163,8 +163,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -181,8 +181,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -199,8 +199,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -217,8 +217,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -235,8 +235,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -253,8 +253,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -271,8 +271,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -289,8 +289,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -307,8 +307,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -325,8 +325,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -343,8 +343,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">
@@ -361,8 +361,8 @@ export default function FriendsComponent({UserData}) {
                 <header>
                     <ProfileImage image={friend.image} id="" size="big" />
                     <div className="text-item">
-                        <h2>{friend.firstname + " " + friend.lastname}</h2>
-                        <p>{friend.username}</p>
+                        <h2>{friend.firstname}</h2>
+                        <h2>{friend.lastname}</h2>
                         <span>{friend.status}</span>
                     </div>
                     <div className="level-item">

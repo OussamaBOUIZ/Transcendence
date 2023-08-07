@@ -56,25 +56,20 @@
             width: 22.4375rem;
             height: 14.0625rem;
             border-radius: 1rem;
-            padding: 0.4em;
+            padding: 1em;
             background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
             header {
                 display: flex;
-                justify-content: space-around;
+                justify-content: flex-start;
                 align-items: center;
                 height: 50%;
                 width: 100%;
-                // background-color: green;
                 .text-item {
                     display: flex;
                     flex-direction: column;
-                    // background-color: red;
-                    h2, p {
-                        margin: 0;
-                        font-size: 1rem;
-                        font-weight: 500;
-                    }
+                    margin-left: 1em;
                     h2 {
+                        margin: 0;
                         font-size: 1.25rem;
                         font-weight: 700;
                     }
@@ -86,6 +81,7 @@
                 }
                 .level-item {
                     @include center-columns;
+                    margin-left: auto;
                     p {
                         margin: 0;
                         font-size: 1rem;
@@ -119,13 +115,14 @@
     overflow: hidden;
     position: relative;
     p {
-        font-size: 1.4rem;
+        font-size: 1.75rem;
         font-weight: 700;
         color: white;
-        margin: 1rem;
+        margin: 1em;
     }
     .svgIcons {
         position: absolute;
+        width: 100%;
     }
     .board {
         z-index: 1;
@@ -154,7 +151,7 @@
             }
         }
         .rank2, .rank3 {
-            height: 80%;
+            height: 70%;
         }
     }
     .topEleven {
@@ -172,6 +169,7 @@
             justify-content: flex-start;
             align-items: center;
             padding: 0 5em;
+            height: 100%;
             p {
                 font-weight: 400;
                 font-size: 0.625rem;
