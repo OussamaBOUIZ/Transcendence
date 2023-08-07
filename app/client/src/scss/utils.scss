@@ -1,5 +1,5 @@
 @import './var.scss';
-
+@import './mixins.scss';
 
 .flex-sp {
     display: flex;
@@ -8,4 +8,8 @@
 
 .active-link {
     background-color: $sdb-gradient;
+}
+
+.center {
+    @include center-styles;
 }

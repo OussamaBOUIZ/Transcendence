@@ -18,6 +18,7 @@ import { ViewAuthFilter } from 'src/Filter/filter';
 import { authenticator } from 'otplib';
 import {toDataURL, toFileStream} from "qrcode"
 import { UserService } from 'src/user/user.service';
+import { tokenValidity } from './Filter/tokenFilter';
 
 @Controller('auth')
 export class AuthController {
@@ -69,5 +70,12 @@ export class AuthController {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const path = await toDataURL(user.otpPathUrl);
         return res.status(200).send(path);
+    }
+    @Get('tokenValidity')
+    @UseGuards(JwtGuard)
+    @UseFilters(tokenValidity)
+    getTokenValidity(@Req() req: Request, @Res() res: Response)
+    {
+        return true;
     }
 }
