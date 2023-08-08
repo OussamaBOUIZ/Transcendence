@@ -2,15 +2,20 @@ import React from 'react'
 import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
+import { getUserData } from '../../Hooks/getUserData'
 
-function UserCard ({firstname, lastname, username}) {
+function UserCard ({firstname, lastname, username, avatar}) {
+    const bgImg = {
+        backgroundImage: `url(${avatar})`
+    }
     return (
         <figure className='flex-sp'>
                 <figcaption>
                     {/* <img src="./src/Assets/cat.jpg" alt="" /> */}
                     <div>
-                    <h5>{firstname} {lastname}</h5>
-                    <p>{username}</p>
+                        <div className="avatar" style={bgImg}></div>
+                        <h5>{firstname} {lastname}</h5>
+                        <p>{username}</p>
                     </div>
                 </figcaption>
                 <div>
@@ -24,7 +29,7 @@ function UserCard ({firstname, lastname, username}) {
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState("")
     const [submittedName, setSubmittedName] = React.useState("")
-    let searchedUser: User
+    const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
 
 
     const submitStyle = {
@@ -37,22 +42,28 @@ export default function ChatSearchBox () {
     function handleSubmit (e) {
         e.preventDefault()
         if (currentSearch !== "")
-        {
             setSubmittedName(currentSearch)
-            // setCurrentSearch("") 
-        }
     }
+
+    const getUserImage = async (id: number) => {
+        try {
+          const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
+          return URL.createObjectURL(res.data);
+        } catch (err) {
+          console.log("Error: Failed to fetch award image.");
+          console.log(err);
+          return undefined;
+        }
+      };
 
     React.useEffect(() => {
         async function getUser () {
             try {
                 const response = await axios(`api/user/?username=${submittedName}`)
-                console.log("------")
-                console.log(response.data)
-                searchedUser = response.data
-                console.log("searchUser: ", searchedUser)
-                console.log("------")
-            } catch (err) {
+                const imgRes = await getUserImage(response.data.id)
+                console.log(imgRes)
+                setSearchedUser({...response.data, imgRes})
+            } catch (err: any) {
                 console.log(err.message)
             }
         }
@@ -68,26 +79,22 @@ export default function ChatSearchBox () {
             <form onSubmit={handleSubmit}>
                 <label>Search</label>
                 <input 
-                type="search" 
-                name="" 
-                id="" 
+                type="search"  
                 placeholder="Type a username"
                 onChange={handleChange}
                 value={currentSearch}
                 />
                 <input style={submitStyle}type="submit" value="submit" />
             </form>
-            {/* {   submittedName !== "" && 
-                (true
-                ?
-                <UserCard 
-                    firstname={searchedUser.firstname}
-                    lastname={searchedUser.lastname}
-                    username={searchedUser.username}
-                />
-                :
-                <h3>There is no user with this name</h3>)
-            } */}
+            {searchedUser
+            && 
+            <UserCard 
+                firstname={searchedUser.firstname}
+                lastname={searchedUser.lastname}
+                username={searchedUser.username}
+                avatar={searchedUser.image}
+            />
+            }
         </section>
     );
 }

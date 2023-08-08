@@ -1,8 +1,9 @@
 interface User {
     firstname: string,
     id: number,
+    image?: string,
     lastname: string,
-    userName: string,
+    username: string,
 }
 
 interface MessageData {
