@@ -1,5 +1,5 @@
 import React from 'react'
-import Chat from './Components/Chat/Chat'
+import Chat from './Pages/Chat/Chat'
 import Header from './Components/Header'
 import Home from './Pages/Home/Home'
 import Sidebar from './Components/Sidebar'
