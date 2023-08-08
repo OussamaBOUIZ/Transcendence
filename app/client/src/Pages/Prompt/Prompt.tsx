@@ -18,7 +18,7 @@ export default function Prompt() {
     // const [username, setUsername] = useState<string>("")
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [val, increment] = useState<number>(0)
-    const {fullName, updateFullName} = setFullName(setData);
+    const updateFullName = setFullName(setData);
 
     if (!userData)
         return null;
