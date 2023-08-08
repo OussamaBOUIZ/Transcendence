@@ -32,7 +32,7 @@ export default function ChatSearchBox () {
                 console.log(err.message)
             }
         }
-        if (submittedName !== "")
+        if (submittedName !== "")0
         {
             console.log(submittedName)
             getUser()
