@@ -1,4 +1,5 @@
 
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
 import { ILike, Like, Repository } from 'typeorm';
@@ -107,15 +108,6 @@ export class UserService {
 
     async getMatchHistory(userId: number): Promise<Match_history[]> {
         return await this.matchHistoryRepo.find({
-            relations: {
-                opponent: true,
-            },
-            select: {
-                opponent: {
-                    id: true,
-                    username: true,
-                }
-            },
             where: {
                 user: {
                     id: userId
@@ -168,7 +160,7 @@ export class UserService {
     async searchUser(username: string) {
         return await this.userRepo.find({
             where: {
-                username: ILike(`${username}%`)
+                username: username
             },
             select: {
                 id: true,
@@ -301,10 +293,10 @@ export class UserService {
         match_history.user_score = gameHistoryDto.user_score
 
         try {
-            match_history.opponent = await this.findUserById(gameHistoryDto.opponentId)
-            console.log(match_history.opponent)
-            let user = await this.findUserById(gameHistoryDto.userId)
-            console.log(user)
+            const oppenent  = await this.findUserById(gameHistoryDto.opponentId)
+            match_history.opponent = oppenent.id
+            const user = await this.findUserById(gameHistoryDto.userId)
+            match_history.user = user
             const history = await this.userRepo.find({
                 relations: {
                     match_history: true

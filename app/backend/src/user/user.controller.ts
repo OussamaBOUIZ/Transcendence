@@ -93,13 +93,8 @@ export class UserController {
 		})
 	}
 
-	@Put()
-	async updateAvatar() {
 
-	}
-
-
-	@Get('data')
+	@Get()
 	@UseGuards(JwtGuard)
 	async getUserData(@Req() req: Request) {
 		const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -155,7 +150,7 @@ export class UserController {
 		return res.status(HttpStatus.OK).send('the user blocked ')
 	}
 
-	@Get('user/jwt')
+	@Get()
 	async getUserFromJwt(@Req() req: Request) {
 		const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
 		if (!user)
@@ -296,7 +291,6 @@ export class UserController {
 		const { username } = dto
 		console.log(username)
 		return this.userService.searchUser(username)
-		console.log(username);
 	}
 }
 

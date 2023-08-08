@@ -14,6 +14,6 @@ export class GameHistoryDto {
     user_score: number
 
 
-    @IsNumber()
+    @IsNumber() 
     opponent_score: number
 }

@@ -11,9 +11,8 @@ export class Match_history extends BaseEntity {
     @ManyToOne(() => User, (user) => user.match_history, {nullable: true})
     user: User
 
-    @OneToOne(() => User, {nullable: true})
-    @JoinColumn()
-    opponent: User
+    @Column()
+    opponent: number
     
     @Column()
     user_score: number
