@@ -19,8 +19,7 @@ import {JwtGuard} from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import {Match_history} from "../databases/match_history.entity";
-import { displayNameDto } from './dto/displayDto';
-import { usernameDto } from './dto/usernameDto';
+import { userDataDto } from './dto/userDataDto';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -202,30 +201,37 @@ export class UserController {
         return res.status(200).send('correct two factor token');
     }
 
-    @Post('displayname')
+    @Post('setUserData/:id')
     @UseGuards(JwtGuard)
-    async postUsername(@Body() usernameData: usernameDto, @Req() req: Request, @Res() res: Response)
+    async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
     {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        try {
-            user.username = usernameData.username;
+        const user = await this.userService.findUserById(id);
+        if(userData.username.length === 0)
+        {
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch (error)
+            {
+                return res.status(400).send('nickname is already used');
+            }
+        }
+        else
+        {
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
             await this.userService.saveUser(user);
         }
-        catch (error)
-        {
-            return res.status(400).send('nickname is already used');
-        }
-        return res.status(201).send('username was set succesfully');
+        return res.status(201).send('data was set succesfully');
     }
-    @Post('username')
+    @Get('isFirstLog')
     @UseGuards(JwtGuard)
-    async postDisplay(@Body() displayData: displayNameDto, @Req() req: Request, @Res() res: Response)
+    async isFirstLog(@Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        user.firstname = displayData.firstname;
-        user.lastname = displayData.lastname;
-        await this.userService.saveUser(user);
-        return res.status(201).send('display name was set succesfully');
+        return user.firstLog;
     }
     @Get('logout/:id')
     @UseGuards(JwtGuard)

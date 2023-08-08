@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString} from 'class-validator';
 
-export class displayNameDto {
+export class userDataDto {
     
     @IsNotEmpty()
     @IsString()
@@ -9,4 +9,7 @@ export class displayNameDto {
     @IsNotEmpty()
     @IsString()
     public lastname: string
+
+    @IsString()
+    public username: string
 }

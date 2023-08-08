@@ -35,11 +35,12 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const data = await this.authService.apisignin(googlereq.user);
+        const token = await this.authService.apisignin(googlereq.user);
+        console.log(token);
         const user = await this.userService.userHasAuth(googlereq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');
-        this.authService.setResCookie(res, data.token);
+        this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/home');
     }
 
@@ -51,16 +52,17 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
-        const data = await this.authService.apisignin(fortyTworeq.user);
-        if(!data.token)
+        const token = await this.authService.apisignin(fortyTworeq.user);
+        console.log(token);
+        if(!token)
             return res.redirect('http://localhost:5173/home');
-        this.authService.setResCookie(res, data.token);
+        console.log(token)
+        this.authService.setResCookie(res, token);
         const user = await this.userService.userHasAuth(fortyTworeq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');
         return res.redirect('http://localhost:5173/home');
     }
-
     @Get('qrcode')
     @UseGuards(JwtGuard)
     async getQrCode(@Req() req: Request, @Res() res: Response)
