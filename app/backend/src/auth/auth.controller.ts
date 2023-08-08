@@ -42,7 +42,7 @@ export class AuthController {
         if(user)
             return res.redirect('http://localhost:5173/auth');
         this.authService.setResCookie(res, token);
-        return res.redirect('http://localhost:5173/home');
+        return res.redirect('http://localhost:5173/');
     }
 
     @Get('42')
@@ -55,12 +55,12 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if(!token)
-            return res.redirect('http://localhost:5173/home');
+            return res.redirect('http://localhost:5173/');
         this.authService.setResCookie(res, token);
         const user = await this.userService.userHasAuth(fortyTworeq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');
-        return res.redirect('http://localhost:5173/home');
+        return res.redirect('http://localhost:5173/');
     }
 
     @Get('qrcode')

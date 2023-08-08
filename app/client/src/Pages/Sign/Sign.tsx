@@ -56,7 +56,7 @@ export default function Sign() {
         try {
             
             const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            SignX === "up" ? setNotif(response.data) : window.location.replace("http://localhost:5173/home")
+            SignX === "up" ? setNotif(response.data) : window.location.replace("http://localhost:5173/")
         } catch (error) {
             error.response.data.message === undefined ?
             setNotif(error.response.data) :

@@ -43,7 +43,7 @@ export default function App () {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/sign" element={<Sign />} /> */}
+        <Route path="/sign" element={<Sign />} />
         <Route element={<AuthRequired />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
