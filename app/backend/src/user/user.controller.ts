@@ -85,7 +85,7 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	): Promise<Observable<Object> > {
-		if (! await this.userService.saveUserAvatarPath(id, image.path))
+		// if (! await this.userService.saveUserAvatarPath(id, image.path))
 			// return  res.status(HttpStatus.NOT_FOUND).send('jfj')
 		return of({
 			imagePath: image.path,
@@ -99,7 +99,7 @@ export class UserController {
 	}
 
 
-	@Get()
+	@Get('data')
 	@UseGuards(JwtGuard)
 	async getUserData(@Req() req: Request) {
 		const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -155,7 +155,7 @@ export class UserController {
 		return res.status(HttpStatus.OK).send('the user blocked ')
 	}
 
-	@Get()
+	@Get('user/jwt')
 	async getUserFromJwt(@Req() req: Request) {
 		const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
 		if (!user)
@@ -299,3 +299,5 @@ export class UserController {
 		console.log(username);
 	}
 }
+
+// localhost:3000/api/user/:ael÷
