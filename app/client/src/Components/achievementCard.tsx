@@ -6,6 +6,7 @@ import unlocked from "../Assets/Icons/lock-open-solid.svg"
 import {User} from "../../../global/Interfaces"
 
 export default function AchievementCard({ user }: {user: User}) {
+
     const allAchievements = getAllAchievements(user?.id);
 
     const AchievementsToggle = allAchievements.map((award) => {

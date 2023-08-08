@@ -1,7 +1,7 @@
 import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {getUserData} from "../../Hooks/getUserData";
 import {Data} from "../../../../global/Interfaces";
 import UserName from "./userName";
@@ -14,14 +14,20 @@ export default function Prompt() {
     const userData = getUserData();
     const [notif, setNotif] = useState("")
 
-    
-    // const [username, setUsername] = useState<string>("")
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [val, increment] = useState<number>(0)
     const updateFullName = setFullName(setData);
 
     if (!userData)
         return null;
+
+    const clearFields = () => {
+        setData({
+            firstname: "",
+            lastname: "",
+            username: ""
+        });
+    };
 
     const handleSubmit = () => {
         // setData(prev => ({
@@ -32,9 +38,11 @@ export default function Prompt() {
         // }))
         const sendData = async () => {
             try {
+                console.log("let's try", data)
                 await axios.post(`/api/user/setUserData/${userData.id}`, data)
                 increment(prev => prev + 1)
                 console.log("successfuly")
+                clearFields()
             }
             catch (err) {
                 console.log(err)
@@ -44,17 +52,17 @@ export default function Prompt() {
         sendData();
     };
 
-    const handleChange = (event: { target: { value: string; }; }) => {
-        const { value } = event.target;
-        setData(prev => ({
-            ...prev,
-            username: value,
-        }))
-    };
+    // const handleChange = (event: { target: { name: string, value: string; }; }) => {
+    //     const { name, value } = event.target;
+    //     setData(prev => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }))
+    // };
 
     let icon;
     (val) ?
-    icon = <UserName username={data.username} user={userData.username} handleChange={handleChange} /> :
+    icon = <UserName username={data.username} user={userData.username} handleChange={updateFullName} /> :
     icon = <FullName fullName={data} user={userData} handleChange={updateFullName} />
 
   return (

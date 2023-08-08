@@ -14,7 +14,6 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     useEffect(() => {
         const SendRequest = async () => {
             try {
-                console.log("fcweds")
                 await axios.post(`api/user/addfriend/${UserData.id}?friendId=2`, null)
             }
             catch (err) {

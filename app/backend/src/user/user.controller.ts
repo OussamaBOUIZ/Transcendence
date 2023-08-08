@@ -1,14 +1,25 @@
-import { Controller, Delete, Get, Header, Param, Post, Query, ParseIntPipe, UseGuards,Res, StreamableFile, Req, Headers, BadRequestException, ConsoleLogger } from '@nestjs/common';
+import {
+    Controller,
+    Header,
+    Get,
+    Delete,
+    Param,
+    ParseIntPipe,
+    UseGuards,
+    StreamableFile,
+    UnauthorizedException,
+    Post, Req, Res, HttpStatus, UploadedFile, Query, Body, UseFilters,
+
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import {Request, Response} from 'express'
-import { createReadStream, existsSync } from 'fs';
+import {Request, Response, raw} from 'express'
+import { createReadStream } from 'fs';
 import * as path from 'path';
 import {JwtGuard} from "../auth/jwt/jwtGuard";
-import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
+import {Match_history} from "../databases/match_history.entity";
+import { userDataDto } from './dto/userDataDto';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -19,6 +30,7 @@ export class UserController {
 
     @Get()
     @UseGuards(JwtGuard)
+    @UseFilters()
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -52,12 +64,63 @@ export class UserController {
         return await this.userService.findUserById(id)
     }
 
-    @Get('stats/:userId')
-    async getStatsById(
-        @Param('userId', ParseIntPipe) id: number
+    @Get('block/:userId')
+    async getBlockedUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request
+    )
+    {
+        const user = await this.userService.findUserByEmail(req.user["email"])
+        const User1 =  await this.userService.getBlockedUsers(user.id)
+        return await this.userService.getBlockedUsers(userId)
+    }
+    @Post('block/:userId')
+    async blockUser(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req: Request,
+        @Res() res: Response
     ) {
+        // console.log(req.user['email'], "ok")
+        const user = await this.userService.findUserByEmail(req.user['email'])
+        console.log(user.id, userId)
+        await this.userService.blockUser(userId, user)
+        return res.status(HttpStatus.OK).send('the user blocked ')
+    }
+
+    @Get()
+    async getUserFromJwt(@Req() req: Request)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
+        if (!user)
+            throw new UnauthorizedException()
+        return {
+            id: user.id,
+            username: user.username,
+        }
+    }
+
+
+    // @Post('/:userId/uploadImage')
+    // uploadImage(
+    //     @Param('userId', ParseIntPipe) id: number,
+    //     @UploadedFile() image
+    // ) {
+    //
+    // }
+    @Get('image/:id')
+    @Header('Content-Type', 'image/png')
+    async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>
+    {
+        const filename = id + '.png';
+        const imagePath = path.join(process.cwd(), 'src/usersImage', filename);
+        const fileContent = createReadStream(imagePath)
+        return new StreamableFile(fileContent);
+    }
+    @Get('stats/:userId')
+    async getStatsById( @Param('userId', ParseIntPipe) id: number) {
        return await this.userService.getStatsById(id)
     }
+
     @Get('achievement/firstThree/:id')
     async getLastThree(@Param('id') id: number)
     {
@@ -67,8 +130,7 @@ export class UserController {
     @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
-        let filename;
-        id % 14 === 0 ? filename = '14.jpg' : filename = (id % 14) + '.jpg'
+        const filename = id + '.jpg';
         const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
@@ -89,13 +151,16 @@ export class UserController {
     {
         return await this.userService.AllFriends(id);
     }
-    // @Get('generate2fa/:id')
-    // @UseGuards(JwtGuard)
-    // generate2faForUser(@Param('id') id: number, @Req() req: Request)
-    // {
-    //     const data = await this.userService.generate2fa(id);
+    @Get('friendLastGame/:friendId')
+    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number)
+    {   
+        return await this.userService.getFriendLastGame(friendId);
+    }
 
-    // }
+    @Get('game/history/:userId')
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Match_history[]> {
+        return await this.userService.getMatchHistory(userId)
+    }
 
     @Get('2fa/turn-on/:id')
     @UseGuards(JwtGuard)
@@ -109,7 +174,6 @@ export class UserController {
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
-
     @Get('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
@@ -137,13 +201,48 @@ export class UserController {
         return res.status(200).send('correct two factor token');
     }
 
+    @Post('setUserData/:id')
+    @UseGuards(JwtGuard)
+    async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
+    {
+        
+        const user = await this.userService.findUserById(id);
+        if(userData.username.length === 0)
+        {
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            await this.userService.saveUser(user);
+        }
+        else
+        {
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch (error)
+            {
+                return res.status(400).send('nickname is already used');
+            }
+        }
+        return res.status(201).send('data was set succesfully');
+    }
+    @Get('isFirstLog')
+    @UseGuards(JwtGuard)
+    async isFirstLog(@Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        return user.firstLog;
+    }
     @Get('logout/:id')
     @UseGuards(JwtGuard)
-    async logout(@Param('id') id: number, @Req() req: Request, @Headers('Authorization') authtoken: string)
+    async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
+        const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
-        const payload = this.jwt.verify(authtoken.split(' ')[1], {secret: process.env.JWT_SECRET});
+        const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
         const till = payload.iat + 86400;
-        await this.BlockedTokenService.blacklistToken(authtoken.split[1](), till * 1000)
+        await this.BlockedTokenService.blacklistToken(token, till * 1000);
+        return res.redirect('http://localhost:5137/');
     }
 }
