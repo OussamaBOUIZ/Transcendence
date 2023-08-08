@@ -1,5 +1,5 @@
 import React from 'react'
-import Chat from './Components/Chat/Chat'
+import Chat from './Pages/Chat/Chat'
 import Home from './Pages/Home/Home'
 import { BrowserRouter, Route,Routes } from 'react-router-dom'
 import Sign from './Pages/Sign/Sign'
@@ -43,11 +43,11 @@ export default function App () {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <Route path="/sign" element={<Sign />} /> */}
         <Route element={<AuthRequired />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
             <Route path="/chat" element={<Chat />}/>
-            <Route path="/sign" element={<Sign />} />
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/settings" element={<Settings />} />

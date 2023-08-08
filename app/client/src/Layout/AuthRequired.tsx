@@ -26,7 +26,8 @@ export default function AuthRequired () {
         }
         verifyAuthentication();
     }, [])
-    if (!authenticated)
-        return <div className='center'><h1>You have to login</h1></div>
+    // authenticated = true
+    // if (!authenticated)
+    //     return <div className='center'><h1>You have to login</h1></div>
     return <Outlet />
 }
