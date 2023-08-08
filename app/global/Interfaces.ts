@@ -46,4 +46,10 @@ interface MessageData {
     creationTime: Date
 }
 
-export type {User, MessageData, FriendUser, Achievement, Leaders};
+interface Data {
+    firstname: string,
+    lastname: string,
+    username: string,
+}
+
+export type {User, MessageData, FriendUser, Achievement, Leaders, Data};
