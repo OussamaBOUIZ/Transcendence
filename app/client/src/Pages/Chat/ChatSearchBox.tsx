@@ -1,14 +1,31 @@
 import React from 'react'
 import "../../scss/utils.scss"
 import axios from "axios"
+import {User} from '../../../../global/Interfaces'
 
-// function UserCard () {
-
-// }
+function UserCard ({firstname, lastname, username}) {
+    return (
+        <figure className='flex-sp'>
+                <figcaption>
+                    {/* <img src="./src/Assets/cat.jpg" alt="" /> */}
+                    <div>
+                    <h5>{firstname} {lastname}</h5>
+                    <p>{username}</p>
+                    </div>
+                </figcaption>
+                <div>
+                    <button>DM</button>
+                    <button>ADD</button>
+                </div>
+            </figure>
+    )
+}
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState("")
     const [submittedName, setSubmittedName] = React.useState("")
+    let searchedUser: User
+
 
     const submitStyle = {
         marginTop: "1em",
@@ -20,14 +37,21 @@ export default function ChatSearchBox () {
     function handleSubmit (e) {
         e.preventDefault()
         if (currentSearch !== "")
+        {
             setSubmittedName(currentSearch)
+            // setCurrentSearch("") 
+        }
     }
 
     React.useEffect(() => {
         async function getUser () {
             try {
                 const response = await axios(`api/user/?username=${submittedName}`)
+                console.log("------")
                 console.log(response.data)
+                searchedUser = response.data
+                console.log("searchUser: ", searchedUser)
+                console.log("------")
             } catch (err) {
                 console.log(err.message)
             }
@@ -53,19 +77,17 @@ export default function ChatSearchBox () {
                 />
                 <input style={submitStyle}type="submit" value="submit" />
             </form>
-            <figure className='flex-sp'>
-                <figcaption>
-                    {/* <img src="./src/Assets/cat.jpg" alt="" /> */}
-                    <div>
-                    <h5>firstName LastName</h5>
-                    <p>username</p>
-                    </div>
-                </figcaption>
-                <div>
-                    <button>DM</button>
-                    <button>ADD</button>
-                </div>
-            </figure>
+            {/* {   submittedName !== "" && 
+                (true
+                ?
+                <UserCard 
+                    firstname={searchedUser.firstname}
+                    lastname={searchedUser.lastname}
+                    username={searchedUser.username}
+                />
+                :
+                <h3>There is no user with this name</h3>)
+            } */}
         </section>
     );
 }
