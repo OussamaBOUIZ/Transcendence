@@ -8,7 +8,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile, Query,
+    Post, Req, Res, HttpStatus, UploadedFile, Query, Body,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -19,6 +19,8 @@ import {JwtGuard} from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import {Match_history} from "../databases/match_history.entity";
+import { displayNameDto } from './dto/displayDto';
+import { usernameDto } from './dto/usernameDto';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -173,7 +175,6 @@ export class UserController {
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
-
     @Get('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
@@ -201,6 +202,31 @@ export class UserController {
         return res.status(200).send('correct two factor token');
     }
 
+    @Post('displayname')
+    @UseGuards(JwtGuard)
+    async postUsername(@Body() usernameData: usernameDto, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        try {
+            user.username = usernameData.username;
+            await this.userService.saveUser(user);
+        }
+        catch (error)
+        {
+            return res.status(400).send('nickname is already used');
+        }
+        return res.status(201).send('username was set succesfully');
+    }
+    @Post('username')
+    @UseGuards(JwtGuard)
+    async postDisplay(@Body() displayData: displayNameDto, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        user.firstname = displayData.firstname;
+        user.lastname = displayData.lastname;
+        await this.userService.saveUser(user);
+        return res.status(201).send('display name was set succesfully');
+    }
     @Get('logout/:id')
     @UseGuards(JwtGuard)
     async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)

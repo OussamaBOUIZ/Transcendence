@@ -35,12 +35,11 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const token = await this.authService.apisignin(googlereq.user);
-        console.log(token);
+        const data = await this.authService.apisignin(googlereq.user);
         const user = await this.userService.userHasAuth(googlereq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');
-        this.authService.setResCookie(res, token);
+        this.authService.setResCookie(res, data.token);
         return res.redirect('http://localhost:5173/home');
     }
 
@@ -52,12 +51,10 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
-        const token = await this.authService.apisignin(fortyTworeq.user);
-        console.log(token);
-        if(!token)
+        const data = await this.authService.apisignin(fortyTworeq.user);
+        if(!data.token)
             return res.redirect('http://localhost:5173/home');
-        console.log(token)
-        this.authService.setResCookie(res, token);
+        this.authService.setResCookie(res, data.token);
         const user = await this.userService.userHasAuth(fortyTworeq.user.email);
         if(user)
             return res.redirect('http://localhost:5173/auth');

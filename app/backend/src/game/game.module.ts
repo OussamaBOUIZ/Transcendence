@@ -9,14 +9,15 @@ import { Achievement } from "src/databases/achievement/achievement.entity";
 import { Match_history } from "src/databases/match_history.entity";
 import { JwtService } from "@nestjs/jwt";
 import { gameController } from "./game.controller";
+import { AchievementService } from "src/databases/achievement/achievement.service";
 
 
 @Module({
     imports: [TypeOrmModule.forFeature([Game, Stats, User, Achievement, Match_history])],
-	providers: [gameService, UserService, JwtService],
+	providers: [gameService, UserService, JwtService, AchievementService],
     controllers: [gameController]
 })
 
 export class gameModule {
 
-}
+}  

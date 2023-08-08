@@ -31,11 +31,15 @@ export class AuthService {
         if(!userFound)
             return await this.apiregisterUser(user);
         const secret = this.configService.get<string>('JWT_SECRET');
-        return this.jwtService.sign ({ 
+        const userToken = this.jwtService.sign ({ 
             id: userFound.id,
             email: userFound.email},
              {secret}
             );
+        return {
+            token: userToken,
+            firstTime: false
+        }
     }
 
     async apiregisterUser(user)
@@ -44,15 +48,16 @@ export class AuthService {
         
         const newUser = new User();
         newUser.email = user.email;
-        newUser.firstname = user.firstname;
-        newUser.lastname = user.lastname;
-        newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
         await this.userService.saveUser(newUser);
         this.achievementService.createAchievements(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
-        return this.jwtService.sign({
+        const userToken = this.jwtService.sign({
             id: newUser.id,
             email: newUser.email}, {secret});
+        return {
+            token: userToken,
+            firstTime: true
+        }
     }
     async searchForEmail(email)
     {
