@@ -8,7 +8,7 @@ import {
     UseGuards,
     StreamableFile,
     UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile, Query, Body,
+    Post, Req, Res, HttpStatus, UploadedFile, Query, Body, UseFilters,
 
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -30,6 +30,7 @@ export class UserController {
 
     @Get()
     @UseGuards(JwtGuard)
+    @UseFilters()
     async getUserData(@Req() req: Request)
     {
         console.log('HEERE');
