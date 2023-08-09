@@ -4,7 +4,7 @@ import { User } from "./user.entity"
 
 @Entity('Match_history')
 export class Match_history extends BaseEntity {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn()
     id: number
 
     @ManyToOne(() => User, (user) => user.match_history, {nullable: true})

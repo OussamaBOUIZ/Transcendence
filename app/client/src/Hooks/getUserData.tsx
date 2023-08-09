@@ -8,7 +8,7 @@ export const getUserData = (): User | null => {
 
   const getUserImage = async (id: number) => {
     try {
-      const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
+      const res = await axios.get(`/api/user/avatar/${id}`, {responseType: 'blob'})
       return URL.createObjectURL(res.data);
     } catch (err) {
       console.log("Error: Failed to fetch award image.");

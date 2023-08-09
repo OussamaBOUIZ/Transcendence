@@ -7,26 +7,20 @@ export default function fullName({fullName, user, handleChange} : {fullName: Dat
     <>
         <p>Full Name</p>
         <div className="inputs">
-          <div className="field">
-            <label>First Name</label>
             <input
-              placeholder={user.firstname}
+              placeholder="First Name"
               type="text"
               name="firstname"
               value={fullName.firstname}
               onChange={handleChange}
             />
-          </div>
-          <div className="field">
-            <label>Last Name</label>
             <input
-              placeholder={user.lastname}
+              placeholder="Last Name"
               type="text"
               name="lastname"
               value={fullName.lastname}
               onChange={handleChange}
             />
-          </div>
         </div>
     </>
   );

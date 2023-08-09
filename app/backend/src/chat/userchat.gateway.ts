@@ -4,7 +4,7 @@ import {
 	OnGatewayInit,
 	SubscribeMessage,
 	WebSocketGateway,
-	WebSocketServer
+	WebSocketServer, WsException
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
 import {ChatGatewayService} from "./userchat.service"
@@ -34,8 +34,11 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway(1313)
-@UseGuards(WsGuard)
+@WebSocketGateway(1313, {cors: {
+	origin: "http://localhost:5173",
+		credentials: true
+}})
+// @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
 	private readonly logger: Logger;
@@ -53,7 +56,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
-		const socketId = await this.chatGatewayService.processMessage(socket, messageDto)
+		console.log('onSendMessage')
+		let socketId: string
+		try {
+			socketId = await this.chatGatewayService.processMessage(socket, messageDto)
+		}
+		catch (e) {
+			console.log(e)
+			this.server.to(e.socket).emit('error', e.msg)
+			return
+		}
 		this.server.to(socketId).emit("message", messageDto.message)
 	}
 

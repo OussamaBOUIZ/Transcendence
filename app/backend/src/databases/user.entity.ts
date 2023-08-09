@@ -37,7 +37,7 @@ export class User extends BaseEntity {
     @Column({nullable: true })
     lastname: string
 
-    @Column({nullable: true})
+    @Column({nullable: true, unique: true})
     username: string
 
     @Exclude()

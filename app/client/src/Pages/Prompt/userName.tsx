@@ -6,16 +6,13 @@ export default function userName({username, user, handleChange} : {username: str
     <>
         <p>Username</p>
         <div className="inputs">
-          <div className="field">
-            <label>UserName</label>
             <input
-              placeholder={user}
+              placeholder="User Name"
               type="text"
               name="username"
               value={username}
               onChange={handleChange}
             />
-          </div>
         </div>
     </>
   );

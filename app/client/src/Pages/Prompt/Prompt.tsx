@@ -6,6 +6,7 @@ import {getUserData} from "../../Hooks/getUserData";
 import {Data} from "../../../../global/Interfaces";
 import UserName from "./userName";
 import FullName from "./fullName";
+import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 
 
@@ -13,6 +14,8 @@ export default function Prompt() {
 
     const userData = getUserData();
     const [notif, setNotif] = useState("")
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+
 
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [val, increment] = useState<number>(0)
@@ -29,41 +32,64 @@ export default function Prompt() {
         });
     };
 
+    function checkInput(): boolean {
+        if (!val && (data.firstname === '' || data.lastname === '')) {
+            setNotif('Please enter your full name')
+            return true;
+        }
+        if (val === 1 && data.username === '') {
+            setNotif('Please enter your user name')
+            return true;
+        }
+        return false;
+    }
+
     const handleSubmit = () => {
-        // setData(prev => ({
-        //     ...prev,
-        //     firstname: fullName.firstname,
-        //     lastname: fullName.lastname,
-        //     username: username,
-        // }))
-        const sendData = async () => {
+        setNotif('')
+        const sendData = async (Path: string, data: Data | FormData, headers: object | null) => {
             try {
-                console.log("let's try", data)
-                await axios.post(`/api/user/setUserData/${userData.id}`, data)
+                await axios.post(Path, data, headers)
                 increment(prev => prev + 1)
-                console.log("successfuly")
+                console.log(val)
                 clearFields()
+                if (val === 2)
+                    window.location.replace('/home')
             }
-            catch (err) {
-                console.log(err)
-                // setNotif
+            catch (error) {
+                setNotif(error.response.data)
             }
         }
-        sendData();
+        if (checkInput())
+            return
+        let Path: string;
+        let headers = null;
+        (val === 2) ? Path = `/api/user/${userData.id}/upload` : Path = `/api/user/setUserData/${userData.id}`
+        if (val === 2) {
+            headers = {
+                'Content-Type': 'multipart/form-data',
+            };
+            const formData = new FormData();
+            if (imagePreview !== null) {
+                formData.append('image', imagePreview);
+            }
+            sendData(Path, formData, headers);
+        } else {
+            sendData(Path, data, headers);
+        }
     };
 
-    // const handleChange = (event: { target: { name: string, value: string; }; }) => {
-    //     const { name, value } = event.target;
-    //     setData(prev => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }))
-    // };
-
     let icon;
-    (val) ?
-    icon = <UserName username={data.username} user={userData.username} handleChange={updateFullName} /> :
-    icon = <FullName fullName={data} user={userData} handleChange={updateFullName} />
+    switch (val) {
+        case 1:
+            icon = <UserName username={data.username} user={userData.username} handleChange={updateFullName} />
+            break;
+        case 2:
+            icon = <ChangeAvatar user={userData} imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            break;
+        default:
+            icon = <FullName fullName={data} user={userData} handleChange={updateFullName} />
+            break;
+    }
 
   return (
     <div className="info-body">
@@ -71,8 +97,8 @@ export default function Prompt() {
         <div className="info-container">
             {icon}
             <div className="buttons">
-                <button className="skip">skip</button>
-                <button className="update" onClick={handleSubmit}>update</button>
+                <button className={`skip step${val}`} onClick={() => {increment(prev => prev - 1)}} >back</button>
+                <button className="update" onClick={handleSubmit}>apply</button>
             </div>
         </div>
     </div>

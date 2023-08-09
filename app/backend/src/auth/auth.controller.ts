@@ -48,8 +48,6 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     fortyTwoLogin() {
     }
-
-
     @Get('42api')
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)

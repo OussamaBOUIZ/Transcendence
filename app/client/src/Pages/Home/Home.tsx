@@ -1,3 +1,4 @@
+import React from "react";
 import "../../scss/home.scss";
 import SideBar from "../../Components/Sidebar";
 import HomeComponent from "./homeComponent";

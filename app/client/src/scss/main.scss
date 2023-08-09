@@ -1,0 +1,37 @@
+
+@import './var.scss';
+
+* {
+   margin: 0;
+   padding: 0;  
+   border: 0;
+   font-family: $font-style;
+   color: $text-color;
+}
+*:focus {
+    outline : none;
+}
+
+body {
+    background: linear-gradient(135deg, $bg-color-left 0%, $bg-color-right 100%);
+    width: 100vw;    
+    height: 100vh;
+}
+
+main {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    object-fit: cover;
+}
+
+textarea {
+    resize: none;
+}
