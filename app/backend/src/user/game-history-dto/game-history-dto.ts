@@ -1,4 +1,4 @@
-import { IsNumber } from "class-validator"
+import { IsInt, IsNumber } from "class-validator"
 import { LessThan } from "typeorm"
 
 

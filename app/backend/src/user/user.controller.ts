@@ -78,15 +78,15 @@ export class UserController {
 	@Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	// @HttpCode(HttpStatus.CREATED)
-	async uploadImage(
+	async uploadImage (
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
 			fileIsRequired: true,
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	): Promise<Observable<Object> > {
-		// if (! await this.userService.saveUserAvatarPath(id, image.path))
-			// return  res.status(HttpStatus.NOT_FOUND).send('jfj')
+		if (! await this.userService.saveUserAvatarPath(id, image.path))
+			throw new NotFoundException('The User Not Found')
 		return of({
 			imagePath: image.path,
 			message: 'the avatar uploaded succesfuly'
@@ -97,7 +97,7 @@ export class UserController {
 	@Get()
 	@UseGuards(JwtGuard)
 	async getUserData(@Req() req: Request) {
-		const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+	const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
 		const userData = {
 			id: user.id,
 			firstname: user.firstname,
@@ -106,6 +106,7 @@ export class UserController {
 		};
 		return userData;
 	}
+
 	@Delete('delete/:id')
 	async deleteUser(@Param('id') userId: number) // return success
 	{
@@ -137,6 +138,7 @@ export class UserController {
 		const User1 = await this.userService.getBlockedUsers(user.id)
 		return await this.userService.getBlockedUsers(userId)
 	}
+
 	@Post('block/:userId')
 	async blockUser(
 		@Param('userId', ParseIntPipe) userId: number,
@@ -149,18 +151,6 @@ export class UserController {
 		await this.userService.blockUser(userId, user)
 		return res.status(HttpStatus.OK).send('the user blocked ')
 	}
-
-	@Get()
-	async getUserFromJwt(@Req() req: Request) {
-		const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
-		if (!user)
-			throw new UnauthorizedException()
-		return {
-			id: user.id,
-			username: user.username,
-		}
-	}
-
 
 
 	@Get('avatar/:id')
@@ -182,6 +172,8 @@ export class UserController {
 
 
 	}
+
+
 	@Get('stats/:userId')
 	async getStatsById(@Param('userId', ParseIntPipe) id: number) {
 		return await this.userService.getStatsById(id)
@@ -285,9 +277,10 @@ export class UserController {
 		}
 	}
 
-
-	@Get()
-	async searchForUser(@Query() dto: searchDto) {
+	@Get('search/user')
+	async searchForUser(
+		@Query() dto: searchDto,
+	) {
 		const { username } = dto
 		console.log(username)
 		return this.userService.searchUser(username)
