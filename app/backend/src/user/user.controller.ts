@@ -33,7 +33,6 @@ export class UserController {
     @UseFilters()
     async getUserData(@Req() req: Request)
     {
-        console.log('HEERE');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -153,9 +152,9 @@ export class UserController {
         return await this.userService.AllFriends(id);
     }
     @Get('friendLastGame/:friendId')
-    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number)
-    {   
-        return await this.userService.getFriendLastGame(friendId);
+    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
+    {
+        return await this.userService.getFriendLastGame(friendId, userId);
     }
 
     @Get('game/history/:userId')
@@ -243,6 +242,8 @@ export class UserController {
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
         const till = payload.iat + 86400;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
+        user.status = 'Offline';
+        this.userService.saveUser(user);
         return res.redirect('http://localhost:5137/');
     }
 }
