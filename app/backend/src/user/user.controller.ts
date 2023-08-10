@@ -17,6 +17,7 @@ import {
 	MaxFileSizeValidator,
 	NotFoundException,
 	Put,
+    UseFilters,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -36,6 +37,7 @@ import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
 import { log } from 'console';
+import { ViewAuthFilter } from 'src/Filter/filter';
 
 
 const DirUpload = './uploads/usersImage/'

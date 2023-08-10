@@ -4,4 +4,3 @@ dist
 .idea/
 
 **/package-lock.json
-**/uploads/**

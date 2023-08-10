@@ -15,10 +15,6 @@ import {User_chat} from "./userchat.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
 import {Exclude} from "class-transformer";
-<<<<<<< HEAD
-import { Channel } from "./channel.entity";
-=======
->>>>>>> 12cae7e6fb28ba7a9d004960ae840a608ba7dec8
 
 
 @Entity('User')
