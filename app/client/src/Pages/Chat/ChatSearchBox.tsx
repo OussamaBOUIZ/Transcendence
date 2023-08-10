@@ -3,6 +3,8 @@ import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
 import { getUserData } from '../../Hooks/getUserData'
+import {getUserImage} from '../../Hooks/getUserImage'
+import ProfileImage from '../../Components/profileImage'
 
 function UserCard ({firstname, lastname, username, avatar}) {
     // const bgImg = {
@@ -11,9 +13,9 @@ function UserCard ({firstname, lastname, username, avatar}) {
     return (
         <figure className='flex-sp'>
                 <figcaption>
-                    <img src={avatar} alt="" />
                     <div>
                         {/* <div className="avatar" style={bgImg}></div> */}
+                        <ProfileImage image={avatar} size="small"/>
                         <h5>{firstname} {lastname}</h5>
                         <p>{username}</p>
                     </div>
@@ -61,15 +63,14 @@ export default function ChatSearchBox () {
         //     }
         //   };
 
-        async function getUser () {
+        async function getUserCard () {
             try {
                 const response = await axios(`api/user/search/user/?username=${submittedName}`)
-                // const imgRes = await getUserImage(response.data[0].id)
+                const imgRes = await getUserImage(response.data[0].id)
                 // console.log(imgRes)
                 // console.log(response.data[0])
-                // setSearchedUser({...response.data[0], image: imgRes})
-                // console.log(response.data[0])
-                setSearchedUser(response.data[0])
+                setSearchedUser({...response.data[0], image: imgRes})
+                // setSearchedUser(response.data[0])
                 console.log(searchedUser)
             } catch (err: any) {
                 console.log(err.message)
@@ -78,7 +79,7 @@ export default function ChatSearchBox () {
         if (submittedName !== "")
         {
             console.log(submittedName)
-            getUser()
+            getUserCard()
         }
     }, [submittedName])
 
@@ -100,7 +101,7 @@ export default function ChatSearchBox () {
                 firstname={searchedUser.firstname}
                 lastname={searchedUser.lastname}
                 username={searchedUser.username}
-                avatar={searchedUser?.image}
+                avatar={searchedUser.image}
             />
             }
         </section>

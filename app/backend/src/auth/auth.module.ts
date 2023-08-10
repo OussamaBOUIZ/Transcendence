@@ -30,8 +30,7 @@ const jwtFactory = {
 };
 @Module({
   controllers: [AuthController],
-  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, 
-    BlockedTokenList, Match_history]),
+  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, BlockedTokenList, Match_history]),
    JwtModule.registerAsync(jwtFactory), PassportModule ],
   providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy
     , MailTemplate, UserService, AchievementService, BlockedTokenlistService, RequestProvider],

@@ -27,12 +27,10 @@ import AuthRequired from './Layout/AuthRequired'
 
 import './scss/main.scss'
 import './scss/utils.scss'
+import Prompt from './Pages/Prompt/Prompt'
+import Profile from './Pages/Profile/Profile'
+import Friends from './Pages/Friends/Friends'
 
-function Friends () {
-  return (
-    <h1>Friends Page</h1>
-  )
-}
 
 // export default function App () {
 //   return (
@@ -67,6 +65,9 @@ export default function App () {
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/info" element={<Prompt />} />
+            <Route path="/profile" element={<Profile />} />
+
           </Route>
         </Route>
       </Routes>

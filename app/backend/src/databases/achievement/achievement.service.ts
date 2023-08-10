@@ -23,7 +23,7 @@ export class AchievementService {
         map['Pong veteran'] = 'achieved level 5'; 
         map['Pong pro'] = 'achieved level 15';
         map['Pong master'] = 'achieved level 25';
-        map['clean shot'] = '0 shots at own goal';
+        map['the wall'] = '0 shots at own goal';
         map['hot shooter'] = '5 wins in a row';
         map['master shooter'] = '10 wins in a row';
         map['underdog'] = 'beat a player 2 levels higher than you';

@@ -1,5 +1,3 @@
-
-
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
 import { ILike, Like, Repository } from 'typeorm';
@@ -35,7 +33,7 @@ export class UserService {
         if (!user)
             return null
         user.avatar = pathAvatar
-        await this.userRepo.save(user)
+       return await this.userRepo.save(user)
     }
 
     async blockUser(userId: number, user: User) {
@@ -56,6 +54,9 @@ export class UserService {
 
     async saveUser(user: User) {
         await this.userRepo.save(user);
+    }
+    async saveStat(stat: Stats) {
+        await this.statsRepo.save(stat);
     }
 
     async findUserByEmail(email: string): Promise<User> {
@@ -82,7 +83,7 @@ export class UserService {
     }
 
     async findUserById(id: number): Promise<User> {
-        return await this.userRepo.findOneBy({ id: id });
+        return await this.userRepo.findOneBy({id: id});
     }
 
     async userHasAuth(email: string) {
@@ -115,6 +116,21 @@ export class UserService {
             },
             take: 4
         })
+    }
+
+
+    async getFriendLastGame(friendId: number)
+    {
+        const match = await this.matchHistoryRepo.findOne({
+            where: {
+              opponent: friendId  
+            },
+            select: {
+                user_score: true,
+                opponent_score: true,
+            }
+        });
+        return match;
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
@@ -211,6 +227,20 @@ export class UserService {
                 friends: {
                     stat: true,
                 }
+            },
+            select: {
+                id: true,
+                friends: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
+                    username: true,
+                    status: true,
+                    stat: {
+                        wins: true,
+                        losses: true,
+                    }
+                },
             }
         });
         return user;

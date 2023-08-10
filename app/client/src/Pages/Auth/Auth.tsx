@@ -1,35 +1,37 @@
 import "../../scss/auth.scss";
-// import QRcode from "../../Assets/qr-code.png";
 import axios from "axios"
 import {useState} from "react"
 import Notification from "../../Components/Notification"
 import { getQRcode } from "../../Hooks/getQRcode"
+
+interface Inputs {
+    [id: number]: string;
+    input1: string,
+    input2: string,
+    input3: string,
+    input4: string,
+    input5: string,
+    input6: string,
+}
 
 
 export default function Auth() {
 
     const [notif, setNotif] = useState("")
 
-    const { QRcode } = getQRcode();
+    const QRcode = getQRcode();
 
-    const [codeNumber, setCodeNumber] =useState({
-        input1: "",
-        input2: "",
-        input3: "",
-        input4: "",
-        input5: "",
-        input6: ""
-    })
+    const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
 
-    function handleInput() {
-        input.forEach(element => {
-            if (isNaN(+element)) {
-                console.log("error");
-                return;
-            }
-        });
-    }
+    // function handleInput() {
+    //     input.forEach(element => {
+    //         if (isNaN(+element)) {
+    //             console.log("error");
+    //             return;
+    //         }
+    //     });
+    // }
 
     const collectedCode = Object.values(codeNumber).join('');
 
@@ -56,7 +58,7 @@ export default function Auth() {
         sendCode();
     };
 
-    const handleChange = (event) => {
+    const handleChange = (event: { target: { id: string; value: string; }; }) => {
         const { id, value } = event.target;
         setCodeNumber((prevCodeNumber) => ({ ...prevCodeNumber, [id]: value }));
       };
@@ -73,7 +75,7 @@ export default function Auth() {
     const inputs = Ids.map(input => {
         return (
             <input
-            key={input.key}
+            key={input.id}
             type="text"
             id={input.id}
             maxLength={1}
