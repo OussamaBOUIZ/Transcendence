@@ -26,5 +26,4 @@ export class gameService {
         await this.achievementService.setLevelAchievement(oldLevel, user.stat.ladder_level);
         await this.userService.saveStat(user.stat);
     }
-    async 
 }

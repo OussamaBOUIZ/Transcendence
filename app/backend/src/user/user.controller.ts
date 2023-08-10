@@ -20,6 +20,7 @@ import { JwtService } from '@nestjs/jwt';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import {Match_history} from "../databases/match_history.entity";
 import { userDataDto } from './dto/userDataDto';
+import { ViewAuthFilter } from 'src/Filter/filter';
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -30,9 +31,10 @@ export class UserController {
 
     @Get()
     @UseGuards(JwtGuard)
-    @UseFilters()
+    // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
+        console.log('HERE');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -59,7 +61,8 @@ export class UserController {
         return this.userService.getLeaderBoard()
     }
 
-    @Get(':id')
+    @Get(':id/data')
+    @UseFilters(ViewAuthFilter)
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
     }
@@ -243,7 +246,7 @@ export class UserController {
         const till = payload.iat + 86400;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
-        this.userService.saveUser(user);
+        await this.userService.saveUser(user);
         return res.redirect('http://localhost:5137/');
     }
 }
