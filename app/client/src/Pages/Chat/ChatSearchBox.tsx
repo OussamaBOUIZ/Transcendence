@@ -30,7 +30,7 @@ export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState("")
     const [submittedName, setSubmittedName] = React.useState("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
-
+    const initialRender:any = React.useRef(true)
 
     const submitStyle = {
         marginTop: "1em",
@@ -57,6 +57,10 @@ export default function ChatSearchBox () {
     //   };
 
     React.useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
         async function getUser () {
             try {
                 const response = await axios(`api/user/search/user/?username=${submittedName}`)
@@ -70,7 +74,7 @@ export default function ChatSearchBox () {
                 console.log(err.message)
             }
         }
-        if (submittedName !== "")0
+        if (submittedName !== "")
         {
             console.log(submittedName)
             getUser()
