@@ -1,7 +1,7 @@
 interface User {
-    firstname: string,
     id: number,
-    image?: string,
+    firstname: string,
+    // image?: string,
     lastname: string,
     username: string,
 }

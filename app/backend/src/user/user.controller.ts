@@ -43,7 +43,7 @@ const multerConfig = () => ({
 	storage: diskStorage({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
-			const supportedExt = ['.png', '.jpeg', ['.jpg']]
+			const supportedExt = ['.png', '.jpeg', '.jpg']
 			if (isNaN(parseInt(req.params['userId'], 10)))
 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
@@ -84,9 +84,9 @@ export class UserController {
 			fileIsRequired: true,
 		})) image: Express.Multer.File,
 		@Res() res: Response
-	): Promise<Observable<Object> > {
+	): Promise<Observable<Object>>  {
 		if (! await this.userService.saveUserAvatarPath(id, image.path))
-			throw new NotFoundException('The User Not Found')
+		 	throw new NotFoundException('The User Not Found')
 		return of({
 			imagePath: image.path,
 			message: 'the avatar uploaded succesfuly'
@@ -95,9 +95,10 @@ export class UserController {
 
 
 	@Get()
-	@UseGuards(JwtGuard)
 	async getUserData(@Req() req: Request) {
 	const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+	if (!user)
+		throw new NotFoundException('user not found')
 		const userData = {
 			id: user.id,
 			firstname: user.firstname,

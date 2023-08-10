@@ -45,24 +45,27 @@ export default function ChatSearchBox () {
             setSubmittedName(currentSearch)
     }
 
-    const getUserImage = async (id: number) => {
-        try {
-          const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
-          return URL.createObjectURL(res.data);
-        } catch (err) {
-          console.log("Error: Failed to fetch award image.");
-          console.log(err);
-          return undefined;
-        }
-      };
+    // const getUserImage = async (id: number) => {
+    //     try {
+    //       const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
+    //       return URL.createObjectURL(res.data);
+    //     } catch (err) {
+    //       console.log("Error: Failed to fetch award image.");
+    //       console.log(err);
+    //       return undefined;
+    //     }
+    //   };
 
     React.useEffect(() => {
         async function getUser () {
             try {
-                const response = await axios(`api/user/?username=${submittedName}`)
-                const imgRes = await getUserImage(response.data.id)
-                console.log(imgRes)
-                setSearchedUser({...response.data, imgRes})
+                const response = await axios(`api/user/search/user/?username=${submittedName}`)
+                // const imgRes = await getUserImage(response.data.id)
+                // console.log(imgRes)
+                // setSearchedUser({...response.data, imgRes})
+                console.log(response.data[0])
+                setSearchedUser(response.data[0])
+                console.log(searchedUser)
             } catch (err: any) {
                 console.log(err.message)
             }
@@ -92,7 +95,7 @@ export default function ChatSearchBox () {
                 firstname={searchedUser.firstname}
                 lastname={searchedUser.lastname}
                 username={searchedUser.username}
-                avatar={searchedUser.image}
+                avatar={searchedUser?.image}
             />
             }
         </section>

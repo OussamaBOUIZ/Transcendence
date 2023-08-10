@@ -1,4 +1,4 @@
-import { Transform } from "class-transformer";
+// import { Transform } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { throwIfEmpty } from "rxjs";
 
@@ -9,6 +9,6 @@ import { throwIfEmpty } from "rxjs";
 export class searchDto {
     @IsString()
     @IsNotEmpty()
-    @Transform(({value}) => trim(value))
+    // @Transform(({value}) => trim(value))
     username: string 
 }
