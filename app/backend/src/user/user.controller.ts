@@ -75,6 +75,7 @@ export class UserController {
 	) {
 	}
 
+	// todo : if the user not found i have to remove avatar ??
 	@Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	async uploadImage (
@@ -84,8 +85,8 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	)  {
-		console.log(image)
-		if (! await this.userService.saveUserAvatarPath(id, image.path))
+		const user  = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user)
 		 	throw new NotFoundException('The User Not Found')
 		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}

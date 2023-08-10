@@ -35,7 +35,7 @@ export class UserService {
         if (!user)
             return null
         user.avatar = pathAvatar
-        await this.userRepo.save(user)
+        return await this.userRepo.save(user)
     }
 
     async blockUser(userId: number, user: User) {
