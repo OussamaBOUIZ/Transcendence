@@ -1,0 +1,186 @@
+@import "../scss/var.scss";
+@import "../scss/mixins.scss";
+
+.friendsComponent {
+    margin: 6% 2% 4.6% 3%;
+    width: 70%;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    color: white;
+    p {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    .friends-list {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        gap: 5em;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+            width: .4em;
+            border-radius: 6em;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 6em;
+        }
+        .friend-empty {
+            @include center-columns;
+            justify-content: center;
+            width: 100%;
+            gap: .3em;
+            p {
+                margin: 0;
+                font-weight: 700;
+                text-align: center;
+            }
+            p:nth-child(1) {
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+            p:nth-child(2) {
+                font-size: 1.325rem;
+                span {
+                    color: $primary-pink;
+                }
+            }
+        }
+        .friend-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 22.4375rem;
+            height: 14.0625rem;
+            border-radius: 1rem;
+            padding: 1em;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
+            header {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                height: 50%;
+                width: 100%;
+                .text-item {
+                    display: flex;
+                    flex-direction: column;
+                    margin-left: 1em;
+                    h2 {
+                        margin: 0;
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                    }
+                    span {
+                        font-size: 1rem;
+                        color: $primary-pink;
+                        font-weight: 600;
+                    }
+                }
+                .level-item {
+                    @include center-columns;
+                    margin-left: auto;
+                    p {
+                        margin: 0;
+                        font-size: 1rem;
+                        font-weight: 600;
+                    }
+                }
+            }
+            main {
+                border-radius: 1rem;
+                background: rgba(0, 0, 0, 0.30);
+                @include center-columns;
+                p {
+                    font-size: .875rem;
+                    margin: 0;
+                }
+                padding: 0.625rem 1.25rem;
+            }
+        }
+    }
+}
+.globalLeaderboard {
+    grid-area: Leaderboard;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.25rem 0 0 1.25rem;
+    border: .5px solid rgba(0, 0, 0, 0.05);
+    background: radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
+    box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+    width: 25%;
+    height: 90%;
+    overflow: hidden;
+    position: relative;
+    p {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white;
+        margin: 1em;
+    }
+    .svgIcons {
+        position: absolute;
+        width: 100%;
+    }
+    .board {
+        z-index: 1;
+        width: 100%;
+        height: 15%;
+        margin-top: 30%;
+        display: flex;
+        align-items: flex-end;
+        .rank {
+            width: 34%;
+            height: 100%;
+            background: #270C42;
+            border-radius: 1.5625rem 1.5625rem 0rem 0rem;
+            .rankContent {
+                @include center-columns;
+                margin-top: -50px;
+                span > h4 {
+                    margin-bottom: 0;
+                }
+                span {
+                    color: #FFF;
+                    font-size: 0.625rem;
+                    font-weight: 400;
+                    text-transform: lowercase;
+                }
+            }
+        }
+        .rank2, .rank3 {
+            height: 70%;
+        }
+    }
+    .topEleven {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        z-index: 2;
+        gap: .5em;
+        height: 70%;
+        padding: 1em 0;
+        background: #270C42;
+        overflow: hidden;
+        .topRank {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 5em;
+            height: 100%;
+            p {
+                font-weight: 400;
+                font-size: 0.625rem;
+                margin-left: 5em;
+            }
+            span {
+                margin-left: auto;
+                p {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}

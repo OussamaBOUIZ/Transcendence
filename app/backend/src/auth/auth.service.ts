@@ -46,9 +46,6 @@ export class AuthService {
         
         const newUser = new User();
         newUser.email = user.email;
-        newUser.firstname = user.firstname;
-        newUser.lastname = user.lastname;
-        newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
         newUser.status = "Online";
         await this.userService.saveUser(newUser);
         this.achievementService.createAchievements(newUser);

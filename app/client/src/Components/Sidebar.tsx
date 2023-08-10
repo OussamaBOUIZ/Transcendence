@@ -8,31 +8,24 @@ import {nanoid} from 'nanoid'
 
 
 import '../scss/sidebar.scss'
+import { isHtmlElement } from '../../../../node_modules/react-router-dom/dist/dom'
 
 export default function Sidebar () {
     const allIcons = [
-        {id: nanoid() ,value: <GoHomeFill />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <BsChatSquareFill />, style: "sidebar_button", active: true},
-        {id: nanoid() ,value: <FaGamepad />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaUserFriends />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <IoMdSettings />, style: "sidebar_button", active: false},
-        {id: nanoid() ,value: <FaSignOutAlt />, style: "sidebar_button logout", active: false}
+        {id: nanoid() ,to:"/",value: <GoHomeFill />},
+        {id: nanoid() ,to:"/chat",value: <BsChatSquareFill />},
+        {id: nanoid() ,to:"/game",value: <FaGamepad />},
+        {id: nanoid() ,to:"/friends",value: <FaUserFriends />},
+        {id: nanoid() ,to:"/settings",value: <IoMdSettings />},
+        {id: nanoid() ,to:"/logout",value: <FaSignOutAlt />}
     ]
 
-    const [sdButtons, setSdButtons] = React.useState(allIcons);
-
-    function toggle (id) {
-        setSdButtons(prevSdButtons => prevSdButtons.map(item => {
-            return item.id === id ? {...item, active: true} : {...item, active: false}
-        }))
-    }
-    
-    const sidebarButtons = sdButtons.map(icon => {
+    const sidebarButtons = allIcons.map(icon => {
         return (
-            <SidebarButton 
+            <SidebarButton
             key={icon.id} 
-            className={`${icon.style} ${icon.active ? "active" : ""}`}
-            toggle={() => toggle(icon.id)}
+            className="sidebar_button"
+            to={icon.to}
             >
                 {icon.value}
             </SidebarButton> 

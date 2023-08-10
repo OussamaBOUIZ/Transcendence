@@ -1,26 +1,68 @@
-import {
-    Controller,
-    Header,
-    Get,
-    Delete,
-    Param,
-    ParseIntPipe,
-    UseGuards,
-    StreamableFile,
-    UnauthorizedException,
-    Post, Req, Res, HttpStatus, UploadedFile, Query, Body, UseFilters,
 
+import {
+	Controller,
+	Header,
+	Headers,
+	Get,
+	Delete,
+	Param,
+	ParseIntPipe,
+	UseGuards,
+	StreamableFile,
+	UnauthorizedException,
+	UseInterceptors,
+	Post, Req, Res, HttpStatus,
+	UploadedFile, Body, Patch, HttpCode, Query,
+	HttpException, ParseFilePipe, FileTypeValidator,
+	MaxFileSizeValidator,
+	NotFoundException,
+	Put,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
-import {Request, Response, raw} from 'express'
-import { createReadStream } from 'fs';
+import { raw, Request, Response } from 'express'
+import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
-import {JwtGuard} from "../auth/jwt/jwtGuard";
+import { JwtGuard } from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
+import { Match_history } from "../databases/match_history.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
-import {Match_history} from "../databases/match_history.entity";
+import { StatsDto } from './dto/stats-dto';
+import { GameHistoryDto } from './game-history-dto/game-history-dto';
+import { searchDto } from './game-history-dto/search-dto';
+import { diskStorage } from 'multer'
+import { Observable, of } from 'rxjs';
+import { extname } from 'path';
+import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
-import { ViewAuthFilter } from 'src/Filter/filter';
+import { log } from 'console';
+
+
+const DirUpload = './uploads/usersImage/'
+
+const multerConfig = () => ({
+	storage: diskStorage({
+		destination: DirUpload,
+		filename: async (req: any, file: any, cb: any) => {
+			const supportedExt = ['.png', '.jpeg', '.jpg']
+			if (isNaN(parseInt(req.params['userId'], 10)))
+				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+
+			if (!supportedExt.includes(extname(file.originalname)))
+				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+			const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+			try {
+				await fsPromises.access(DirUpload + filename)
+                console.log('interceptor')
+				cb(new HttpException(`Wrong Http Method`, HttpStatus.METHOD_NOT_ALLOWED))
+			}
+			catch (e) {
+				cb(null, filename)
+			}
+		}
+	})
+})
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -34,7 +76,6 @@ export class UserController {
     // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
-        console.log('HERE');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -44,6 +85,21 @@ export class UserController {
         };
         return userData;
     }
+
+    @Post('/:userId/upload')
+	@UseInterceptors(FileInterceptor('image', multerConfig()))
+	@HttpCode(HttpStatus.CREATED)
+	async uploadImage(
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: false,
+		})) image: Express.Multer.File,
+		@Res() res: Response
+	) {
+	    await this.userService.saveUserAvatarPath(id, image.path)
+      return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	}
+
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
     {
@@ -110,15 +166,27 @@ export class UserController {
     // ) {
     //
     // }
-    @Get('image/:id')
-    @Header('Content-Type', 'image/png')
-    async getPictureById(@Param('id', ParseIntPipe) id: number) : Promise<StreamableFile>
-    {
-        const filename = id + '.png';
-        const imagePath = path.join(process.cwd(), 'src/usersImage', filename);
-        const fileContent = createReadStream(imagePath)
-        return new StreamableFile(fileContent);
-    }
+	@Get('avatar/:id')
+	@Header('Content-Type', 'image/jpg')
+	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
+		const user = await this.userService.findUserById(id)
+
+		if (!user)
+			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
+		const imagePath = user.avatar
+		try {
+			await access(imagePath, fsPromises.constants.R_OK)
+			const fileContent = createReadStream(imagePath)
+			return new StreamableFile(fileContent);
+		}
+		catch (e) {
+            const filename = 'default.jpg';
+            const defaultPath = path.join(process.cwd(), 'uploads/usersImage', filename);
+			const fileContent = createReadStream(defaultPath)
+			return new StreamableFile(fileContent);
+		}
+
+	}
     @Get('stats/:userId')
     async getStatsById( @Param('userId', ParseIntPipe) id: number) {
        return await this.userService.getStatsById(id)
@@ -130,11 +198,11 @@ export class UserController {
         return await this.userService.getLastThreeAchievements(id);
     }
     @Get('achievement/image/:id')
-    @Header('Content-Type', 'image/png')
+    @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
-        const filename = id + '.png';
-        const imagePath = path.join(process.cwd(), 'src/images', filename);
+        const filename = id + '.jpg';
+        const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
     }
@@ -209,8 +277,15 @@ export class UserController {
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
+        
         const user = await this.userService.findUserById(id);
         if(userData.username.length === 0)
+        {
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            await this.userService.saveUser(user);
+        }
+        else
         {
             try {
                 user.username = userData.username;
@@ -220,12 +295,6 @@ export class UserController {
             {
                 return res.status(400).send('nickname is already used');
             }
-        }
-        else
-        {
-            user.firstname = userData.firstname;
-            user.lastname = userData.lastname;
-            await this.userService.saveUser(user);
         }
         return res.status(201).send('data was set succesfully');
     }
@@ -249,4 +318,30 @@ export class UserController {
         await this.userService.saveUser(user);
         return res.redirect('http://localhost:5137/');
     }
+
+    @Patch('stat/add')
+	async addUserStat(@Query() statDto: StatsDto, @Req() req: Request) {
+		await this.userService.addUserStat(statDto, req.user)
+	}
+
+	@Post('gameHistory/add')
+	@HttpCode(HttpStatus.CREATED)
+	async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
+		console.log(gameHistoryDto)
+		await this.userService.addGameHistory(gameHistoryDto)
+		return {
+			Message: "The content is created"
+		}
+	}
+
+	@Get('search/user')
+	async searchForUser(
+		@Query() dto: searchDto,
+	) {
+		const { username } = dto
+		console.log(username)
+		return this.userService.searchUser(username)
+	}
 }
+
+// localhost:3000/api/user/:ael÷

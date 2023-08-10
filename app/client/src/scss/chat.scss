@@ -186,75 +186,84 @@ div.chat_container {
                 background: #E62FD0;
             }
         }  
-        // &.chat_main_init { // to be corrected 
-        //     display: block;
-        //     @include center-styles;
-        //     flex-direction: column;
-        //     justify-content: flex-start;
-        //     article {
-        //         text-align: center;
-        //         width: 50%;
-        //         margin-top: 50px;
-        //             @include center-styles;
-        //             flex-direction: column;
-        //         h2 {
-        //             font-size: 28px;
-        //             margin: 5px auto;
-        //             img {
-        //                 position:relative;
-        //                 right: 10px;
-        //                 top: 15px;
-        //             }
-        //         }
-        //         p {
-        //             margin-top: 10px;
-        //             width: 90%;
-        //         }
-        //     }
-        //     section.search_box {
-        //         margin-top: 50px;
-        //         width: 50%;
-        //         label {
-        //             display: block;
-        //         }
-        //         input {
-        //             width: 100%;
-        //             padding: 5px 10px;
-        //             background: $input-background;
-        //             border-radius: 7px;
-        //             &::placeholder {
-        //                 color: $text-grey-color;
-        //             }
-        //         }
-        //     }
-        //     section.init_action_container {
-        //         @include center-styles;
-        //         flex-direction: column;
-        //         div.container {
-        //             display: flex;
-        //             margin-top: 30px;
-        //             gap: 25px;
-        //             padding: 0 25px;
-        //             margin-left: 40px; // should be fixed
-        //             button {    
-        //                 &.secondary_btn {
-        //                     @include secondary-button;
-        //                 }
-        //                 &.primary_btn {
-        //                     @include primary-button;
-        //                     @include center-styles;
-        //                     svg {
-        //                         fill: $text-color;
-        //                         width: 20px;
-        //                         height: 20px;
-        //                         margin-right: 10px;
-        //                         margin-left: -10px;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        &.chat_main_init { // to be corrected 
+            margin: 1em;
+            @include center-styles;
+            flex-direction: column;
+            justify-content: flex-start;
+            article {
+                text-align: center;
+                width: 50%;
+                margin-top: 50px;
+                    @include center-styles;
+                    flex-direction: column;
+                h2 {
+                    font-size: 28px;
+                    margin: 5px auto;
+                    img {
+                        position:relative;
+                        right: 10px;
+                        top: 15px;
+                    }
+                }
+                p {
+                    font-weight: 600;
+                    margin-top: 10px;
+                    width: 90%;
+                }
+            }
+            section.search_box {
+                margin-top: 50px;
+                width: 50%;
+                label {
+                    display: block;
+                }
+                input {
+                    width: 100%;
+                    padding: 5px 10px;
+                    background: $input-background;
+                    border-radius: 7px;
+                    &::placeholder {
+                        color: $text-grey-color;
+                    }
+                }
+                figure {
+                    margin-top: .5em;
+                    button {
+                        background-color: $primary-pink;
+                        padding: .4em;
+                        margin: 1em;
+                    }
+                }
+            }
+            section.init_action_container {
+                @include center-styles;
+                flex-direction: column;
+                div.container {
+                    display: flex;
+                    margin-top: 30px;
+                    gap: 25px;
+                    padding: 0 25px;
+                    margin-left: 40px; // should be fixed
+                    button {    
+                        &.secondary_btn {
+                            @include secondary-button;
+                        }
+                        &.primary_btn {
+                            @include primary-button;
+                            @include center-styles;
+                            svg {
+                                fill: $text-color;
+                                width: 20px;
+                                height: 20px;
+                                margin-right: 10px;
+                                margin-left: -10px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     div.chat_overview{
         background: $overview-gradient;

@@ -1,0 +1,14 @@
+@import './var.scss';
+@import './mixins.scss';
+
+.flex-sp {
+    display: flex;
+    justify-content: space-between;
+}
+
+.avatar {
+    width: 3em;
+    height: 3em;
+    background-color: red;
+    border-radius: 50%;
+}

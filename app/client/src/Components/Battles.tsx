@@ -1,15 +1,16 @@
-import Character from "../Assets/character.png";
+import Character from "../Assets/character.png"
 
-export default function LeaderBoard() {
+export default function Battles() {
     return (
         <>
             <div className="item battleRoyal">
+                <div className="cover"></div>
+                <img src={Character} alt="" />
                 <div className="BattleRoyalCover" >
                     <span>Battle Royal</span>
                     <p>Play the game and get extra coins in our Battle Royal</p>
                     <button className='PlayButton' ><span>Play</span></button>
                 </div>
-                <img src={Character} alt="" />
             </div>
             <div className="item theBeast">
                 <span>TheBeast</span>
