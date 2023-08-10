@@ -193,7 +193,7 @@ export class UserService {
                 },
             }
         });
-        return user;
+        return user.stat.achievements;
     }
 
     async getLastThreeAchievements(id: number) {

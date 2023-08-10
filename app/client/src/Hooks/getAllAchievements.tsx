@@ -8,6 +8,7 @@ export const getAllAchievements = (id: number): Achievement[] | [] => {
   const getData = async (id: number): Promise<Achievement[] | []> => {
     try {
       const res = await axios.get(`/api/user/achievements/${id}`);
+      console.log(res);
       return res.data;
     } catch (err) {
       console.log("Error: Failed to fetch all friends.");
