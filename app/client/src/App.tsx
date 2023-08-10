@@ -14,9 +14,8 @@
 //     )
 // } 
 
-
 import React from 'react'
-import Chat from './Pages/Chat/Chat'
+import ChatLayout from './Pages/Chat/ChatLayout'
 import Header from './Components/Header'
 import Home from './Pages/Home/Home'
 import Sidebar from './Components/Sidebar'
@@ -29,7 +28,7 @@ export default function App () {
       <Header />
       <main>
         <Sidebar />
-        <Chat />
+        <ChatLayout />
       </main>
     </div>
   )
