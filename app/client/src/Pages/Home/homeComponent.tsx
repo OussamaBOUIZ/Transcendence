@@ -4,7 +4,7 @@ import LeaderBoard from '../../Components/leaderBoard';
 import Battles from '../../Components/Battles';
 import {User, Leaders} from "../../../../global/Interfaces"
 
-export default function HomeComponent({ UserData , Leaders} : {UserData: User, Leaders: Leaders[]}) {
+export default function HomeComponent({ UserData , Leaders} : {UserData: User | null, Leaders: Leaders[]}) {
 
     return (
         <>

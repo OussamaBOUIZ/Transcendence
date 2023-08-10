@@ -1,8 +1,12 @@
 import axios from 'axios';
 import {useState, useEffect} from "react";
+import { getUserImage } from "./getUserImage";
 import {FriendUser} from "../../../global/Interfaces"
 
 export const getAllFriends = (id: number): FriendUser[] | [] => {
+
+  const [allFriends, setAllFriends] = useState<FriendUser[]>([]);
+
     const getData = async (id: number): Promise<FriendUser[] | []> => {
         try {
           if (id) {
@@ -15,32 +19,13 @@ export const getAllFriends = (id: number): FriendUser[] | [] => {
           }
         return [];
     };
-    const [allFriends, setAllFriends] = useState<FriendUser[] | []>([]);
-
-    useEffect(() => {
-        const fetchFriends = async () => {
-            const friends = await getData(id);
-            setAllFriends(friends);
-        };
-    
-        fetchFriends();
-    }, []);
-
-    const getFriendImage = async (id: number) : Promise<string | undefined> => {
-        try {
-          const res = await axios.get(`/api/user/image/${id}`, {responseType: 'blob'})
-          return URL.createObjectURL(res.data);
-        } catch (err) {
-          return undefined;
-        }
-      };
 
     useEffect(() => {
         const fetchFriends = async () => {
           const friends = await getData(id);
           const friendswithImage = await Promise.all(
             friends.map(async (friend) => {
-              const image = await getFriendImage(friend.id);
+              const image = await getUserImage(friend.id);
               return { ...friend, image };
             })
           );

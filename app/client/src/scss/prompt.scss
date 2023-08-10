@@ -10,11 +10,10 @@
         justify-content: center;
         width: 40%;
         max-width: 500px;
-        min-width: 400px;
+        min-width: 360px;
         height: 100%;
         gap: 2em;
         p {
-            font-size: 3rem;
             font-weight: 700;
             margin: 0;
         }
@@ -25,7 +24,7 @@
             justify-content: space-between;
             gap: 1em;
             input {
-                flex-grow: 1;
+                width: 100%;
                 padding: .8em 1em;
                 border-radius: .625rem;
                 border: 2px solid #D3CBCB;

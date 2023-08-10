@@ -32,6 +32,7 @@ interface Achievement {
 }
 
 interface Leaders {
+    image?: string,
     id: number,
     ladder_level: number,
     losses: number,

@@ -50,7 +50,6 @@ export default function Prompt() {
             try {
                 await axios.post(Path, data, headers)
                 increment(prev => prev + 1)
-                console.log(val)
                 clearFields()
                 if (val === 2)
                     window.location.replace('/home')

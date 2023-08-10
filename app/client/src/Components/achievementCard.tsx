@@ -12,7 +12,7 @@ export default function AchievementCard({ user }: {user: User}) {
     const AchievementsToggle = allAchievements.map((award) => {
         return (
             <div className={`award-item ${award.is_achieved}`} key={award.id}>
-                <ProfileImage image={award.image} id="" size="medium" />
+                <ProfileImage image={award.image} size="medium" />
                 <div className="achievement-name">
                     <p>{award.badge_name}</p>
                     <span>{award.description}</span>

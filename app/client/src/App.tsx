@@ -5,7 +5,7 @@ import Profile from "./Pages/Profile/Profile"
 import Friends from "./Pages/Friends/Friends"
 import Prompt from "./Pages/Prompt/Prompt"
 import Auth from "./Pages/Auth/Auth"
-import "./scss/app.scss"
+import "./scss/app.css"
 import logo from "./Assets/Icons/logo1.png"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 

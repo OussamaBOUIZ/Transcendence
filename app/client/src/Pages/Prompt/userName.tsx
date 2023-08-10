@@ -4,7 +4,7 @@ export default function userName({username, user, handleChange} : {username: str
 
   return (
     <>
-        <p>Username</p>
+        <p className="text-3xl lg:text-5xl md:text-4xl">Enter User Name</p>
         <div className="inputs">
             <input
               placeholder="User Name"

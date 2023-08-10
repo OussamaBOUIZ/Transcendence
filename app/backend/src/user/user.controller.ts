@@ -35,6 +35,7 @@ import { Observable, of } from 'rxjs';
 import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
+import { log } from 'console';
 
 
 const DirUpload = './uploads/usersImage/'
@@ -86,20 +87,16 @@ export class UserController {
 
     @Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
-	// @HttpCode(HttpStatus.CREATED)
+	@HttpCode(HttpStatus.CREATED)
 	async uploadImage(
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
-			fileIsRequired: true,
+			fileIsRequired: false,
 		})) image: Express.Multer.File,
 		@Res() res: Response
-	): Promise<Observable<Object> > {
-		await this.userService.saveUserAvatarPath(id, image.path)
-			// return  res.status(HttpStatus.NOT_FOUND).send('jfj')
-		return of({
-			imagePath: image.path,
-			message: 'the avatar uploaded succesfuly'
-		})
+	) {
+	    await this.userService.saveUserAvatarPath(id, image.path)
+      return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
     @Delete('delete/:id')
@@ -168,7 +165,7 @@ export class UserController {
     //
     // }
 	@Get('avatar/:id')
-	@Header('Content-Type', 'image/png')
+	@Header('Content-Type', 'image/jpg')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
 
@@ -181,7 +178,10 @@ export class UserController {
 			return new StreamableFile(fileContent);
 		}
 		catch (e) {
-			throw new NotFoundException('File not found or cannot be read.')
+            const filename = 'default.jpg';
+            const defaultPath = path.join(process.cwd(), 'uploads/usersImage', filename);
+			const fileContent = createReadStream(defaultPath)
+			return new StreamableFile(fileContent);
 		}
 
 	}

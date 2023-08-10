@@ -1,7 +1,6 @@
 import "../../scss/profileComponent.scss";
 import GameHistory from "../../Components/gameHistory";
 import profileImage from "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg"
-import StarRank from "../../Components/starRank";
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
@@ -29,8 +28,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
         <div className="profileComponent">
             <div className="item ProfileCard">
                 <div className="image">
-                    <img src={profileImage} alt="" />
-                    <StarRank RankNumber={1} color="#E72FD0" />
+                    <img src={UserData.image} alt="" />
                 </div>
                 <h2>{UserData.firstname + " " + UserData.lastname}</h2>
                 <p>{UserData.username}</p>

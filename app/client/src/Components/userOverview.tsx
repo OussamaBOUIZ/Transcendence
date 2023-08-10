@@ -10,7 +10,7 @@ export default function UserOverview ({UserData}) {
             <div className="contact_details_container">
                 <h2>My profile</h2>
                 <figure className="contact">
-                    <ProfileImage  id="" size="big" />
+                    <ProfileImage image={UserData?.image} size="big" />
                     <figcaption>
                         <span>{UserData?.firstname}</span>
                         <span>{UserData?.lastname}</span>

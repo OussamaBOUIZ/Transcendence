@@ -5,8 +5,8 @@ export default function fullName({fullName, user, handleChange} : {fullName: Dat
 
   return (
     <>
-        <p>Full Name</p>
-        <div className="inputs">
+        <p className="text-3xl lg:text-5xl md:text-4xl">Enter Full Name</p>
+        <div className="inputs flex-col sm:flex-row">
             <input
               placeholder="First Name"
               type="text"

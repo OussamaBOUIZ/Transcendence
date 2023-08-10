@@ -13,7 +13,7 @@ export default function FriendsCard({ user }: {user: User}) {
         return (
             <div className="friend-item" key={friend.username}>
                 <div className="userImage">
-                    <img src={image} alt="" />
+                    <img src={friend.image} alt="" />
                     <div className={`status ${friend.status}`}></div>
                 </div>
                 <div className="friend-name">

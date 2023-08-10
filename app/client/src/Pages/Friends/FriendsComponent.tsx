@@ -18,7 +18,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             <>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -36,7 +36,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -54,7 +54,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -72,7 +72,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -90,7 +90,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -108,7 +108,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -126,7 +126,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -144,7 +144,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -162,7 +162,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -180,7 +180,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -198,7 +198,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -216,7 +216,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -234,7 +234,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -252,7 +252,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -270,7 +270,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -288,7 +288,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -306,7 +306,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -324,7 +324,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -342,7 +342,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -360,7 +360,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} id="" size="big" />
+                    <ProfileImage image={friend.image} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>

@@ -1,7 +1,7 @@
 import History from "./history";
 import {User} from "../../../global/Interfaces"
 
-export default function GameHistory({UserData}: {UserData: User}) {
+export default function GameHistory({UserData}: {UserData: User | null}) {
 
       return (
         <div className="item GameHistory">

@@ -20,7 +20,7 @@ export default function ChangeAvatar({ user, imagePreview, setImagePreview }: {u
 
   return (
     <div>
-      <p>Avatar</p>
+      <p className="text-3xl lg:text-5xl md:text-4xl">Enter Your Avatar</p>
       <div className="avatar-upload">
         <div className="avatar-edit">
             <input
