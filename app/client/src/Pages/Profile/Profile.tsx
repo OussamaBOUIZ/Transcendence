@@ -5,11 +5,17 @@ import { getUserData } from "../../Hooks/getUserData";
 
 export default function Profile() {
 
-  const { userData } = getUserData();
+  const userData = getUserData();
 
+  if (!userData) {
+    return (
+      <div className="Home">
+      </div>
+    );
+  }
+  
   return (
     <div className="Home">
-      <SideBar />
       <ProfileComponent UserData={userData} />
     </div>
   );

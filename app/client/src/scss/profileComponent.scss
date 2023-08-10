@@ -1,7 +1,7 @@
 @import "../scss/var.scss";
 @import "../scss/mixins.scss";
 
-.profileCompenent {
+.profileComponent {
     display: grid;
     margin: 6% 2% 4.6% 3%;
     width: 85%;
@@ -23,17 +23,11 @@
         color: white;
         padding-top: 1.75em;
         .image {
-            position: relative;
             img {
                 width: 9.5em;
                 height: 9.5em;
                 border-radius: 6em;
                 border: 1px solid white;
-            }
-            .starRank {
-                position: absolute;
-                bottom: 0;
-                right: 0;
             }
         }
         h2 {
@@ -65,6 +59,8 @@
             width: 100%;
             display: flex;
             button {
+                background: white;
+                color: black;
                 flex-grow: 1;
                 padding: 1.5em 3em;
                 border-radius: 0 0 0 1em;
@@ -281,7 +277,7 @@
 }
 
 @media (max-width: 1500px) {
-    .profileCompenent {
+    .profileComponent {
         .ProfileCard {
             margin: 0;
         }
