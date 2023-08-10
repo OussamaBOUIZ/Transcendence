@@ -34,13 +34,13 @@ import { diskStorage } from 'multer'
 import { Observable, of } from 'rxjs';
 import { isNumber } from 'class-validator';
 import { extname } from 'path';
-import { access } from 'fs/promises';
+import { access, unlink } from 'fs/promises';
 
 
 const DirUpload = './uploads/usersImage/'
 
 const multerConfig = () => ({
-	storage: diskStorage({	
+	storage: diskStorage({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
 			const supportedExt = ['.png', '.jpeg', '.jpg']
@@ -78,25 +78,27 @@ export class UserController {
 	// todo : if the user not found i have to remove avatar ??
 	@Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
-	async uploadImage (
+	async uploadImage(
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
 			fileIsRequired: false
 		})) image: Express.Multer.File,
 		@Res() res: Response
-	)  {
-		const user  = await this.userService.saveUserAvatarPath(id, image.path)
-		if (!user)
-		 	throw new NotFoundException('The User Not Found')
+	) {
+		const user = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user) {
+			await unlink(image.path)
+			throw new NotFoundException('The User Not Found')
+		}
 		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
 
 	@Get()
 	async getUserData(@Req() req: Request) {
-	const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-	if (!user)
-		throw new NotFoundException('user not found')
+		const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+		if (!user)
+			throw new NotFoundException('user not found')
 		const userData = {
 			id: user.id,
 			firstname: user.firstname,
@@ -127,7 +129,7 @@ export class UserController {
 	async getUserById(@Param('id', ParseIntPipe) id: number) {
 		return await this.userService.findUserById(id)
 	}
-	
+
 	@Get('block/:userId')
 	async getBlockedUser(
 		@Param('userId', ParseIntPipe) userId: number,
@@ -161,7 +163,7 @@ export class UserController {
 		const imagePath = user.avatar
 		try {
 			console.log(imagePath);
-			
+
 			await access(imagePath, fsPromises.constants.R_OK)
 			const fileContent = createReadStream(imagePath)
 			const ext = extname(imagePath).substring(1)
@@ -281,10 +283,17 @@ export class UserController {
 	@Get('search/user')
 	async searchForUser(
 		@Query() dto: searchDto,
+		@Req() req: Request
 	) {
 		const { username } = dto
 		console.log(username)
-		return this.userService.searchUser(username)
+		const authUser = await this.userService.findUserByEmail(req.user['email'])
+		if (!authUser) 
+			throw new NotFoundException('Auth User Not found')
+		const user = await this.userService.searchUser(username)
+		if (authUser.username === user?.username)
+			throw new HttpException({reason: 'You cant Search for yourself'}, HttpStatus.BAD_REQUEST)
+		return user
 	}
 }
 

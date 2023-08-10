@@ -158,7 +158,7 @@ export class UserService {
 
 
     async searchUser(username: string) {
-        return await this.userRepo.find({
+        return await this.userRepo.findOne({
             where: {
                 username: username
             },
@@ -293,7 +293,7 @@ export class UserService {
         match_history.user_score = gameHistoryDto.user_score
 
         try {
-            const oppenent  = await this.findUserById(gameHistoryDto.opponentId)
+            const oppenent = await this.findUserById(gameHistoryDto.opponentId)
             match_history.opponent = oppenent.id
             const user = await this.findUserById(gameHistoryDto.userId)
             match_history.user = user
