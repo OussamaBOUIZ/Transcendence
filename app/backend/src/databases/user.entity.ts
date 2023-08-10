@@ -66,6 +66,9 @@ export class User extends BaseEntity {
     @JoinTable()
     friends: User[];
 
+    @ManyToMany(() => User, user => user.friends)
+    friendOf: User[];
+
     @ManyToMany(type => User, user => user.blocked_users, {nullable: true})
     @JoinTable()
     blocked_users: User[]

@@ -6,10 +6,9 @@
     justify-content: space-between;
 }
 
-.active-link {
-    background-color: $sdb-gradient;
-}
-
-.center {
-    @include center-styles;
+.avatar {
+    width: 3em;
+    height: 3em;
+    background-color: red;
+    border-radius: 50%;
 }
