@@ -9,7 +9,7 @@ import "../../scss/chat.scss"
 import ChatHeader from './ChatHeader';
 import ChatMainInit from './ChatMainInit';
 
-export default function ChatL () {
+export default function ChatLayout () {
 
     return ((
         <div className="chat_container">
