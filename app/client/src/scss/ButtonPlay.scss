@@ -4,28 +4,33 @@ html {
 }
 
 .ButtonPlay {
-  --purple: #db07d1;
-  --pink: #f2056f;
-  --blue: #61dafb;
+  --purple: #8B3DD9;
+  --pink: #E72FD0;
+  --blue: #340D5B;
 
   appearance: none;
   border: none;
   cursor: pointer;
-  background-color: #acc7ed;
+  background: linear-gradient(
+      60deg,
+      var(--blue) 0%,
+      #dfcbf6 30%,
+      var(--pink) 70%
+    );
   color: #fff;
   border-radius: 60px;
   outline: none;
   margin: 0;
-  padding: 12px 25px;
   font-family: "Poppins";
-  font-size: 48px;
-  font-weight: 600;
+  font-size: 1.75rem;
   line-height: 48px;
   letter-spacing: -1px;
   position: relative;
-  text-align: center;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 9.5rem;
+  height: 3.375rem;
   .shapes {
     position: absolute;
     top: -1px;
@@ -36,7 +41,7 @@ html {
     background: linear-gradient(
       60deg,
       var(--blue) 0%,
-      #d6cbf6 30%,
+      #dfcbf6 30%,
       var(--pink) 70%
     );
     .blush {
@@ -74,8 +79,6 @@ html {
   }
   
   .label {
-    width: 180px;
-    padding: 20px 0;
     transform: translateZ(0);
     font-weight: 700;
     z-index: 1;

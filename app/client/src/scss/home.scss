@@ -1,45 +1,8 @@
-.grid {
-    display: grid;
+@import "../scss/var.scss";
+@import "../scss/mixins.scss";
+
+.Home {
+    background: linear-gradient(135deg, $bg-color-left 0%, $bg-color-right 100%);
     height: 100vh;
-    grid-gap: 10px;
-    grid-template-rows: repeat(6, 1fr);
-    grid-template-columns: repeat(6, 1fr);
-}
-
-.item {
-    background: rgb(255, 94, 0);
-}
-
-.item1 {
-    grid-column: 1 / -1;
-    grid-row: 1 / 3;
-    background: blue;
-}
-
-.item2 {
-    background: red;
-    grid-column: 1 / span 2;
-    grid-row: 3 / span 2;
-}
-.item3 {
-    background: orange;
-    grid-column: 3 / span 2;
-    grid-row: 3 / span 2;
-}
-.item4 {
-    background: pink;
-    grid-column: 5 / span 2;
-    grid-row: 3 / span 2;
-}
-
-.item5 {
-    grid-column: 1 / 4;
-    grid-row: 5 / -1;
-    background: aqua;
-}
-
-.item6 {
-    grid-column: 4 / -1;
-    grid-row: 5 / -1;
-    background: violet;
+    display: flex;
 }

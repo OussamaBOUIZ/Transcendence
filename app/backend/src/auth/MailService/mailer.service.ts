@@ -10,7 +10,7 @@ export class MailTemplate {
     const from: string = 'transcendencePro2023@outlook.com';
     const to: string = toUser;
     const subject: string = 'Email confirmation';
-    const htmlfile = fs.readFileSync('/home/oouazize/Desktop/Transcendence/app/backend/src/auth/file.html', 'utf-8');
+    const htmlfile = fs.readFileSync('/home/oouazize/Desktop/Transcendence/app/backend/src/auth/htmlSources/file.html', 'utf-8');
     console.log(`${to}`);
     const v = await this.mailerService.sendMail({
       from, 

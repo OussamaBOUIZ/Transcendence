@@ -1,23 +1,16 @@
 import "../scss/profileImage.scss"
 import source from "../Assets/Icons/istockphoto-1356959038-612x612.jpg"
 
-export default function ProfileImage({image, id, size}) {
+export default function ProfileImage({image, size}) {
 
-    if (image !== undefined) {
-        return (
-            <div className={`profileImage ${size}`}>
-                <div
-                className="userImage"
-                style={{backgroundImage: `url(${image})`}}
-                ></div>
-            </div>
-        )
+    function handleClick() {
+        window.location.replace('/profile')
     }
     return (
-        <div className={`profileImage ${size}`}>
+        <div onClick={handleClick} className={`profileImage ${size}`}>
             <div
             className="userImage"
-            style={{backgroundImage: `url(${source})`}}
+            style={{backgroundImage: `url(${image})`}}
             ></div>
         </div>
     )

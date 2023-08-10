@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import {useState} from "react"
 import { useEffect } from "react";
 import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
