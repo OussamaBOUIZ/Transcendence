@@ -40,7 +40,7 @@ import { access } from 'fs/promises';
 const DirUpload = './uploads/usersImage/'
 
 const multerConfig = () => ({
-	storage: diskStorage({
+	storage: diskStorage({	
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
 			const supportedExt = ['.png', '.jpeg', '.jpg']
@@ -77,20 +77,17 @@ export class UserController {
 
 	@Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
-	// @HttpCode(HttpStatus.CREATED)
 	async uploadImage (
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
-			fileIsRequired: true,
+			fileIsRequired: false
 		})) image: Express.Multer.File,
 		@Res() res: Response
-	): Promise<Observable<Object>>  {
+	)  {
+		console.log(image)
 		if (! await this.userService.saveUserAvatarPath(id, image.path))
 		 	throw new NotFoundException('The User Not Found')
-		return of({
-			imagePath: image.path,
-			message: 'the avatar uploaded succesfuly'
-		})
+		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
 
@@ -129,7 +126,7 @@ export class UserController {
 	async getUserById(@Param('id', ParseIntPipe) id: number) {
 		return await this.userService.findUserById(id)
 	}
-
+	
 	@Get('block/:userId')
 	async getBlockedUser(
 		@Param('userId', ParseIntPipe) userId: number,
@@ -155,23 +152,25 @@ export class UserController {
 
 
 	@Get('avatar/:id')
-	@Header('Content-Type', 'image/png')
-	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
+	async getAvatarById(@Param('id', ParseIntPipe) id: number, @Res() res: Response): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
 
 		if (!user)
 			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
 		const imagePath = user.avatar
 		try {
+			console.log(imagePath);
+			
 			await access(imagePath, fsPromises.constants.R_OK)
 			const fileContent = createReadStream(imagePath)
+			const ext = extname(imagePath).substring(1)
+			console.log(ext)
+			res.setHeader('Content-Type', `image/${ext}`)
 			return new StreamableFile(fileContent);
 		}
 		catch (e) {
 			throw new NotFoundException('File not found or cannot be read.')
 		}
-
-
 	}
 
 
