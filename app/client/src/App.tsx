@@ -30,6 +30,7 @@ import './scss/utils.scss'
 import Prompt from './Pages/Prompt/Prompt'
 import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
+import ChatMainInit from './Pages/Chat/ChatMainInit'
 
 
 // export default function App () {
@@ -61,7 +62,9 @@ export default function App () {
         <Route element={<AuthRequired />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
-            <Route path="/chat" element={<ChatLayout />}/>
+            <Route path="/chat" element={<ChatLayout />}>
+                <Route path="init" element={<ChatMainInit /> }/>
+            </Route>
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/settings" element={<Settings />} />

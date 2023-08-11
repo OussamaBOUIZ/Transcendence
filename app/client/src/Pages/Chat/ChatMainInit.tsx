@@ -1,5 +1,6 @@
 import React from 'react'
 import ChannelInitAction from './ChannelInitAction';
+import ChatOverview from './ChatOverview';
 import ChatSearchBox from './ChatSearchBox';
 
 
@@ -22,6 +23,7 @@ export default function ChatMainInit () {
     ]
     const index = 0;
     return (
+        <>
         <div className="chat_main chat_main_init">
             <article>
             <h2>
@@ -37,5 +39,7 @@ export default function ChatMainInit () {
         </article>
         {content[index].callToAction}
         </div>
+        <ChatOverview />
+        </>
     );
 }
