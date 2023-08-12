@@ -1,65 +1,28 @@
 import { getAllFriends } from "../Hooks/getAllFriends"
-import image from "../Assets/DreamShaper_32_young_pale_skinny_white_man_white_and_blue_hair_1.jpeg"
+import image from "../Assets/SpiderGround.jpeg"
 import losses from "../Assets/Icons/losses.svg"
 import wins from "../Assets/Icons/wins.svg"
 import friendsIcon from "../Assets/Icons/group.svg"
+import {User} from "../../../global/Interfaces"
 
-export default function ProfileImage({ user }) {
+export default function FriendsCard({ user }: {user: User}) {
 
-    const {allFriends} = getAllFriends(user?.id);
+    const allFriends = getAllFriends(user?.id);
 
     const FriendsToggle = allFriends.map((friend) => {
         return (
-            <>
-                <div className="friend-item" key={friend.username}>
-                    <div className="userImage">
-                        <img src={image} alt="" />
-                        <div className="status"></div>
-                    </div>
-                    <div className="friend-name">
-                        <p>{friend.firstname + " " + friend.lastname}</p>
-                        <span>{friend.username}</span>
-                    </div>
-                    <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
-                    <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
+            <div className="friend-item" key={friend.username}>
+                <div className="userImage">
+                    <img src={friend.image} alt="" />
+                    <div className={`status ${friend.status}`}></div>
                 </div>
-                <div className="friend-item" key={friend.username}>
-                    <div className="userImage">
-                        <img src={image} alt="" />
-                        <div className="status"></div>
-                    </div>
-                    <div className="friend-name">
-                        <p>{friend.firstname + " " + friend.lastname}</p>
-                        <span>{friend.username}</span>
-                    </div>
-                    <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
-                    <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
+                <div className="friend-name">
+                    <p>{friend.firstname + " " + friend.lastname}</p>
+                    <span>{friend.username}</span>
                 </div>
-                <div className="friend-item" key={friend.username}>
-                    <div className="userImage">
-                        <img src={image} alt="" />
-                        <div className="status"></div>
-                    </div>
-                    <div className="friend-name">
-                        <p>{friend.firstname + " " + friend.lastname}</p>
-                        <span>{friend.username}</span>
-                    </div>
-                    <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
-                    <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
-                </div>
-                <div className="friend-item" key={friend.username}>
-                    <div className="userImage">
-                        <img src={image} alt="" />
-                        <div className="status"></div>
-                    </div>
-                    <div className="friend-name">
-                        <p>{friend.firstname + " " + friend.lastname}</p>
-                        <span>{friend.username}</span>
-                    </div>
-                    <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
-                    <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
-                </div>
-            </>
+                <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
+                <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
+            </div>
         );
     });
 

@@ -3,17 +3,19 @@ import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
 import { getUserData } from '../../Hooks/getUserData'
+import {getUserImage} from '../../Hooks/getUserImage'
+import ProfileImage from '../../Components/profileImage'
 
 function UserCard ({firstname, lastname, username, avatar}) {
-    const bgImg = {
-        backgroundImage: `url(${avatar})`
-    }
+    // const bgImg = {
+    //     backgroundImage: `url(${avatar})`
+    // }
     return (
         <figure className='flex-sp'>
                 <figcaption>
-                    {/* <img src="./src/Assets/cat.jpg" alt="" /> */}
                     <div>
-                        <div className="avatar" style={bgImg}></div>
+                        {/* <div className="avatar" style={bgImg}></div> */}
+                        <ProfileImage image={avatar} size="small"/>
                         <h5>{firstname} {lastname}</h5>
                         <p>{username}</p>
                     </div>
@@ -45,30 +47,30 @@ export default function ChatSearchBox () {
             setSubmittedName(currentSearch)
     }
 
-    // const getUserImage = async (id: number) => {
-    //     try {
-    //       const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
-    //       return URL.createObjectURL(res.data);
-    //     } catch (err) {
-    //       console.log("Error: Failed to fetch award image.");
-    //       console.log(err);
-    //       return undefined;
-    //     }
-    //   };
-
     React.useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false
             return
         }
-        async function getUser () {
+        // const getUserImage = async (id: number) => {
+        //     try {
+        //       const res = await axios.get(`/api/user/avatar/${id}`, {responseType: 'blob'})
+        //       return URL.createObjectURL(res.data);
+        //     } catch (err) {
+        //       console.log("Error: Failed to fetch award image.");
+        //       console.log(err);
+        //       return undefined;
+        //     }
+        //   };
+
+        async function getUserCard () {
             try {
                 const response = await axios(`api/user/search/user/?username=${submittedName}`)
-                // const imgRes = await getUserImage(response.data.id)
+                const imgRes = await getUserImage(response.data[0].id)
                 // console.log(imgRes)
-                // setSearchedUser({...response.data, imgRes})
-                console.log(response.data[0])
-                setSearchedUser(response.data[0])
+                // console.log(response.data[0])
+                setSearchedUser({...response.data[0], image: imgRes})
+                // setSearchedUser(response.data[0])
                 console.log(searchedUser)
             } catch (err: any) {
                 console.log(err.message)
@@ -77,7 +79,7 @@ export default function ChatSearchBox () {
         if (submittedName !== "")
         {
             console.log(submittedName)
-            getUser()
+            getUserCard()
         }
     }, [submittedName])
 
@@ -99,7 +101,7 @@ export default function ChatSearchBox () {
                 firstname={searchedUser.firstname}
                 lastname={searchedUser.lastname}
                 username={searchedUser.username}
-                avatar={searchedUser?.image}
+                avatar={searchedUser.image}
             />
             }
         </section>

@@ -37,7 +37,7 @@ export class User extends BaseEntity {
     @Column({nullable: true })
     lastname: string
 
-    @Column({nullable: true})
+    @Column({nullable: true, unique: true})
     username: string
 
     @Exclude()
@@ -46,6 +46,9 @@ export class User extends BaseEntity {
 
     @Column({default: 'path', nullable: true})
     avatar: string
+
+    @Column({ type: 'boolean', default: true })
+    firstLog: boolean
 
     @Column({unique: true, nullable: true})
     email: string
@@ -73,10 +76,6 @@ export class User extends BaseEntity {
     @JoinTable()
     blocked_users: User[]
 
-    // @ManyToOne(() => Channel, {nullable: true})
-    // @JoinTable()
-    // joined_channels: Channel []
-
     @OneToOne(() => Stats, (stats) => stats.user , {nullable: true})
     @JoinColumn()
     stat: Stats
@@ -89,4 +88,6 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
+
 }
+   

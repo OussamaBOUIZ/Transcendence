@@ -23,7 +23,7 @@ export class AchievementService {
         map['Pong veteran'] = 'achieved level 5'; 
         map['Pong pro'] = 'achieved level 15';
         map['Pong master'] = 'achieved level 25';
-        map['clean shot'] = '0 shots at own goal';
+        map['the wall'] = '0 shots at own goal';
         map['hot shooter'] = '5 wins in a row';
         map['master shooter'] = '10 wins in a row';
         map['underdog'] = 'beat a player 2 levels higher than you';
@@ -54,5 +54,40 @@ export class AchievementService {
             newAchievement.user_id = user.id;
             await this.achieveRepo.save(newAchievement);       
         }
+    }
+    async unlockAchievement(badge_name: string)
+    {
+        const achievement = await this.achieveRepo.findOne({
+            where: {
+                badge_name: badge_name,
+            }
+        });
+        achievement.is_achieved === true;
+        await this.achieveRepo.save(achievement);
+    }
+    async setUnderdogAchievement()
+    {
+        await this.unlockAchievement('underdog');
+    }
+    async setLevelAchievement(oldlevel: number, level: number)
+    {
+        if(oldlevel === level) return ;
+        if(level === 5)
+            await this.unlockAchievement('Pong veteran');
+        else if(level === 15)
+            await this.unlockAchievement('Pong pro');
+        else if(level === 25)
+            await this.unlockAchievement('Pong master');
+    }
+    async setGameAchievement(gameType: string)
+    {
+        if(gameType === 'Battle royal')
+            await this.unlockAchievement('Battle royal winner');
+        else if(gameType === 'The beast')
+            await this.unlockAchievement('The beast winner');
+        else if(gameType === 'bright')
+            await this.unlockAchievement('bright winner');
+        else if(gameType === 'spider')
+            await this.unlockAchievement('spider winner');
     }
 }

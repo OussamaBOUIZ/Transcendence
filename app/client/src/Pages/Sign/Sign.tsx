@@ -1,130 +1,47 @@
-import {useState} from "react"
-import axios from 'axios'
-import Notification from "../../Components/Notification"
-import Welcome from './SignWelcome'
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
 import logo42 from "../../Assets/Icons/42Logo.png"
-import Form from './SignForm'
-import SignInImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_2.jpeg'
-import SignUpImage from '../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg'
+import logo from "../../Assets/Icons/logo.png"
+import SignInImage from '../../Assets/2f964e6c-a41e-4baa-b88c-4e7237f2e606.jpg'
 
 export default function Sign() {
-
-    const [formData, setFormData] = useState({
-        username: "",
-        password: ""
-    })
-
-    const [formDataUp, setFormDataUp] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: ""
-    })
-
-    const [notif, setNotif] = useState("")
-
-    const [SignX, setSignX] = useState("in")
-
-    function handleChange(event: any) {
-        const {name, value} = event.target
-        if (SignX === "in") {
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                [name]: value
-            }))
-        } else {
-            setFormDataUp(prevFormDataUp => ({
-                ...prevFormDataUp,
-                [name]: value
-            }))
-        }
-    }
-
-
-
-    function handleClick() {
-        setSignX(prev => (prev === "in" ? "up" : "in"));
-    }
-
-    function handleSubmit() {
-        console.log("cdscdsz")
-        setNotif("")
-        const bodyResponse = SignX === "in" ? formData : formDataUp
-        const sendFormData = async () => {
-        try {
-            
-            const response = await axios.post(`/api/auth/sign${SignX}`, bodyResponse);
-            SignX === "up" ? setNotif(response.data) : window.location.replace("http://localhost:5173/home")
-        } catch (error) {
-            error.response.data.message === undefined ?
-            setNotif(error.response.data) :
-            setNotif(error.response.data.message)
-        }
-        };
-        sendFormData()
-    }
-
     
     function handleAuth(props: string) {
-        console.log(`props ${props}`)
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }
 
+    const welcome = <div className="welcome">
+        <img src={logo} alt="" />
+            <p className="hd" style={{fontSize: "clamp(4rem, 4.8vw, 4.7rem)"}}>Hi there!</p>
+            <p className='pr' style={{fontSize: "clamp(.6rem, .9vw, 1rem)"}}>Welcome to PongLogo, Game Application</p>
+        </div>
+
     const orContent = <div className="orContent">
-                            <div className='bar'></div>
-                            or
-                            <div className='bar'></div>
+                            <div className='bar'></div>or<div className='bar'></div>
                         </div>
     const ButtonsAuth = <div className='bttn'>
-                            <button className='btn btn-google' onClick={() => handleAuth("google")}><img src={googleImg} alt="" /> Sign in with Google</button>
-                            <button className='btn btn-42'onClick={() => handleAuth("42")}><img src={logo42} alt="" /> Sign in with 42 Netowrk</button>
+                            <button className='btn' onClick={() => handleAuth("google")}>
+                                <img src={googleImg} alt="" /> Sign in with Google
+                            </button>
+                            {orContent}
+                            <button className='btn'onClick={() => handleAuth("42")}>
+                                <img src={logo42} alt="" /> Sign in with 42 Netowrk
+                            </button>
                         </div>
 
 
     return (
         <div className="main">
-           {notif && <Notification message={notif} />}
+            <img className="bg" src={SignInImage} alt="" />
             <div className='content'>
                 <div className='container'>
-                    <Welcome SignX={SignX} />
-                    <main>
-                        {ButtonsAuth}
-                        {orContent}
-                        <Form
-                            SignX = {SignX}
-                            handleChange={handleChange}
-                            handleSubmit={handleSubmit}
-                            formData={formData}
-                            setFormData={setFormData}
-                            formDataUp={formDataUp}
-                            setFormDataUp={setFormDataUp}
-                        />
-                    </main>
-                    {SignX === "in" && <span className="forget"><p>Forget password?</p></span>}
-                    {/* <ButtonPlay onClick={handleSubmit} content={`sign ${SignX}`} /> */}
-                    <button className='submit' onClick={handleSubmit} >
-                        {
-                            SignX === "in" ?
-                            <span>sign in</span> :
-                            <span>sign up</span>
-                        }
-                    </button>
-                    <div className="signUp" onClick={handleClick} >
-                        {
-                            SignX === "in" ?
-                            <p>Don't you have an account? <span>sign up</span></p> :
-                            <p>Already have an account? <span>sign in</span></p>
-                        }
-                    </div>
+                    {welcome}
+                    {ButtonsAuth}
                 </div>
-            </div>
-            <div
-                className='cover'
-                style={SignX === "in" ?
-                {backgroundImage: `url(${SignInImage})`} :
-                {backgroundImage: `url(${SignUpImage})`}}>
+                <div
+                    className='cover'
+                    style={{backgroundImage: `url(${SignInImage})`}}>
+                </div>
             </div>
         </div>
     )

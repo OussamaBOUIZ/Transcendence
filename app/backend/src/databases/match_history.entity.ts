@@ -1,4 +1,3 @@
-
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
 import { User } from "./user.entity"
 
@@ -14,10 +13,10 @@ export class Match_history extends BaseEntity {
     @Column()
     opponent: number
     
-    @Column()
+    @Column({default: 0})
     user_score: number
 
-    @Column()
+    @Column({default: 0})
     opponent_score: number
     
 }

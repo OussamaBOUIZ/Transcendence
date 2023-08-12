@@ -1,15 +1,21 @@
 import "../../scss/home.scss";
 import SideBar from "../../Components/Sidebar";
 import ProfileComponent from "./ProfileComponent";
-import { useFetchUserData } from "../../Hooks/useFetchUserData";
+import { getUserData } from "../../Hooks/getUserData";
 
 export default function Profile() {
 
-  const { userData } = useFetchUserData();
+  const userData = getUserData();
 
+  if (!userData) {
+    return (
+      <div className="Home">
+      </div>
+    );
+  }
+  
   return (
     <div className="Home">
-      <SideBar />
       <ProfileComponent UserData={userData} />
     </div>
   );

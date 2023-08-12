@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import { Muted_users } from "./muted_users.entity"
 import { Message } from "./message.entity"
+import { User } from "./user.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
@@ -16,17 +17,21 @@ export class Channel extends BaseEntity {
     @Column({nullable: true})
     channel_password: string
 
-    @Column('int', {array: true, nullable: true})
-    channel_owners: number[]
-    
-    @Column('int', {array: true, nullable: true})
-    channel_admins: number[]
+    @ManyToMany(() => User)
+    @JoinTable()
+    channelUsers: User[]
 
-    @Column('int', {array: true, nullable: true})
-    channel_users: number[]
+    @ManyToMany(() => User)
+    @JoinTable()
+    channelAdmins: User[]
 
-    @Column('int', {array: true, nullable: true})
-    banned_users: number[]
+    @ManyToMany(() => User)
+    @JoinTable()
+    channelOwners: User[]
+
+    @ManyToMany(() => User)
+    @JoinTable()
+    BannedUsers: User[]
 
     @OneToMany(() => Message, (messages) => messages.channel)
     messages: Message[]

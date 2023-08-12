@@ -1,3 +1,6 @@
+@import './var.scss';
+@import './mixins.scss';
+
 .flex-sp {
     display: flex;
     justify-content: space-between;

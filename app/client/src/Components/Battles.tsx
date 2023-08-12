@@ -1,6 +1,6 @@
 import Character from "../Assets/character.png"
 
-export default function LeaderBoard() {
+export default function Battles() {
     return (
         <>
             <div className="item battleRoyal">
