@@ -7,6 +7,7 @@ import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import Inbox from './Inbox';
+import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, Link, useLocation} from 'react-router-dom'
 
@@ -16,11 +17,11 @@ function InboxDm () {
     );
 }
 
-function InboxRooms () {
-    return (
-        <h2>ROOMS MESSAGES</h2>
-    );
-}
+// function InboxRooms () {
+//     return (
+//         <h2>ROOMS MESSAGES</h2>
+//     );
+// }
 
 
 function InboxLayout () {
@@ -31,8 +32,8 @@ function InboxLayout () {
         <div>
             <section className="inbox">
                 <nav>
-                    <Link  className="block" to={location.pathname}><button className="active">Messages<span></span></button></Link>
-                    <Link className="block"  to={`${location.pathname}/rooms`}><button>Channels<span></span></button></Link>
+                    <Link to="dm"><button className="active">Messages<span></span></button></Link>
+                    <Link to="rooms"><button>Channels<span></span></button></Link>
                 </nav>
                 <Outlet />
             </section>
@@ -41,20 +42,12 @@ function InboxLayout () {
 }
 
 export default function ChatLayout () {
-    const location = useLocation()
-    console.log(location.pathname)
     return ((
         <div className="chat_container">
             <ChatAccount />
             <div className="chat_list">
                 <OnlineNow />
-                <Routes>
-                    <Route element={<InboxLayout /> }>
-                        <Route  index element={<InboxDm />}/>
-                        <Route path="rooms" element={<InboxRooms />}/>
-                    </Route>
-                    
-                </Routes>
+                <InboxRooms />
             </div>
             <Outlet />
         </div>
