@@ -65,6 +65,22 @@ const multerConfig = () => ({
 	})
 })
 
+const multerConfigUpdateAvatar = () => ({
+	storage: diskStorage({
+		destination: DirUpload,
+		filename: async (req: any, file: any, cb: any) => {
+			const supportedExt = ['.png', '.jpeg', '.jpg']
+			if (isNaN(parseInt(req.params['userId'], 10)))
+				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+			if (!supportedExt.includes(extname(file.originalname)))
+				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.UNSUPPORTED_MEDIA_TYPE), false)
+			const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+			cb(null, filename)
+		}
+	})
+})
+
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
@@ -75,14 +91,15 @@ export class UserController {
 	) {
 	}
 
-	// todo : if the user not found i have to remove avatar ??
 	@Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	async uploadImage(
 		@Param('userId', ParseIntPipe) id: number,
-		@UploadedFile(new ParseFilePipe({
-			fileIsRequired: false
-		})) image: Express.Multer.File,
+		@UploadedFile(
+			new ParseFilePipe({
+				fileIsRequired: true
+			})
+		) image: Express.Multer.File,
 		@Res() res: Response
 	) {
 		const user = await this.userService.saveUserAvatarPath(id, image.path)
@@ -93,6 +110,22 @@ export class UserController {
 		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
+	@Put('/:userId/avatar/')
+	@UseInterceptors(FileInterceptor('image', multerConfig()))
+	async updateAvatar(
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: true
+		})) image: Express.Multer.File,
+		@Res() res: Response
+	) {
+		const user = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user) {
+			await unlink(image.path)
+			throw new NotFoundException('The User Not Found')
+		}
+		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	}
 
 	@Get()
 	async getUserData(@Req() req: Request) {
