@@ -12,6 +12,7 @@ import {
    @Catch(BadRequestException)
    export class FormCheck implements ExceptionFilter {
      catch(exception: HttpException, host: ArgumentsHost) {
+      console.log('YES PROBLEM 222222')
       const ctx = host.switchToHttp();
       const response = ctx.getResponse<Response>();
       const status = exception.getStatus();

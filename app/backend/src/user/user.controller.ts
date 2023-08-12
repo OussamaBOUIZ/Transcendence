@@ -17,6 +17,7 @@ import {
 	MaxFileSizeValidator,
 	NotFoundException,
 	Put,
+	UseFilters,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -35,6 +36,8 @@ import { Observable, of } from 'rxjs';
 import { isNumber } from 'class-validator';
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
+import { ViewAuthFilter } from 'src/auth/Filter/filter';
+
 
 
 const DirUpload = './uploads/usersImage/'
@@ -158,7 +161,7 @@ export class UserController {
 		return this.userService.getLeaderBoard()
 	}
 
-	@Get(':id')
+	@Get('/data/:id')
 	async getUserById(@Param('id', ParseIntPipe) id: number) {
 		return await this.userService.findUserById(id)
 	}
@@ -327,6 +330,12 @@ export class UserController {
 		if (authUser.username === user?.username)
 			throw new HttpException({reason: 'You cant Search for yourself'}, HttpStatus.BAD_REQUEST)
 		return user
+	}
+	@Get('testException')
+	@UseFilters(ViewAuthFilter)
+	test()
+	{
+		throw new UnauthorizedException('Unauthorized', 'this not true');
 	}
 }
 
