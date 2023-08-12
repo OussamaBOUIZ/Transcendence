@@ -22,7 +22,7 @@ export default function ChatDmInit () {
             </article>
             <ChatSearchBox />
         </div>
-        <ChatOverview />
+            <ChatOverview />
         </>
     );
 }
