@@ -7,7 +7,6 @@ import SignInImage from '../../Assets/2f964e6c-a41e-4baa-b88c-4e7237f2e606.jpg'
 export default function Sign() {
     
     function handleAuth(props: string) {
-        console.log(`props ${props}`)
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }
 

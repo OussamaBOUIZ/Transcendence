@@ -3,14 +3,16 @@ import awardIcon from "../Assets/Icons/award.svg";
 import ProfileImage from "./profileImage";
 import locked from "../Assets/Icons/lock-solid.svg"
 import unlocked from "../Assets/Icons/lock-open-solid.svg"
+import {User} from "../../../global/Interfaces"
 
-export default function AchievementCard({ user }) {
-    const {allAchievements} = getAllAchievements(user?.id);
+export default function AchievementCard({ user }: {user: User}) {
+
+    const allAchievements = getAllAchievements(user?.id);
 
     const AchievementsToggle = allAchievements.map((award) => {
         return (
             <div className={`award-item ${award.is_achieved}`} key={award.id}>
-                <ProfileImage image={award.image} id="" size="medium" />
+                <ProfileImage image={award.image} size="medium" />
                 <div className="achievement-name">
                     <p>{award.badge_name}</p>
                     <span>{award.description}</span>

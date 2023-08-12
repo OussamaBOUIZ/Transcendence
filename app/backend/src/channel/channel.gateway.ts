@@ -8,7 +8,10 @@ import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 
-@WebSocketGateway()
+@WebSocketGateway(1313, {cors: {
+	origin: "http://localhost:5173",
+		credentials: true
+}})
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() 
         server: Server;
@@ -18,10 +21,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     afterInit() {
         console.log(`Init gateway`)
     }
-
-        // io.on('connection', {})
+    
     async handleConnection(client: Socket) {
-        console.log(client.id);
         const authToken: string = client.handshake.headers.authorization;
         const user = await this.userService.getUserFromJwt(authToken);
         if(!user)

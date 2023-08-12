@@ -3,16 +3,17 @@ import image from "../Assets/SpiderGround.jpeg"
 import losses from "../Assets/Icons/losses.svg"
 import wins from "../Assets/Icons/wins.svg"
 import friendsIcon from "../Assets/Icons/group.svg"
+import {User} from "../../../global/Interfaces"
 
-export default function FriendsCard({ user }) {
+export default function FriendsCard({ user }: {user: User}) {
 
-    const {allFriends} = getAllFriends(user?.id);
+    const allFriends = getAllFriends(user?.id);
 
     const FriendsToggle = allFriends.map((friend) => {
         return (
             <div className="friend-item" key={friend.username}>
                 <div className="userImage">
-                    <img src={image} alt="" />
+                    <img src={friend.image} alt="" />
                     <div className={`status ${friend.status}`}></div>
                 </div>
                 <div className="friend-name">

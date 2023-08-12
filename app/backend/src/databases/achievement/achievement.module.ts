@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Achievement } from "./achievement.entity";
 import { Stats } from "../stats.entity";
 import {User} from "../user.entity";
+import { Match_history } from "../match_history.entity";
 
 @Module ({
     providers: [AchievementService],
