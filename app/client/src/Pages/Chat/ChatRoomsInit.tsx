@@ -15,7 +15,7 @@ export default function ChatRooomsInit () {
                 Create your first channel
                 </h2>
                 <p>
-                Embark on an extraordinary journey of collaboration\
+                Embark on an extraordinary journey of collaboration
                 and inspiration or Join existing ones
                 </p>
             </article>

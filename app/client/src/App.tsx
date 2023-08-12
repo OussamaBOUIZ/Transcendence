@@ -15,6 +15,7 @@ import Prompt from './Pages/Prompt/Prompt'
 import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
 import ChatDmInit from './Pages/Chat/ChatDmInit'
+import ChatRooomsInit from './Pages/Chat/ChatRoomsInit'
 
 export default function App () {
   return (
@@ -24,8 +25,9 @@ export default function App () {
         <Route element={<AuthRequired />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
-            <Route path="/chat" element={<ChatLayout />}>
+            <Route path="/chat/*" element={<ChatLayout />}>
                 <Route index  element={<ChatDmInit /> }/>
+                <Route path="rooms"  element={<ChatRooomsInit /> }/>
             </Route>
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
