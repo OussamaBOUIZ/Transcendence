@@ -26,14 +26,13 @@ function InboxRooms () {
 function InboxLayout () {
     const location = useLocation()
     console.log('---');
-    
     console.log(location.pathname)
     return (
         <div>
             <section className="inbox">
                 <nav>
-                    <Link  className="block" to="/"><button className="active">Messages<span></span></button></Link>
-                    <Link className="block"  to="rooms"><button>Channels<span></span></button></Link>
+                    <Link  className="block" to={location.pathname}><button className="active">Messages<span></span></button></Link>
+                    <Link className="block"  to={`${location.pathname}/rooms`}><button>Channels<span></span></button></Link>
                 </nav>
                 <Outlet />
             </section>
@@ -50,7 +49,7 @@ export default function ChatLayout () {
             <div className="chat_list">
                 <OnlineNow />
                 <Routes>
-                    <Route  element={<InboxLayout /> }>
+                    <Route element={<InboxLayout /> }>
                         <Route  index element={<InboxDm />}/>
                         <Route path="rooms" element={<InboxRooms />}/>
                     </Route>
