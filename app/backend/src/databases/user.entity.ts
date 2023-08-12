@@ -90,3 +90,4 @@ export class User extends BaseEntity {
     inbox_users: Inbox_user[]
 
 }
+   
