@@ -1,20 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Channel } from 'src/databases/channel.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/databases/user.entity';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { newUserDto } from './dto/newUserDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import * as argon from 'argon2'
 import { JwtService } from '@nestjs/jwt';
-import { type } from 'os';
 import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
-import { muteUserDto } from './dto/muteUserDto';
-import {Server} from "socket.io"
 
 
 @Injectable()
@@ -36,6 +32,8 @@ export class ChannelService {
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
+            userFound.ownerRoleChannels = [...userFound.ownerRoleChannels, newChannel];
+            await this.userService.saveUser(userFound); 
             newChannel.channelOwners = [userFound];
             await this.channelRepo.save(newChannel);
         }
@@ -54,6 +52,12 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelOwner.channelName});
         const user = await this.userService.findUserById(channelOwner.newChannelOwner);
+        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
+        user.adminRoleChannels = user.adminRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
+        user.ownerRoleChannels = [...user.ownerRoleChannels, channelFound];
+        await this.userService.saveUser(user);
+        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
+        channelFound.channelAdmins = channelFound.channelAdmins.filter((currentUser) => currentUser !== user);
         channelFound.channelOwners = [...channelFound.channelOwners, user];
         this.channelRepo.save(channelFound);
     }
@@ -61,7 +65,13 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelAdmin.channelName});
         const user = await this.userService.findUserById(channelAdmin.newChannelAdmin);
-        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
+        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
+        user.ownerRoleChannels = user.ownerRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
+        user.ownerRoleChannels = [...user.ownerRoleChannels, channelFound];
+        await this.userService.saveUser(user);
+        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
+        channelFound.channelAdmins = channelFound.channelAdmins.filter((currentUser) => currentUser !== user);
+        channelFound.channelOwners = [...channelFound.channelOwners, user];
         this.channelRepo.save(channelFound);
     }
     async addToChannel(newUser: newUserDto)

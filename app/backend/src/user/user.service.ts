@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
-import { ILike, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from "../databases/achievement/achievement.entity";
@@ -9,8 +9,6 @@ import { Match_history } from "../databases/match_history.entity";
 import { authenticator } from 'otplib';
 import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
-import { searchDto } from './game-history-dto/search-dto';
-import { use } from 'passport';
 
 type tokenPayload = {
     id: number,

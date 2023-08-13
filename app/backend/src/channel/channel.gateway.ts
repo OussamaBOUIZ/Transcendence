@@ -7,6 +7,7 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
+import * as cookieParser from 'cookie-parser';
 
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
@@ -23,8 +24,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     
     async handleConnection(client: Socket) {
-        const authToken: string = client.handshake.headers.authorization;
-        const user = await this.userService.getUserFromJwt(authToken);
+        const sessionCookie = client.handshake.headers.cookie;
+
+        const user = await this.userService.getUserFromJwt(sessionCookie);
         if(!user)
         {
             client.disconnect();

@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import {IsNotEmpty, IsNotEmptyObject} from "class-validator";
+import {IsNotEmpty} from "class-validator";
 
 
 export class ReceiverDto {

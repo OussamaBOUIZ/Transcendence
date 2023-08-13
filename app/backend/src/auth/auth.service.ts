@@ -7,7 +7,6 @@ import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { AchievementService } from 'src/databases/achievement/achievement.service';
-import {authenticator} from 'otplib'
 
 type tokenPayload = {
     id: number,
