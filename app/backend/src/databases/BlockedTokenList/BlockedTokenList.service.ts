@@ -23,7 +23,7 @@ export class BlockedTokenlistService {
     await this.BlockedListRepo.save(tokenEntry);
   }
 
-  async blackListhasToken(token: string)
+  async blackListHasToken(token: string)
   {
     const tokenExist = await this.BlockedListRepo.findOne({
         where: {token: token},

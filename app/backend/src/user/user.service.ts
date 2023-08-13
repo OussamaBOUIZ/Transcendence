@@ -117,13 +117,26 @@ export class UserService {
             take: 4
         })
     }
-
-
-    async getFriendLastGame(friendId: number)
+    async getFriendLastGame(friendId: number, userId: number)
     {
+        // const match = await this.matchHistoryRepo
+        // .createQueryBuilder('match_history')
+        // .where('match_history.userId = :userId', { userId })
+        // .andWhere('match_history.opponent = :friendId', { friendId })
+        // .orderBy('match_history.id', 'DESC')
+        // .getOne(); 
         const match = await this.matchHistoryRepo.findOne({
+            relations: {
+                user: true
+            },
             where: {
-              opponent: friendId  
+                user: {
+                    id: userId
+                },
+                opponent: friendId, 
+            },
+            order: {
+                id: 'DESC',
             },
             select: {
                 user_score: true,

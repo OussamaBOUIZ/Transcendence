@@ -3,5 +3,9 @@ dist
 .env
 .idea/
 
+<<<<<<< HEAD
+**/package-lock.json
+=======
 **/package-lock.json
 **/uploads/**
+>>>>>>> 12cae7e6fb28ba7a9d004960ae840a608ba7dec8

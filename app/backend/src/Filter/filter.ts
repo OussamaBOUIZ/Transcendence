@@ -10,11 +10,12 @@ import {
    @Catch(UnauthorizedException)
    export class ViewAuthFilter implements ExceptionFilter {
      catch(exception: HttpException, host: ArgumentsHost) {
+      console.log('YES BROT')
        const ctx = host.switchToHttp();
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();
     
-       response.status(status).redirect('http://localhost:5173/');
+       response.status(status).redirect('http://localhost:5173/home');
      }
    }
    

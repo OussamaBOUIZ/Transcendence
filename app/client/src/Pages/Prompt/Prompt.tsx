@@ -52,7 +52,7 @@ export default function Prompt() {
                 increment(prev => prev + 1)
                 clearFields()
                 if (val === 2)
-                    window.location.replace('/home')
+                    window.location.replace('/')
             }
             catch (error) {
                 setNotif(error.response.data)
