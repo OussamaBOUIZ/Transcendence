@@ -1,11 +1,10 @@
 import React from 'react'
-import ChatOverview from './ChatOverview';
 import ChatSearchBox from './ChatSearchBox';
+import ChatOverview from './ChatOverview';
 
 
 export default function ChatDmInit () {
     return (
-        <>
         <div className="chat_main chat_main_init">
             <article>
                 <h2>
@@ -22,7 +21,5 @@ export default function ChatDmInit () {
             </article>
             <ChatSearchBox />
         </div>
-            <ChatOverview />
-        </>
     );
 }
