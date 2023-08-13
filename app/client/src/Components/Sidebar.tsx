@@ -28,7 +28,7 @@ export default function Sidebar () {
             to={icon.to}
             >
                 {icon.value}
-            </SidebarButton> 
+            </SidebarButton>
         )
     })
     return (

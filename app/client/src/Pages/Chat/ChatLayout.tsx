@@ -7,6 +7,7 @@ import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import Inbox from './Inbox';
+import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, Link, useLocation} from 'react-router-dom'
 
@@ -16,11 +17,11 @@ function InboxDm () {
     );
 }
 
-function InboxRooms () {
-    return (
-        <h2>ROOMS MESSAGES</h2>
-    );
-}
+// function InboxRooms () {
+//     return (
+//         <h2>ROOMS MESSAGES</h2>
+//     );
+// }
 
 
 function InboxLayout () {
@@ -48,13 +49,7 @@ export default function ChatLayout () {
             <ChatAccount />
             <div className="chat_list">
                 <OnlineNow />
-                <Routes>
-                    <Route element={<InboxLayout /> }>
-                        <Route  index element={<InboxDm />}/>
-                        <Route path="rooms" element={<InboxRooms />}/>
-                    </Route>
-                    
-                </Routes>
+                <InboxRooms />
             </div>
             <Outlet />
         </div>

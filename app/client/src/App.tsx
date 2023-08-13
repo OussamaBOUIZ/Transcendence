@@ -11,6 +11,7 @@ import AuthRequired from './Layout/AuthRequired'
 
 import './scss/main.scss'
 import './scss/utils.scss'
+import './scss/app.css'
 import Prompt from './Pages/Prompt/Prompt'
 import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
