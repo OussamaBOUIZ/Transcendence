@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import TopicRoom from './TopicRoom';
-import Rooms from './PublicRooms';
-import { nanoid } from 'nanoid';
+import CreateRoom from './createRoom';
+import Rooms from './Rooms';
 
 export default function InboxRooms () {
 
@@ -11,6 +11,9 @@ export default function InboxRooms () {
     const initState = false;
     return (
         <div>
+            <div className="item absolute top-1/2 left-1/2">
+                <CreateRoom />
+            </div>
             <section className="inbox">
                 <nav>
                     <button>Messages<span></span></button>
@@ -32,10 +35,8 @@ export default function InboxRooms () {
                     {PublicMode && <Rooms />}
                     <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} />
                     {ProtectedMode && <Rooms />}
-                    {/* <ProtectedRooms /> */}
                     <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} />
                     {PrivateMode && <Rooms />}
-                    {/* <PrivateRooms /> */}
                 </div>
             </section>
         </div>

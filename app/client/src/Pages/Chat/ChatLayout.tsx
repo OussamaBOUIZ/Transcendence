@@ -17,11 +17,11 @@ function InboxDm () {
     );
 }
 
-// function InboxRooms () {
-//     return (
-//         <h2>ROOMS MESSAGES</h2>
-//     );
-// }
+function InboxChannels () {
+    return (
+        <InboxRooms />
+    );
+}
 
 
 function InboxLayout () {
@@ -50,6 +50,7 @@ export default function ChatLayout () {
             <div className="chat_list">
                 <OnlineNow />
                 <InboxRooms />
+                {/* <InboxLayout /> */}
             </div>
             <Outlet />
         </div>

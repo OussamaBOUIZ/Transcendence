@@ -69,9 +69,29 @@ div.chat_container {
                 }
             }
         }
+        input[type="radio"] {
+            appearance: none;
+            width: 1em;
+            height: 1em;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            background-color: #ccc;
+            transition: background-color 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        input[type="text"], input[type="password"] {
+            background-color: rgba(171, 171, 171, 0.28);
+            border-radius: 6px;
+            height: 2em;
+            padding: .5em;
+        }
+        input[type="radio"]:checked {
+            background-color: #007bff;
+        }
         section.inbox {
             display: flex;
-        flex-direction: column;
+            flex-direction: column;
             nav {
                 display: flex;
                 padding: 0 8px;
