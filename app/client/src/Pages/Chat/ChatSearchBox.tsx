@@ -33,7 +33,8 @@ export default function ChatSearchBox () {
         async function getUserCard () {
             try {
                 const response = await axios(`../api/user/search/user/?username=${submittedName}`)
-                const imgRes = await getUserImage(response.data[0].id)
+                // console.log(response)
+                const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data[0], image: imgRes})
                 console.log(searchedUser)
             } catch (err: any) {
