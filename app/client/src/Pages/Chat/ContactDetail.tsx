@@ -5,7 +5,7 @@ export default function ContactDetail () {
         <div className="contact_details_container">
             <h2>Contact details</h2>
             <figure className="contact">
-                <img src="./src/Assets/cat.jpg" alt="cat" />
+                <img src="../src/Assets/cat.jpg" alt="cat" />
                 <figcaption>
                     <h3>Elegant</h3>
                     <h3>Tom</h3>
@@ -30,21 +30,21 @@ export default function ContactDetail () {
                 <h2>Achievements</h2>
                 <div className="achievement-container">
                 <figure className="achievement">
-                    <img src="./src/Assets/leaf.jpg" alt="" className="achievement-icon" />
+                    <img src="../src/Assets/leaf.jpg" alt="" className="achievement-icon" />
                     <figcaption className="achievement-info">
                         <h5 className="achievement-title">Apex Legends</h5>
                         <h6 className="achievement-subtitle">legendary</h6>
                     </figcaption>
                 </figure>
                 <figure className="achievement">
-                    <img src="./src/Assets/leaf.jpg" alt="" className="achievement-icon" />
+                    <img src="../src/Assets/leaf.jpg" alt="" className="achievement-icon" />
                     <figcaption className="achievement-info">
                         <h5 className="achievement-title">Apex Legends</h5>
                         <h6 className="achievement-subtitle">legendary</h6>
                     </figcaption>
                 </figure>
                 <figure className="achievement">
-                    <img src="./src/Assets/leaf.jpg" alt="" className="achievement-icon" />
+                    <img src="../src/Assets/leaf.jpg" alt="" className="achievement-icon" />
                     <figcaption className="achievement-info">
                         <h5 className="achievement-title">Apex Legends</h5>
                         <h6 className="achievement-subtitle">legendary</h6>
