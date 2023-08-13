@@ -88,4 +88,6 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
+
 }
+   

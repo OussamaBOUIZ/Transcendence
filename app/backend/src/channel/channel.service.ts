@@ -36,8 +36,7 @@ export class ChannelService {
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
-            newChannel.channel_owners = [];
-            newChannel.channel_owners.push(userFound.id);
+            newChannel.channelOwners = [userFound];
             await this.channelRepo.save(newChannel);
         }
         else
@@ -54,21 +53,15 @@ export class ChannelService {
     async setChannelOwner(channelOwner: channelOwnerDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelOwner.channelName});
-        if(!channelFound.channel_owners)
-            channelFound.channel_owners = [];
-        if(channelFound.channel_admins.includes(channelOwner.newChannelOwner))
-            throw new HttpException('conflict', HttpStatus.CONFLICT);
-        channelFound.channel_admins.push(channelOwner.newChannelOwner);
+        const user = await this.userService.findUserById(channelOwner.newChannelOwner);
+        channelFound.channelOwners = [...channelFound.channelOwners, user];
         this.channelRepo.save(channelFound);
     }
     async setChannelAdmin(channelAdmin: channelAdminDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: channelAdmin.channelName});
-        if(!channelFound.channel_admins)
-            channelFound.channel_admins = [];
-        if(channelFound.channel_admins.includes(channelAdmin.newChannelAdmin))
-            throw new HttpException('conflict', HttpStatus.CONFLICT);
-        channelFound.channel_admins.push(channelAdmin.newChannelAdmin);
+        const user = await this.userService.findUserById(channelAdmin.newChannelAdmin);
+        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
         this.channelRepo.save(channelFound);
     }
     async addToChannel(newUser: newUserDto)
@@ -76,21 +69,15 @@ export class ChannelService {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
         if(channelFound.channel_type === 'public')
         {
-            if(!channelFound.channel_users)
-                channelFound.channel_users = [];
-            if(channelFound.channel_users.includes(newUser.channelNewUser))
-                return 'user already exists in channel';
-            channelFound.channel_users.push(newUser.channelNewUser);
+            const user = await this.userService.findUserById(newUser.channelNewUser);
+            channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         if(channelFound.channel_type === 'protected')
         {
-            if(!channelFound.channel_users)
-                channelFound.channel_users = [];
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
                 return 'provided password is incorrect'
-            if(channelFound.channel_users.includes(newUser.channelNewUser))
-                return 'user already exists in channel';
-            channelFound.channel_users.push(newUser.channelNewUser);
+            const user = await this.userService.findUserById(newUser.channelNewUser);
+            channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         await this.channelRepo.save(channelFound);
         return await this.channelRepo.find({
@@ -106,31 +93,24 @@ export class ChannelService {
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
-        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== kickUser.userId);
+        const user = await this.userService.findUserById(kickUser.userId);
+        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         await this.channelRepo.save(channelFound);
     }
     async banUserFromChannel(banUser: UserOperationDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: banUser.channelName});
-        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== banUser.userId);
-        if(!channelFound.banned_users)
-            channelFound.banned_users = [];
-        channelFound.banned_users.push(banUser.userId);
+        const user = await this.userService.findUserById(banUser.userId);
+        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
+        channelFound.BannedUsers = [...channelFound.BannedUsers, user];
         await this.channelRepo.save(channelFound);
     }
     async promoteUserToAdmin(promoteUser: UserOperationDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: promoteUser.channelName});
-        if(!channelFound)
-            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        if(!channelFound.channel_users)
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-        if(!channelFound.channel_users.includes(promoteUser.userId))
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-        if(!channelFound.channel_admins)
-            channelFound.channel_admins = [];
-        channelFound.channel_admins.push(promoteUser.userId);
-        channelFound.channel_users = channelFound.channel_users.filter((number) => number !== promoteUser.userId);
+        const user = await this.userService.findUserById(promoteUser.userId);
+        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
+        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         this.channelRepo.save(channelFound);
     }
     async storeChannelMessage(userMessage: string, channel: Channel)
@@ -164,6 +144,44 @@ export class ChannelService {
         if(muted)
             return true;
         return false;
+    }
+    async getChannelData(id: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            relations: {
+                channelAdmins: {
+                    stat: true,
+                },
+                channelOwners: {
+                    stat: true,
+                },
+                channelUsers: {
+                    stat: true,
+                },
+            },
+            where: {id: id},
+            select: {
+                channelAdmins: {
+                    stat: {
+                        wins: true,
+                        losses: true,
+                    }
+                },
+                channelOwners: {
+                    stat: {
+                        wins: true,
+                        losses: true,
+                    }
+                },
+                channelUsers: {
+                    stat: {
+                        wins: true,
+                        losses: true,
+                    }
+                }
+            }
+        });
+        return channel;
     }
 }
  

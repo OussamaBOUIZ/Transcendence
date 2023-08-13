@@ -10,7 +10,6 @@ import {
    @Catch(UnauthorizedException)
    export class tokenValidity implements ExceptionFilter {
      catch(exception: HttpException, host: ArgumentsHost) {
-        console.log('HEEERE')
        const ctx = host.switchToHttp();
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();

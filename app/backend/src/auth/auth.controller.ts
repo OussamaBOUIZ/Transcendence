@@ -3,7 +3,6 @@ import { Body, Controller, Get, Headers, HttpStatus, Post, Query, Redirect, Req,
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
-import { lastValueFrom, map, tap } from 'rxjs';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { GoogleAuthGuard } from './googleapi/googleguard';
@@ -62,7 +61,6 @@ export class AuthController {
             return res.redirect('http://localhost:5173/auth');
         return res.redirect('http://localhost:5173/');
     }
-
     @Get('qrcode')
     @UseGuards(JwtGuard)
     async getQrCode(@Req() req: Request, @Res() res: Response)

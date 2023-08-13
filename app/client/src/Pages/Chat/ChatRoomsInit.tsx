@@ -1,10 +1,8 @@
 import React from 'react'
 import ChannelInitAction from "./ChannelInitAction";
-import ChatOverview from "./ChatOverview";
 
 export default function ChatRooomsInit () {
     return (
-        <>
         <div className="chat_main chat_main_init">
             <article>
                 <h2>
@@ -15,13 +13,11 @@ export default function ChatRooomsInit () {
                 Create your first channel
                 </h2>
                 <p>
-                Embark on an extraordinary journey of collaboration\
+                Embark on an extraordinary journey of collaboration
                 and inspiration or Join existing ones
                 </p>
             </article>
             <ChannelInitAction />
         </div>
-        <ChatOverview />
-        </>
     );
 }

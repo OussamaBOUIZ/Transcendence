@@ -17,6 +17,7 @@ import {
 	MaxFileSizeValidator,
 	NotFoundException,
 	Put,
+    UseFilters,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -36,6 +37,7 @@ import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
 import { log } from 'console';
+import { ViewAuthFilter } from 'src/Filter/filter';
 
 
 const DirUpload = './uploads/usersImage/'
@@ -73,6 +75,7 @@ export class UserController {
 
     @Get()
     @UseGuards(JwtGuard)
+    // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -116,7 +119,8 @@ export class UserController {
         return this.userService.getLeaderBoard()
     }
 
-    @Get(':id')
+    @Get(':id/data')
+    @UseFilters(ViewAuthFilter)
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
     }
@@ -221,9 +225,9 @@ export class UserController {
         return await this.userService.AllFriends(id);
     }
     @Get('friendLastGame/:friendId')
-    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number)
-    {   
-        return await this.userService.getFriendLastGame(friendId);
+    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
+    {
+        return await this.userService.getFriendLastGame(friendId, userId);
     }
 
     @Get('game/history/:userId')
@@ -312,6 +316,8 @@ export class UserController {
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
         const till = payload.iat + 86400;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
+        user.status = 'Offline';
+        await this.userService.saveUser(user);
         return res.redirect('http://localhost:5137/');
     }
 

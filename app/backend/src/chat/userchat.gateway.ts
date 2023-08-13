@@ -34,10 +34,7 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway(1313, {cors: {
-	origin: "http://localhost:5173",
-		credentials: true
-}})
+@WebSocketGateway()
 // @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;

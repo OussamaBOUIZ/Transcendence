@@ -32,8 +32,8 @@ function InboxLayout () {
         <div>
             <section className="inbox">
                 <nav>
-                    <Link to="dm"><button className="active">Messages<span></span></button></Link>
-                    <Link to="rooms"><button>Channels<span></span></button></Link>
+                    <Link  className="block" to="/chat">Messages<span></span></Link>
+                    <Link className="block"  to="/chat/rooms">Channels<span></span></Link>
                 </nav>
                 <Outlet />
             </section>
@@ -42,6 +42,8 @@ function InboxLayout () {
 }
 
 export default function ChatLayout () {
+    const {pathname} = useLocation()
+    console.log(pathname)
     return ((
         <div className="chat_container">
             <ChatAccount />
