@@ -89,16 +89,16 @@ export class User extends BaseEntity {
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
 
-    @ManyToMany(() => Channel)
+    @ManyToMany(() => Channel, {nullable: true})
     userRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel)
+    @ManyToMany(() => Channel, {nullable: true})
     adminRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel)
+    @ManyToMany(() => Channel, {nullable: true})
     ownerRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel)
+    @ManyToMany(() => Channel, {nullable: true})
     userBannedChannels: Channel[]
 
 }

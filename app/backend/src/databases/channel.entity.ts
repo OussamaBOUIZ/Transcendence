@@ -11,31 +11,31 @@ export class Channel extends BaseEntity {
     @Column({unique: true})
     channel_name: string
 
-    @Column()
+    @Column({nullable: true})
     channel_type: string
 
     @Column({nullable: true})
     channel_password: string
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, {nullable: true})
     @JoinTable()
     channelUsers: User[]
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, {nullable: true})
     @JoinTable()
     channelAdmins: User[]
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, {nullable: true})
     @JoinTable()
     channelOwners: User[]
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, {nullable: true})
     @JoinTable()
     BannedUsers: User[]
 
-    @OneToMany(() => Message, (messages) => messages.channel)
+    @OneToMany(() => Message, (messages) => messages.channel, {nullable: true})
     messages: Message[]
 
-    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
+    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id, {nullable: true})
     muted: Muted_users[]
 }
