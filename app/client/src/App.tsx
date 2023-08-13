@@ -11,6 +11,7 @@ import AuthRequired from './Layout/AuthRequired'
 
 import './scss/main.scss'
 import './scss/utils.scss'
+import './scss/app.css'
 import Prompt from './Pages/Prompt/Prompt'
 import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
@@ -25,7 +26,7 @@ export default function App () {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
             <Route path="/chat" element={<ChatLayout />}>
-                <Route index  element={<ChatDmInit /> }/>
+                <Route index element={<ChatDmInit /> }/>
             </Route>
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
