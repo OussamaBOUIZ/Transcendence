@@ -9,7 +9,16 @@ export default function ChatDm () {
     const [receiver, setReceiver] = React.useState<User | null>(null);
     const [receivedMessage, setReceivedMessage] = React.useState<MessageData | null>(null);
     const [messageToSend, setMessageToSend] = React.useState<MessageData | null> (null);
-    
+    function handleSubmit (e: React.SyntheticEvent<EventTarget>): void {
+        e.preventDefault()
+        console.log("handleSubmit");
+    }
+
+    function handleChange (e: React.SyntheticEvent<EventTarget>) :void {
+        console.log(e.target.value);
+        
+    }
+
     return (
         <>
         <div className="chat_main">
@@ -23,10 +32,10 @@ export default function ChatDm () {
             </section>
 
 
-             <form className="chat_input" onSubmit={() => console.log("On submit")}>
+             <form className="chat_input" onSubmit={handleSubmit}>
                 <textarea 
                 placeholder="Type something"
-                onChange={() => console.log('on change')}
+                onChange={handleChange}
                 />
                 <button type="submit">Send</button>
             </form>
