@@ -9,9 +9,7 @@ import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
-import {use} from "passport";
 import {UserService} from "../user/user.service";
-import {WsException} from "@nestjs/websockets";
 
 @Injectable()
 export class ChatGatewayService {

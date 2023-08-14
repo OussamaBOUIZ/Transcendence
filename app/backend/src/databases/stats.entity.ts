@@ -1,5 +1,5 @@
 
-import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
 import { Achievement } from "./achievement/achievement.entity"
 import {User} from "./user.entity";
 

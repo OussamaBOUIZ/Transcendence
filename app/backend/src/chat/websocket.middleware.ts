@@ -1,5 +1,4 @@
 import {Socket} from 'socket.io';
-import {ChatGatewayService} from "./userchat.service";
 import {UserService} from "../user/user.service";
 import {UnauthorizedException} from  "@nestjs/common"
 
