@@ -5,15 +5,22 @@ import Rooms from './Rooms';
 
 export default function InboxRooms () {
 
+    const [isClick, setIsClick] = useState<boolean>(false)
+
+    console.log(isClick)
+
     const [PublicMode, setPublicMode] = useState<boolean>(true)
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true)
     const [PrivateMode, setPrivateMode] = useState<boolean>(true)
     const initState = false;
     return (
         <div>
-            <div className="item absolute top-1/2 left-1/2">
-                <CreateRoom />
-            </div>
+            {
+                isClick &&
+                <div className="popUp absolute flex items-center justify-center">
+                    <CreateRoom setter={setIsClick}/>
+                </div>
+            }
             <section className="inbox">
                 <nav>
                     <button>Messages<span></span></button>
@@ -31,11 +38,11 @@ export default function InboxRooms () {
                     </aside>
                 }
                 <div className="contentRooms">
-                    <TopicRoom roomType="Public Channels" mode={PublicMode} setter={setPublicMode} />
+                    <TopicRoom roomType="Public Channels" mode={PublicMode} setter={setPublicMode} clicked={setIsClick} />
                     {PublicMode && <Rooms />}
-                    <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} />
+                    <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} clicked={setIsClick} />
                     {ProtectedMode && <Rooms />}
-                    <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} />
+                    <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} clicked={setIsClick} />
                     {PrivateMode && <Rooms />}
                 </div>
             </section>

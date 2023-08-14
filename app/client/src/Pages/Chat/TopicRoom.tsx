@@ -4,7 +4,7 @@ import {FaPlus} from "react-icons/fa";
 import {IoChevronDown} from "react-icons/io5";
 import {IoChevronForward} from "react-icons/io5";
 
-export default function TopicRoom({roomType, mode, setter} : {roomType: string, mode: boolean, setter: any}) {
+export default function TopicRoom({roomType, mode, setter, clicked} : {roomType: string, mode: boolean, setter: any, clicked: any}) {
 
     function handleChange() {
         setter(prev => !prev)
@@ -19,7 +19,7 @@ export default function TopicRoom({roomType, mode, setter} : {roomType: string, 
                     {icon}
                     {roomType}
                 </div>
-                <FaPlus className="cursor-pointer"/>
+                <FaPlus className="cursor-pointer" onClick={() => {clicked(prev => !prev)}} />
             </div>
         </>
     )

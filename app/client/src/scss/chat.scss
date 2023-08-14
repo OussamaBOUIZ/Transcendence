@@ -83,11 +83,45 @@ div.chat_container {
         input[type="text"], input[type="password"] {
             background-color: rgba(171, 171, 171, 0.28);
             border-radius: 6px;
-            height: 2em;
             padding: .5em;
         }
         input[type="radio"]:checked {
             background-color: #007bff;
+        }
+        .popUp {
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: rgba(44, 9, 78, 0.85);
+            z-index: 9999;
+            .createRoom {
+                width: 30%;
+                background-color: #38125E;
+                border-radius: 1em;
+                section.search_box {
+                    input {
+                        width: 100%;
+                        padding: .5em;
+                        background: $input-background;
+                        border-radius: 6px;
+                        &::placeholder {
+                            color: $text-grey-color;
+                        }
+                    }
+                    figure {
+                        border-radius: 1rem;
+                        background: rgba(0, 0, 0, 0.20);
+                        margin-top: .5em;
+                        button {
+                            background-color: $primary-pink;
+                            padding: .4em .6em;
+                            margin: 1em;
+                            border-radius: 1rem;
+                        }
+                    }
+                }
+            }
         }
         section.inbox {
             display: flex;

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import passwordVisibility from "../../Assets/Icons/eye-regular.svg"
 import eyeRegular from "../../Assets/Icons/eye-regular.svg"
 import eyeSlashRegular from "../../Assets/Icons/eye-slash-regular.svg"
+import ChatSearchBoxId from "./ChatSearchBoxId";
+import Xmark from "../../Assets/Icons/xmark-solid.svg"
 
 interface Ids {
     id: number,
@@ -14,12 +16,13 @@ interface newRoom {
     channelUsers?: Ids[]
 }
 
-export default function CreateRoom() {
+export default function CreateRoom({setter}: {setter: any}) {
 
     const [newRoom, setNewRoom] = useState<newRoom>({} as newRoom)
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const {name, value} = event.target;
+        console.log(event)
         setNewRoom((prev) => ({
             ...prev,
             [name]: value
@@ -48,16 +51,18 @@ export default function CreateRoom() {
                                     onChange={handleChange}
                                     value={newRoom.channelPassword}>
                                 </input>
-                                <img width="36" className="cursor-pointer" src={inputType === 'password' ? eyeRegular : eyeSlashRegular} alt="icon" onClick={toggleInputType} />
+                                <img width="50" className="cursor-pointer" src={inputType === 'password' ? eyeRegular : eyeSlashRegular} alt="icon" onClick={toggleInputType} />
                             </form>
                         </div>
     const searchCard = <div className="searchCard flex flex-col">
-                            <label>Search</label>
+                            <ChatSearchBoxId handleSubmit={handleChange}/>
                         </div>
 
-
   return (
-    <div className="createRoom flex flex-col w-96 h-52 justify-around p-4 rounded-2xl bg-violet-900">
+    <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x">
+        <div className="flex justify-end">
+            <img className="w-6 cursor-pointer" onClick={() => {setter(prev => !prev)}} src={Xmark} alt="exit" />
+        </div>
         <div className="channelName flex flex-col">
             <label>Channel Name</label>
             <input
@@ -72,7 +77,7 @@ export default function CreateRoom() {
             <label>Accessiblity</label>
             <form className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                    <input type="radio" name="channelType" value="Public" onChange={handleChange}/>
+                    <input type="radio" name="channelType" value="Public" onChange={handleChange} defaultChecked/>
                     <label>Public</label>
                 </div>
                 <div className="flex gap-2 items-center">
