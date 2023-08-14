@@ -11,7 +11,7 @@ import { Channel } from "src/databases/channel.entity";
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
 		credentials: true
-}})
+}}) 
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() 
         server: Server;
@@ -23,14 +23,21 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     
     async handleConnection(client: Socket) {
-        const authToken: string = client.handshake.headers.authorization;
-        const user = await this.userService.getUserFromJwt(authToken);
+        const sessionCookie = client.handshake.headers.cookie;
+        console.log(client.handshake.headers);
+        const user = await this.userService.getUserFromJwt(sessionCookie);
         if(!user)
         {
             client.disconnect();
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
+        if(user.userRoleChannels)
+            user.userRoleChannels.forEach(channel => client.join(channel.channel_name));
+        if(user.adminRoleChannels)
+            user.adminRoleChannels.forEach(channel => client.join(channel.channel_name));
+        if(user.ownerRoleChannels)
+            user.ownerRoleChannels.forEach(channel => client.join(channel.channel_name));
         await this.userService.saveUser(user);
     }
 

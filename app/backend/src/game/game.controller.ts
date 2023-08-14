@@ -1,7 +1,5 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller  } from '@nestjs/common';
 import { gameService } from './game.service';
-import { userWinDto } from './dto/userWinDto';
 
 @Controller('game')
 export class gameController {

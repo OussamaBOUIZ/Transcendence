@@ -1,5 +1,4 @@
-import { IsInt, IsNumber } from "class-validator"
-import { LessThan } from "typeorm"
+import { IsNumber } from "class-validator"
 
 
 // Todo: handle if score is higher than what expected ?? 
