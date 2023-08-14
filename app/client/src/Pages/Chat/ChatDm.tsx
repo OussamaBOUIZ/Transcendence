@@ -2,10 +2,14 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
+import { User, MessageData } from '../../../../global/Interfaces';
 
 export default function ChatDm () {
     const params = useParams()
-
+    const [receiver, setReceiver] = React.useState<User | null>(null);
+    const [receivedMessage, setReceivedMessage] = React.useState<MessageData | null>(null);
+    const [messageToSend, setMessageToSend] = React.useState<MessageData | null> (null);
+    
     return (
         <>
         <div className="chat_main">
