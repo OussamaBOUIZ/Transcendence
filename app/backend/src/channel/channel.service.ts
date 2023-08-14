@@ -32,9 +32,7 @@ export class ChannelService {
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
-            userFound.ownerRoleChannels = [...userFound.ownerRoleChannels, newChannel];
-            await this.userService.saveUser(userFound); 
-            newChannel.channelOwners = [userFound];
+            newChannel.channelOwners = [userFound]; 
             await this.channelRepo.save(newChannel);
         }
         else

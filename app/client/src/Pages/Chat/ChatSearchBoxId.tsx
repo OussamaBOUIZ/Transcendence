@@ -2,11 +2,11 @@ import React from 'react'
 import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
-// import { getUserData } from '../../Hooks/getUserData'
+import addUserIcon from "../../Assets/Icons/addUser.svg"
 import {getUserImage} from '../../Hooks/getUserImage'
 import ProfileImage from "../../Components/profileImage"
 
-export default function ChatSearchBoxId ({handle}) {
+export default function ChatSearchBoxId ({handleId}) {
     const [currentSearch, setCurrentSearch] = React.useState("")
     const [submittedName, setSubmittedName] = React.useState("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
@@ -58,7 +58,12 @@ export default function ChatSearchBoxId ({handle}) {
                                 </div>
                             </div>
                         </figcaption>
-                        <button name="channelUsers" value={searchedUser?.id} onClick={handleSubmit}>Add</button>
+                        <link></link>
+                        <div
+                            className="w-6 cursor-pointer"
+                            onClick={() => handleId(searchedUser?.id)}>
+                            <img src={addUserIcon} alt="addUserButton" />
+                        </div>
                     </figure>
 
     return (
