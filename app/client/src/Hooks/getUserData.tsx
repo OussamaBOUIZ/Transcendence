@@ -1,25 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getUserImage } from "./getUserImage";
+import {User} from "../../../global/Interfaces"
 
-export const getUserData = () => {
+export const getUserData = (): User | null => {
 
-  const [userData, setUserData] = useState(null);
-
-  const getUserImage = async (id: number) => {
-    try {
-      const res = await axios.get(`/api/user/${id}`, {responseType: 'blob'})
-      return URL.createObjectURL(res.data);
-    } catch (err) {
-      console.log("Error: Failed to fetch award image.");
-      console.log(err);
-      return undefined;
-    }
-  };
+  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/user");
+        const response = await axios.get<User>("/api/user");
         const image = await getUserImage(response.data.id)
         setUserData({...response.data, image});
       } catch (error) {
@@ -30,5 +21,5 @@ export const getUserData = () => {
     fetchData();
   }, []);
 
-  return { userData };
+  return userData;
 };

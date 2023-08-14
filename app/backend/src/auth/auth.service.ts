@@ -1,15 +1,12 @@
-
-import { BadRequestException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/databases/user.entity';
+import {Injectable} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {JwtService} from '@nestjs/jwt';
+import {User} from 'src/databases/user.entity';
 import * as argon from 'argon2'
 import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { AchievementService } from 'src/databases/achievement/achievement.service';
-import {authenticator} from 'otplib'
 
 type tokenPayload = {
     id: number,
@@ -32,11 +29,14 @@ export class AuthService {
         const userFound = await this.searchForEmail(user.email);
         if(!userFound)
             return await this.apiregisterUser(user);
+        userFound.firstLog = false;
+        await this.userService.saveUser(userFound);
         const secret = this.configService.get<string>('JWT_SECRET');
         return this.jwtService.sign ({ 
             id: userFound.id,
-            email: userFound.email}, {secret});
-        
+            email: userFound.email},
+             {secret}
+            );
     }
 
     async apiregisterUser(user)
@@ -45,13 +45,13 @@ export class AuthService {
         
         const newUser = new User();
         newUser.email = user.email;
-        newUser.firstname = user.firstname;
-        newUser.lastname = user.lastname;
-        newUser.username = user.provider === '42' ? user.username : user.firstname[0] + user.lastname;
         newUser.status = "Online";
         await this.userService.saveUser(newUser);
         this.achievementService.createAchievements(newUser);
         const secret = this.configService.get<string>('JWT_SECRET');
+        const userToken = this.jwtService.sign({
+            id: newUser.id,
+            email: newUser.email}, {secret});
         return this.jwtService.sign({
             id: newUser.id,
             email: newUser.email}, {secret});
@@ -95,7 +95,7 @@ export class AuthService {
             newUser.username = userdto.firstname[0] + userdto.lastname;
             newUser.password = pass_hash;
             await this.userService.saveUser(newUser);
-            this.achievementService.createAchievements(newUser);
+            await this.achievementService.createAchievements(newUser);
             const secret = this.configService.get<string>('JWT_SECRET');
             return this.jwtService.sign({
                 id: newUser.id,

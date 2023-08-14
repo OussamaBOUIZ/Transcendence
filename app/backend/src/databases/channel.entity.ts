@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import { Muted_users } from "./muted_users.entity"
 import { Message } from "./message.entity"
+import { User } from "./user.entity"
 
 @Entity('Channel')
 export class Channel extends BaseEntity {
@@ -10,27 +11,31 @@ export class Channel extends BaseEntity {
     @Column({unique: true})
     channel_name: string
 
-    @Column()
+    @Column({nullable: true})
     channel_type: string
 
     @Column({nullable: true})
     channel_password: string
 
-    @Column('int', {array: true, nullable: true})
-    channel_owners: number[]
-    
-    @Column('int', {array: true, nullable: true})
-    channel_admins: number[]
+    @ManyToMany(() => User, {nullable: true})
+    @JoinTable()
+    channelUsers: User[]
 
-    @Column('int', {array: true, nullable: true})
-    channel_users: number[]
+    @ManyToMany(() => User, {nullable: true})
+    @JoinTable()
+    channelAdmins: User[]
 
-    @Column('int', {array: true, nullable: true})
-    banned_users: number[]
+    @ManyToMany(() => User, {nullable: true})
+    @JoinTable()
+    channelOwners: User[]
 
-    @OneToMany(() => Message, (messages) => messages.channel)
+    @ManyToMany(() => User, {nullable: true})
+    @JoinTable()
+    BannedUsers: User[]
+
+    @OneToMany(() => Message, (messages) => messages.channel, {nullable: true})
     messages: Message[]
 
-    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id)
+    @OneToMany(() => Muted_users, (muted_users) => muted_users.user_id, {nullable: true})
     muted: Muted_users[]
 }

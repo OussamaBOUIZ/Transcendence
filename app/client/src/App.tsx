@@ -1,22 +1,44 @@
-import Sign from "./Pages/Sign/Sign"
-import Home from "./Pages/Home/Home"
-import Profile from "./Pages/Profile/Profile"
-import Auth from "./Pages/Auth/Auth"
-import "./scss/app.scss"
-import logo from "./Assets/Icons/logo1.png"
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
+import React from 'react'
+import ChatLayout from './Pages/Chat/ChatLayout'
+import Home from './Pages/Home/Home'
+import { BrowserRouter, Route,Routes } from 'react-router-dom'
+import Sign from './Pages/Sign/Sign'
+import Game from './Pages/Game/Game'
+import Settings from './Pages/Settings/Settings'
+import MainLayout from './Layout/MainLayout'
+import AuthRequired from './Layout/AuthRequired'
 
-export default function App() {
-    return (
-        <Router>
-            <img className="logo" src={logo} alt="logo" />
-            {/* <p className="logo">PongLogo</p> */}
-            <Routes>
-                <Route path="/" element={<Sign />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/profile" element={<Profile />} />
-            </Routes>
-        </Router>
-    )
+
+import './scss/main.scss'
+import './scss/utils.scss'
+import './scss/app.css'
+import Prompt from './Pages/Prompt/Prompt'
+import Profile from './Pages/Profile/Profile'
+import Friends from './Pages/Friends/Friends'
+import ChatDmInit from './Pages/Chat/ChatDmInit'
+import ChatRooomsInit from './Pages/Chat/ChatRoomsInit'
+
+export default function App () {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/sign" element={<Sign />} />
+        <Route element={<AuthRequired />}>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />}/>
+            <Route path="/chat/*" element={<ChatLayout />}>
+                <Route index  element={<ChatDmInit /> }/>
+                <Route path="rooms"  element={<ChatRooomsInit /> }/>
+            </Route>
+            <Route path="/game" element={<Game />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/info" element={<Prompt />} />
+            <Route path="/profile" element={<Profile />} />
+
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }

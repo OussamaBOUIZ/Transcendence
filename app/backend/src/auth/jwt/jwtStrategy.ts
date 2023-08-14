@@ -1,13 +1,9 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
 import { PassportStrategy } from "@nestjs/passport";
-import { InjectRepository } from "@nestjs/typeorm";
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { BlockedTokenlistService } from "src/databases/BlockedTokenList/BlockedTokenList.service";
-import { User } from "src/databases/user.entity";
 import { UserService } from "src/user/user.service";
-import { Repository } from "typeorm";
 
 export type JwtPayload = {
     sub: string;
@@ -42,8 +38,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt')
 
     async validate(payload: JwtPayload) {
         const user = await this.userService.findUserByEmail(payload.email);
+        console.log(`user ${user.email}`); 
         if (!user) throw new UnauthorizedException('Please log in to continue');
-        if((await this.BlockedTokenService.blackListhasToken(this.request.cookies['access_token'])) === true)
+        if((await this.BlockedTokenService.blackListHasToken(this.request.cookies['access_token'])) === true)
             throw new UnauthorizedException('token is not valid');
         return {
             id: payload.sub,

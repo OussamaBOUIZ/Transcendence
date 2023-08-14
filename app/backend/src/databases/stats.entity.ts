@@ -1,5 +1,5 @@
 
-import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm"
 import { Achievement } from "./achievement/achievement.entity"
 import {User} from "./user.entity";
 
@@ -14,15 +14,21 @@ export class Stats extends BaseEntity {
     @Column({default: 0})
     wins: number
 
-    @OneToOne(() => User, (user) => user.stat)
-    user: User
-    
+    @Column({default: 0})
+    consecutive_wins: number
+
     @Column({default: 0})
     losses: number
 
-    @Column({nullable: true})
+    @OneToOne(() => User, (user) => user.stat)
+    user: User
+
+    @Column({default: 0})
     xp: number
 
     @Column({default: 0})
     ladder_level: number
+
+    @Column({default: 0, type: 'decimal', precision: 10, scale: 2})
+    levelPercentage: number
 }
