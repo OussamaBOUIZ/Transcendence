@@ -23,4 +23,8 @@ export class chatController {
         return await this.chatService.loadMessage(user, id)
     }
 
+    @Get('userDetails/:id')
+    async getUserDetails( @Param('id', ParseIntPipe) id: number) {
+        return await this.userRepository.getUserDetails(id)
+    }
 }

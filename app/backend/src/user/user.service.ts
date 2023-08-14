@@ -200,7 +200,28 @@ export class UserService {
         })
     }
 
-
+    async getUserDetails(id: number) {
+        return await this.userRepo.findOne({
+            relations: {
+                stat: {
+                    achievements: true
+                },
+            },
+            where: {
+                id: id,
+                stat: {
+                    achievements: {
+                        is_achieved: true
+                    }
+                }
+            },
+            select: {
+                id: true,
+                username: true,
+                
+            }
+        })
+    }
 
     async getAchievement(id: number) {
         const user = await this.userRepo.findOne({
