@@ -40,48 +40,57 @@ export default function ChatDm () {
                 message: messageToSendValue,
                 creationTime : new Date()
             })
-            // console.log(messageToSendData)
+            console.log(messageToSendData)
 
         }
 
     }
-    console.log(messageToSendData)
-
     
     /**EFFECTS     */
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     const newSocket = io('ws://localhost:4000') 
-    //     setSocket(newSocket)
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+        const value = document.cookie.split('=')[1]
+        console.log(value);
+        
+        const newSocket = io('ws://localhost:4000', {
+            auth: {
+              token: value
+            }}) 
+        
+        setSocket(newSocket)
+        console.log(socket);
+        
 
-    //     return  () => {
-    //         if (socket)
-    //             socket.disconnect();
-    //     }
-    // }
-    // , [])
+        return  () => {
+            if (socket)
+                socket.disconnect();
+        }
+    }
+    , [])
 
     
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     socket?.emit('SendMessage', messageToSendData)    
-    // }
-    // , [messageToSendData])
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+        socket?.emit('SendMessage', messageToSendData)    
+    }
+    , [messageToSendData])
     
 
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     socket?.on('message', () => console.log('A message were sent'))
-    // }, [])
+    useEffect(() => {
+        // if (initialRender.current) {
+        //     initialRender.current = false
+        //     return
+        // }
+        console.log('kaywssl hna');
+        
+        socket?.on('message', (mess: string) => console.log('this is a mess', mess))
+    }, [])
 
     return (
         <>

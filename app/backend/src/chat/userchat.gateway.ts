@@ -34,8 +34,10 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway(4000)
-// @UseGuards(WsGuard)
+ @WebSocketGateway(4000, {cors: {
+	origin: "http://localhost:5173",
+		credentials: true
+}})
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
 	private readonly logger: Logger;
@@ -54,6 +56,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		console.log('onSendMessage')
+		console.log(messageDto)
 		let socketId: string
 		try {
 			socketId = await this.chatGatewayService.processMessage(socket, messageDto)
@@ -63,6 +66,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
+		console.log(socketId, messageDto.message);
+		
 		this.server.to(socketId).emit("message", messageDto.message)
 	}
 
@@ -79,7 +84,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	// }
 
 	async afterInit(client: Socket) {
-		// await client.use(SocketAuthMiddleware(this.userService) as any)
+		await client.use(SocketAuthMiddleware(this.userService) as any)
 		console.log('after init called')
 	}
 
