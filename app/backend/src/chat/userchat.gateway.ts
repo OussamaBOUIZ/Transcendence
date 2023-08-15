@@ -17,7 +17,7 @@ import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./websocket.middleware";
 import {MessageDto} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
-import {UserService} from "../user/user.service";
+import {UserService} from "../user/user.service";   
 
 /**
  * RxJS :

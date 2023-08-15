@@ -1,24 +1,68 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
+import io, {Socket} from 'socket.io-client'
+
 import { User, MessageData } from '../../../../global/Interfaces';
 
 export default function ChatDm () {
+    const initialRender = useRef(true)
     const params = useParams()
+    const [socket, setSocket] = React.useState<Socket | null>(null)
     const [receiver, setReceiver] = React.useState<User | null>(null);
     const [receivedMessage, setReceivedMessage] = React.useState<MessageData | null>(null);
-    const [messageToSend, setMessageToSend] = React.useState<MessageData | null> (null);
-    function handleSubmit (e: React.SyntheticEvent<EventTarget>): void {
+    
+    const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
+    const [messageToSendData, setMessageToSendData] = React.useState<MessageData | null> ({
+        userId: 0,
+        message: "",
+        creationTime : new Date()
+    });
+
+    
+    function handleChange (e) :void {
+        setMessageToSendValue(e.target.value)
+    }
+
+    function handleSubmit (e): void {
         e.preventDefault()
-        console.log("handleSubmit");
+        if (messageToSendValue !== "") {
+            setMessageToSendData ( {
+                userId: Number(params.id),
+                message: messageToSendValue,
+                creationTime : new Date()
+            })
+            console.log(messageToSendData)
+
+        }
     }
 
-    function handleChange (e: React.SyntheticEvent<EventTarget>) :void {
-        console.log(e.target.value);
-        
-    }
+    /**EFFECTS     */
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+        setSocket(io('https://localhost:1313'))
 
+        return  () => {
+            if (socket)
+                socket.disconnect();
+        }
+    }
+    , [])
+
+    
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+        socket?.emit('SendMessage', messageToSendData)    
+    }
+    , [messageToSendData])
+    
     return (
         <>
         <div className="chat_main">
@@ -36,6 +80,7 @@ export default function ChatDm () {
                 <textarea 
                 placeholder="Type something"
                 onChange={handleChange}
+                value={messageToSendValue}
                 />
                 <button type="submit">Send</button>
             </form>
