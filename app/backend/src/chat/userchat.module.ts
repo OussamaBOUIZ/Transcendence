@@ -11,7 +11,6 @@ import {UserService} from "../user/user.service";
 import { chatController } from './userchat.controller';
 import {InboxService} from "../inbox/inbox.service";
 import {Inbox_user} from "../databases/inbox_user.entity";
-import {SocketAuthMiddleware} from "./websocket.middleware";
 import { Achievement } from "src/databases/achievement/achievement.entity";
 import {Stats} from "../databases/stats.entity";
 import {Match_history} from "../databases/match_history.entity";

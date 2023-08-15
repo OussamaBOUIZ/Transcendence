@@ -2,31 +2,9 @@ import React from 'react'
 import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
-import { getUserData } from '../../Hooks/getUserData'
+// import { getUserData } from '../../Hooks/getUserData'
 import {getUserImage} from '../../Hooks/getUserImage'
-import ProfileImage from '../../Components/profileImage'
-
-function UserCard ({firstname, lastname, username, avatar}) {
-    // const bgImg = {
-    //     backgroundImage: `url(${avatar})`
-    // }
-    return (
-        <figure className='flex-sp'>
-                <figcaption>
-                    <div>
-                        {/* <div className="avatar" style={bgImg}></div> */}
-                        <ProfileImage image={avatar} size="small"/>
-                        <h5>{firstname} {lastname}</h5>
-                        <p>{username}</p>
-                    </div>
-                </figcaption>
-                <div>
-                    <button>DM</button>
-                    <button>ADD</button>
-                </div>
-            </figure>
-    )
-}
+import UserCard from '../../Components/UserCard'
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState("")
@@ -52,25 +30,11 @@ export default function ChatSearchBox () {
             initialRender.current = false
             return
         }
-        // const getUserImage = async (id: number) => {
-        //     try {
-        //       const res = await axios.get(`/api/user/avatar/${id}`, {responseType: 'blob'})
-        //       return URL.createObjectURL(res.data);
-        //     } catch (err) {
-        //       console.log("Error: Failed to fetch award image.");
-        //       console.log(err);
-        //       return undefined;
-        //     }
-        //   };
-
         async function getUserCard () {
             try {
-                const response = await axios(`api/user/search/user/?username=${submittedName}`)
+                const response = await axios(`../api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data[0].id)
-                // console.log(imgRes)
-                // console.log(response.data[0])
                 setSearchedUser({...response.data[0], image: imgRes})
-                // setSearchedUser(response.data[0])
                 console.log(searchedUser)
             } catch (err: any) {
                 console.log(err.message)

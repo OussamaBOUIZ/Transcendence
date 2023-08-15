@@ -4,7 +4,6 @@ import {ChatGatewayService} from 'src/chat/userchat.service';
 import {InboxController} from './inbox.controller';
 import {InboxService} from './inbox.service';
 import {User} from 'src/databases/user.entity'
-import {ChatGateway} from 'src/chat/userchat.gateway';
 import {JwtService} from '@nestjs/jwt';
 import {User_chat} from 'src/databases/userchat.entity';
 import {Message} from 'src/databases/message.entity';

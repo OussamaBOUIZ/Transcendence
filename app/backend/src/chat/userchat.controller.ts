@@ -1,4 +1,4 @@
-import {Controller, Get, Header, Headers, Param, ParseIntPipe, Req} from '@nestjs/common';
+import {Controller, Get, Headers, Param, ParseIntPipe} from '@nestjs/common';
 import {ChatGatewayService} from "./userchat.service";
 import {UserService} from "../user/user.service";
 

@@ -75,7 +75,7 @@ div.chat_container {
             nav {
                 display: flex;
                 padding: 0 8px;
-                button {
+                a {
                     border-bottom: 1px solid $border-color;
                     width: 50%;
                     padding: 8px;
@@ -83,7 +83,7 @@ div.chat_container {
                     font-size: 16px;
                     color: $text-light-color;
                 }
-                button.active {
+                a.active {
                     border-bottom: 3px solid $border-color;
                     color: $text-pink-color;
                 }
@@ -93,6 +93,14 @@ div.chat_container {
                 p {
                     text-align: center;
                     color: $text-grey-color;
+                }
+            }
+            .contentRooms {
+                .topic {
+                    background-color: #2C094E;
+                }
+                .active {
+                    background-color: #531F8A;
                 }
             }
             figure.message_oview {

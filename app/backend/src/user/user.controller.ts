@@ -2,7 +2,6 @@
 import {
 	Controller,
 	Header,
-	Headers,
 	Get,
 	Delete,
 	Param,
@@ -21,7 +20,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
-import { raw, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { JwtGuard } from "../auth/jwt/jwtGuard";
@@ -32,12 +31,10 @@ import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import { diskStorage } from 'multer'
-import { Observable, of } from 'rxjs';
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
-import { ViewAuthFilter } from 'src/auth/Filter/filter';
 import { userDataDto } from './dto/userDataDto';
-
+import { ViewAuthFilter } from 'src/Filter/filter';
 
 
 const DirUpload = './uploads/usersImage/'
@@ -401,12 +398,12 @@ export class UserController {
 			throw new HttpException({reason: 'You cant Search for yourself'}, HttpStatus.BAD_REQUEST)
 		return user
 	}
-	@Get('testException')
-	@UseFilters(ViewAuthFilter)
-	test()
-	{
-		throw new UnauthorizedException('Unauthorized', 'this not true');
-	}
+	
+
+    @Get('user/details/:id')
+    async getUserDetails(@Param('id') id: number) {
+        return this.userService.getUserDetails(id)
+    }
 }
 
 // localhost:3000/api/user/:ael÷

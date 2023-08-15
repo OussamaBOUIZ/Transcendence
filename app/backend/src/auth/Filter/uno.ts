@@ -7,7 +7,6 @@ import {
     BadRequestException,
    } from '@nestjs/common';
    import { Response } from 'express';
-   import { UnauthorizedException } from '@nestjs/common';
       
    @Catch(BadRequestException)
    export class FormCheck implements ExceptionFilter {
