@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios"
-import { getUserData } from "../../Hooks/getUserData";
-import {channelData} from "../../../../global/Interfaces"
+import {channelData, User} from "../../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
 
-export default function ChannelInfo() {
+export default function ChannelInfo({user}: {user: User | null}) {
 
     const [channel, setData] = useState<channelData>()
-    const user = getUserData();
-
 
     useEffect(() => {
         const getChannelData = async () => {
@@ -23,20 +20,21 @@ export default function ChannelInfo() {
         getChannelData()
     }, [])
 
-
     const [myGrade, setMyGrade] = useState<string>("")
     useEffect(() => {
         const getInfo = async () => {
             try {
-                const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${channel?.id}`);
-                setMyGrade(res.data)
+                if (user && channel) {
+                    const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${channel?.id}`);
+                    setMyGrade(res.data)
+                }
             }
             catch (err) {
                 console.log(err)
             }
         }
         getInfo()
-    })
+    }, [user, channel])
 
 
     return (

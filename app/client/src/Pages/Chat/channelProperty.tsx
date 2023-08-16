@@ -23,22 +23,22 @@ export default function ChannelProperty({ channel, propertyName, isUnderMyGrade 
 
   useEffect(() => {
     const getInfo = async () => {
-      let data: channelProperty[] | undefined = channel?.channelUsers;
-      if (propertyName === 'owner')
-        data = channel?.channelOwners
-      if(propertyName === 'admin') {
-        data = channel?.channelAdmins
+      let data: channelProperty[] | undefined = []
+      if (channel) {
+        if (propertyName === "owner") data = channel.channelOwners;
+        if (propertyName === "admin") data = channel.channelAdmins;
+        if (propertyName === "user") data = channel.channelUsers;
       }
       try {
         const ComponentsList = await Promise.all(
           data.map(async (element: channelProperty) => {
-            const img = await getUserImage(element.id);
+            element.image = await getUserImage(element.id);
             return (
               <UserInfoCard
                 key={element.id}
                 id={element.id}
                 channelId={channel?.id}
-                image={img}
+                image={element.image}
                 firstname={element.firstname}
                 lastname={element.lastname}
                 wins={element.stat.wins}
@@ -55,7 +55,7 @@ export default function ChannelProperty({ channel, propertyName, isUnderMyGrade 
       }
     };
     void getInfo();
-  });
+  }, [channel, propertyName, isUnderMyGrade]);
 
   return <>{Components}</>;
 }

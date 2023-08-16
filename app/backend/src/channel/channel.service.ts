@@ -173,13 +173,13 @@ export class ChannelService {
         });
         if(channel.channelUsers && channel.channelUsers.some(user => user.id === userId))
         {
-            channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser !== user);
+            channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser.id !== user.id);
             channel.channelAdmins = channel.channelAdmins !== null && channel.channelAdmins !== undefined ?
                                     [...channel.channelAdmins, user] : [user]; 
         }
-        if(channel.channelAdmins && channel.channelAdmins.some(user => user.id === userId))
+        else if(channel.channelAdmins && channel.channelAdmins.some(user => user.id === userId))
         {
-            channel.channelAdmins = channel.channelAdmins.filter((currentUser) => currentUser !== user);
+            channel.channelAdmins = channel.channelAdmins.filter((currentUser) => currentUser.id !== user.id);
             channel.channelOwners = channel.channelOwners !== null && channel.channelOwners !== undefined ?
                                     [...channel.channelOwners, user] : [user]; 
         }

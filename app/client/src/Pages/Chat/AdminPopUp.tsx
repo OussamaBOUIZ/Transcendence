@@ -9,7 +9,6 @@ import axios from "axios"
 
 
 export default function AdminPopUp({ channelId, id }: {channelId: number, id: number}) {
-
     function promoteMember() {
         const action = async () => {
             try {

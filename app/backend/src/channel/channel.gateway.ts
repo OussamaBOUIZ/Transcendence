@@ -82,6 +82,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         this.server.emit('userKicked', `user was kicked from channel ${user.channelName}`);
     }
 
+        
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
