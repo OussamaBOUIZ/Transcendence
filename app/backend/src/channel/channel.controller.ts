@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { ChannelService } from './channel.service';
 import { Response } from 'express';
@@ -32,6 +32,13 @@ export class ChannelController {
         await this.channelservice.promoteUserToAdmin(promoteUser);
         return res.status(HttpStatus.CREATED).send('user was promoted successfully');
     }
+
+    @Get('userGrade/:id')
+    async getUserGrade(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number)
+    {
+        return await this.channelservice.getUserGrade(userId, channelId);
+    }
+
     @Get('channelData/:id')
     async getChannelUsers(@Param('id', ParseIntPipe) id: number)
     {

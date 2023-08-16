@@ -11,7 +11,7 @@ interface newRoom {
     channelName: string,
     channelType: "public" | "private" | "protected",
     channelPassword: string,
-    channelUsers: number[];
+    joinedUsers: number[],
     channelOwner: number,
 }
 
@@ -20,7 +20,7 @@ export default function CreateRoom({setter}: {setter: any}) {
     const user = getUserData();
     console.log(user)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ channelUsers: [], channelName: "", channelPassword: "", channelType: "public" } as unknown as newRoom)
+    const [newRoom, setNewRoom] = useState<newRoom>({ channelName: "", channelPassword: "", channelType: "public", joinedUsers: [] } as unknown as newRoom)
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -34,7 +34,7 @@ export default function CreateRoom({setter}: {setter: any}) {
     function handleId(id: number) {
         setNewRoom((prev) => ({
             ...prev,
-            channelUsers: [...prev.channelUsers, id],
+            joinedUsers: [...prev.joinedUsers, id],
           }));
     }
 

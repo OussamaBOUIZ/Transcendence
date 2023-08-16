@@ -1,5 +1,6 @@
 import React from 'react'
 import ContactDetail from './ContactDetail';
+import ChannelInfo from "./ChannelInfo"
 
 export default function ChatOverview () {
 
@@ -10,10 +11,11 @@ export default function ChatOverview () {
     like-minded individuals\
     ";
 
-    return (<div className="chat_overview"> 
+    return (<div className="chat_overview overflow-hidden"> 
         {/* <p className="guide_text">
             {guidingText}
         </p> */}
-    <ContactDetail />
+        <ChannelInfo />
+    {/* <ContactDetail /> */}
     </div>);
 }

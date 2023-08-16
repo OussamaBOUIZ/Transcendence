@@ -1,5 +1,4 @@
 import React, {useState} from "react"
-import nanoid from "nanoid"
 import {FaPlus} from "react-icons/fa";
 import {IoChevronDown} from "react-icons/io5";
 import {IoChevronForward} from "react-icons/io5";

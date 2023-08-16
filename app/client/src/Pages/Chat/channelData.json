@@ -1,0 +1,114 @@
+{
+  "data": {
+    "channelOwners": [
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 1, 
+        "firstname": "Oussama",
+        "lastname": "Ouazize"
+      }
+    ],
+    "channelAdmins": [
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 5,
+        "firstname": "Oussama", 
+        "lastname": "Bouizgarne"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 2,
+        "firstname": "Issam",
+        "lastname": "Jmari"  
+      }
+    ],
+    "channelMembers": [
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 3,
+        "firstname": "Abdelhak",
+        "lastname": "El Moussaoui"
+      },
+      {
+        "image": "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg",
+        "wins": 12,
+        "losses": 4,
+        "id": 4, 
+        "firstname": "Yassine",
+        "lastname": "Ed-dyb"
+      }
+    ]
+  }
+}

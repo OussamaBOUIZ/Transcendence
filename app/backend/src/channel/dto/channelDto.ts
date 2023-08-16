@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
 export class channelDto {
     
@@ -12,6 +12,10 @@ export class channelDto {
 
     @IsString()
     public channelPassword: string
+
+    @IsArray()
+    @IsNumber({}, { each: true })
+    public joinedUsers: number[];
 
     @IsNumber()
     @IsNotEmpty()

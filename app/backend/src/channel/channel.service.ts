@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Channel } from 'src/databases/channel.entity';
@@ -21,9 +21,30 @@ export class ChannelService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
+    async addUsersToChannel(channel: Channel, channelData: channelDto)
+    {
+        if(channelData.joinedUsers)
+        {
+            channelData.joinedUsers.forEach(async id => {
+                const addedUser = await this.userService.findUserById(id);
+                if (channel && (channel.channelUsers !== null && channel.channelUsers !== undefined)) {
+                    channel.channelUsers = [...channel.channelUsers, addedUser]
+                } else {
+                    channel.channelUsers = [addedUser]
+                }
+            });
+            // console.log('END IS ', channel.channelUsers);
+        }
+    }
     async channelUpdate(channelData: channelDto)
     {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: channelData.channelName});
+        const channelFound = await this.channelRepo.findOne({
+                where: {channel_name: channelData.channelName},
+                relations: {
+                    channelUsers: true,
+                    channelOwners: true,
+                }
+        });
         if(!channelFound)
         {
             const newChannel = new Channel();
@@ -31,8 +52,23 @@ export class ChannelService {
             newChannel.channel_type = channelData.channelType;
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
+
             const userFound = await this.userService.findUserById(channelData.channelOwner);
-            newChannel.channelOwners = [userFound]; 
+            newChannel.channelOwners = [userFound];
+            if(newChannel.channel_type === 'private')
+            {
+                if(channelData.joinedUsers)
+                {
+                    channelData.joinedUsers.forEach(async id => {
+                        const addedUser = await this.userService.findUserById(id);
+                        if (newChannel && (newChannel.channelUsers !== null && newChannel.channelUsers !== undefined)) {
+                            newChannel.channelUsers = [...newChannel.channelUsers, addedUser]
+                        } else {
+                            newChannel.channelUsers = [addedUser]
+                        }
+                    });
+                }
+            }
             await this.channelRepo.save(newChannel);
         }
         else
@@ -43,6 +79,8 @@ export class ChannelService {
                 channelFound.channel_type = channelData.channelType;
             if(channelFound.channel_type === 'protected' && channelData.channelPassword !== channelFound.channel_password)
                 channelFound.channel_password = channelData.channelPassword;
+            if(channelFound.channel_type === 'private')
+                this.addUsersToChannel(channelFound, channelData);
             await this.channelRepo.save(channelFound);
         }
     }
@@ -168,6 +206,7 @@ export class ChannelService {
     async getChannelData(id: number)
     {
         const channel = await this.channelRepo.findOne({
+            where: {id: id},
             relations: {
                 channelAdmins: {
                     stat: true,
@@ -179,21 +218,30 @@ export class ChannelService {
                     stat: true,
                 },
             },
-            where: {id: id},
             select: {
+                id: true,
                 channelAdmins: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
                     stat: {
                         wins: true,
                         losses: true,
                     }
                 },
                 channelOwners: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
                     stat: {
                         wins: true,
                         losses: true,
                     }
                 },
                 channelUsers: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -201,7 +249,28 @@ export class ChannelService {
                 }
             }
         });
+        console.log('BEGG')
+        console.log(channel.channelOwners);
+        console.log('END')
         return channel;
+    }
+    async getUserGrade(userId: number, channelId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+            relations: {
+                channelAdmins: true,
+                channelUsers: true,
+                channelOwners: true,
+            },
+        });
+        console.log(channel);
+        if(channel.channelOwners.some(user => user.id === userId))
+            return 'owner';
+        else if(channel.channelAdmins.some(user => user.id === userId))
+            return 'admin';
+        else if(channel.channelUsers.some(user => user.id === userId))
+            return 'user';
     }
 }
  

@@ -52,6 +52,7 @@ export default function ChatLayout () {
                 <InboxRooms />
                 {/* <InboxLayout /> */}
             </div>
+            <ChatOverview />
             <Outlet />
         </div>
     ));

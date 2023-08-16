@@ -325,6 +325,13 @@ div.chat_container {
     div.chat_overview{
         background: $overview-gradient;
         grid-area: o;
+        height: 100%;
+        .info {
+            height: 55%;
+            &::-webkit-scrollbar {
+                width: .1em;
+            }
+        }
         &.chat_overview_init {
             @include center-styles; 
             p {
