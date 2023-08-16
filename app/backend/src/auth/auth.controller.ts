@@ -74,6 +74,6 @@ export class AuthController {
     @UseFilters(tokenValidity)
     getTokenValidity(@Req() req: Request, @Res() res: Response)
     {
-        return true;
+        return res.send(true)
     }
 }

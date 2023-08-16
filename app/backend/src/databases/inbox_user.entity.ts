@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "./user.entity";
 
 @Entity('Inbox_user')
@@ -6,8 +6,9 @@ export class Inbox_user extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @Column()
-    sender_id: number
+    @OneToOne(type => User)
+    @JoinColumn()
+    author: User
 
     @Column()
     lastMessage: string

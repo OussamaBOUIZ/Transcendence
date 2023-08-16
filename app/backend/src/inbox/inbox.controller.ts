@@ -5,6 +5,7 @@ import {
     Headers,
     Param,
     ParseIntPipe,
+    Req,
     UseGuards,
     UseInterceptors
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {Repository} from 'typeorm';
 import {classToPlain, serialize} from "class-transformer";
 import {UserService} from "../user/user.service";
 import {InboxService} from "./inbox.service";
+import { Request } from 'express';
 
 
 @Controller('inbox')
@@ -29,21 +31,18 @@ export class InboxController {
     ) {
     }
 
-    @Get('/:id')
+    @Get('/all')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(ClassSerializerInterceptor)
     async getUserInbox (
-        @Headers('authorization') req: string,
-        @Param('id', ParseIntPipe) id: number,
+        @Req() req: Request
     ) {
-        const user = await this.userService.getUserFromJwt(req)
+        console.log(req.user)
+        const user = await this.userService.findUserByEmail(req.user['email'])
         if (user === null)
             return 'Not authorized';
         // const user = await this.chatService.getUserByEmail(userFromToken.email)
-        const author = await this.chatService.getUserById(id)
-        if (author === null)
-            return 'user does not exist'
         console.log(user)
-        return await this.inboxService.getInboxBySenderId(author.id, user)
+        return await this.inboxService.getAllInboxOfUser(user.id)
     }
 }

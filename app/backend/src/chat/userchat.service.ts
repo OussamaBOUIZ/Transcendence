@@ -82,7 +82,7 @@ export class ChatGatewayService {
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {
-        console.log(messageDto.userId);
+        console.log( socket.data.user.email);
         
         const receiver = await this.getUserById(messageDto.userId)
         console.log({receiver})
@@ -114,7 +114,7 @@ export class ChatGatewayService {
             }
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
-        // await this.inboxService.saveInbox(receiver, author.id, messageDto)
+        await this.inboxService.saveInbox(receiver, author, messageDto)
         return receiver.socketId
     }
 
