@@ -7,7 +7,7 @@ import {
     ManyToMany,
     ManyToOne,
     OneToMany,
-    OneToOne,
+    OneToOne, 
     PrimaryGeneratedColumn
 } from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
