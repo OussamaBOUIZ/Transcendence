@@ -11,7 +11,7 @@ import { channelDto } from "./dto/channelDto";
 
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
-		credentials: true
+    credentials: true
 }}) 
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() 
