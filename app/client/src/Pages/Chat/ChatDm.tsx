@@ -11,7 +11,7 @@ export default function ChatDm () {
     const params = useParams()
     const [socket, setSocket] = React.useState<Socket | null>(null)
     const [receiver, setReceiver] = React.useState<User | null>(null);
-    const [receivedMessage, setReceivedMessage] = React.useState<MessageData | null>(null);
+    const [receivedMessage, setReceivedMessage] = React.useState<string>("");
     
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
@@ -29,19 +29,15 @@ export default function ChatDm () {
 
       
     function handleSubmit (e): void {
-        console.log('hello');
-        
         e.preventDefault()
         if (messageToSendValue !== "") {
-            console.log('message 1', messageToSendValue);
-            
             setMessageToSendData({
                 userId: Number(params.id),
                 message: messageToSendValue,
                 creationTime : new Date()
             })
-            console.log(messageToSendData)
-
+            setMessageToSendValue("")
+            // console.log(messageToSendData)
         }
 
     }
@@ -53,7 +49,7 @@ export default function ChatDm () {
             return
         }
         const value = document.cookie.split('=')[1]
-        console.log(value);
+        // console.log(value);
         
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -61,9 +57,8 @@ export default function ChatDm () {
             }}) 
         
         setSocket(newSocket)
-        console.log(socket);
         
-
+        //cleanup function
         return  () => {
             if (socket)
                 socket.disconnect();
@@ -77,19 +72,17 @@ export default function ChatDm () {
             initialRender.current = false
             return
         }
-        socket?.emit('SendMessage', messageToSendData)    
+        socket?.emit('SendMessage', messageToSendData)
     }
     , [messageToSendData])
     
 
     useEffect(() => {
-        // if (initialRender.current) {
-        //     initialRender.current = false
-        //     return
-        // }
+        socket?.on('message', (mess: string) => setReceivedMessage(mess))
+        if (receivedMessage !== "")
+            console.log('Received: ', receivedMessage)
         
-        socket?.on('message', (mess: string) => console.log('Received: ', mess))
-    }, [])
+    }, [socket, receivedMessage])
 
     return (
         <>  
