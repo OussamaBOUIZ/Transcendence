@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
+import { Socket } from 'dgram';
 
 
 @Injectable()
@@ -21,29 +22,13 @@ export class ChannelService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
-    async addUsersToChannel(channel: Channel, channelData: channelDto)
-    {
-        if(channelData.joinedUsers)
-        {
-            channelData.joinedUsers.forEach(async id => {
-                const addedUser = await this.userService.findUserById(id);
-                if (channel && (channel.channelUsers !== null && channel.channelUsers !== undefined)) {
-                    channel.channelUsers = [...channel.channelUsers, addedUser]
-                } else {
-                    channel.channelUsers = [addedUser]
-                }
-            });
-            // console.log('END IS ', channel.channelUsers);
-        }
-    }
     async channelUpdate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOne({
-                where: {channel_name: channelData.channelName},
-                relations: {
-                    channelUsers: true,
-                    channelOwners: true,
-                }
+            where: {channel_name: channelData.channelName},
+            relations: {
+                channelOwners: true,
+            }
         });
         if(!channelFound)
         {
@@ -52,35 +37,17 @@ export class ChannelService {
             newChannel.channel_type = channelData.channelType;
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
-
             const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channelOwners = [userFound];
-            if(newChannel.channel_type === 'private')
-            {
-                if(channelData.joinedUsers)
-                {
-                    channelData.joinedUsers.forEach(async id => {
-                        const addedUser = await this.userService.findUserById(id);
-                        if (newChannel && (newChannel.channelUsers !== null && newChannel.channelUsers !== undefined)) {
-                            newChannel.channelUsers = [...newChannel.channelUsers, addedUser]
-                        } else {
-                            newChannel.channelUsers = [addedUser]
-                        }
-                    });
-                }
-            }
             await this.channelRepo.save(newChannel);
         }
-        else
-        {
+        else {
             if(channelData.channelName !== channelFound.channel_name)
                 channelFound.channel_name = channelData.channelName;
             if(channelData.channelType !== channelFound.channel_type)
                 channelFound.channel_type = channelData.channelType;
-            if(channelFound.channel_type === 'protected' && channelData.channelPassword !== channelFound.channel_password)
-                channelFound.channel_password = channelData.channelPassword;
-            if(channelFound.channel_type === 'private')
-                this.addUsersToChannel(channelFound, channelData);
+            if(channelFound.channel_type === 'protected')
+                channelFound.channel_password = await argon.hash(channelData.channelPassword);
             await this.channelRepo.save(channelFound);
         }
     }
@@ -160,7 +127,7 @@ export class ChannelService {
         channelFound.BannedUsers = [...channelFound.BannedUsers, user];
         await this.channelRepo.save(channelFound);
     }
-    async promoteUserToAdmin(userId: number, channelId: number)
+    async promoteMember(userId: number, channelId: number)
     {
         const user = await this.userService.findUserById(userId);
         const channel = await this.channelRepo.findOne({
