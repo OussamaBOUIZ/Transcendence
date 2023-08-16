@@ -85,7 +85,7 @@ export class ChatGatewayService {
         console.log(messageDto.userId);
         
         const receiver = await this.getUserById(messageDto.userId)
-        console.log(receiver)
+        console.log({receiver})
         // if (receiver === null)
         //     console.log('TODO : handle if the receiver not exist')
         // this.logger.log({receiver})
@@ -94,6 +94,7 @@ export class ChatGatewayService {
 
         // this.logger.log(socket.data.user.email)
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
+        console.log({author})
         if (!author || !receiver) {
             throw {
                 msg: 'Invalid sender or receiver',

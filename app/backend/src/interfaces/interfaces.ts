@@ -18,7 +18,7 @@ export class ReceiverDto {
 // 	message: string;
 // }
 
-export class MessageDto {
+export class  MessageDto {
 	@IsNumber()
 	userId: number
 	@IsString()

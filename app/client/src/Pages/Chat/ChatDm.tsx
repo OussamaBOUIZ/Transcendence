@@ -68,12 +68,12 @@ export default function ChatDm () {
             if (socket)
                 socket.disconnect();
         }
-    }
-    , [])
+    } 
+    , []) 
 
     
     useEffect(() => {
-        if (initialRender.current) {
+        if (initialRender.current) {    
             initialRender.current = false
             return
         }
@@ -87,13 +87,12 @@ export default function ChatDm () {
         //     initialRender.current = false
         //     return
         // }
-        console.log('kaywssl hna');
         
-        socket?.on('message', (mess: string) => console.log('this is a mess', mess))
+        socket?.on('message', (mess: string) => console.log('Received: ', mess))
     }, [])
 
     return (
-        <>
+        <>  
         <div className="chat_main">
              <ChatHeader 
              username={`user id: ${params.id}`}

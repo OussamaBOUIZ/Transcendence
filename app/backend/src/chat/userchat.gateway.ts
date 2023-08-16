@@ -70,7 +70,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		
 		this.server.to(socketId).emit("message", messageDto.message)
 	}
-
+ 
 	// @SubscribeMessage('loadMessages')
 	// async allMessages(socket: Socket, data: MessageDto) {
 	// 	const receiver = await this.chatGatewayService.getUserById(data.user.userId)
