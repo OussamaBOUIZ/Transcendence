@@ -9,7 +9,6 @@ export default function AuthRequired () {
     // }, [])
     const [authenticated, setAuthenticated] = React.useState(false);
     useEffect(() => {
-        console.log("here")
         const verifyAuthentication = async () => {
             try {
                 const response = await axios.get("/api/auth/tokenValidity");
