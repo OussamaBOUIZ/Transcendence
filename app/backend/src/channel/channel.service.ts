@@ -160,16 +160,30 @@ export class ChannelService {
         channelFound.BannedUsers = [...channelFound.BannedUsers, user];
         await this.channelRepo.save(channelFound);
     }
-    async promoteUserToAdmin(promoteUser: UserOperationDto)
+    async promoteUserToAdmin(userId: number, channelId: number)
     {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: promoteUser.channelName});
-        const user = await this.userService.findUserById(promoteUser.userId);
-        user.userRoleChannels =  user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.adminRoleChannels = [...user.adminRoleChannels, channelFound];
-        await this.userService.saveUser(user);
-        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        this.channelRepo.save(channelFound);
+        const user = await this.userService.findUserById(userId);
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+            relations: {
+                channelAdmins: true,
+                channelOwners: true,
+                channelUsers: true,
+            },
+        });
+        if(channel.channelUsers && channel.channelUsers.some(user => user.id === userId))
+        {
+            channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser !== user);
+            channel.channelAdmins = channel.channelAdmins !== null && channel.channelAdmins !== undefined ?
+                                    [...channel.channelAdmins, user] : [user]; 
+        }
+        if(channel.channelAdmins && channel.channelAdmins.some(user => user.id === userId))
+        {
+            channel.channelAdmins = channel.channelAdmins.filter((currentUser) => currentUser !== user);
+            channel.channelOwners = channel.channelOwners !== null && channel.channelOwners !== undefined ?
+                                    [...channel.channelOwners, user] : [user]; 
+        }
+        await this.channelRepo.save(channel);
     }
     async storeChannelMessage(userMessage: string, channel: Channel)
     {

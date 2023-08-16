@@ -1,19 +1,19 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import muteIcon from "../../Assets/Icons/mute.svg"
 import kickIcon from "../../Assets/Icons/kick.svg"
 import blockIcon from "../../Assets/Icons/block.svg"
-import promotIcon from "../../Assets/Icons/upgrade.svg"
+import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
 import axios from "axios"
 
 
 
-export default function AdminPopUp({ id }: {id: number}) {
+export default function AdminPopUp({ channelId, id }: {channelId: number, id: number}) {
 
-    function promotMember() {
+    function promoteMember() {
         const action = async () => {
             try {
-                const res = await axios.get(`/api/channel/`)
+                const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
                 console.log(res)
             }
             catch (err) {
@@ -26,7 +26,7 @@ export default function AdminPopUp({ id }: {id: number}) {
     function kickMember() {
         const action = async () => {
             try {
-                const res = await axios.get(`/api/channel/`)
+                const res = await axios.post(`/api/channel/`)
                 console.log(res)
             }
             catch (err) {
@@ -39,7 +39,7 @@ export default function AdminPopUp({ id }: {id: number}) {
     function blockMember() {
         const action = async () => {
             try {
-                const res = await axios.get(`/api/channel/`)
+                const res = await axios.post(`/api/channel/`)
                 console.log(res)
             }
             catch (err) {
@@ -52,7 +52,7 @@ export default function AdminPopUp({ id }: {id: number}) {
     function muteMember() {
         const action = async () => {
             try {
-                const res = await axios.get(`/api/channel/`)
+                const res = await axios.post(`/api/channel/`)
                 console.log(res)
             }
             catch (err) {
@@ -64,8 +64,8 @@ export default function AdminPopUp({ id }: {id: number}) {
 
     function handleClick(name: string) {
         switch (name) {
-            case "promot":
-                promotMember()
+            case "promote":
+                promoteMember()
                 break;
             case "kick":
                 kickMember()
@@ -80,7 +80,7 @@ export default function AdminPopUp({ id }: {id: number}) {
     }
 
     const allIcons = [
-        {id: nanoid() ,value: promotIcon, name:"promot"},
+        {id: nanoid() ,value: promoteIcon, name:"promote"},
         {id: nanoid() ,value: kickIcon, name:"kick"},
         {id: nanoid() ,value: blockIcon, name:"block"},
         {id: nanoid() ,value: muteIcon, name:"mute"}

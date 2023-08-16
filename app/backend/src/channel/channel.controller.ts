@@ -26,13 +26,13 @@ export class ChannelController {
         this.channelservice.setChannelAdmin(channelAdminData);
         return res.status(HttpStatus.CREATED).send('new channel admin was set');
     }
-    @Post('promoteuser')
-    async promoteUserFromChannel(@Body() promoteUser: UserOperationDto, @Res() res: Response)
+    @Post('promoteuser/:id')
+    async promoteUserFromChannel(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number
+    , @Res() res: Response)
     {
-        await this.channelservice.promoteUserToAdmin(promoteUser);
-        return res.status(HttpStatus.CREATED).send('user was promoted successfully');
+        await this.channelservice.promoteUserToAdmin(userId, channelId);
+        res.status(HttpStatus.CREATED).send('user was promoted succesfully');
     }
-
     @Get('userGrade/:id')
     async getUserGrade(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number)
     {

@@ -55,6 +55,7 @@ interface Data {
 
 interface userInfoCard {
     id: number,
+    channelId?: number,
     image: string | undefined,
     status?: string,
     firstname: string,
