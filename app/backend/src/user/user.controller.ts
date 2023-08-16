@@ -215,7 +215,8 @@ export class UserController {
 	@Get('avatar/:id')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number, @Res() res: Response): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
-
+        console.log(user, 'avatar');
+        
 		if (!user)
 			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
 		const imagePath = user.avatar
@@ -230,9 +231,13 @@ export class UserController {
 			return new StreamableFile(fileContent);
 		}
 		catch (e) {
+            console.log(e);
             const filename = 'default.jpg';
             const defaultPath = path.join(process.cwd(), 'uploads/usersImage', filename);
+            console.log(defaultPath)
 			const fileContent = createReadStream(defaultPath)
+            const ext = extname(defaultPath).substring(1)
+            res.setHeader('Content-Type', `image/${ext}`)
 			return new StreamableFile(fileContent);
 		}
 	}
@@ -396,6 +401,8 @@ export class UserController {
 		const user = await this.userService.searchUser(username)
 		if (authUser.username === user?.username)
 			throw new HttpException({reason: 'You cant Search for yourself'}, HttpStatus.BAD_REQUEST)
+        console.log(user, "search");
+    
 		return user
 	}
 	

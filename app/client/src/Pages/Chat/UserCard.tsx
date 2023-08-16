@@ -1,9 +1,9 @@
 import React from 'react'
-import ProfileImage from './profileImage'
+import ProfileImage from '../../Components/profileImage'
+import {Link} from 'react-router-dom'
 
 
-
-export default function UserCard ({firstname, lastname, username, avatar}) {
+export default function UserCard ({firstname, lastname, username, avatar, id}) {
     return (
         <figure className='flex-sp'>
                 <figcaption>
@@ -14,7 +14,7 @@ export default function UserCard ({firstname, lastname, username, avatar}) {
                     </div>
                 </figcaption>
                 <div>
-                    <button>DM</button>
+                    <Link to={`/chat/${id}`}>DM</Link>
                     <button>ADD</button>
                 </div>
             </figure>

@@ -30,11 +30,11 @@ export class InboxService {
             inbox = new Inbox_user()
             inbox.sender_id = senderId; // id of the receiver
             inbox.lastMessage = msgDto.message;
-            inbox.CreatedAt = msgDto.timeSent
+            inbox.CreatedAt = msgDto.creationTime
             inbox.user = receiver;
         } else {
             inbox.lastMessage = msgDto.message
-            inbox.CreatedAt = msgDto.timeSent
+            inbox.CreatedAt = msgDto.creationTime
         }
         // I assume that the receiver is on chat page
         if (receiver.status != Status.Online)

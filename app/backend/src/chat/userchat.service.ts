@@ -59,7 +59,7 @@ export class ChatGatewayService {
         await this.chatRepository.save(user_chat)
 
         msg.message = dto.message
-        msg.CreatedAt = dto.timeSent
+        msg.CreatedAt = dto.creationTime
         msg.user_chat = user_chat
         await this.messageRepository.save(msg)
     }
@@ -80,7 +80,10 @@ export class ChatGatewayService {
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {
-        const receiver = await this.getUserById(messageDto.user.userId)
+        console.log(messageDto.userId);
+        
+        const receiver = await this.getUserById(messageDto.userId)
+        console.log(receiver)
         // if (receiver === null)
         //     console.log('TODO : handle if the receiver not exist')
         // this.logger.log({receiver})
@@ -108,7 +111,7 @@ export class ChatGatewayService {
             }
         await this.saveMessage(messageDto, receiver, author.id)
         // check status of receiver
-        await this.inboxService.saveInbox(receiver, author.id, messageDto)
+        // await this.inboxService.saveInbox(receiver, author.id, messageDto)
         return receiver.socketId
     }
 

@@ -17,6 +17,8 @@ import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
 import ChatDmInit from './Pages/Chat/ChatDmInit'
 import ChatRooomsInit from './Pages/Chat/ChatRoomsInit'
+import ChatDm from './Pages/Chat/ChatDm'
+import ChatRooms from './Pages/Chat/ChatRooms'
 
 export default function App () {
   return (
@@ -26,10 +28,23 @@ export default function App () {
         <Route element={<AuthRequired />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />}/>
-            <Route path="/chat/*" element={<ChatLayout />}>
+            
+            {/* <Route path="/chat/*" element={<ChatLayout />}>
                 <Route index  element={<ChatDmInit /> }/>
                 <Route path="rooms"  element={<ChatRooomsInit /> }/>
+                <Route path=":id" element={<ChatDm />}/>
+                <Route path="rooms/:id" element={<ChatRooms />}/>
+            </Route> */}
+
+            <Route path="/chat/*" element={<ChatLayout />}>
+              <Route index element={<ChatDm />} />
+              <Route path="rooms" element={<ChatRooms />} />
+              <Route path="init"  element={<ChatDmInit /> }/>
+              <Route path="rooms/init"  element={<ChatRooomsInit /> }/>
+              <Route path=":id" element={<ChatDm />} />
+              <Route path="rooms:id" element={<ChatRooms />} />
             </Route>
+            
             <Route path="/game" element={<Game />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/settings" element={<Settings />} />

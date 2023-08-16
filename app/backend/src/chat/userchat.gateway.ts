@@ -17,7 +17,7 @@ import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./websocket.middleware";
 import {MessageDto} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
-import {UserService} from "../user/user.service";
+import {UserService} from "../user/user.service";   
 
 /**
  * RxJS :
@@ -34,11 +34,10 @@ import {UserService} from "../user/user.service";
  *
  */
 
-@WebSocketGateway(1313, {cors: {
+ @WebSocketGateway(4000, {cors: {
 	origin: "http://localhost:5173",
-	credentials: true
+		credentials: true
 }})
-// @UseGuards(WsGuard)
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
 	private readonly logger: Logger;
@@ -53,10 +52,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	) {
 		this.logger = new Logger(ChatGateway.name);
 	}
-
+	
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		console.log('onSendMessage')
+		console.log(messageDto)
 		let socketId: string
 		try {
 			socketId = await this.chatGatewayService.processMessage(socket, messageDto)
@@ -66,6 +66,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
+		console.log(socketId, messageDto.message);
+		
 		this.server.to(socketId).emit("message", messageDto.message)
 	}
 
