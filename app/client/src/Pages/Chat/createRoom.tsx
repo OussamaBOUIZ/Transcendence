@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import eyeRegular from "../../Assets/Icons/eye-regular.svg"
 import eyeSlashRegular from "../../Assets/Icons/eye-slash-regular.svg"
-import ChatSearchBoxId from "./ChatSearchBoxId";
 import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import axios from "axios"
 import { getUserData } from "../../Hooks/getUserData";
@@ -15,7 +14,7 @@ interface newRoom {
     channelOwner: number,
 }
 
-export default function CreateRoom({setter}: {setter: any}) {
+export default function CreateRoom({setter}: {setter: unknown}) {
 
     const user = getUserData();
     console.log(user)
@@ -31,13 +30,6 @@ export default function CreateRoom({setter}: {setter: any}) {
         }));
     }
 
-    function handleId(id: number) {
-        setNewRoom((prev) => ({
-            ...prev,
-            joinedUsers: [...prev.joinedUsers, id],
-          }));
-    }
-
     const [inputType, setInputType] = useState('password');
 
     const toggleInputType = () => {
@@ -48,7 +40,7 @@ export default function CreateRoom({setter}: {setter: any}) {
 
     const handleSubmit = () => {
         try {
-            const res = axios.post(`/api/channel/update`, newRoom)
+            void axios.post(`/api/channel/update`, newRoom)
         }
         catch (err) {
             console.log(err)
@@ -69,9 +61,6 @@ export default function CreateRoom({setter}: {setter: any}) {
                                 </input>
                                 <img width="50" className="cursor-pointer" src={inputType === 'password' ? eyeRegular : eyeSlashRegular} alt="icon" onClick={toggleInputType} />
                             </form>
-                        </div>
-    const searchCard = <div className="searchCard flex flex-col">
-                            <ChatSearchBoxId handleId={handleId}/>
                         </div>
 
   return (
@@ -107,7 +96,6 @@ export default function CreateRoom({setter}: {setter: any}) {
             </form>
         </div>
         {newRoom.channelType === "protected" && passwordCard}
-        {newRoom.channelType === "private" && searchCard}
         <button className="primary_btn flex items-center justify-center py-3 rounded-3xl text-base bg-pink-500" onClick={handleSubmit}>
             <svg className="mx-3" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 30 30" fill="white">
                 <path d="M15,3C8.373,3,3,8.373,3,15c0,6.627,5.373,12,12,12s12-5.373,12-12C27,8.373,21.627,3,15,3z M21,16h-5v5 c0,0.553-0.448,1-1,1s-1-0.447-1-1v-5H9c-0.552,0-1-0.447-1-1s0.448-1,1-1h5V9c0-0.553,0.448-1,1-1s1,0.447,1,1v5h5 c0.552,0,1,0.447,1,1S21.552,16,21,16z"></path>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import wins from "../Assets/Icons/wins2.svg"
 import losses from "../Assets/Icons/losses2.svg"
 import "../scss/userInfoCard.scss"
@@ -7,9 +7,21 @@ import AdminPopUp from "../Pages/Chat/AdminPopUp"
 
 export default function UserInfoCard(props: userInfoCard) {
 
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+    };
+  
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+    };
+
     return (
-        <div className="friend-item relative overflow-hidden" key={props.username}>
-            
+        <div className={`element-${isHovered ? "hovered" : ""} friend-item relative overflow-hidden`}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            key={props.username}>
             <div className="useData">
                 <div className='userImage'>
                     <img src={props.image} alt="" />
@@ -24,10 +36,10 @@ export default function UserInfoCard(props: userInfoCard) {
                 </div>
             </div>
             <div className={`stats flex ${props.flex === "row" ? '' : 'flex-col'}`}>
-                <span><img src={wins} alt="" /> {props.wins + " wins"}</span>
-                <span><img src={losses} alt="" /> {props.losses + " losses"}</span>
+                <span><img src={wins} alt="" /> {props.wins.toString() + " wins"}</span>
+                <span><img src={losses} alt="" /> {props.losses.toString() + " losses"}</span>
             </div>
-            {props.isUnderMyGrade && <AdminPopUp channelId={props.channelId} id={props.id}/>}
+            {props.isUnderMyGrade && isHovered && <AdminPopUp channelId={props.channelId as number} id={props.id}/>}
         </div>
     )
 }
