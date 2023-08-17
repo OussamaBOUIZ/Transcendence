@@ -1,0 +1,16 @@
+{
+    "data": [
+      {
+        "id": 1,
+        "name": "Living Room"
+      },
+      {
+        "id": 2,
+        "name": "Kitchen"
+      },
+      {
+        "id": 3,
+        "name": "Bedroom"
+      }
+    ]
+  }

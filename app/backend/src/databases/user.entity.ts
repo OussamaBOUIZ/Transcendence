@@ -5,7 +5,6 @@ import {
     JoinColumn,
     JoinTable,
     ManyToMany,
-    ManyToOne,
     OneToMany,
     OneToOne, 
     PrimaryGeneratedColumn
@@ -15,6 +14,7 @@ import {User_chat} from "./userchat.entity";
 import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
 import {Exclude} from "class-transformer";
+import { Channel } from "./channel.entity";
 
 
 @Entity('User')
@@ -88,6 +88,18 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
+
+    @ManyToMany(() => Channel, {nullable: true})
+    userRoleChannels: Channel[]
+
+    @ManyToMany(() => Channel, {nullable: true})
+    adminRoleChannels: Channel[]
+
+    @ManyToMany(() => Channel, {nullable: true})
+    ownerRoleChannels: Channel[]
+
+    @ManyToMany(() => Channel, {nullable: true})
+    userBannedChannels: Channel[]
 
 }
    

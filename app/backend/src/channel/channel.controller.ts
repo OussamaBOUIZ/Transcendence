@@ -3,7 +3,6 @@ import { channelDto } from './dto/channelDto';
 import { ChannelService } from './channel.service';
 import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
-import { newUserDto } from './dto/newUserDto';
 import { UserOperationDto } from './dto/operateUserDto';
 
 @Controller('channel')

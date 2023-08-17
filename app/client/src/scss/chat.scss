@@ -95,6 +95,14 @@ div.chat_container {
                     color: $text-grey-color;
                 }
             }
+            .contentRooms {
+                .topic {
+                    background-color: #2C094E;
+                }
+                .active {
+                    background-color: #531F8A;
+                }
+            }
             figure.message_oview {
                 // height: 70px;
                 padding: 8px;

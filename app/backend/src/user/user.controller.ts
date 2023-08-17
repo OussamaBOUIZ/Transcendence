@@ -2,7 +2,6 @@
 import {
 	Controller,
 	Header,
-	Headers,
 	Get,
 	Delete,
 	Param,
@@ -13,15 +12,12 @@ import {
 	UseInterceptors,
 	Post, Req, Res, HttpStatus,
 	UploadedFile, Body, Patch, HttpCode, Query,
-	HttpException, ParseFilePipe, FileTypeValidator,
-	MaxFileSizeValidator,
-	NotFoundException,
-	Put,
+	HttpException, ParseFilePipe, 
     UseFilters,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
-import { raw, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { JwtGuard } from "../auth/jwt/jwtGuard";
@@ -32,11 +28,9 @@ import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import { diskStorage } from 'multer'
-import { Observable, of } from 'rxjs';
 import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
-import { log } from 'console';
 import { ViewAuthFilter } from 'src/Filter/filter';
 
 

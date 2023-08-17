@@ -1,4 +1,4 @@
-import { BaseEntity, CannotAttachTreeChildrenEntityError, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { BaseEntity, Entity } from "typeorm"
 import { User } from "./user.entity"
 
 @Entity('Friend')

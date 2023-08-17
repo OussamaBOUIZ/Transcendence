@@ -7,6 +7,7 @@ import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import Inbox from './Inbox';
+import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, Link, useParams} from 'react-router-dom'
 import { getUserData } from '../../Hooks/getUserData';
@@ -18,11 +19,11 @@ function InboxDm () {
     );
 }
 
-function InboxRooms () {
-    return (
-        <h2>ROOMS MESSAGES</h2>
-    );
-}
+// function InboxRooms () {
+//     return (
+//         <h2>ROOMS MESSAGES</h2>
+//     );
+// }
 
 
 function InboxLayout () {
