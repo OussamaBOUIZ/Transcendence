@@ -1,5 +1,5 @@
 import React, {useEffect, useContext} from 'react'
-import {Outlet} from 'react-router-dom'
+import {Outlet, Navigate} from 'react-router-dom'
 import axios from 'axios'
 import UserContext from '../Context/UserContext'
 
@@ -23,6 +23,7 @@ export default function AuthRequired () {
     }, [])
 
     if (!authenticated)
-        return <div className='center'><h1>You have to login</h1></div>
+        return <Navigate to="/sign" />
+        // return <div className='center'><h1>You have to login</h1></div>
     return <Outlet />
 }

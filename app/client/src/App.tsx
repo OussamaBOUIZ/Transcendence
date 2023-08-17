@@ -21,12 +21,10 @@ import ChatDm from './Pages/Chat/ChatDm'
 import ChatRooms from './Pages/Chat/ChatRooms'
 
 export default function App () {
-  console.log('hellooooo');
-  
   return (
     <UserProvider>
-    <BrowserRouter>
-        <Routes>
+      <BrowserRouter>
+          <Routes>
               <Route path="/sign" element={<Sign />} />
               <Route element={<AuthRequired/>}>
                 <Route element={<MainLayout />}>
@@ -41,7 +39,6 @@ export default function App () {
                       <Route path="rooms:id" element={<ChatRooms />} />
                     </Route>
                     
-
                     <Route path="/game" element={<Game />} />
                     <Route path="/friends" element={<Friends />} />
                     <Route path="/settings" element={<Settings />} />
@@ -50,8 +47,8 @@ export default function App () {
 
                     </Route>
                 </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
       </UserProvider>
   );
 }
