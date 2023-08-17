@@ -263,9 +263,6 @@ export class ChannelService {
                 }
             }
         });
-        console.log('BEGG')
-        console.log(channel.channelOwners);
-        console.log('END')
         return channel;
     }
     async getUserGrade(userId: number, channelId: number)
@@ -278,7 +275,6 @@ export class ChannelService {
                 channelOwners: true,
             },
         });
-        console.log(channel);
         if(channel.channelOwners.some(user => user.id === userId))
             return 'owner';
         else if(channel.channelAdmins.some(user => user.id === userId))

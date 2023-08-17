@@ -1,3 +1,4 @@
+import React from "react";
 import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
 import axios from "axios";
@@ -46,11 +47,13 @@ export default function Prompt() {
 
     const handleSubmit = () => {
         setNotif('')
-        const sendData = async (Path: string, data: Data | FormData, headers: object | null) => {
+        const sendData = async (Path: string, data: Data | FormData | null, headers: {'Content-Type': string} | null) => {
             try {
-                await axios.post(Path, data, headers)
-                increment(prev => prev + 1)
-                clearFields()
+                if (data) {
+                    await axios.post(Path, data, headers)
+                    increment(prev => prev + 1)
+                    clearFields()
+                }
                 if (val === 2)
                     window.location.replace('/')
             }
@@ -67,14 +70,13 @@ export default function Prompt() {
             headers = {
                 'Content-Type': 'multipart/form-data',
             };
-            const formData = new FormData();
-            if (imagePreview !== null) {
-                formData.append('image', imagePreview);
-            }
-            sendData(Path, formData, headers);
-        } else {
-            sendData(Path, data, headers);
+            let formData: FormData | null = new FormData();
+            imagePreview ? formData.append('image', imagePreview) : formData = null
+            void sendData(Path, formData, headers);
+            
         }
+        else
+            void sendData(Path, data, headers);
     };
 
     let icon;

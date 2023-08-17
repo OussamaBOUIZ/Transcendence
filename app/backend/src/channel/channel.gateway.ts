@@ -23,9 +23,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     
     async handleConnection(client: Socket) {
-        const sessionCookie = client.handshake.headers.cookie;
+        console.log("hello from: ", client)
+        const {auth} = client.handshake;
+        console.log('token: ', auth.token)
         console.log(client.handshake.headers);
-        const user = await this.userService.getUserFromJwt(sessionCookie);
+        const user = await this.userService.getUserFromJwt(auth.token);
         if(!user)
         {
             client.disconnect();
@@ -72,6 +74,12 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         client.leave(user.channelName);
         await this.channelservice.banUserFromChannel(user);
         this.server.emit('userBanned', `user was banned from channel ${user.channelName}`);
+    }
+
+    @SubscribeMessage('messagee')
+    messagee(@MessageBody() data: string) {
+        console.log("server get the message")
+        this.server.emit("messagee", data)
     }
 
     @SubscribeMessage('kickuser')

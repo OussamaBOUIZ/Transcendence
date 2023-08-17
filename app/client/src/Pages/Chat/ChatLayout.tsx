@@ -11,6 +11,7 @@ import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, Link, useLocation} from 'react-router-dom'
 
+
 function InboxDm () {
     return (
         <h2>DIRECT MESSAGES</h2>
@@ -25,9 +26,6 @@ function InboxChannels () {
 
 
 function InboxLayout () {
-    const location = useLocation()
-    console.log('---');
-    console.log(location.pathname)
     return (
         <div>
             <section className="inbox">
