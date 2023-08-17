@@ -13,9 +13,10 @@ export const SocketAuthMiddleware = (
 ): SocketIOMiddleWare => {
     return  async (client, next) => {
         try {
-            const {authorization} = client.handshake.headers;
-            console.log('authorization' , authorization)
-            client.data.user = await userService.getUserFromJwt(authorization);
+            const {auth} = client.handshake;
+            
+            console.log('authorization' , auth.token)
+            client.data.user = await userService.getUserFromJwt(auth.token);
             if (client.data.user == null)
                 throw new UnauthorizedException()
             next();
