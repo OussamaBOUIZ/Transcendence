@@ -51,40 +51,13 @@ export class ChannelService {
             await this.channelRepo.save(channelFound);
         }
     }
-    async setChannelOwner(channelOwner: channelOwnerDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: channelOwner.channelName});
-        const user = await this.userService.findUserById(channelOwner.newChannelOwner);
-        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.adminRoleChannels = user.adminRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.ownerRoleChannels = [...user.ownerRoleChannels, channelFound];
-        await this.userService.saveUser(user);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        channelFound.channelAdmins = channelFound.channelAdmins.filter((currentUser) => currentUser !== user);
-        channelFound.channelOwners = [...channelFound.channelOwners, user];
-        await this.channelRepo.save(channelFound);
-    }
-    async setChannelAdmin(channelAdmin: channelAdminDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: channelAdmin.channelName});
-        const user = await this.userService.findUserById(channelAdmin.newChannelAdmin);
-        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.ownerRoleChannels = user.ownerRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.adminRoleChannels = [...user.adminRoleChannels, channelFound];
-        await this.userService.saveUser(user);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        channelFound.channelOwners = channelFound.channelOwners.filter((currentUser) => currentUser !== user);
-        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
-        await this.channelRepo.save(channelFound);
-    }
+
     async addToChannel(newUser: newUserDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
         if(channelFound.channel_type === 'public')
         {
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            user.userRoleChannels = [...user.userRoleChannels, channelFound];
-            await this.userService.saveUser(user);
             channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         if(channelFound.channel_type === 'protected')
@@ -92,8 +65,6 @@ export class ChannelService {
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
                 return 'provided password is incorrect'
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            user.userRoleChannels = [...user.userRoleChannels, channelFound];
-            await this.userService.saveUser(user);
             channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         await this.channelRepo.save(channelFound);
@@ -111,8 +82,6 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
         const user = await this.userService.findUserById(kickUser.userId);
-        user.userRoleChannels =  user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        await this.userService.saveUser(user);
         channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         await this.channelRepo.save(channelFound);
     }
@@ -120,9 +89,6 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: banUser.channelName});
         const user = await this.userService.findUserById(banUser.userId);
-        user.userRoleChannels =  user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.userBannedChannels = [...user.userBannedChannels, channelFound];
-        await this.userService.saveUser(user);
         channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         channelFound.BannedUsers = [...channelFound.BannedUsers, user];
         await this.channelRepo.save(channelFound);
@@ -230,9 +196,6 @@ export class ChannelService {
                 }
             }
         });
-        console.log('BEGG')
-        console.log(channel.channelOwners);
-        console.log('END')
         return channel;
     }
     async getUserGrade(userId: number, channelId: number)
