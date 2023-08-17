@@ -4,11 +4,15 @@ import axios from 'axios'
 import UserContext from '../Context/UserContext'
 
 export default function AuthRequired () {
-
+    console.log('shiiiit');
+    
     const {authenticated, setAuthenticated} = useContext(UserContext)
 
-    useEffect(() => {       
+    useEffect(() => { 
+        console.log('eyyyow');
+        
         const verifyAuthentication = async () => {
+            
             try {
                 const response = await axios.get("/api/auth/tokenValidity");
                 setAuthenticated(response.data)
@@ -20,10 +24,11 @@ export default function AuthRequired () {
 
         }
         verifyAuthentication();
-    }, [])
+    }, [authenticated])
 
+    console.log(authenticated);
+    
     if (!authenticated)
         return <Navigate to="/sign" />
-        // return <div className='center'><h1>You have to login</h1></div>
     return <Outlet />
 }
