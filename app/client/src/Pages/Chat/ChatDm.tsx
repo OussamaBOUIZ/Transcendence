@@ -39,9 +39,7 @@ export default function ChatDm () {
                 creationTime : new Date()
             })
             setMessageToSendValue("")
-            // console.log(messageToSendData)
         }
-
     }
     
     /**EFFECTS     */
@@ -89,6 +87,7 @@ export default function ChatDm () {
 
     }, [socket, receivedMessage])
 
+    
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false
@@ -96,6 +95,8 @@ export default function ChatDm () {
         }
         console.log(messages)
     }, [messages])
+
+
     const messStyle = {
         textAlign: 'center',
         fontSize: '1em',
