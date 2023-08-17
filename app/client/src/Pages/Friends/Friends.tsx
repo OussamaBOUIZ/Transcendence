@@ -14,6 +14,7 @@ export default function Friends() {
   if (!userData) {
     return (
         <div className="Home">
+          
       </div>
     )
   }

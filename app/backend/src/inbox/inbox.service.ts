@@ -20,59 +20,72 @@ export class InboxService {
             }
         })
     }
-    async saveInbox(receiver: User, senderId: number, msgDto: MessageDto) {
+    async saveInbox(receiver: User, author: User, msgDto: MessageDto) {
         let inbox: Inbox_user
-        console.log(receiver)
-        inbox = await this.getInboxBySenderId(senderId, receiver)
-        console.log('inbox:', inbox)
-        console.log('senderId: ', senderId)
-        if (inbox === undefined || inbox === null) {
+        inbox = await this.getInboxBySenderId(author, receiver)
+        if (!inbox) {
             inbox = new Inbox_user()
-            inbox.sender_id = senderId; // id of the receiver
+            inbox.author = author; // id of the receiver
             inbox.lastMessage = msgDto.message;
-            inbox.CreatedAt = msgDto.timeSent
+            inbox.CreatedAt = msgDto.creationTime
             inbox.user = receiver;
+            inbox.unseenMessages = 0
         } else {
             inbox.lastMessage = msgDto.message
-            inbox.CreatedAt = msgDto.timeSent
+            inbox.CreatedAt = msgDto.creationTime
         }
         // I assume that the receiver is on chat page
-        if (receiver.status != Status.Online)
-            inbox.unseenMessages = 1
+        if (receiver.isActive === true)
+            inbox.unseenMessages = 0
         else
             inbox.unseenMessages += 1
+        console.log(inbox)
         await this.inboxRepository.save(inbox)
     }
 
-    async getInboxBySenderId(senderid: number, receiver: User): Promise<Inbox_user> {
+    async getInboxBySenderId(author: User, receiver: User): Promise<Inbox_user> {
         const tmp = await this.inboxRepository.findOne({
             relations: {
-                user: true
+                user: true,
+                author: true
             },
             where: {
-                sender_id: senderid,
+                author: {
+                    id: author.id
+                },
                 user: {
                     id: receiver.id
                 }
             }
         })
 
-        console.log(tmp)
-
         return tmp;
-        /*  const author = await this.userRepository.findOne({
-			  relations: {
-				  inbox_users: true
-			  },
-			  where: {
-				  id: receiver.id,
-				  inbox_users: {
-					 sender_id: senderid
-				  }
-			  },
-  `
-		  })
-		  console.log(author.inbox_users)
-		  return author.inbox_users*/
+    }
+
+    async getAllInboxOfUser(authorId: number) {
+        return await this.inboxRepository.find({
+            relations: {
+                user: true,
+                author: true
+            },
+            where: {
+                 author: {
+                    id: authorId
+                 },
+            },
+            order: {
+                CreatedAt: 'DESC'
+            },
+            select: {
+                user: {
+                    id: true,
+                    username: true,
+                },
+                author: {
+                    id: true,
+                    username: true,
+                }
+            }
+        })
     }
 }
