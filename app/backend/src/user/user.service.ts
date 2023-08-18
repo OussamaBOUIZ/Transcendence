@@ -376,6 +376,8 @@ export class UserService {
             select: {
                 id: true,
                 username: true,
+                firstname: true,
+                lastname: true
                 
             }
         })
