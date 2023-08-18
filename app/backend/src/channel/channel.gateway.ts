@@ -7,10 +7,11 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
+import { channelDto } from "./dto/channelDto";
 
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
-		credentials: true
+    credentials: true
 }}) 
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() 
@@ -34,11 +35,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
-        if(user.userRoleChannels)
+        if(user.userRoleChannels !== null && user.userRoleChannels !== undefined)
             user.userRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.adminRoleChannels)
+        if(user.adminRoleChannels !== null && user.adminRoleChannels !== undefined)
             user.adminRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.ownerRoleChannels)
+        if(user.ownerRoleChannels !== null && user.ownerRoleChannels !== undefined)
             user.ownerRoleChannels.forEach(channel => client.join(channel.channel_name));
         await this.userService.saveUser(user);
     }
@@ -66,6 +67,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         }
         setTimeout(this.unmuteUser, user.minutes * 60000, user.userId, this.channelservice, this.server);
         this.server.emit('userMuted', `user was muted from channel ${user.channelName}`)
+    }
+
+    @SubscribeMessage('updateChannel')
+    async createChannel(@MessageBody() channelData: channelDto, @ConnectedSocket() client: Socket)
+    {
+        client.join(channelData.channelName);
+        await this.channelservice.channelUpdate(channelData);
     }
 
     @SubscribeMessage('banuser')

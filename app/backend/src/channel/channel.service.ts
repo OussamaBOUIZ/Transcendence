@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
+import { Socket } from 'dgram';
 
 
 @Injectable()
@@ -21,29 +22,13 @@ export class ChannelService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
-    async addUsersToChannel(channel: Channel, channelData: channelDto)
-    {
-        if(channelData.joinedUsers)
-        {
-            channelData.joinedUsers.forEach(async id => {
-                const addedUser = await this.userService.findUserById(id);
-                if (channel && (channel.channelUsers !== null && channel.channelUsers !== undefined)) {
-                    channel.channelUsers = [...channel.channelUsers, addedUser]
-                } else {
-                    channel.channelUsers = [addedUser]
-                }
-            });
-            // console.log('END IS ', channel.channelUsers);
-        }
-    }
     async channelUpdate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOne({
-                where: {channel_name: channelData.channelName},
-                relations: {
-                    channelUsers: true,
-                    channelOwners: true,
-                }
+            where: {channel_name: channelData.channelName},
+            relations: {
+                channelOwners: true,
+            }
         });
         if(!channelFound)
         {
@@ -52,72 +37,27 @@ export class ChannelService {
             newChannel.channel_type = channelData.channelType;
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
-
             const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channelOwners = [userFound];
-            if(newChannel.channel_type === 'private')
-            {
-                if(channelData.joinedUsers)
-                {
-                    channelData.joinedUsers.forEach(async id => {
-                        const addedUser = await this.userService.findUserById(id);
-                        if (newChannel && (newChannel.channelUsers !== null && newChannel.channelUsers !== undefined)) {
-                            newChannel.channelUsers = [...newChannel.channelUsers, addedUser]
-                        } else {
-                            newChannel.channelUsers = [addedUser]
-                        }
-                    });
-                }
-            }
             await this.channelRepo.save(newChannel);
         }
-        else
-        {
+        else {
             if(channelData.channelName !== channelFound.channel_name)
                 channelFound.channel_name = channelData.channelName;
             if(channelData.channelType !== channelFound.channel_type)
                 channelFound.channel_type = channelData.channelType;
-            if(channelFound.channel_type === 'protected' && channelData.channelPassword !== channelFound.channel_password)
-                channelFound.channel_password = channelData.channelPassword;
-            if(channelFound.channel_type === 'private')
-                this.addUsersToChannel(channelFound, channelData);
+            if(channelFound.channel_type === 'protected')
+                channelFound.channel_password = await argon.hash(channelData.channelPassword);
             await this.channelRepo.save(channelFound);
         }
     }
-    async setChannelOwner(channelOwner: channelOwnerDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: channelOwner.channelName});
-        const user = await this.userService.findUserById(channelOwner.newChannelOwner);
-        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.adminRoleChannels = user.adminRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.ownerRoleChannels = [...user.ownerRoleChannels, channelFound];
-        await this.userService.saveUser(user);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        channelFound.channelAdmins = channelFound.channelAdmins.filter((currentUser) => currentUser !== user);
-        channelFound.channelOwners = [...channelFound.channelOwners, user];
-        await this.channelRepo.save(channelFound);
-    }
-    async setChannelAdmin(channelAdmin: channelAdminDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: channelAdmin.channelName});
-        const user = await this.userService.findUserById(channelAdmin.newChannelAdmin);
-        user.userRoleChannels = user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.ownerRoleChannels = user.ownerRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.adminRoleChannels = [...user.adminRoleChannels, channelFound];
-        await this.userService.saveUser(user);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        channelFound.channelOwners = channelFound.channelOwners.filter((currentUser) => currentUser !== user);
-        channelFound.channelAdmins = [...channelFound.channelAdmins, user];
-        await this.channelRepo.save(channelFound);
-    }
+
     async addToChannel(newUser: newUserDto)
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
         if(channelFound.channel_type === 'public')
         {
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            user.userRoleChannels = [...user.userRoleChannels, channelFound];
-            await this.userService.saveUser(user);
             channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         if(channelFound.channel_type === 'protected')
@@ -125,8 +65,6 @@ export class ChannelService {
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
                 return 'provided password is incorrect'
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            user.userRoleChannels = [...user.userRoleChannels, channelFound];
-            await this.userService.saveUser(user);
             channelFound.channelUsers = [...channelFound.channelUsers, user];
         }
         await this.channelRepo.save(channelFound);
@@ -144,8 +82,6 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
         const user = await this.userService.findUserById(kickUser.userId);
-        user.userRoleChannels =  user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        await this.userService.saveUser(user);
         channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         await this.channelRepo.save(channelFound);
     }
@@ -153,14 +89,11 @@ export class ChannelService {
     {
         const channelFound = await this.channelRepo.findOneBy({channel_name: banUser.channelName});
         const user = await this.userService.findUserById(banUser.userId);
-        user.userRoleChannels =  user.userRoleChannels.filter((currentChannel) => currentChannel !== channelFound);
-        user.userBannedChannels = [...user.userBannedChannels, channelFound];
-        await this.userService.saveUser(user);
         channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
         channelFound.BannedUsers = [...channelFound.BannedUsers, user];
         await this.channelRepo.save(channelFound);
     }
-    async promoteUserToAdmin(userId: number, channelId: number)
+    async promoteMember(userId: number, channelId: number)
     {
         const user = await this.userService.findUserById(userId);
         const channel = await this.channelRepo.findOne({
@@ -209,6 +142,31 @@ export class ChannelService {
     async getChannel(channelName: string)
     {
         return await this.channelRepo.findOneBy({channel_name: channelName});
+    }
+
+    async getPublicChannels()
+    {
+        const type = 'public';
+        const publicChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return publicChannels;
+    }
+    async getProtectedChannels()
+    {
+        const type = 'protected';
+        const protectedChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return protectedChannels;
+    }
+    async getPrivateChannels()
+    {
+        const type = 'private';
+        const privateChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return privateChannels;
     }
     async userIsMuted(userId: number)
     {

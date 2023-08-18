@@ -8,29 +8,11 @@ import { UserOperationDto } from './dto/operateUserDto';
 @Controller('channel')
 export class ChannelController {
     constructor(private readonly channelservice: ChannelService) {}
-    @Post('update')
-    async updateOrCreateChannel(@Body() channelData: channelDto, @Res() res: Response)
-    {
-        await this.channelservice.channelUpdate(channelData);
-        return res.status(HttpStatus.CREATED).send('channel was created');
-    }
-    @Post('setowner')
-    async newChannelOwner(@Body() channelOwnerData: channelOwnerDto, @Res() res: Response)
-    {
-        this.channelservice.setChannelOwner(channelOwnerData);
-        return res.status(HttpStatus.CREATED).send('new channel owner was set');
-    }
-    @Post('setadmin')
-    async newChannelAdmin(@Body() channelAdminData: channelAdminDto, @Res() res: Response)
-    {
-        this.channelservice.setChannelAdmin(channelAdminData);
-        return res.status(HttpStatus.CREATED).send('new channel admin was set');
-    }
     @Post('promoteuser/:id')
     async promoteUserFromChannel(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number
     , @Res() res: Response)
     {
-        await this.channelservice.promoteUserToAdmin(userId, channelId);
+        await this.channelservice.promoteMember(userId, channelId);
         res.status(HttpStatus.CREATED).send('user was promoted succesfully');
     }
     @Get('userGrade/:id')
@@ -43,5 +25,20 @@ export class ChannelController {
     async getChannelUsers(@Param('id', ParseIntPipe) id: number)
     {
         return await this.channelservice.getChannelData(id);
+    }
+    @Get('publicChannels')
+    async getPublicChannels()
+    {
+        return await this.channelservice.getPublicChannels();
+    }
+    @Get('publicChannels')
+    async getProtectedChannels()
+    {
+        return await this.channelservice.getProtectedChannels();
+    }
+    @Get('publicChannels')
+    async getPrivateChannels()
+    {
+        return await this.channelservice.getPrivateChannels();
     }
 }
