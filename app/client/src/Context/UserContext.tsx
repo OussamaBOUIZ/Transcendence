@@ -11,7 +11,7 @@ export function UserProvider ({children}) {
 
     const fetchUserData = async () => {
         try {
-          const response = await axios.get<User>("/api/user");
+          const response = await axios.get<User>("/api/user"); 
           const image = await getUserImage(response.data.id)
           setUser({...response.data, image});
           console.log(user);
