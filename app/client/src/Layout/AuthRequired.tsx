@@ -28,7 +28,7 @@ export default function AuthRequired () {
 
     console.log(authenticated);
     
-    if (!authenticated)
-        return <Navigate to="/sign" />
+    // if (!authenticated)
+    //     return <Navigate to="/sign" />
     return <Outlet />
 }

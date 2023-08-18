@@ -30,8 +30,8 @@ export default function App () {
 
               <Route element={<AuthRequired/>}>
                 {/* {authenticated
-                  <Route path="/sign" element={<Sign />} />} */}
-
+                   */}
+                <Route path="/sign" element={<Sign />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
                     
