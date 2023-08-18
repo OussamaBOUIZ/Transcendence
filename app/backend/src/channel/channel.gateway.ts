@@ -67,11 +67,10 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         this.server.emit('userMuted', `user was muted from channel ${user.channelName}`)
     }
 
-    @SubscribeMessage('updateChannel')
+    @SubscribeMessage('accessChannel')
     async createChannel(@MessageBody() channelData: channelDto, @ConnectedSocket() client: Socket)
     {
         client.join(channelData.channelName);
-        await this.channelservice.channelUpdate(channelData);
     }
 
     @SubscribeMessage('banuser')
