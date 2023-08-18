@@ -143,6 +143,31 @@ export class ChannelService {
     {
         return await this.channelRepo.findOneBy({channel_name: channelName});
     }
+
+    async getPublicChannels()
+    {
+        const type = 'public';
+        const publicChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return publicChannels;
+    }
+    async getProtectedChannels()
+    {
+        const type = 'protected';
+        const protectedChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return protectedChannels;
+    }
+    async getPrivateChannels()
+    {
+        const type = 'private';
+        const privateChannels = await this.channelRepo.find({
+            where: {channel_type: type}
+        });
+        return privateChannels;
+    }
     async userIsMuted(userId: number)
     {
         const muted = await this.muteRepo.findOneBy({user_id: userId});

@@ -3,6 +3,7 @@ import googleImg from "../../Assets/Icons/google.png"
 import logo42 from "../../Assets/Icons/42Logo.png"
 import logo from "../../Assets/Icons/logo.png"
 import SignInImage from '../../Assets/2f964e6c-a41e-4baa-b88c-4e7237f2e606.jpg'
+import UserProvider from "../../context/UserProvider"
 
 export default function Sign() {
     

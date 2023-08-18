@@ -4,7 +4,7 @@ import axios from "axios"
 import {User} from '../../../../global/Interfaces'
 // import { getUserData } from '../../Hooks/getUserData'
 import {getUserImage} from '../../Hooks/getUserImage'
-import UserCard from '../../Components/UserCard'
+import UserCard from './UserCard'
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState("")
@@ -35,7 +35,6 @@ export default function ChatSearchBox () {
                 const response = await axios(`../api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data[0].id)
                 setSearchedUser({...response.data[0], image: imgRes})
-                console.log(searchedUser)
             } catch (err: any) {
                 console.log(err.message)
             }
@@ -66,6 +65,7 @@ export default function ChatSearchBox () {
                 lastname={searchedUser.lastname}
                 username={searchedUser.username}
                 avatar={searchedUser.image}
+                id={searchedUser.id}
             />
             }
         </section>

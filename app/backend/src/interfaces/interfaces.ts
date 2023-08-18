@@ -1,6 +1,5 @@
 import { Transform } from "class-transformer";
-import {IsNotEmpty} from "class-validator";
-
+import {IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString} from "class-validator";
 
 export class ReceiverDto {
 	@IsNotEmpty()
@@ -18,12 +17,11 @@ export class ReceiverDto {
 // 	message: string;
 // }
 
-export class MessageDto {
-	user: {
-		userName: string;
-		userId: number;
-	};
-	@Transform(({ value }) => new Date(value))
-	timeSent: Date;
-	message: string;
+export class  MessageDto {
+	@IsNumber()
+	userId: number
+	@IsString()
+    message: string
+	@IsDate()
+    creationTime: Date
 }

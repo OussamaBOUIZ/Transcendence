@@ -4,7 +4,7 @@ export default function ChatHeader ({username, online}) {
     return (
         <header className='chat_header'>
             <figure>
-                <img src="./src/Assets/cat1.jpg" alt="cat.jpg" />
+                <img src="" alt="cat.jpg" />
                 <figcaption>
                     <h4>{username}</h4>
                     <p>{online ? "online" : ""}</p>
