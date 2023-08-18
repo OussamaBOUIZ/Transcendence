@@ -3,6 +3,7 @@ import source from "../Assets/Icons/istockphoto-1356959038-612x612.jpg"
 
 export default function ProfileImage({image, size}) {
 
+    // to be modified using link
     function handleClick() {
         window.location.replace('/profile')
     }

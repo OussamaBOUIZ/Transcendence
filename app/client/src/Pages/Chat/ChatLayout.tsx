@@ -9,7 +9,9 @@ import "../../scss/chat.scss"
 import Inbox from './Inbox';
 import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
-import {Outlet, Routes, Route, Link, useLocation} from 'react-router-dom'
+import {Outlet, Routes, Route, Link, useParams} from 'react-router-dom'
+import { getUserData } from '../../Hooks/getUserData';
+import {User} from "../../../../global/Interfaces"
 
 
 function InboxDm () {
@@ -26,6 +28,7 @@ function InboxChannels () {
 
 
 function InboxLayout () {
+    console.log("okokokokokokokok")
     return (
         <div>
             <section className="inbox">
@@ -40,15 +43,19 @@ function InboxLayout () {
 }
 
 export default function ChatLayout () {
-    const {pathname} = useLocation()
-    console.log(pathname)
+ 
     return ((
         <div className="chat_container">
             <ChatAccount />
             <div className="chat_list">
                 <OnlineNow />
                 <InboxRooms />
-                {/* <InboxLayout /> */}
+                {/* <Routes>
+                    <Route element={<InboxLayout /> }>
+                        <Route index  path="./*" element={<InboxDm />}/>
+                        <Route path="rooms/*" element={<InboxRooms />}/>
+                    </Route>
+                </Routes> */}
             </div>
             <ChatOverview />
             <Outlet />

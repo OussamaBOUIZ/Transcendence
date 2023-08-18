@@ -76,10 +76,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         this.server.emit('userBanned', `user was banned from channel ${user.channelName}`);
     }
 
-    @SubscribeMessage('messagee')
-    messagee(@MessageBody() data: string) {
-        console.log("server get the message")
-        this.server.emit("messagee", data)
+    @SubscribeMessage('messageSend')
+    messagee(@MessageBody() data) {
+        this.server.to(data.room).emit('messagee', data.message);
     }
 
     @SubscribeMessage('kickuser')

@@ -44,7 +44,7 @@ interface Leaders {
 interface MessageData {
     userId: number,
     message: string,
-    creationTime: Date
+    creationTime: Date,
 }
 
 interface Data {
