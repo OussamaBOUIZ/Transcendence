@@ -33,11 +33,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
-        if(user.userRoleChannels)
+        if(user.userRoleChannels !== null && user.userRoleChannels !== undefined)
             user.userRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.adminRoleChannels)
+        if(user.adminRoleChannels !== null && user.adminRoleChannels !== undefined)
             user.adminRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.ownerRoleChannels)
+        if(user.ownerRoleChannels !== null && user.ownerRoleChannels !== undefined)
             user.ownerRoleChannels.forEach(channel => client.join(channel.channel_name));
         await this.userService.saveUser(user);
     }
