@@ -6,6 +6,7 @@ import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
 import { User, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
+import InboxDm from './InboxDm';
 
 const messages = [
     {id: 1, message: "hello ossama", date: new Date()},
@@ -136,7 +137,8 @@ export default function ChatDm () {
     
 
     return (
-        <>  
+        <>
+        <InboxDm />
         <div className="chat_main">
              <ChatHeader 
              username={`user id: ${params.id}`}
