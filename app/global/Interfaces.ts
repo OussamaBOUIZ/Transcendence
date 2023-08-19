@@ -88,9 +88,10 @@ interface MessageBox {
 }
 
 interface roomData {
+    prevChannel: string,
     channelName: string,
-    channelNewUser: number,
-    providedPass: string
+    userId: number,
 }
+
 
 export type {User, MessageData, MessageBox, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

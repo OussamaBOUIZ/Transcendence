@@ -7,16 +7,15 @@ import ChatRoom from "./ChatRoom"
 interface propsType {
   type: 'public' | 'protected' | 'private';
   setRoom: any;
-  setChat: any
 }
 
-function RoomItem({room, setRoom, setChat}: {room: any, setRoom: any, setChat: any}) {
+function RoomItem({room, setRoom}: {room: any, setRoom: any}) {
   const [isActive, setIsActive] = useState(false);
   
   return (
     <div
       className={`${isActive ? 'active' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}
-      onClick={() => {setRoom(room); setChat(prev => !prev)}}>
+      onClick={() => {setRoom(room)}}>
       {/* <NavLink to={room.id} style={({isActive}) => setIsActive(isActive)}> */}
           <div className="room-header flex gap-5">
           <img src={cube} alt="" />
@@ -27,7 +26,7 @@ function RoomItem({room, setRoom, setChat}: {room: any, setRoom: any, setChat: a
   )
 }
 
-export default function Rooms({type, setRoom, setChat} : propsType) {
+export default function Rooms({type, setRoom} : propsType) {
 
   const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
 
@@ -44,7 +43,7 @@ export default function Rooms({type, setRoom, setChat} : propsType) {
   return (
     <>
       {Object.values(roomsToRender).map((room) => (
-        <RoomItem key={room.id} room={room} setRoom={setRoom} setChat={setChat} />
+        <RoomItem key={room.id} room={room} setRoom={setRoom} />
       ))}
     </>
   )

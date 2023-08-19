@@ -8,6 +8,7 @@ import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelDto } from "./dto/channelDto";
+import { channelAccess } from "./dto/channelAccess";
 
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
@@ -22,12 +23,16 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     afterInit() {
         console.log(`Init gateway`)
     }
-    
     async handleConnection(client: Socket) {
         console.log(client.handshake.headers.cookie)
-        const cookie = client.handshake.headers.cookie.split('access_token=')[1];
-        console.log(`cookie ${cookie}`)
-        const user = await this.userService.getUserFromJwt(cookie);
+        const AllCookies = client.handshake.headers.cookie;
+        const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
+        let end = AllCookies.indexOf(";", start);
+        end = end !== -1 ? end : AllCookies.length;
+        console.log('beg', start, 'end', end);
+        const accessToken = AllCookies.substring(start, end);
+        console.log(`access_token`, accessToken);
+        const user = await this.userService.getUserFromJwt(accessToken);
         if(!user)
         {
             client.disconnect();
@@ -69,8 +74,12 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     @SubscribeMessage('accessChannel')
-    async createChannel(@MessageBody() channelData: channelDto, @ConnectedSocket() client: Socket)
+    async createChannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
     {
+        const user = await this.userService.findUserWithChannels(channelData.userId);
+        console.log("prev: ", channelData.prevChannel)
+        console.log("current: ", channelData.channelName)
+        client.leave(channelData.prevChannel);
         client.join(channelData.channelName);
     }
 
@@ -99,7 +108,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
-        console.log('HEEEY BRO')
+        console.log('id:', newUser.channelNewUser)
         client.join(newUser.channelName);
         let channelFound = await this.channelservice.addToChannel(newUser);
         if(typeof channelFound === 'string')

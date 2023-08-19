@@ -3,7 +3,7 @@ import TopicRoom from './TopicRoom';
 import CreateRoom from './createRoom';
 import Rooms from './Rooms';
 
-export default function InboxRooms ({setRoom, setChat}) {
+export default function InboxRooms ({setRoom}) {
 
     const [isClick, setIsClick] = useState<boolean>(false)
 
@@ -17,9 +17,6 @@ export default function InboxRooms ({setRoom, setChat}) {
         // refresh the component
         setRefresh(prev => prev + 1)
     }, [isClick])
-
-    console.log(isClick)
-
 
     return (
         <div>
@@ -47,11 +44,11 @@ export default function InboxRooms ({setRoom, setChat}) {
                 }
                 <div className="contentRooms">
                     <TopicRoom roomType="Public Channels" mode={PublicMode} setter={setPublicMode} clicked={setIsClick} />
-                    {PublicMode && <Rooms type="public"setRoom={setRoom} setChat={setChat} />}
+                    {PublicMode && <Rooms type="public"setRoom={setRoom} />}
                     <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} clicked={setIsClick} />
-                    {ProtectedMode && <Rooms type="protected"setRoom={setRoom} setChat={setChat} />}
+                    {ProtectedMode && <Rooms type="protected"setRoom={setRoom} />}
                     <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} clicked={setIsClick} />
-                    {PrivateMode && <Rooms type="private" setRoom={setRoom} setChat={setChat} />}
+                    {PrivateMode && <Rooms type="private" setRoom={setRoom} />}
                 </div>
             </section>
         </div>

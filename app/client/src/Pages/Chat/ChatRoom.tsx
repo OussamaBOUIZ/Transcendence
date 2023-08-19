@@ -3,13 +3,14 @@ import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import {rooms, MessageBox, roomData} from "../../../../global/Interfaces"
 
-export default function ChatRoom({room}: {room: rooms}) {
+export default function ChatRoom({room, prevRoom}: {room: rooms, prevRoom: string}) {
     const [socket, setSocket] = useState<Socket>()
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<MessageBox[]>([])
     const {user} = useContext(UserContext)
     const initState = useRef<boolean>(false)
     const ini = useRef<boolean>(false)
+
 
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
 
@@ -41,17 +42,16 @@ export default function ChatRoom({room}: {room: rooms}) {
             initState.current = true;
             return;
         }
-        
-        socket?.emit("joinchannel", roomData);
-    }, [socket]);
+        socket?.emit("accessChannel", roomData);
+    }, [roomData, socket]);
     
     useEffect(() => {
         setRoomData({
+            prevChannel: prevRoom,
             channelName: room.channel_name,
-            channelNewUser: user.id,
-            providedPass: (room.channel_type === "protected") ? room.password : ""
+            userId: user?.id,
         });
-    }, [user, room]);
+    }, [user, room, prevRoom]);
     
 
     useEffect(() => {
