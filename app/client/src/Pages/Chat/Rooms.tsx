@@ -1,30 +1,51 @@
 import React, { useState } from "react";
 import cube from "../../Assets/Icons/cube.svg";
-import { data } from "./rooms.json";
 import { NavLink } from "react-router-dom";
+import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
+import ChatRoom from "./ChatRoom"
 
-export default function Rooms() {
+interface propsType {
+  type: 'public' | 'protected' | 'private';
+  setRoom: any;
+  setChat: any
+}
 
-  const rooms = data.map((room) => {
-    const [isActive, setIsActive] = useState(false);
+function RoomItem({room, setRoom, setChat}: {room: any, setRoom: any, setChat: any}) {
+  const [isActive, setIsActive] = useState(false);
+  
+  return (
+    <div
+      className={`${isActive ? 'active' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}
+      onClick={() => {setRoom(room); setChat(prev => !prev)}}>
+      {/* <NavLink to={room.id} style={({isActive}) => setIsActive(isActive)}> */}
+          <div className="room-header flex gap-5">
+          <img src={cube} alt="" />
+          {room.channel_name}
+          </div>
+      {/* </NavLink> */}
+    </div>
+  )
+}
 
-    return (
-      <div
-        key={room.id}
-        className={`${isActive ? 'active' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}>
-        <NavLink to={""} style={({isActive}) => setIsActive(isActive)}>
-            <div className="room-header flex gap-5">
-            <img src={cube} alt="" />
-            {room.name}
-            </div>
-        </NavLink>
-      </div>
-    )
-  })
+export default function Rooms({type, setRoom, setChat} : propsType) {
+
+  const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
+
+    // Choose the appropriate rooms array based on the provided type
+    let roomsToRender = null;
+    if (type === 'public')
+      roomsToRender = publicRooms
+    else if (type === "protected") {
+      roomsToRender = protectedRooms;
+    } else {
+      roomsToRender = privateRooms;
+    }
 
   return (
     <>
-      {rooms}
+      {Object.values(roomsToRender).map((room) => (
+        <RoomItem key={room.id} room={room} setRoom={setRoom} setChat={setChat} />
+      ))}
     </>
   )
 }

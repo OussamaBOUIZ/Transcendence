@@ -24,11 +24,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     
     async handleConnection(client: Socket) {
-        console.log("hello from: ", client)
-        const {auth} = client.handshake;
-        console.log('token: ', auth.token)
-        console.log(client.handshake.headers);
-        const user = await this.userService.getUserFromJwt(auth.token);
+        const cookie = client.handshake.headers.cookie.split('access_token=')[1];
+        console.log(`cookie ${cookie}`)
+        const user = await this.userService.getUserFromJwt(cookie);
         if(!user)
         {
             client.disconnect();
@@ -85,7 +83,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
     @SubscribeMessage('messageSend')
     messagee(@MessageBody() data) {
-        this.server.to(data.room).emit('messagee', data.message);
+        this.server.to(data.channelName).emit('messagee', data);
     }
 
     @SubscribeMessage('kickuser')
@@ -100,6 +98,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
+        console.log('HEEEY BRO')
         client.join(newUser.channelName);
         let channelFound = await this.channelservice.addToChannel(newUser);
         if(typeof channelFound === 'string')
@@ -113,17 +112,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto)
     {
-        if(this.channelservice.userIsMuted(newMessage.fromUser))
+        console.log("getting the message")
+
+        if(await this.channelservice.userIsMuted(newMessage.fromUser) === true)
         {
             this.server.emit('userIsMuted', 'user is muted from the channel');
             return ;
         }
+        console.log('block1');
         const channel: Channel = await this.channelservice.getChannel(newMessage.channelName);
+        console.log('block2');
         await this.channelservice.storeChannelMessage(newMessage.message, channel);
-        this.server.to(newMessage.channelName).emit('sendChannelMessage', {
-            msg: 'new message',
-            content: newMessage
-        });
+        console.log(newMessage.channelName)
+        this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
     }
 
 }

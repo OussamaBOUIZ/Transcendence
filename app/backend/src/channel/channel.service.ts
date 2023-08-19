@@ -58,14 +58,16 @@ export class ChannelService {
         if(channelFound.channel_type === 'public')
         {
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = [...channelFound.channelUsers, user];
+            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
+            [...channelFound.channelUsers, user] : [user];
         }
         if(channelFound.channel_type === 'protected')
         {
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
                 return 'provided password is incorrect'
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = [...channelFound.channelUsers, user];
+            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
+            [...channelFound.channelUsers, user] : [user];
         }
         await this.channelRepo.save(channelFound);
         return await this.channelRepo.find({
@@ -171,6 +173,7 @@ export class ChannelService {
     async userIsMuted(userId: number)
     {
         const muted = await this.muteRepo.findOneBy({user_id: userId});
+        console.log(muted);
         if(muted)
             return true;
         return false;
@@ -239,6 +242,14 @@ export class ChannelService {
             return 'admin';
         else if(channel.channelUsers.some(user => user.id === userId))
             return 'user';
+    }
+    async getAllChannels(id: number)
+    {
+        const user = await this.userService.findUserWithChannels(id);
+        console.log(user)
+        const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
+        console.log(`All are: `, AllChannels);
+        return AllChannels;
     }
 }
  

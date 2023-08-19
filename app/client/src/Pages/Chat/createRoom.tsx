@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import eyeRegular from "../../Assets/Icons/eye-regular.svg"
 import eyeSlashRegular from "../../Assets/Icons/eye-slash-regular.svg"
 import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import axios from "axios"
-import { getUserData } from "../../Hooks/getUserData";
-
+import UserContext from "../../Context/UserContext"
 
 interface newRoom {
     channelName: string,
@@ -16,8 +15,7 @@ interface newRoom {
 
 export default function CreateRoom({setter}: {setter: unknown}) {
 
-    const user = getUserData();
-    console.log(user)
+    const {user} = useContext(UserContext)
 
     const [newRoom, setNewRoom] = useState<newRoom>({ channelName: "", channelPassword: "", channelType: "public", joinedUsers: [] } as unknown as newRoom)
 
@@ -36,14 +34,14 @@ export default function CreateRoom({setter}: {setter: unknown}) {
       setInputType(inputType === 'password' ? 'text' : 'password');
     };
 
-    console.log(newRoom)
 
     const handleSubmit = () => {
         try {
             void axios.post(`/api/channel/update`, newRoom)
+            setter(prev => !prev)
         }
         catch (err) {
-            console.log(err)
+            // console.log(err)
         }
     }
 

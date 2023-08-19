@@ -1,18 +1,26 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import TopicRoom from './TopicRoom';
 import CreateRoom from './createRoom';
 import Rooms from './Rooms';
 
-export default function InboxRooms () {
+export default function InboxRooms ({setRoom, setChat}) {
 
     const [isClick, setIsClick] = useState<boolean>(false)
-
-    console.log(isClick)
 
     const [PublicMode, setPublicMode] = useState<boolean>(true)
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true)
     const [PrivateMode, setPrivateMode] = useState<boolean>(true)
     const initState = false;
+    const [refresh, setRefresh] = useState<number>(0)
+
+    useEffect(() => {
+        // refresh the component
+        setRefresh(prev => prev + 1)
+    }, [isClick])
+
+    console.log(isClick)
+
+
     return (
         <div>
             {
@@ -39,11 +47,11 @@ export default function InboxRooms () {
                 }
                 <div className="contentRooms">
                     <TopicRoom roomType="Public Channels" mode={PublicMode} setter={setPublicMode} clicked={setIsClick} />
-                    {PublicMode && <Rooms />}
+                    {PublicMode && <Rooms type="public"setRoom={setRoom} setChat={setChat} />}
                     <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} clicked={setIsClick} />
-                    {ProtectedMode && <Rooms />}
+                    {ProtectedMode && <Rooms type="protected"setRoom={setRoom} setChat={setChat} />}
                     <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} clicked={setIsClick} />
-                    {PrivateMode && <Rooms />}
+                    {PrivateMode && <Rooms type="private" setRoom={setRoom} setChat={setChat} />}
                 </div>
             </section>
         </div>

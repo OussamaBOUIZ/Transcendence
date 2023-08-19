@@ -6,21 +6,16 @@ import {UpdateContext} from "./ChatOverview"
 
 export default function ChannelInfo({user}: {user: User | null}) {
     const {update} = useContext(UpdateContext)
-
-
-    console.log("ChannelInf")
-
     const [channel, setData] = useState<channelData>()
 
     useEffect(() => {
         const getChannelData = async () => {
             try {
                 const res = await axios.get(`/api/channel/channelData/9`)
-                console.log(res.data)
                 setData(res.data)
             }
             catch (e) {
-                console.log(e)
+                // console.log(e)
             }
         }
         getChannelData()
@@ -36,10 +31,10 @@ export default function ChannelInfo({user}: {user: User | null}) {
                 }
             }
             catch (err) {
-                console.log(err)
+                // console.log(err)
             }
         }
-        getInfo()
+        void getInfo()
     }, [user, channel])
 
 

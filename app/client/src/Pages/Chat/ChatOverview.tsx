@@ -25,8 +25,6 @@ export default function ChatOverview() {
     like-minded individuals\
     ";
 
-    console.log(update);
-
     return (
         <div className="chat_overview overflow-hidden">
             <UpdateContext.Provider value={{ update, setUpdate }}>

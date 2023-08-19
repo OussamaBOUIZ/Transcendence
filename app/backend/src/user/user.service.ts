@@ -84,6 +84,35 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async findUserWithChannels(id: number): Promise<User> {
+        return await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                userRoleChannels: true,
+                adminRoleChannels: true,
+                ownerRoleChannels: true,
+            },
+            select: {
+                id: true,
+                userRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                adminRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                ownerRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                }
+            },
+        });
+    }
+    
     async userHasAuth(email: string) {
         const user = await this.userRepo.findOne({
             where: { email: email }

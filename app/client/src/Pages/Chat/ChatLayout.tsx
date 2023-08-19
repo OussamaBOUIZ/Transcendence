@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ChatList from './ChatList';
 import ChatOverview from './ChatOverview';
 import ChatInput from './ChatInput';
@@ -11,7 +11,8 @@ import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, Link, useParams} from 'react-router-dom'
 import { getUserData } from '../../Hooks/getUserData';
-import {User} from "../../../../global/Interfaces"
+import {User, rooms} from "../../../../global/Interfaces"
+import ChatRoom from "./ChatRoom"
 
 
 function InboxDm () {
@@ -28,7 +29,6 @@ function InboxChannels () {
 
 
 function InboxLayout () {
-    console.log("okokokokokokokok")
     return (
         <div>
             <section className="inbox">
@@ -43,13 +43,17 @@ function InboxLayout () {
 }
 
 export default function ChatLayout () {
+
+    const [chat, setChat] = useState<boolean>(false)
+    const [room, setRoom] = useState<rooms>({id: 0, channel_name: "", channel_type: ""})
  
     return ((
         <div className="chat_container">
             <ChatAccount />
             <div className="chat_list">
                 <OnlineNow />
-                <InboxRooms />
+                <InboxRooms setRoom={setRoom} setChat={setChat}/>
+                {chat && <ChatRoom room={room}/>}
                 {/* <Routes>
                     <Route element={<InboxLayout /> }>
                         <Route index  path="./*" element={<InboxDm />}/>

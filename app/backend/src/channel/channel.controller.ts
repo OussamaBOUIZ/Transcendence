@@ -34,19 +34,9 @@ export class ChannelController {
     {
         return await this.channelservice.getChannelData(id);
     }
-    @Get('publicChannels')
-    async getPublicChannels()
+    @Get('AllChannels/:id')
+    async getAllChannels(@Param('id', ParseIntPipe) id: number)
     {
-        return await this.channelservice.getPublicChannels();
-    }
-    @Get('publicChannels')
-    async getProtectedChannels()
-    {
-        return await this.channelservice.getProtectedChannels();
-    }
-    @Get('publicChannels')
-    async getPrivateChannels()
-    {
-        return await this.channelservice.getPrivateChannels();
+        return await this.channelservice.getAllChannels(id);
     }
 }
