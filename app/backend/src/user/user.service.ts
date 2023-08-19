@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
@@ -96,7 +96,11 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        return await this.userRepo.findOneBy({ id: payload.id });
+        console.log(typeof payload);
+        
+        // if (payload)
+        //     throw new UnauthorizedException('userToken not valid')
+        return await this.userRepo.findOneBy({ email: payload.email });
     }
 
     decodeJwtCode(userToken: string) {
