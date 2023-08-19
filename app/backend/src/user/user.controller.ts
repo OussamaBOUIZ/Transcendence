@@ -338,6 +338,11 @@ export class UserController {
 		console.log(username)
 		return this.userService.searchUser(username)
 	}
+
+    @Get('user/details/:id')
+    async getUserDetails(@Param('id') id: number) {
+        return this.userService.getUserDetails(id)
+    }
 }
 
 // localhost:3000/api/user/:ael÷

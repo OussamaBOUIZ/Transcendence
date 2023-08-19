@@ -6,6 +6,10 @@ export default {
   theme: {
     extend: {},
   },
+  colors: {
+      'purple': '#ff7849'
+    },
   plugins: [],
 }
 
+// A15FE4

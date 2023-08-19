@@ -2,7 +2,7 @@ import {Controller, Get, Headers, Param, ParseIntPipe} from '@nestjs/common';
 import {ChatGatewayService} from "./userchat.service";
 import {UserService} from "../user/user.service";
 
-@Controller('Chat')
+@Controller('chat')
 export class chatController {
     constructor(
         private chatService: ChatGatewayService,

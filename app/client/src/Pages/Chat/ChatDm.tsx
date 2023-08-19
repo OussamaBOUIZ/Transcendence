@@ -1,19 +1,43 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useContext} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
 import io, {Socket} from 'socket.io-client'
-
+import UserContext from '../../Context/UserContext';
 import { User, MessageData } from '../../../../global/Interfaces';
+import MessageBox from '../../Components/MessageBox';
+
+const messages = [
+    {id: 1, message: "hello ossama", date: new Date()},
+    {id: 2, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
+    {id: 1, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    // {id: 1, message: "hello ossama", date: new Date()},
+    // {id: 2, message: "hello yassine", date: new Date()}
+]
 
 export default function ChatDm () {
     const initialRender = useRef(true)
     const params = useParams()
+    const {user} = useContext(UserContext)
     const [socket, setSocket] = React.useState<Socket | null>(null)
     const [receiver, setReceiver] = React.useState<User | null>(null);
     const [receivedMessage, setReceivedMessage] = React.useState<string>("");
 
-    const [messages, setMessages] = React.useState<string[]>([]);
+    // const [messages, setMessages] = React.useState<string[]>([]);
     
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
@@ -42,6 +66,7 @@ export default function ChatDm () {
         }
     }
     
+
     /**EFFECTS     */
     useEffect(() => {
         if (initialRender.current) {
@@ -56,6 +81,7 @@ export default function ChatDm () {
               token: value
             }}) 
         
+
         setSocket(newSocket)
         
         //cleanup function
@@ -73,7 +99,7 @@ export default function ChatDm () {
             return
         }
         socket?.emit('SendMessage', messageToSendData)
-        setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
+        // setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
     }
     , [messageToSendData])
     
@@ -81,7 +107,7 @@ export default function ChatDm () {
     useEffect(() => {
         socket?.on('message', (mess: string) => setReceivedMessage(mess))
         if (receivedMessage !== "") {
-        setMessages((prevMessages:string[]) => [...prevMessages, receivedMessage])
+        // setMessages((prevMessages:string[]) => [...prevMessages, receivedMessage])
         console.log('Received: ', receivedMessage)
         }
 
@@ -96,13 +122,19 @@ export default function ChatDm () {
         console.log(messages)
     }, [messages])
 
+    const messagesElements = messages.map((mess:any) => {
+        console.log('mess.id : ', mess.id);
+        
+        return (
+            <MessageBox 
+            id={mess.id === user?.id}>
+            {mess.message}
+            </MessageBox>
+        )
+    })
 
-    const messStyle = {
-        textAlign: 'center',
-        fontSize: '1em',
-        margin: '.5em',
-    }
-    const messagesElements = messages.map((item:string) => <h2 style={messStyle}>{item}</h2>)
+    
+
     return (
         <>  
         <div className="chat_main">

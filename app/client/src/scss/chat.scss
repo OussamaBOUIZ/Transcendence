@@ -169,6 +169,8 @@ div.chat_container {
         }
         section.chat_window {
             grid-row: 2/3;
+            overflow-y: scroll;
+            padding-right: .5em
         }
         form.chat_input {
             grid-row: 3/4;
