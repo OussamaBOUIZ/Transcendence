@@ -120,9 +120,7 @@ export class ChatGatewayService {
         return await this.chatRepository.find({
             select: {
                 author: {
-                    id: true,
-                    username: true,
-                    firstname: true
+                    id: true
                 }
             },
             relations: {
@@ -130,7 +128,7 @@ export class ChatGatewayService {
                 author: true
             },
             where: [
-                { receiverId: senderId, author: {id: userId}},
+                {receiverId: senderId, author: {id: userId}},
                 {receiverId: userId, author: {id: senderId}}
             ],
             order: {
@@ -144,8 +142,15 @@ export class ChatGatewayService {
 
     async loadMessage(user: User, sender: number) {
         const message = await this.getAllMessages(user.id, sender)
-
-        return message
+        const transformedArray = message.map(item => {
+            const message = item.messages[0]
+            return {
+                authorId : item.author.id,
+                message: message.message,
+                date: new Date(message.CreatedAt)
+            }
+        })
+        return transformedArray
     }
 
 
