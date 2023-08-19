@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import ChatList from './ChatList';
 import ChatOverview from './ChatOverview';
 import ChatInput from './ChatInput';
-import ChatMain from './ChatMain';
 import ChatAccount from './ChatAccount';
 import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"

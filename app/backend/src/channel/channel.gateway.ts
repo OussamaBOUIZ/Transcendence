@@ -24,6 +24,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     
     async handleConnection(client: Socket) {
+        console.log(client.handshake.headers.cookie)
         const cookie = client.handshake.headers.cookie.split('access_token=')[1];
         console.log(`cookie ${cookie}`)
         const user = await this.userService.getUserFromJwt(cookie);
