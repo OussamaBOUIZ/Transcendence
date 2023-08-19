@@ -9,11 +9,22 @@ import MessageBox from '../../Components/MessageBox';
 
 const messages = [
     {id: 1, message: "hello ossama", date: new Date()},
-    {id: 2, message: "hello yassine", date: new Date()}
-    // {id: 1, message: "hello ossama", date: new Date()},
-    // {id: 2, message: "hello yassine", date: new Date()},
-    // {id: 1, message: "hello ossama", date: new Date()},
-    // {id: 2, message: "hello yassine", date: new Date()},
+    {id: 2, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
+    {id: 1, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
+    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
+    {id: 2, message: "Axkat3awd", date: new Date()},
+    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
+    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
     // {id: 1, message: "hello ossama", date: new Date()},
     // {id: 2, message: "hello yassine", date: new Date()}
 ]
@@ -112,6 +123,8 @@ export default function ChatDm () {
     }, [messages])
 
     const messagesElements = messages.map((mess:any) => {
+        console.log('mess.id : ', mess.id);
+        
         return (
             <MessageBox 
             id={mess.id === user?.id}>
