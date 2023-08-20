@@ -49,12 +49,12 @@ export class ChatGatewayService {
         return await this.userRepository.findOneBy({id: Id})
     }
 
-    async saveMessage(dto: MessageDto, user: User, sender: number) {
+    async saveMessage(dto: MessageDto, reciever: User, author: User) {
         const user_chat = new User_chat()
         const msg = new Message()
 
-        user_chat.sender_id = sender
-        user_chat.user = user
+        user_chat.receiverId = reciever.id
+        user_chat.author = author
 
         await this.chatRepository.save(user_chat)
 
@@ -110,7 +110,7 @@ export class ChatGatewayService {
                 msg: 'the user blocked',
                 socket: author.socketId
             }
-        await this.saveMessage(messageDto, receiver, author.id)
+        await this.saveMessage(messageDto, receiver, author)
         // check status of receiver
         await this.inboxService.saveInbox(receiver, author, messageDto)
         return receiver.socketId
@@ -118,15 +118,19 @@ export class ChatGatewayService {
 
     async getAllMessages(senderId: number, userId: number): Promise<User_chat[] | undefined> {
         return await this.chatRepository.find({
-            select: {messages: true},
+            select: {
+                author: {
+                    id: true
+                }
+            },
             relations: {
                 messages: true,
-                user: true
+                author: true
             },
-            where: {
-                sender_id: senderId,
-                user: {id: userId}
-            },
+            where: [
+                {receiverId: senderId, author: {id: userId}},
+                {receiverId: userId, author: {id: senderId}}
+            ],
             order: {
                 messages:{ 
                     CreatedAt: 'DESC'
@@ -137,9 +141,16 @@ export class ChatGatewayService {
     }
 
     async loadMessage(user: User, sender: number) {
-        const receiverMsgs = await this.getAllMessages(user.id, sender)
-        const senderMsgs = await this.getAllMessages(sender, user.id)
-        return {receiverMsgs, senderMsgs}
+        const message = await this.getAllMessages(user.id, sender)
+        const transformedArray = message.map(item => {
+            const message = item.messages[0]
+            return {
+                authorId : item.author.id,
+                message: message.message,
+                date: new Date(message.CreatedAt)
+            }
+        })
+        return transformedArray
     }
 
 

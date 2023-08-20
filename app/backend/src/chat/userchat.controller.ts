@@ -1,8 +1,18 @@
-import {Controller, Get, Headers, Param, ParseIntPipe} from '@nestjs/common';
+import {
+    Controller, Get,
+    Headers, Param,
+    ParseIntPipe,
+    Req,
+    UseGuards
+} from '@nestjs/common';
 import {ChatGatewayService} from "./userchat.service";
 import {UserService} from "../user/user.service";
+import { Request } from 'express';
+import { JwtGuard } from 'src/auth/jwt/jwtGuard';
 
 @Controller('chat')
+
+@UseGuards(JwtGuard)
 export class chatController {
     constructor(
         private chatService: ChatGatewayService,
@@ -12,12 +22,13 @@ export class chatController {
 
     @Get(':id') // receiver id
     async getMessages(
-        @Headers('authorization') auth: string,
+        @Req() req: Request,
         @Param('id', ParseIntPipe) id: number,
     ) 
     {
-        const user = await this.userRepository.getUserFromJwt(auth)
-
+        console.log(req.user);
+        
+        const user = await this.userRepository.findUserByEmail(req.user['email'])
         if (user === null)
             console.log('todo: handle if the receiver not exist')
         return await this.chatService.loadMessage(user, id)
