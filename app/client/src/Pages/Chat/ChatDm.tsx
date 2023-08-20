@@ -130,12 +130,12 @@ export default function ChatDm () {
         console.log(messagesList)
     }, [messagesList])
 
-    const messagesElements = messagesList.map((mess:any) => {
-        console.log('mess.id : ', mess.id);
+    const messagesElements = messagesList.map((mess:MessageData) => {
+        console.log('mess.id : ', mess.authorId);
         
         return (
             <MessageBox
-            id={mess.id === user?.id}>
+            id={mess.authorId === user?.id}>
             {mess.message}
             </MessageBox>
         )
