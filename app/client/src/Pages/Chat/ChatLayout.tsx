@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState} from 'react'
 import ChatList from './ChatList';
 import ChatOverview from './ChatOverview';
 import ChatInput from './ChatInput';
@@ -43,17 +43,8 @@ function InboxLayout () {
 
 export default function ChatLayout () {
 
-    const initial = useRef<boolean>(false)
-    const [prevRoom, setPrevRoom] = useState<string>("")
     const [room, setRoom] = useState<rooms>({id: 0, channel_name: "", channel_type: ""})
  
-    useEffect(() => {
-        if(initial.current === false) {
-            initial.current = true;
-            return ;
-        }
-        setPrevRoom(room.channel_name);
-    }, [room])
 
     return ((
         <div className="chat_container">
@@ -61,7 +52,7 @@ export default function ChatLayout () {
             <div className="chat_list">
                 <OnlineNow />
                 <InboxRooms setRoom={setRoom}/>
-                <ChatRoom room={room} prevRoom={prevRoom} />
+                <ChatRoom room={room} />
                 {/* <Routes>
                     <Route element={<InboxLayout /> }>
                         <Route index  path="./*" element={<InboxDm />}/>

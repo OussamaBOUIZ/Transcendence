@@ -88,7 +88,6 @@ interface MessageBox {
 }
 
 interface roomData {
-    prevChannel: string,
     channelName: string,
     userId: number,
 }

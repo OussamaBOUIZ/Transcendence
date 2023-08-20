@@ -3,7 +3,7 @@ import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import {rooms, MessageBox, roomData} from "../../../../global/Interfaces"
 
-export default function ChatRoom({room, prevRoom}: {room: rooms, prevRoom: string}) {
+export default function ChatRoom({room}: {room: rooms}) {
     const [socket, setSocket] = useState<Socket>()
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<MessageBox[]>([])
@@ -30,11 +30,16 @@ export default function ChatRoom({room, prevRoom}: {room: rooms, prevRoom: strin
 
 
     useEffect(() => {
-        const value = document.cookie.split('=')[1]
+        // const value = document.cookie.split('=')[1]
         const fd = io("ws://localhost:1313", {
             withCredentials: true,
           })
         setSocket(fd)
+
+        return  () => {
+            if (socket)
+                socket.disconnect();
+        }
     }, [])
 
     useEffect(() => {
@@ -43,15 +48,19 @@ export default function ChatRoom({room, prevRoom}: {room: rooms, prevRoom: strin
             return;
         }
         socket?.emit("accessChannel", roomData);
+
+        return  () => {
+            if (socket)
+                socket.emit("leavechannel", roomData);
+        }
     }, [roomData, socket]);
     
     useEffect(() => {
         setRoomData({
-            prevChannel: prevRoom,
             channelName: room.channel_name,
             userId: user?.id,
         });
-    }, [user, room, prevRoom]);
+    }, [user, room]);
     
 
     useEffect(() => {

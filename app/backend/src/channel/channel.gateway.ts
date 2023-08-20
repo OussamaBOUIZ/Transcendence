@@ -77,10 +77,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     async createChannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
     {
         const user = await this.userService.findUserWithChannels(channelData.userId);
-        console.log("prev: ", channelData.prevChannel)
-        console.log("current: ", channelData.channelName)
-        client.leave(channelData.prevChannel);
         client.join(channelData.channelName);
+    }
+
+    @SubscribeMessage('leavechannel')
+    async leavechannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
+    {
+        const user = await this.userService.findUserWithChannels(channelData.userId);
+        client.leave(channelData.channelName);
     }
 
     @SubscribeMessage('banuser')
