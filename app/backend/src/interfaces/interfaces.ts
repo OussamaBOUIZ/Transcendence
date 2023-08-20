@@ -25,3 +25,9 @@ export class  MessageDto {
 	@IsDate()
     creationTime: Date
 }
+
+export interface MessageData {
+    userId: number,
+    message: string,
+    creationTime: Date,
+}

@@ -18,7 +18,7 @@ import {SocketAuthMiddleware} from "./websocket.middleware";
 import {MessageDto} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
-import {MessageData} from "../../../global/Interfaces"
+import {MessageData} from "../../../global/Interfaces" 
 /**
  * RxJS :
  *

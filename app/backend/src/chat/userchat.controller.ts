@@ -12,7 +12,7 @@ import { JwtGuard } from 'src/auth/jwt/jwtGuard';
 
 @Controller('chat')
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard) 
 export class chatController {
     constructor(
         private chatService: ChatGatewayService,
@@ -26,7 +26,7 @@ export class chatController {
         @Param('id', ParseIntPipe) id: number,
     ) 
     {
-        console.log(req.user);
+        console.log('-------------  ');
         
         const user = await this.userRepository.findUserByEmail(req.user['email'])
         if (user === null)
