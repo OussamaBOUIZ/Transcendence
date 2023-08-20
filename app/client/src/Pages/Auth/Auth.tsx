@@ -17,7 +17,7 @@ interface Inputs {
 
 export default function Auth() {
 
-    const [notif, setNotif] = useState("")
+    const [notif, setNotif] = useState<string>("")
 
     const QRcode = getQRcode();
 

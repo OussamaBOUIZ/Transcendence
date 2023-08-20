@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { channelData } from "../../../../global/Interfaces";
 import { getUserImage } from "../../Hooks/getUserImage";
 import UserInfoCard from "../../Components/UserInfoCard";
+import { SocketContext } from "./ChatLayout";
 
 interface ChannelProps {
   channel: channelData | undefined,
@@ -20,6 +21,7 @@ interface channelProperty {
 
 export default function ChannelProperty({ channel, propertyName, isUnderMyGrade }: ChannelProps) {
   const [Components, setComponents] = useState();
+  const {roomData} = useContext(SocketContext)
 
   useEffect(() => {
     const getInfo = async () => {

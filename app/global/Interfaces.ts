@@ -90,6 +90,7 @@ interface MessageBox {
 interface roomData {
     channelName: string,
     userId: number,
+    minutes?: number
 }
 
 

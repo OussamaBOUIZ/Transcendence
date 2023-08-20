@@ -11,7 +11,7 @@ export function UserProvider ({children}) {
 
     const fetchUserData = async () => {
         try {
-          const response = await axios.get<User>("/api/user");
+          const response = await axios.get<User>("/api/user"); 
           const image = await getUserImage(response.data.id)
           setUser({...response.data, image});
           
@@ -21,18 +21,18 @@ export function UserProvider ({children}) {
       };
 
     useEffect(() => {
-        fetchUserData();
+        void fetchUserData();
       }, [])
 
     return (
-        <>
-            <UserContext.Provider value={{
-                user, setUser,
-                authenticated, setAuthenticated
-            }}>
-                {children}
-            </UserContext.Provider>
-        </>
+      <>
+        <UserContext.Provider value={{
+            user, setUser,
+            authenticated, setAuthenticated
+        }}>
+            {children}
+        </UserContext.Provider>
+      </>
     );
 } 
 

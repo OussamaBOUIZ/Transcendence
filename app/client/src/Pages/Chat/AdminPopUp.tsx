@@ -1,15 +1,18 @@
 import React, {useContext} from 'react'
 import muteIcon from "../../Assets/Icons/mute.svg"
 import kickIcon from "../../Assets/Icons/kick.svg"
-import blockIcon from "../../Assets/Icons/block.svg"
+import banIcon from "../../Assets/Icons/block.svg"
 import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
 import {UpdateContext} from "./ChatOverview"
 import axios from "axios"
-
+import { SocketContext } from './ChatLayout'
 
 
 export default function AdminPopUp({ channelId, id }: {channelId: number, id: number}) {
+
+    const {socket, roomData} = useContext(SocketContext)
+
     async function promoteMember() {
         try {
             const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
@@ -21,34 +24,19 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
         }
     }
 
-    async function kickMember() {
-        try {
-            const res = await axios.post(`/api/channel/`)
-            console.log(res)
-        }
-        catch (err) {
-            console.log(err)
-        }
+    function kickMember() {
+        const data ={userId: id, channelName: roomData.channelName}
+        socket?.emit('kickuser', data);
     }
 
-    async function blockMember() {
-        try {
-            const res = await axios.post(`/api/channel/`)
-            console.log(res)
-        }
-        catch (err) {
-            console.log(err)
-        }
+    function banMember() {
+        const data ={userId: id, channelName: roomData.channelName}
+        socket?.emit('banuser', data)
     }
 
-    async function muteMember() {
-        try {
-            const res = await axios.post(`/api/channel/`)
-            console.log(res)
-        }
-        catch (err) {
-            console.log(err)
-        }
+    function muteMember() {
+        const data ={userId: id, channelName: roomData.channelName, minutes: 1}
+        socket?.emit('muteuser', data)
     }
 
     async function handleClick(name: string) {
@@ -57,13 +45,13 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
                 await promoteMember()
                 break;
             case "kick":
-                await kickMember()
+                kickMember()
                 break;
-            case "block":
-                await blockMember()
+            case "ban":
+                banMember()
                 break;
             default:
-                await muteMember()
+                muteMember()
                 break;
         }
     }
@@ -71,7 +59,7 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
     const allIcons = [
         {id: nanoid() ,value: promoteIcon, name:"promote"},
         {id: nanoid() ,value: kickIcon, name:"kick"},
-        {id: nanoid() ,value: blockIcon, name:"block"},
+        {id: nanoid() ,value: banIcon, name:"ban"},
         {id: nanoid() ,value: muteIcon, name:"mute"}
     ]
 

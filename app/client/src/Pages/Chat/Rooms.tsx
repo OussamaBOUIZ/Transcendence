@@ -1,34 +1,38 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import cube from "../../Assets/Icons/cube.svg";
-import { NavLink } from "react-router-dom";
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
-import ChatRoom from "./ChatRoom"
+import {SocketContext} from "./ChatLayout";
+import {rooms} from "../../../../global/Interfaces"
+import UserContext from "../../Context/UserContext";
 
 interface propsType {
   type: 'public' | 'protected' | 'private';
-  setRoom: any;
 }
 
-function RoomItem({room, setRoom}: {room: any, setRoom: any}) {
+function RoomItem({item}: {item: rooms}) {
   const [isActive, setIsActive] = useState(false);
+  const {user} = useContext(UserContext)
+  const {room, setRoom} = useContext(SocketContext)
   
   return (
     <div
       className={`${isActive ? 'active' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}
-      onClick={() => {setRoom(room)}}>
+      onClick={() => {setRoom(item)}}>
       {/* <NavLink to={room.id} style={({isActive}) => setIsActive(isActive)}> */}
           <div className="room-header flex gap-5">
           <img src={cube} alt="" />
-          {room.channel_name}
+          {item.channel_name}
           </div>
       {/* </NavLink> */}
     </div>
   )
 }
 
-export default function Rooms({type, setRoom} : propsType) {
+export default function Rooms({type} : propsType) {
 
   const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
+  const {room, setRoom} = useContext(SocketContext)
+
 
     // Choose the appropriate rooms array based on the provided type
     let roomsToRender = null;
@@ -42,8 +46,8 @@ export default function Rooms({type, setRoom} : propsType) {
 
   return (
     <>
-      {Object.values(roomsToRender).map((room) => (
-        <RoomItem key={room.id} room={room} setRoom={setRoom} />
+      {Object.values(roomsToRender).map((item) => (
+        <RoomItem key={item.id} item={item} />
       ))}
     </>
   )

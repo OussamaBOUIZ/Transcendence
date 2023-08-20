@@ -77,35 +77,38 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     async createChannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
     {
         const user = await this.userService.findUserWithChannels(channelData.userId);
-        client.join(channelData.channelName);
+        const channel = await this.channelservice.findChannelBannedMembers(channelData.channelName);
+
+        if(channel !== null && channel.BannedUsers !== null && 
+            channel.BannedUsers.some(user => user.id === channelData.userId))
+        {
+            console.log('HEERE', channelData.userId);
+            this.server.emit('userIsBanned', 'You are banned from this channel');
+        }
+        else
+            client.join(channelData.channelName);
     }
 
     @SubscribeMessage('leavechannel')
     async leavechannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
     {
-        const user = await this.userService.findUserWithChannels(channelData.userId);
         client.leave(channelData.channelName);
     }
 
     @SubscribeMessage('banuser')
-    async banuser(@MessageBody() user: UserOperationDto, @ConnectedSocket() client: Socket)
+    async banuser(@MessageBody() banData: UserOperationDto, @ConnectedSocket() client: Socket)
     {
-        client.leave(user.channelName);
-        await this.channelservice.banUserFromChannel(user);
-        this.server.emit('userBanned', `user was banned from channel ${user.channelName}`);
-    }
-
-    @SubscribeMessage('messageSend')
-    messagee(@MessageBody() data) {
-        this.server.to(data.channelName).emit('messagee', data);
+        const user = await this.userService.findUserById(banData.userId);
+        client.to(user.socketId).emit('socketDisconnect', banData.channelName);
+        await this.channelservice.banUserFromChannel(banData);
     }
 
     @SubscribeMessage('kickuser')
-    async kickuser(@MessageBody() user: UserOperationDto, @ConnectedSocket() client: Socket)
+    async kickuser(@MessageBody() kickData: UserOperationDto, @ConnectedSocket() client: Socket)
     {
-        client.leave(user.channelName);
-        await this.channelservice.kickUserFromChannel(user);
-        this.server.emit('userKicked', `user was kicked from channel ${user.channelName}`);
+        const user = await this.userService.findUserById(kickData.userId);
+        client.to(user.socketId).emit('socketDisconnect', kickData.channelName);
+        await this.channelservice.kickUserFromChannel(kickData);
     }
 
         
@@ -124,22 +127,24 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     @SubscribeMessage('channelMessage')
-    async messageSend(@MessageBody() newMessage: channelMessageDto)
+    async messageSend(@MessageBody() newMessage: channelMessageDto, @ConnectedSocket() client: Socket)
     {
-        console.log("getting the message")
-
         if(await this.channelservice.userIsMuted(newMessage.fromUser) === true)
+            return;
+        if(await this.channelservice.userIsBanned(newMessage.channelName, newMessage.fromUser) === true)
         {
-            this.server.emit('userIsMuted', 'user is muted from the channel');
+            client.leave(newMessage.channelName);
             return ;
         }
-        console.log('block1');
-        const channel: Channel = await this.channelservice.getChannel(newMessage.channelName);
-        console.log('block2');
-        await this.channelservice.storeChannelMessage(newMessage.message, channel);
-        console.log(newMessage.channelName)
-        this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
+        const channel: Channel = await this.channelservice.findChannelWithMembers(newMessage.channelName);
+        if(channel.channelUsers !== null && channel.channelUsers.some(user => user.id === newMessage.fromUser)
+    || channel.channelAdmins !== null && channel.channelAdmins.some(user => user.id === newMessage.fromUser)
+    || channel.channelOwners !== null && channel.channelOwners.some(user => user.id === newMessage.fromUser))
+        {
+
+            await this.channelservice.storeChannelMessage(newMessage.message, channel);
+            this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
+        }
     }
 
 }
-

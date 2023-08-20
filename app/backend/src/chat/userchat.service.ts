@@ -127,6 +127,11 @@ export class ChatGatewayService {
                 sender_id: senderId,
                 user: {id: userId}
             },
+            order: {
+                messages:{ 
+                    CreatedAt: 'DESC'
+                }
+            },
             take: 30
         })
     }

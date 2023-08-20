@@ -1,24 +1,26 @@
 import React, {useState, useContext, useEffect} from "react";
 import axios from "axios"
-import {channelData, User} from "../../../../global/Interfaces"
+import {channelData} from "../../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
 import {UpdateContext} from "./ChatOverview"
+import UserContext from "../../Context/UserContext";
 
-export default function ChannelInfo({user}: {user: User | null}) {
+export default function ChannelInfo() {
     const {update} = useContext(UpdateContext)
     const [channel, setData] = useState<channelData>()
+    const {user} = useContext(UserContext)
 
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelData/9`)
+                const res = await axios.get(`/api/channel/channelData/26`)
                 setData(res.data)
             }
             catch (e) {
                 // console.log(e)
             }
         }
-        getChannelData()
+        void getChannelData()
     }, [update])
 
     const [myGrade, setMyGrade] = useState<string>("")

@@ -218,6 +218,8 @@ div.chat_container {
         }
         section.chat_window {
             grid-row: 2/3;
+            overflow-y: scroll;
+            padding-right: .5em
         }
         form.chat_input {
             grid-row: 3/4;
@@ -240,7 +242,6 @@ div.chat_container {
                 border-radius: 5px;
                 padding: 8px 20px;
                 margin-left: 10px;
-                background: #E62FD0;
             }
         }  
         &.chat_main_init { // to be corrected 
@@ -327,7 +328,7 @@ div.chat_container {
         grid-area: o;
         height: 100%;
         .info {
-            height: 55%;
+            height: 95%;
             &::-webkit-scrollbar {
                 width: .1em;
             }

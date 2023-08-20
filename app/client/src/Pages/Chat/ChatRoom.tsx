@@ -1,18 +1,11 @@
-import React, {useState, useEffect, useContext, useRef} from "react"
-import io, {Socket} from "socket.io-client"
+import React, {useContext} from "react"
 import UserContext from "../../Context/UserContext"
-import {rooms, MessageBox, roomData} from "../../../../global/Interfaces"
+import {SocketContext} from "./ChatLayout"
 
-export default function ChatRoom({room}: {room: rooms}) {
-    const [socket, setSocket] = useState<Socket>()
-    const [message, setMessage] = useState<string>("")
-    const [messageList, setMessageList] = useState<MessageBox[]>([])
+export default function ChatRoom({message, setMessage, setMessageList}) {
+
     const {user} = useContext(UserContext)
-    const initState = useRef<boolean>(false)
-    const ini = useRef<boolean>(false)
-
-
-    const [roomData, setRoomData] = useState<roomData>({} as roomData)
+    const {socket, room} = useContext(SocketContext)
 
     const sendMessage = () => {
         if (message !== "") {
@@ -27,57 +20,6 @@ export default function ChatRoom({room}: {room: rooms}) {
           setMessage("");
         }
       }
-
-
-    useEffect(() => {
-        // const value = document.cookie.split('=')[1]
-        const fd = io("ws://localhost:1313", {
-            withCredentials: true,
-          })
-        setSocket(fd)
-
-        return  () => {
-            if (socket)
-                socket.disconnect();
-        }
-    }, [])
-
-    useEffect(() => {
-        if (!initState.current) {
-            initState.current = true;
-            return;
-        }
-        socket?.emit("accessChannel", roomData);
-
-        return  () => {
-            if (socket)
-                socket.emit("leavechannel", roomData);
-        }
-    }, [roomData, socket]);
-    
-    useEffect(() => {
-        setRoomData({
-            channelName: room.channel_name,
-            userId: user?.id,
-        });
-    }, [user, room]);
-    
-
-    useEffect(() => {
-        console.log("ko")
-
-        if (ini.current === false)
-        {
-            ini.current = true
-            return ;
-        }
-        console.log("ok")
-        socket?.on("sendChannelMessage", (data: MessageBox)  => {
-        console.log(`data is ${data.message}`);
-        // console.log(`${data.fromUser}: ${data.message}`)
-        // setMessageList((list) => [...list, data]);
-        });
-    }, [socket]);
 
     return (
         <>
