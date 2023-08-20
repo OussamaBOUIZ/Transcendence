@@ -134,7 +134,6 @@ export class ChatGatewayService {
 
     async loadMessage(user: User, receiver: number) {
         const message = await this.getAllMessages(user.id, receiver)
-        console.log('message',message)
         const transformedArray = message.map(item => {
             const message = item.messages[0]
             if (!message)

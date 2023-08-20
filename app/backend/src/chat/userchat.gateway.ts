@@ -68,7 +68,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		console.log(data, messageDto.message);
 		const message: MessageData = {
-			userId: data.authorId,
+			authorId: data.authorId,
 			message: messageDto.message,
 			creationTime: new Date(messageDto?.creationTime)
 		}
