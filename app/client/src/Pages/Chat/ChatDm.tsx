@@ -35,28 +35,28 @@ export default function ChatDm () {
     const params = useParams()
     const {user} = useContext(UserContext)
     const [socket, setSocket] = React.useState<Socket | null>(null)
-    // const [receiver, setReceiver] = React.useState<User | null>(null);
-    const [receivedMessage, setReceivedMessage] = React.useState<string>("");
-
+    const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
+    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
+    const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
     
-    const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
-    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
-        userId: Number(params.id),
-        message: "",
-        creationTime : new Date()
-    });
-    
 
-    function handleChange (e) :void {
+
+    // const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
+    //     authorId: Number(params.id),
+    //     message: "",
+    //     creationTime : new Date()
+    // });
+    
+    function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
         setMessageToSendValue(e.target.value)
     }
 
-    function handleSubmit (e): void {
+    function handleSubmit (e:  React.FormEvent<HTMLFormElement>): void {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({
-                userId: Number(params.id),
+                authorId: Number(params.id),
                 message: messageToSendValue,
                 creationTime : new Date()
             })
@@ -107,19 +107,19 @@ export default function ChatDm () {
             return
         }
         socket?.emit('SendMessage', messageToSendData)
-        // setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
+        setMessagesList((prevList) => [...prevList, messageToSendData])
     }
     , [messageToSendData])
     
 
     useEffect(() => {
-        socket?.on('message', (mess: string) => setReceivedMessage(mess))
-        if (receivedMessage !== "") {
-        // setMessages((prevMessages:string[]) => [...prevMessages, receivedMessage])
-        console.log('Received: ', receivedMessage)
+        socket?.on('message', (mess: string) => setReceivedMessageData({authorId: 2, message: mess, creationTime: new Date()}))
+        if (receivedMessageData.message !== "") {
+            setMessagesList((prevList) => [...prevList, receivedMessageData])
+            console.log('Received: ', receivedMessageData.message)
         }
 
-    }, [socket, receivedMessage])
+    }, [socket, receivedMessageData])
 
     
     useEffect(() => {
@@ -140,13 +140,12 @@ export default function ChatDm () {
             </MessageBox>
         )
     })
-
     
 
     return (
         <>  
         <div className="chat_main">
-             <ChatHeader 
+ <ChatHeader 
              username={`user id: ${params.id}`}
              online={true}
              />

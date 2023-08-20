@@ -42,7 +42,7 @@ interface Leaders {
 }
 
 interface MessageData {
-    userId: number,
+    authorId: number,
     message: string,
     creationTime: Date,
 }
