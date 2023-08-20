@@ -45,6 +45,8 @@ import React, {useState} from 'react'
 
 export default function InboxRooms () {
     return (
-        <h2>ROOMS MESSAGES</h2>
+        <div className="chat_inbox">
+            <h2>ROOMS MESSAGES</h2>
+        </div>
     );
 }

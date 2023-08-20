@@ -8,7 +8,7 @@ import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
-import {Outlet, Routes, Route, Link, useParams} from 'react-router-dom'
+import {Outlet, Routes, Route, NavLink, useParams} from 'react-router-dom'
 
 // function InboxDm () {
 //     return (
@@ -58,14 +58,29 @@ import {Outlet, Routes, Route, Link, useParams} from 'react-router-dom'
 
 
 export default function ChatLayout () {
+    const activeStyle = {
+        borderBottom: "3px solid $border-color",
+        color: "#FEC9FF"
+    }
     return (
         <div className="chat_container">
             <ChatAccount />
-            <div className="chat_list">
+            <div className="chat_nav">
                  <OnlineNow />
                     <nav className='flex justify-between'>
-                        <Link  className="block" to="/chat">Messages<span></span></Link>
-                        <Link className="block"  to="/chat/rooms">Channels<span></span></Link>
+                        <NavLink  
+                        className="nav_link" 
+                        style={(isActive) => isActive ? activeStyle : {}}
+                        to="/chat">
+                            Messages
+                            <span></span>
+                        </NavLink>
+                        <NavLink 
+                        className="nav_link"
+                        style={(isActive) => isActive ? activeStyle : {}}
+                        to="/chat/rooms">
+                            Channels
+                        </NavLink>
                     </nav>
             </div>
             <Outlet />
