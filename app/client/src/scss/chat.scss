@@ -13,9 +13,10 @@ div.chat_container {
     border-radius: 25px;
     overflow: hidden;
     display: grid;
-    grid-template :  80px auto 90px / repeat(15, 1fr);
+    grid-template :  80px 160px auto 90px / repeat(15, 1fr);
     grid-template-areas: 
         "a a a m m m m m m m m m o o o"
+        "n n n m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
@@ -48,8 +49,8 @@ div.chat_container {
     section.chat_info {
         grid-area: h;
     }
-    div.chat_list {
-        grid-area: l;
+    div.chat_nav {
+        grid-area: n;
         border-right: 1px solid $border-color;
         
         section.online_now {
@@ -69,69 +70,26 @@ div.chat_container {
                 }
             }
         }
-        section.inbox {
+        nav {
             display: flex;
-        flex-direction: column;
-            nav {
-                display: flex;
-                padding: 0 8px;
-                a {
-                    border-bottom: 1px solid $border-color;
-                    width: 50%;
-                    padding: 8px;
-                    background: transparent;
-                    font-size: 16px;
-                    color: $text-light-color;
-                }
-                a.active {
-                    border-bottom: 3px solid $border-color;
-                    color: $text-pink-color;
-                }
-            }
-            aside {
-                margin: 20% 10%;
-                p {
-                    text-align: center;
-                    color: $text-grey-color;
-                }
-            }
-            .contentRooms {
-                .topic {
-                    background-color: #2C094E;
-                }
-                .active {
-                    background-color: #531F8A;
-                }
-            }
-            figure.message_oview {
-                // height: 70px;
+            padding: 0 8px;
+            .nav_link {
+                border-bottom: 1px solid $border-color;
+                width: 50%;
                 padding: 8px;
-                display: flex;
-                img {
-                    height: 50px;
-                    width : 50px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-                figcaption {
-                    margin-left: 10px;
-                    p {
-                        font-size: 12px;
-                    }
-                    
-                }
-                time {
-                    font-size: 10px;
-                    margin-left: 10px;
-                }
-                &.active {
-                    background-color: $active-message-bg;
-                    border-left: 3px solid $border-color;
-                }
+                background: transparent;
+                font-size: 16px;
+                color: $text-light-color;
+            }
+            .active {
+                border-bottom: 3px solid $border-color;
+                color: $text-pink-color;
             }
         }
     }
-    
+    div.chat_inbox {
+        grid-area: l;
+    }
     div.chat_main {
         grid-area: m;
         display: grid;
@@ -169,6 +127,8 @@ div.chat_container {
         }
         section.chat_window {
             grid-row: 2/3;
+            overflow-y: scroll;
+            padding-right: .5em
         }
         form.chat_input {
             grid-row: 3/4;
@@ -360,3 +320,66 @@ div.chat_container {
         }
     }
 }
+
+
+// section.inbox {
+//     display: flex;
+//     flex-direction: column;
+//     nav {
+//         display: flex;
+//         padding: 0 8px;
+//         a {
+//             border-bottom: 1px solid $border-color;
+//             width: 50%;
+//             padding: 8px;
+//             background: transparent;
+//             font-size: 16px;
+//             color: $text-light-color;
+//         }
+//         a.active {
+//             border-bottom: 3px solid $border-color;
+//             color: $text-pink-color;
+//         }
+//     }
+//     aside {
+//         margin: 20% 10%;
+//         p {
+//             text-align: center;
+//             color: $text-grey-color;
+//         }
+//     }
+//     .contentRooms {
+//         .topic {
+//             background-color: #2C094E;
+//         }
+//         .active {
+//             background-color: #531F8A;
+//         }
+//     }
+//     figure.message_oview {
+//         // height: 70px;
+//         padding: 8px;
+//         display: flex;
+//         img {
+//             height: 50px;
+//             width : 50px;
+//             border-radius: 50%;
+//             object-fit: cover;
+//         }
+//         figcaption {
+//             margin-left: 10px;
+//             p {
+//                 font-size: 12px;
+//             }
+            
+//         }
+//         time {
+//             font-size: 10px;
+//             margin-left: 10px;
+//         }
+//         &.active {
+//             background-color: $active-message-bg;
+//             border-left: 3px solid $border-color;
+//         }
+//     }
+// }
