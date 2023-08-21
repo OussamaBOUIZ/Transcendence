@@ -9,15 +9,16 @@ import axios from "axios"
 import { SocketContext } from './ChatLayout'
 
 
-export default function AdminPopUp({ channelId, id }: {channelId: number, id: number}) {
+export default function AdminPopUp({ channelId, id, setIsClicked}: {channelId: number, id: number, setIsClicked: any}) {
 
     const {socket, roomData} = useContext(SocketContext)
+    const {setUpdate} = useContext(UpdateContext)
 
     async function promoteMember() {
         try {
             const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
             console.log(res)
-            setUpdate(update + 1)
+            setUpdate(prev => prev + 1)
         }
         catch (err) {
             console.log(err)
@@ -27,6 +28,7 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
     function kickMember() {
         const data ={userId: id, channelName: roomData.channelName}
         socket?.emit('kickuser', data);
+        setUpdate(prev => prev + 1)
     }
 
     function banMember() {
@@ -51,7 +53,8 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
                 banMember()
                 break;
             default:
-                muteMember()
+                setIsClicked(prev => !prev)
+                // muteMember()
                 break;
         }
     }
@@ -68,8 +71,6 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
             <img key={icon.id} className="cursor-pointer" src={icon.value} alt="" onClick={() => void handleClick(icon.name)}/>
         )
     })
-
-    const {update, setUpdate} = useContext(UpdateContext)
 
     return (
         <div className='bg-violet-700 bg-opacity-90 flex items-center justify-evenly absolute top-0 left-0 w-full h-full'>

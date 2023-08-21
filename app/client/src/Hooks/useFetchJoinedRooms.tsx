@@ -12,16 +12,12 @@ export function useFetchJoinedRooms() {
     
 
     useEffect(() => {
-        if (!initialValue.current) {
-            initialValue.current = true;
-            return ;
-        }
         const getData = async () => {
             try {
                 if (user) {
                     const res = await axios.get(`api/channel/AllChannels/${user?.id}`);
                     const roomData = res.data as rooms[];
-                    console.log(res.data)
+                    console.log("rooms here")
                     setPublicRooms(roomData.filter((room) => room.channel_type === 'public'));
                     setProtectedRooms(roomData.filter((room) => room.channel_type === 'protected'));
                     setPrivateRooms(roomData.filter((room) => room.channel_type === 'private'));

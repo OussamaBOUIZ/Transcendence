@@ -4,10 +4,12 @@ import losses from "../Assets/Icons/losses2.svg"
 import "../scss/userInfoCard.scss"
 import {userInfoCard} from "../../../global/Interfaces"
 import AdminPopUp from "../Pages/Chat/AdminPopUp"
+import MutePopUp from "../Pages/Chat/MutePopUp"
 
 export default function UserInfoCard(props: userInfoCard) {
 
     const [isHovered, setIsHovered] = useState(false);
+    const [isMuteClicked, setIsClicked] = useState(false);
 
     const handleMouseEnter = () => {
       setIsHovered(true);
@@ -15,7 +17,9 @@ export default function UserInfoCard(props: userInfoCard) {
   
     const handleMouseLeave = () => {
       setIsHovered(false);
+      setIsClicked(false)
     };
+
 
     return (
         <div className={`element-${isHovered ? "hovered" : ""} friend-item relative overflow-hidden`}
@@ -39,7 +43,8 @@ export default function UserInfoCard(props: userInfoCard) {
                 <span><img src={wins} alt="" /> {props.wins.toString() + " wins"}</span>
                 <span><img src={losses} alt="" /> {props.losses.toString() + " losses"}</span>
             </div>
-            {props.isUnderMyGrade && isHovered && <AdminPopUp channelId={props.channelId as number} id={props.id}/>}
+            {props.isUnderMyGrade && isHovered && <AdminPopUp channelId={props.channelId as number} id={props.id} setIsClicked={setIsClicked} />}
+            {isHovered && isMuteClicked && <MutePopUp channelId={props.channelId as number} id={props.id} />}
         </div>
     )
 }

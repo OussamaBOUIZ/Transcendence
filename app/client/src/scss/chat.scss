@@ -50,6 +50,12 @@ div.chat_container {
     }
     div.chat_list {
         grid-area: l;
+        overflow-x: hidden;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: .4em;
+            border-radius: 6em;
+        }
         border-right: 1px solid $border-color;
         
         section.online_now {

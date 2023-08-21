@@ -13,7 +13,7 @@ export default function ChannelInfo() {
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelData/26`)
+                const res = await axios.get(`/api/channel/channelData/1`)
                 setData(res.data)
             }
             catch (e) {
@@ -41,17 +41,17 @@ export default function ChannelInfo() {
 
 
     return (
-        <div className="info overflow-x-hidden overflow-y-auto ">
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Channel Owners</label>
+        <div className="info overflow-x-hidden overflow-y-auto">
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Channel Owners</label>
                 <ChannelProperty channel={channel} propertyName="owner" isUnderMyGrade={false}/>
             </div>
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Admins</label>
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Admins</label>
                 <ChannelProperty channel={channel} propertyName="admin" isUnderMyGrade={(myGrade === "owner") ? true : false}/>
             </div>
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Members</label>
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Members</label>
                 <ChannelProperty channel={channel} propertyName="user" isUnderMyGrade={(myGrade === "owner" || myGrade === "admin") ? true : false}/>
             </div>
         </div>

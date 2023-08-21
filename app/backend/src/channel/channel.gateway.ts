@@ -111,7 +111,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         await this.channelservice.kickUserFromChannel(kickData);
     }
 
-        
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {

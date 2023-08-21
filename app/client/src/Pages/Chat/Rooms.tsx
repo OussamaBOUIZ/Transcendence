@@ -3,7 +3,6 @@ import cube from "../../Assets/Icons/cube.svg";
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import {SocketContext} from "./ChatLayout";
 import {rooms} from "../../../../global/Interfaces"
-import UserContext from "../../Context/UserContext";
 
 interface propsType {
   type: 'public' | 'protected' | 'private';
@@ -11,7 +10,6 @@ interface propsType {
 
 function RoomItem({item}: {item: rooms}) {
   const [isActive, setIsActive] = useState(false);
-  const {user} = useContext(UserContext)
   const {room, setRoom} = useContext(SocketContext)
   
   return (
@@ -31,8 +29,6 @@ function RoomItem({item}: {item: rooms}) {
 export default function Rooms({type} : propsType) {
 
   const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
-  const {room, setRoom} = useContext(SocketContext)
-
 
     // Choose the appropriate rooms array based on the provided type
     let roomsToRender = null;

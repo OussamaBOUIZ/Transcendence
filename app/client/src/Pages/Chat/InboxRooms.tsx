@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState} from 'react'
 import TopicRoom from './TopicRoom';
 import CreateRoom from './createRoom';
 import Rooms from './Rooms';
@@ -11,12 +11,6 @@ export default function InboxRooms () {
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true)
     const [PrivateMode, setPrivateMode] = useState<boolean>(true)
     const initState = false;
-    const [refresh, setRefresh] = useState<number>(0)
-
-    useEffect(() => {
-        // refresh the component
-        setRefresh(prev => prev + 1)
-    }, [isClick])
 
     return (
         <div>
@@ -27,10 +21,6 @@ export default function InboxRooms () {
                 </div>
             }
             <section className="inbox">
-                <nav>
-                    <button>Messages<span></span></button>
-                    <button className="active">Channels<span></span></button>
-                </nav>
                 {
                 initState 
                 &&
