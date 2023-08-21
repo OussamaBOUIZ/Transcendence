@@ -21,7 +21,14 @@ export class  MessageDto {
 	@IsNumber()
 	userId: number
 	@IsString()
+	@IsNotEmpty()
     message: string
 	@IsDate()
     creationTime: Date
+}
+
+export interface MessageData {
+    authorId: number,
+    message: string,
+    creationTime: Date,
 }

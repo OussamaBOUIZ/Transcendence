@@ -379,14 +379,24 @@ export class UserService {
             },
             select: {
                 id: true,
-                username: true,
                 firstname: true,
-                lastname: true
-                
+                lastname: true,
+                stat: {
+                   achievements: {
+                        id: true,
+                        badge_name: true,
+                        description: true,
+                   },
+                   ladder_level: true,
+                   losses: true,
+                   wins: true, 
+                }
             }
         })
         if (!user)
             throw new NotFoundException('user not found')
+        console.log(user);
+        
         return user
     }
 }

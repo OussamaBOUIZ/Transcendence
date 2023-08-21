@@ -32,6 +32,8 @@ import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
+import { promises } from 'dns';
+import { PlayerData} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
@@ -340,7 +342,7 @@ export class UserController {
 	}
 
     @Get('user/details/:id')
-    async getUserDetails(@Param('id') id: number) {
+    async getUserDetails(@Param('id') id: number) : Promise<PlayerData> {
         return this.userService.getUserDetails(id)
     }
 }

@@ -16,19 +16,20 @@ interface FriendUser {
     username: string,
 }
 
+
+interface Achievement {
+    id: number,
+    badge_name: string,
+    description: string,
+    image?: string,
+    is_achieved?: boolean,
+    user_id?: number,
+}
 interface Stat {
     ladder_level: number,
     losses: number,
     wins: number,
-}
-
-interface Achievement {
-    badge_name: string,
-    description: string,
-    id: number,
-    image?: string,
-    is_achieved: boolean,
-    user_id: number,
+    achievements?: Achievement[],
 }
 
 interface Leaders {
@@ -52,5 +53,30 @@ interface Data {
     lastname: string,
     username: string,
 }
+interface DmUserOverview {
+    id: number,
+    firstname: string,
+    lastname: string,
+    stat: Stat,
+}
 
-export type {User, MessageData, FriendUser, Achievement, Leaders, Data};
+interface StatAchievement {
+    id: number;
+    badge_name: string;
+    description: string;
+  }
+  
+  interface SStat {
+    achievements: StatAchievement[];
+    ladder_level: number;
+    losses: number;
+    wins: number;
+  }
+  
+  interface PlayerData {
+    id: number;
+    firstname: string;
+    lastname: string;
+    stat: SStat;
+  }
+export type {User, MessageData, FriendUser, Achievement, Leaders, Data, PlayerData};

@@ -4,31 +4,9 @@ import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { User, MessageData } from '../../../../global/Interfaces';
+import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
-
-// const messagesList = [
-//     {id: 1, message: "hello ossama", date: new Date()},
-//     {id: 2, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
-//     {id: 1, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
-//     {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-//     {id: 2, message: "Axkat3awd", date: new Date()},
-//     {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-//     {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-//     {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-//     {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-//     {id: 2, message: "Axkat3awd", date: new Date()},
-//     {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-//     {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-//     {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-//     {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-//     {id: 2, message: "Axkat3awd", date: new Date()},
-//     {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-//     {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-//     // {id: 1, message: "hello ossama", date: new Date()},
-//     // {id: 2, message: "hello yassine", date: new Date()}
-// ]
 
 export default function ChatDm () {
     const initialRender = useRef(true)
@@ -39,14 +17,8 @@ export default function ChatDm () {
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
     const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
-    
+    const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
 
-
-    // const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
-    //     authorId: Number(params.id),
-    //     message: "",
-    //     creationTime : new Date()
-    // });
     
     function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
         setMessageToSendValue(e.target.value)
@@ -74,6 +46,17 @@ export default function ChatDm () {
             console.log(error);
         }
     }
+    const getUserOverview = async () => {
+        try {
+            const res = await axios.get(`../api/user/user/details/${params.id}`)
+            console.log('log overview', res.data);
+            setUserOverview(res.data);
+            console.log('overview', userOverview);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     /**EFFECTS     */
     useEffect(() => {
@@ -91,6 +74,9 @@ export default function ChatDm () {
 
         // Getting the conversation 
         loadConversation();
+        getUserOverview();
+        console.log('overview', userOverview);
+
         
         //cleanup function
         return  () => {
@@ -130,13 +116,13 @@ export default function ChatDm () {
         console.log(messagesList)
     }, [messagesList])
 
-    const messagesElements = messagesList.map((mess:any) => {
-        console.log('mess.id : ', mess.id);
+    const messagesElements = messagesList.map((recMsg:MessageData) => {
+        console.log('mess.id : ', recMsg.authorId);
         
         return (
             <MessageBox
-            id={mess.id === user?.id}>
-            {mess.message}
+            id={recMsg.authorId === user?.id}>
+            {recMsg.message}
             </MessageBox>
         )
     })
@@ -145,7 +131,7 @@ export default function ChatDm () {
     return (
         <>  
         <div className="chat_main">
- <ChatHeader 
+            <ChatHeader 
              username={`user id: ${params.id}`}
              online={true}
              />
