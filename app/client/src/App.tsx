@@ -45,7 +45,7 @@ export default function App () {
                         <Route path="rooms:id" element={<ChatRooms />} />
                       </Route> */}
                     
-                    <Route path="/chat" element={<ChatLayout />}>
+                    <Route path="chat" element={<ChatLayout />}>
                       <Route index element={<ChatDm />} />
                       <Route path=":id" element={<ChatDm />} />
                       <Route path="rooms" element={<ChatRooms />} />

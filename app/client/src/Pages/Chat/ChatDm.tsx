@@ -147,7 +147,7 @@ export default function ChatDm () {
 
              <section className="chat_window">
                 {messagesElements}               
-            </section>
+             </section>
 
 
              <form className="chat_input" onSubmit={handleSubmit}>
