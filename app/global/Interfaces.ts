@@ -61,13 +61,14 @@ interface Data {
 //     stat: Stat,
 // }
 
-interface StatAchievement {
+export interface StatAchievement {
     id: number;
     badge_name: string;
     description: string;
+    image?: string;
   }
   
-  interface SStat {
+export interface SStat {
     achievements: StatAchievement[];
     ladder_level: number;
     losses: number;

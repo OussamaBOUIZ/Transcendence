@@ -18,7 +18,6 @@ export default function ChatDm () {
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
     const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
-    // const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
 
     
     function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
@@ -51,14 +50,7 @@ export default function ChatDm () {
         }
     }
 
-    // const getUserOverview = async () => {
-    //     try {
-    //         const res = await axios.get(`../api/user/user/details/${params.id}`)
-    //         setUserOverview(res.data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+
     
     /**EFFECTS     */
     useEffect(() => {
