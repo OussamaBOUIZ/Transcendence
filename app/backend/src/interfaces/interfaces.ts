@@ -1,23 +1,27 @@
 import { Transform, Type } from "class-transformer";
-import {IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, Matches} from "class-validator";
+import {IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, Matches, NotContains} from "class-validator";
+
 
 export class ReceiverDto {
 	@IsNotEmpty()
 	userName: string;
-	@IsNotEmpty()
+	@IsNotEmpty() 
 	userId: number;
 }
 
+function trim(value: string): string {
+    return value.trim();
+}
 
 export class  MessageDto {
 	@IsNumber()
 	receiverId: number
 
+	
 	@IsString()
 	@IsNotEmpty()
-	@Matches(/^\S*$/, {
-		message: 'Username cannot contain whitespaces',
-	  })
+	@Type(() => String)
+	@Transform(({value}) => trim(value))
     message: string
 	
 	@Type(() => Date)
