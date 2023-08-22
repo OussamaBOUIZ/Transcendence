@@ -40,10 +40,7 @@ export default function ChatSearchBox () {
             }
         }
         if (submittedName !== "")
-        {
-            console.log(submittedName)
             getUserCard()
-        }
     }, [submittedName])
 
     return (

@@ -4,12 +4,10 @@ import axios from 'axios'
 import UserContext from '../Context/UserContext'
 
 export default function AuthRequired () {
-    console.log('shiiiit');
     
     const {authenticated, setAuthenticated} = useContext(UserContext)
 
     useEffect(() => { 
-        console.log('eyyyow');
         
         const verifyAuthentication = async () => {
             
@@ -26,7 +24,6 @@ export default function AuthRequired () {
         verifyAuthentication();
     }, [authenticated])
 
-    console.log(authenticated);
     
     // if (!authenticated)
     //     return <Navigate to="/sign" />

@@ -34,12 +34,16 @@ export default function ChatDm () {
                 creationTime : new Date()
             })
             setMessageToSendValue("")
+            console.log(messageToSendData);
+            
         }
     }
     
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${params.id}`)
+            console.log('res data', res.data);
+            
             setMessagesList(res.data)
             
         } catch (error) {
@@ -89,19 +93,24 @@ export default function ChatDm () {
             initialRender.current = false 
             return
         }
-        socket?.emit('SendMessage', messageToSendData)
-        console.log('emit message', messageToSendData);
+        if (messageToSendData.message !== "") {
+            socket?.emit('SendMessage', messageToSendData)
+            setMessagesList((prevList) => [...prevList, messageToSendData])
+        }
+        // console.log('emit message', messageToSendData);
         
-        setMessagesList((prevList) => [...prevList, messageToSendData])
     }
     , [socket, messageToSendData])
     
 
     useEffect(() => {
-        console.log('aaaaaaaaa');
+        if (initialRender.current) {    
+            initialRender.current = false 
+            return
+        }
         
         socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
-        console.log('on message', receivedMessageData);
+        // console.log('on message', receivedMessageData);
         
         setMessagesList((prevList) => [...prevList, receivedMessageData])
 
@@ -116,11 +125,14 @@ export default function ChatDm () {
     //     console.log(messagesList)
     // }, [messagesList])
 
-    const messagesElements = messagesList.map((recMsg:MessageData) => {
+    const messagesElements = messagesList.map((msg:MessageData, index:number) => {
+        if (msg.message !== "")
+            console.log('empty', index);
+            
         return (
             <MessageBox
-            id={recMsg.authorId === user?.id}>
-            {recMsg.message}
+            id={msg.authorId === user?.id}>
+            {msg.message}
             </MessageBox>
         )
     })
