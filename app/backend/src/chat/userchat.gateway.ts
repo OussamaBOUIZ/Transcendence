@@ -13,12 +13,13 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {User} from 'src/databases/user.entity';
 import {WsGuard} from "../auth/socketGuard/wsGuard";
-import {Logger, UseGuards} from '@nestjs/common';
+import {Logger, UseFilters, UseGuards, UsePipes, ValidationPipe} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./websocket.middleware";
-import {MessageDto} from "../interfaces/interfaces";
+import {MessageDto, sentMsg} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
 import {MessageData} from "../interfaces/interfaces"
+import { WsExceptionFilter } from "src/Filter/ws.filter";
 /**
  * RxJS :
  *
@@ -34,6 +35,7 @@ import {MessageData} from "../interfaces/interfaces"
  *
  */
 
+@UseFilters(WsExceptionFilter)
  @WebSocketGateway(4000, {cors: {
 	origin: "http://localhost:5173",
 		credentials: true
@@ -53,14 +55,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger = new Logger(ChatGateway.name);
 	}
 	
+	@UsePipes(new ValidationPipe)
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		console.log('onSendMessage')
 		console.log(messageDto)
-		let data
+		var data: sentMsg
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
-			console.log(data, messageDto.message);
 			const message: MessageData = {
 				authorId: data.authorId,
 				message: messageDto.message,

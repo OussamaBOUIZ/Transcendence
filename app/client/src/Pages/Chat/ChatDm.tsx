@@ -62,10 +62,10 @@ export default function ChatDm () {
     
     /**EFFECTS     */
     useEffect(() => {
-        // if (initialRender.current) {
-        //     initialRender.current = false
-        //     return
-        // }
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
