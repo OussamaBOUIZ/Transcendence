@@ -26,7 +26,7 @@ export class  MessageDto {
 	
 	@Type(() => Date)
 	@IsDate()
-    creationTime: Date
+    creationTime: Date 
 }
 
 export interface sentMsg {
