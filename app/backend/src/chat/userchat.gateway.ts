@@ -18,7 +18,6 @@ import {SocketAuthMiddleware} from "./websocket.middleware";
 import {MessageDto} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
-// import {MessageData} from "../../../global/Interfaces"
 import {MessageData} from "../interfaces/interfaces"
 /**
  * RxJS :
@@ -61,19 +60,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let data
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
+			console.log(data, messageDto.message);
+			const message: MessageData = {
+				authorId: data.authorId,
+				message: messageDto.message,
+				creationTime: new Date(messageDto?.creationTime)
+			}
+			this.server.to(data.socketId).emit("message", message)
 		}
 		catch (e) {
 			console.log(e)
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
-		console.log(data, messageDto.message);
-		const message: MessageData = {
-			authorId: data.authorId,
-			message: messageDto.message,
-			creationTime: new Date(messageDto?.creationTime)
-		}
-		this.server.to(data.socketId).emit("message", message)
+		
 	}
  
 	// @SubscribeMessage('loadMessages')

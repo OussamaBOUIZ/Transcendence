@@ -7,6 +7,7 @@ import UserContext from '../../Context/UserContext';
 import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
+import InboxDm from './InboxDm';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
@@ -17,7 +18,7 @@ export default function ChatDm () {
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
     const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
-    const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
+    // const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
 
     
     function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
@@ -28,7 +29,7 @@ export default function ChatDm () {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({
-                authorId: Number(params.id),
+                receiverId: Number(params.id),
                 message: messageToSendValue,
                 creationTime : new Date()
             })
@@ -40,30 +41,27 @@ export default function ChatDm () {
         try {
             const res = await axios.get(`../api/chat/${params.id}`)
             setMessagesList(res.data)
-            console.log(messagesList);
             
         } catch (error) {
             console.log(error);
         }
     }
-    const getUserOverview = async () => {
-        try {
-            const res = await axios.get(`../api/user/user/details/${params.id}`)
-            console.log('log overview', res.data);
-            setUserOverview(res.data);
-            console.log('overview', userOverview);
-            
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
+    // const getUserOverview = async () => {
+    //     try {
+    //         const res = await axios.get(`../api/user/user/details/${params.id}`)
+    //         setUserOverview(res.data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
     
     /**EFFECTS     */
     useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
+        // if (initialRender.current) {
+        //     initialRender.current = false
+        //     return
+        // }
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -74,8 +72,7 @@ export default function ChatDm () {
 
         // Getting the conversation 
         loadConversation();
-        getUserOverview();
-        console.log('overview', userOverview);
+        // getUserOverview();
 
         
         //cleanup function
@@ -93,32 +90,33 @@ export default function ChatDm () {
             return
         }
         socket?.emit('SendMessage', messageToSendData)
+        console.log('emit message', messageToSendData);
+        
         setMessagesList((prevList) => [...prevList, messageToSendData])
     }
-    , [messageToSendData])
+    , [socket, messageToSendData])
     
 
     useEffect(() => {
-        socket?.on('message', (mess: string) => setReceivedMessageData({authorId: 2, message: mess, creationTime: new Date()}))
-        if (receivedMessageData.message !== "") {
-            setMessagesList((prevList) => [...prevList, receivedMessageData])
-            console.log('Received: ', receivedMessageData.message)
-        }
+        console.log('aaaaaaaaa');
+        
+        socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
+        console.log('on message', receivedMessageData);
+        
+        setMessagesList((prevList) => [...prevList, receivedMessageData])
 
     }, [socket, receivedMessageData])
 
     
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
-        console.log(messagesList)
-    }, [messagesList])
+    // useEffect(() => {
+    //     if (initialRender.current) {
+    //         initialRender.current = false
+    //         return
+    //     }
+    //     console.log(messagesList)
+    // }, [messagesList])
 
     const messagesElements = messagesList.map((recMsg:MessageData) => {
-        console.log('mess.id : ', recMsg.authorId);
-        
         return (
             <MessageBox
             id={recMsg.authorId === user?.id}>
@@ -129,7 +127,8 @@ export default function ChatDm () {
     
 
     return (
-        <>  
+        <>
+        <InboxDm />
         <div className="chat_main">
             <ChatHeader 
              username={`user id: ${params.id}`}
@@ -138,7 +137,7 @@ export default function ChatDm () {
 
              <section className="chat_window">
                 {messagesElements}               
-            </section>
+             </section>
 
 
              <form className="chat_input" onSubmit={handleSubmit}>

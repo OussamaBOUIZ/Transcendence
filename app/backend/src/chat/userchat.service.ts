@@ -89,6 +89,7 @@ export class ChatGatewayService {
             }
         }
         console.log(author.username, receiver.username)
+        console.log(author, receiver)
         if (author.id === receiver.id)
             throw {
                 msg: 'You cannot send message to your self?',
@@ -144,6 +145,8 @@ export class ChatGatewayService {
                 date: new Date(message?.CreatedAt)
             }
         })
+        console.log(transformedArray);
+        
         return transformedArray
     }
 

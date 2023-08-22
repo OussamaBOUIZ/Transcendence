@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: number,
     firstname: string,
     image?: string,
@@ -42,8 +42,9 @@ interface Leaders {
     xp: number | null,
 }
 
-interface MessageData {
-    authorId: number,
+export interface MessageData {
+    receiverId?: number,
+    authorId?:number,
     message: string,
     creationTime: Date,
 }
@@ -53,12 +54,12 @@ interface Data {
     lastname: string,
     username: string,
 }
-interface DmUserOverview {
-    id: number,
-    firstname: string,
-    lastname: string,
-    stat: Stat,
-}
+// interface DmUserOverview {
+//     id: number,
+//     firstname: string,
+//     lastname: string,
+//     stat: Stat,
+// }
 
 interface StatAchievement {
     id: number;
@@ -73,10 +74,11 @@ interface StatAchievement {
     wins: number;
   }
   
-  interface PlayerData {
+  export interface PlayerData {
     id: number;
     firstname: string;
     lastname: string;
     stat: SStat;
-  }
-export type {User, MessageData, FriendUser, Achievement, Leaders, Data, PlayerData};
+}
+
+export type { FriendUser, Achievement, Leaders, Data};
