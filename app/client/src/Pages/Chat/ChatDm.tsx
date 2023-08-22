@@ -95,9 +95,9 @@ export default function ChatDm () {
         }
         if (messageToSendData.message !== "") {
             socket?.emit('SendMessage', messageToSendData)
-            setMessagesList((prevList) => [...prevList, messageToSendData])
+            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(params.id)}])
+            console.log('emit message', messageToSendData);
         }
-        // console.log('emit message', messageToSendData);
         
     }
     , [socket, messageToSendData])
@@ -125,16 +125,18 @@ export default function ChatDm () {
     //     console.log(messagesList)
     // }, [messagesList])
 
-    const messagesElements = messagesList.map((msg:MessageData, index:number) => {
-        if (msg.message !== "")
-            console.log('empty', index);
-            
-        return (
-            <MessageBox
-            id={msg.authorId === user?.id}>
-            {msg.message}
+    const messagesElements = messagesList.map((msg:MessageData) => {
+        console.log(msg.authorId);
+        
+        if (msg.message !== "") {
+            return (
+                <MessageBox
+                id={msg.authorId === user?.id}>
+                {msg.message}
             </MessageBox>
-        )
+           )
+        } 
+        return null
     })
     
     

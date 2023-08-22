@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
-import {IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString} from "class-validator";
+import { Transform, Type } from "class-transformer";
+import {IsDate, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, Matches} from "class-validator";
 
 export class ReceiverDto {
 	@IsNotEmpty()
@@ -15,8 +15,12 @@ export class  MessageDto {
 
 	@IsString()
 	@IsNotEmpty()
+	@Matches(/^\S*$/, {
+		message: 'Username cannot contain whitespaces',
+	  })
     message: string
 	
+	@Type(() => Date)
 	@IsDate()
     creationTime: Date
 }

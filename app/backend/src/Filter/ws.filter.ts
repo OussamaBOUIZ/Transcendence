@@ -10,8 +10,9 @@ export class WsExceptionFilter {
   }
 
   public handleError(client: Socket, exception: HttpException | WsException) {
+    
     if (exception instanceof HttpException) {
-      return new WsException(exception.getResponse)
+      return new WsException(exception.message)
     } else {
       // handle websocket exception
         return new WsException(exception.message)
