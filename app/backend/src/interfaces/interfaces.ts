@@ -8,26 +8,26 @@ export class ReceiverDto {
 	userId: number;
 }
 
-// export class MessageDto {
-// 	user: {
-// 		userId: string;
-// 		userName: string;
-// 	};
-// 	timeSent: string;
-// 	message: string;
-// }
 
 export class  MessageDto {
 	@IsNumber()
-	userId: number
+	receiverId: number
+
 	@IsString()
+	@IsNotEmpty()
     message: string
+	
 	@IsDate()
     creationTime: Date
 }
 
+export interface sentMsg {
+	authorId: number,
+	socketId: string
+}
+
 export interface MessageData {
-    userId: number,
+	authorId: number,
     message: string,
     creationTime: Date,
 }

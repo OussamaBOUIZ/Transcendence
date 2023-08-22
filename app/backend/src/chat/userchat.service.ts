@@ -4,13 +4,12 @@ import {ConfigService} from "@nestjs/config";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../databases/user.entity";
 import {Repository} from "typeorm";
-import {MessageDto} from "../interfaces/interfaces";
+import {MessageDto, sentMsg} from "../interfaces/interfaces";
 import {User_chat} from "../databases/userchat.entity";
 import {Message} from "../databases/message.entity";
 import {Socket} from "socket.io";
 import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";
-
 @Injectable()
 export class ChatGatewayService {
     private logger = new Logger(ChatGatewayService.name)
@@ -80,15 +79,23 @@ export class ChatGatewayService {
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {
-        const receiver = await this.getUserById(messageDto.userId)
+        console.log('id:', messageDto.receiverId)  
+        console.log('message:', messageDto)
+
+        const receiver = await this.getUserById(messageDto.receiverId)
+        console.log(receiver);
+        
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
+        this.logger.log({receiver})
+        this.logger.log(socket.data.user.email)
+        this.logger.log({author})
+ 
         if (!author || !receiver) {
             throw {
                 msg: 'Invalid sender or receiver',
                 socket: author.socketId
             }
         }
-        console.log(author.username, receiver.username)
         if (author.id === receiver.id)
             throw {
                 msg: 'You cannot send message to your self?',
@@ -102,10 +109,11 @@ export class ChatGatewayService {
         await this.saveMessage(messageDto, receiver, author)
         // check status of receiver
         await this.inboxService.saveInbox(receiver, author, messageDto)
-        return {
+        const ss: sentMsg = {
             authorId: author.id,
-           socket: receiver.socketId
+            socketId: receiver.socketId
         }
+        return ss
     }
 
     async getAllMessages(senderId: number, receiverId: number): Promise<User_chat[] | undefined> {
@@ -144,6 +152,8 @@ export class ChatGatewayService {
                 date: new Date(message?.CreatedAt)
             }
         })
+        console.log(transformedArray);
+        
         return transformedArray
     }
 

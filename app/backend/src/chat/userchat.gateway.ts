@@ -3,7 +3,7 @@ import {
 	OnGatewayDisconnect,
 	OnGatewayInit,
 	SubscribeMessage,
-	WebSocketGateway,
+	WebSocketGateway, 
 	WebSocketServer
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
@@ -15,10 +15,10 @@ import {User} from 'src/databases/user.entity';
 import {WsGuard} from "../auth/socketGuard/wsGuard";
 import {Logger, UseGuards} from '@nestjs/common';
 import {SocketAuthMiddleware} from "./websocket.middleware";
-import {MessageDto} from "../interfaces/interfaces";
+import {MessageDto, sentMsg} from "../interfaces/interfaces";
 import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
-import {MessageData} from "../../../global/Interfaces" 
+import {MessageData} from "../interfaces/interfaces"
 /**
  * RxJS :
  *
@@ -57,22 +57,22 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		console.log('onSendMessage')
 		console.log(messageDto)
-		let data
+		var data: sentMsg
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
+			const message: MessageData = {
+				authorId: data.authorId,
+				message: messageDto.message,
+				creationTime: new Date(messageDto?.creationTime)
+			}
+			this.server.to(data.socketId).emit("message", message)
 		}
 		catch (e) {
 			console.log(e)
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
-		console.log(data, messageDto.message);
-		const message: MessageData = {
-			authorId: data.authorId,
-			message: messageDto.message,
-			creationTime: new Date(messageDto?.creationTime)
-		}
-		this.server.to(data.socketId).emit("message", message)
+		
 	}
  
 	// @SubscribeMessage('loadMessages')

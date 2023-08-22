@@ -32,6 +32,8 @@ import { extname } from 'path';
 import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
+import { promises } from 'dns';
+// import { PlayerData} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
