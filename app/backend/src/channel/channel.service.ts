@@ -284,5 +284,17 @@ export class ChannelService {
         const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
         return AllChannels;
     }
+    async addUserToChannel(userId: number, channelName: string)
+    {
+        const user = await this.userService.findUserById(userId);
+        const channel = await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                channelUsers: true,
+            },
+        });
+        channel.channelUsers = channel.channelUsers !== null ? [...channel.channelUsers, user] : [user]; 
+        await this.channelRepo.save(channel);
+    }
 }
  

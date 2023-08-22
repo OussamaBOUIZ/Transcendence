@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { channelData } from "../../../../global/Interfaces";
 import { getUserImage } from "../../Hooks/getUserImage";
 import UserInfoCard from "../../Components/UserInfoCard";
-import { SocketContext } from "./ChatLayout";
+import { SocketContext } from "./ChatRooms";
 
 interface ChannelProps {
   channel: channelData | undefined,

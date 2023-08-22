@@ -6,7 +6,7 @@ import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
 import {UpdateContext} from "./ChatOverview"
 import axios from "axios"
-import { SocketContext } from './ChatLayout'
+import { SocketContext } from './ChatRooms'
 
 
 export default function AdminPopUp({ channelId, id, setIsClicked}: {channelId: number, id: number, setIsClicked: any}) {

@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function InboxDm () {
     return (
-        <h2>MESSAGES</h2>
+        <div className="chat_inbox">
+            <h2>MESSAGES</h2>
+        </div>
     );
 }

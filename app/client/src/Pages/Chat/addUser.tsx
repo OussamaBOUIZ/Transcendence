@@ -1,20 +1,15 @@
-import React from 'react'
-import "../../scss/utils.scss"
+import React, {useRef, useState, useEffect} from 'react'
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
-// import { getUserData } from '../../Hooks/getUserData'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 
-export default function ChatSearchBox () {
-    const [currentSearch, setCurrentSearch] = React.useState("")
-    const [submittedName, setSubmittedName] = React.useState("")
-    const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
-    const initialRender:any = React.useRef(true)
+export default function AddUser() {
+    const [currentSearch, setCurrentSearch] = useState("")
+    const [submittedName, setSubmittedName] = useState("")
+    const [searchedUser, setSearchedUser] = useState<User | null>(null);
+    const initialRender = useRef(true)
 
-    const submitStyle = {
-        marginTop: "1em",
-    }
     function handleChange (e) {
         setCurrentSearch(e.target.value)
     }
@@ -25,7 +20,7 @@ export default function ChatSearchBox () {
             setSubmittedName(currentSearch)
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false
             return
@@ -42,28 +37,30 @@ export default function ChatSearchBox () {
         if (submittedName !== "")
         {
             console.log(submittedName)
-            getUserCard()
+            void getUserCard()
         }
     }, [submittedName])
 
     return (
-        <section className="search_box">
-            <form onSubmit={handleSubmit}>
-                <label>Search</label>
-                <input 
-                type="search"  
-                placeholder="Type a username"
-                onChange={handleChange}
-                value={currentSearch}
-                />
-                <input style={submitStyle}type="submit" value="submit" />
+        <section className="bg-primary-color flex flex-col rounded-xl">
+            <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+                <label className='pl-3 pt-3'>Search</label>
+                <div className='flex gap-2 items-center p-2'>
+                    <input 
+                    type="search"  
+                    className='w-4/5 py-1 px-2 bg-input rounded-sm'
+                    placeholder="Type a username"
+                    onChange={handleChange}
+                    value={currentSearch}
+                    />
+                    <input className="bg-violet-900 py-1 px-2 rounded-md" type="submit" value="search" />
+                </div>
             </form>
             {searchedUser
             && 
             <UserCard 
                 user={searchedUser}
-                message={true}
-                friend={true}
+                add={true}
             />
             }
         </section>

@@ -136,7 +136,7 @@ export default function ChatDm () {
         )
     })
 
-    
+    console.log("okokokokokoko")
 
     return (
         <>
@@ -149,7 +149,7 @@ export default function ChatDm () {
 
              <section className="chat_window bg-chat-body">
                 {messagesElements}               
-            </section>
+             </section>
 
 
              <form className="chat_input" onSubmit={handleSubmit}>

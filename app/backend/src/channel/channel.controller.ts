@@ -39,4 +39,9 @@ export class ChannelController {
     {
         return await this.channelservice.getAllChannels(id);
     }
+    @Get('addToChannel/:id')
+    async addToChannel(@Param('id', ParseIntPipe) id: number, @Query('channelName') channelName: string)
+    {
+        await this.channelservice.addUserToChannel(id, channelName);
+    }
 }

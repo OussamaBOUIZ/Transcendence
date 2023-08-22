@@ -81,10 +81,12 @@ interface rooms {
     password?: string
 }
 
-interface MessageBox {
+interface Message {
     message: string,
     channelName: string,
-    fromUser: number
+    fromUser: number,
+    Username: string,
+    image: string
 }
 
 interface roomData {
@@ -94,4 +96,4 @@ interface roomData {
 }
 
 
-export type {User, MessageData, MessageBox, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};
+export type {User, MessageData, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

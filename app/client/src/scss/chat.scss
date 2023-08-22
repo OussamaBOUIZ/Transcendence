@@ -13,9 +13,10 @@ div.chat_container {
     border-radius: 25px;
     overflow: hidden;
     display: grid;
-    grid-template :  80px auto 90px / repeat(15, 1fr);
+    grid-template :  80px 160px auto 90px / repeat(15, 1fr);
     grid-template-areas: 
         "a a a m m m m m m m m m o o o"
+        "n n n m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
@@ -48,14 +49,8 @@ div.chat_container {
     section.chat_info {
         grid-area: h;
     }
-    div.chat_list {
-        grid-area: l;
-        overflow-x: hidden;
-        overflow-y: auto;
-        &::-webkit-scrollbar {
-            width: .4em;
-            border-radius: 6em;
-        }
+    div.chat_nav {
+        grid-area: n;
         border-right: 1px solid $border-color;
         
         section.online_now {
@@ -75,6 +70,25 @@ div.chat_container {
                 }
             }
         }
+        nav {
+            display: flex;
+            padding: 0 8px;
+            .nav_link {
+                border-bottom: 1px solid $border-color;
+                width: 50%;
+                padding: 8px;
+                background: transparent;
+                font-size: 16px;
+                color: $text-light-color;
+            }
+            .active {
+                border-bottom: 3px solid $border-color;
+                color: $text-pink-color;
+            }
+        }
+    }
+    div.chat_inbox {
+        grid-area: l;
         input[type="radio"] {
             appearance: none;
             width: 1em;
@@ -124,69 +138,7 @@ div.chat_container {
                 }
             }
         }
-        section.inbox {
-            display: flex;
-            flex-direction: column;
-            nav {
-                display: flex;
-                padding: 0 8px;
-                a {
-                    border-bottom: 1px solid $border-color;
-                    width: 50%;
-                    padding: 8px;
-                    background: transparent;
-                    font-size: 16px;
-                    color: $text-light-color;
-                }
-                a.active {
-                    border-bottom: 3px solid $border-color;
-                    color: $text-pink-color;
-                }
-            }
-            aside {
-                margin: 20% 10%;
-                p {
-                    text-align: center;
-                    color: $text-grey-color;
-                }
-            }
-            .contentRooms {
-                .topic {
-                    background-color: #2C094E;
-                }
-                .active {
-                    background-color: #531F8A;
-                }
-            }
-            figure.message_oview {
-                // height: 70px;
-                padding: 8px;
-                display: flex;
-                img {
-                    height: 50px;
-                    width : 50px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-                figcaption {
-                    margin-left: 10px;
-                    p {
-                        font-size: 12px;
-                    }
-                    
-                }
-                time {
-                    font-size: 10px;
-                    margin-left: 10px;
-                }
-                &.active {
-                    background-color: $active-message-bg;
-                    border-left: 3px solid $border-color;
-                }
-            }
-        }
     }
-    
     div.chat_main {
         grid-area: m;
         display: grid;
@@ -198,7 +150,7 @@ div.chat_container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 25px;
+            padding: .7em 2em;
             border-bottom: .5px solid $border-color;
             figure {
                 display: flex;
@@ -224,8 +176,15 @@ div.chat_container {
         }
         section.chat_window {
             grid-row: 2/3;
-            overflow-y: scroll;
-            padding-right: .5em
+            padding-right: .5em;
+            &::-webkit-scrollbar {
+                width: .2em;
+                border-radius: 6em;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: rgb(210, 210, 210);
+                border-radius: 6em;
+            }
         }
         form.chat_input {
             grid-row: 3/4;
@@ -248,6 +207,7 @@ div.chat_container {
                 border-radius: 5px;
                 padding: 8px 20px;
                 margin-left: 10px;
+                background: #E62FD0;
             }
         }  
         &.chat_main_init { // to be corrected 
@@ -332,13 +292,6 @@ div.chat_container {
     div.chat_overview{
         background: $overview-gradient;
         grid-area: o;
-        height: 100%;
-        .info {
-            height: 95%;
-            &::-webkit-scrollbar {
-                width: .1em;
-            }
-        }
         &.chat_overview_init {
             @include center-styles; 
             p {
@@ -423,3 +376,66 @@ div.chat_container {
         }
     }
 }
+
+
+// section.inbox {
+//     display: flex;
+//     flex-direction: column;
+//     nav {
+//         display: flex;
+//         padding: 0 8px;
+//         a {
+//             border-bottom: 1px solid $border-color;
+//             width: 50%;
+//             padding: 8px;
+//             background: transparent;
+//             font-size: 16px;
+//             color: $text-light-color;
+//         }
+//         a.active {
+//             border-bottom: 3px solid $border-color;
+//             color: $text-pink-color;
+//         }
+//     }
+//     aside {
+//         margin: 20% 10%;
+//         p {
+//             text-align: center;
+//             color: $text-grey-color;
+//         }
+//     }
+//     .contentRooms {
+//         .topic {
+//             background-color: #2C094E;
+//         }
+//         .active {
+//             background-color: #531F8A;
+//         }
+//     }
+//     figure.message_oview {
+//         // height: 70px;
+//         padding: 8px;
+//         display: flex;
+//         img {
+//             height: 50px;
+//             width : 50px;
+//             border-radius: 50%;
+//             object-fit: cover;
+//         }
+//         figcaption {
+//             margin-left: 10px;
+//             p {
+//                 font-size: 12px;
+//             }
+            
+//         }
+//         time {
+//             font-size: 10px;
+//             margin-left: 10px;
+//         }
+//         &.active {
+//             background-color: $active-message-bg;
+//             border-left: 3px solid $border-color;
+//         }
+//     }
+// }
