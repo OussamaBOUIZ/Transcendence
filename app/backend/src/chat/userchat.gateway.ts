@@ -55,7 +55,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger = new Logger(ChatGateway.name);
 	}
 	
-	@UsePipes(new ValidationPipe)
+	@UsePipes(new ValidationPipe({
+		transform: true,
+	}))
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
 		console.log('onSendMessage')
@@ -78,17 +80,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		
 	}
  
-	// @SubscribeMessage('loadMessages')
-	// async allMessages(socket: Socket, data: MessageDto) {
-	// 	const receiver = await this.chatGatewayService.getUserById(data.user.userId)
-	// 	if (receiver === null)
-	// 		console.log('todo: handle if the receiver not exist')
-	//
-	// 	const db_user = await this.userRepository.findOneBy({email: socket.data.user.email})
-	// 	if (db_user === null)
-	// 		console.log('todo: handle if the receiver not exist')
-	// 	return await this.chatGatewayService.loadMessage(db_user, receiver.id)
-	// }
 
 	async afterInit(client: Socket) {
 		await client.use(SocketAuthMiddleware(this.userService) as any)

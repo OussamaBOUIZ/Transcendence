@@ -14,6 +14,9 @@ import {
 	UploadedFile, Body, Patch, HttpCode, Query,
 	HttpException, ParseFilePipe, 
     UseFilters,
+    Logger,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -332,12 +335,15 @@ export class UserController {
 		}
 	}
 
+    // @UsePipes(new ValidationPipe({
+	// 	transform: true,
+	// }))
 	@Get('search/user')
 	async searchForUser(
 		@Query() dto: searchDto,
 	) {
 		const { username } = dto
-		console.log(username)
+		Logger.log(username)
 		return this.userService.searchUser(username)
 	}
 

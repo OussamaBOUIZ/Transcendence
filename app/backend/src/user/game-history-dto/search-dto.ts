@@ -1,4 +1,4 @@
-// import { Transform } from "class-transformer";
+import { Transform } from "class-transformer";
 import { IsNotEmpty, IsString } from "class-validator";
 
  function trim(value: string): string {
@@ -8,6 +8,6 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class searchDto {
     @IsString()
     @IsNotEmpty()
-    // @Transform(({value}) => trim(value))
+    @Transform(({value}) => trim(value))
     username: string 
 }
