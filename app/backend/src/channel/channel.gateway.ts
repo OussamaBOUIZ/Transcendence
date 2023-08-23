@@ -9,6 +9,7 @@ import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelDto } from "./dto/channelDto";
 import { channelAccess } from "./dto/channelAccess";
+import { access } from "fs";
 
 @WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
@@ -25,14 +26,12 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     async handleConnection(client: Socket) {
         console.log(client.handshake.headers.cookie)
-        // const AllCookies = client.handshake.headers.cookie;
-        // const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
-        // let end = AllCookies.indexOf(";", start);
-        // end = end !== -1 ? end : AllCookies.length; 
-        // console.log('beg', start, 'end', end);
-        // const accessToken = AllCookies.substring(start, end);
-        // console.log(`access_token`, accessToken);
-        const user = await this.userService.getUserFromJwt(client.handshake.headers.cookie);
+        const AllCookies = client.handshake.headers.cookie;
+        const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
+        let end = AllCookies.indexOf(";", start);
+        end = end !== -1 ? end : AllCookies.length;
+        const accessToken = AllCookies.substring(start, end);
+        const user = await this.userService.getUserFromJwt(accessToken);
         if(!user) 
         {
             client.disconnect();

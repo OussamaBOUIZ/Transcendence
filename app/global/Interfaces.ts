@@ -95,5 +95,10 @@ interface roomData {
     minutes?: number
 }
 
+interface OldMessages {
+    sender_id: number,
+    message: string
+}
 
-export type {User, MessageData, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};
+
+export type {User, MessageData, OldMessages, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

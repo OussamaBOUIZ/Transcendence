@@ -4,14 +4,12 @@ import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
 import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
-import {rooms, roomData, Message} from "../../../../global/Interfaces"
+import {rooms, roomData, Message, OldMessages} from "../../../../global/Interfaces"
 import MessageBox from "../../Components/MessageBox"
 import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import Notification from "../../Components/Notification"
 import AddUser from "./addUser"
-// import useScrollableBox from "../../Hooks/useScrollableBox"
-
 
 export const SocketContext = createContext({});
 
@@ -22,12 +20,11 @@ export default function ChatRooms () {
     const [room, setRoom] = useState<rooms>({id: 0, channel_name: "", channel_type: ""})
     const [socket, setSocket] = useState<Socket>()
     const [message, setMessage] = useState<string>("")
-    const [messageList, setMessageList] = useState<Message[]>([])
+    const [messageList, setMessageList] = useState<OldMessages[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     const {user} = useContext(UserContext)
     const initState = useRef<boolean>(false)
     const ini = useRef<boolean>(false)
-    // const {outerDiv, innerDiv, OuterProvider, InnerProvider, handleScrollButtonClick} = useScrollableBox(messageList);
     const outerDiv = useRef<HTMLDivElement>(null);
     const innerDiv = useRef<HTMLDivElement>(null);
     const prevInnerDivHeight = useRef<HTMLDivElement>(null);
@@ -40,23 +37,22 @@ export default function ChatRooms () {
         event.preventDefault();
         
         if (message !== "") {
-          const messageData: Message = {
+            const messageData: Message = {
             message: message,
             channelName: room.channel_name,
             fromUser: user.id,
             username: user.username,
             image: user.image
-          };
-          socket?.emit("channelMessage", messageData);
-          setMessage("");
-          handleScrollButtonClick()
+        };
+        socket?.emit("channelMessage", messageData);
+        setMessage("");
         const outerDivHeight = outerDiv.current.clientHeight;
         const innerDivHeight = innerDiv.current.clientHeight + 24;
     
         outerDiv.current.scrollTo({
-          top: innerDivHeight - outerDivHeight,
-          left: 0,
-          behavior: "smooth"
+        top: innerDivHeight - outerDivHeight,
+        left: 0,
+        behavior: "smooth"
         });
         }
       }
@@ -68,15 +64,6 @@ export default function ChatRooms () {
           })
         setSocket(fd)
 
-        // const outerDivHeight = outerDiv.current.clientHeight;
-        // const innerDivHeight = innerDiv.current.clientHeight + 24;
-    
-        // outerDiv.current.scrollTo({
-        //   top: innerDivHeight - outerDivHeight,
-        //   left: 0,
-        //   behavior: "smooth"
-        // });
-
         return  () => {
             if (socket)
                 socket.disconnect();
@@ -85,12 +72,8 @@ export default function ChatRooms () {
 
     useEffect(() => {
         const outerDivHeight = outerDiv.current.clientHeight;
-        console.log("🚀 ~ useEffect ~ outerDivHeight:", outerDivHeight)
         const innerDivHeight = innerDiv.current.clientHeight + 24;
-        console.log("🚀 ~ useEffect ~ innerDivHeight:", innerDivHeight)
-        console.log("🚀 ~ useEffect ~ prevInnerDivHeight:", prevInnerDivHeight.current)
         const outerDivScrollTop = outerDiv.current.scrollTop;
-        console.log("🚀 ~ useEffect ~ outerDivScrollTop:", outerDivScrollTop)
 
         if (
         !prevInnerDivHeight.current ||
@@ -128,14 +111,15 @@ export default function ChatRooms () {
     
 
     useEffect(() => {
-        console.log("ko")
-
-        if (ini.current === false)
-        {
+        if (ini.current === false) {
             ini.current = true
             return ;
         }
-        socket?.on("sendChannelMessage", (data: Message)  => {
+        socket?.on("loadOldConversations", (data: OldMessages[]) => {
+            setMessageList(data)
+        })
+
+        socket?.on("sendChannelMessage", (data: OldMessages)  => {
             setMessageList((list) => [...list, data]);
         });
 
@@ -165,16 +149,14 @@ export default function ChatRooms () {
     const {id} = useParams()
 
     function handleEnter(event) {
-        if (event.key === 'Enter') {
-            sendMessage(event);
-        }
+        if (event.key === 'Enter') sendMessage(event)
     }
 
     return (
         <SocketContext.Provider value={{socket, setSocket, room, setRoom, roomData, showSearch, setShowSearch}}>
             {/* {notif && <Notification message={notif} />} */}
             {
-            showSearch &&
+                showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
                 </div>
@@ -182,14 +164,10 @@ export default function ChatRooms () {
             <InboxRooms />
             <div className="chat_main">
                 <RoomHeader />
-                {/* <OuterProvider className="chat_window bg-chat-body" outerDiv={outerDiv}>
-                    <InnerProvider innerDiv={innerDiv}> */}
                 <section className="chat_window bg-chat-body" ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
                     <div ref={innerDiv} style={{position: 'relative'}}>
                         {messagesElements}
                     </div>
-                    {/* </InnerProvider>
-                    </OuterProvider> */}
                 </section>
                 <form className="chat_input" onSubmit={sendMessage}>
                     <textarea
