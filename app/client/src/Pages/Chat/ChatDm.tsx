@@ -8,6 +8,7 @@ import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
+import ContactDetail from './ContactDetail';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
@@ -40,15 +41,15 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${params.id}`)
-            console.log(res.data);
+            // console.log(res.data);
             setMessagesList(res.data)
             
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
-    console.log("initialrender: ",initialRender.current);
+    // console.log("initialrender: ",initialRender.current);
     
     
     /**EFFECTS     */
@@ -84,7 +85,7 @@ export default function ChatDm () {
         if (messageToSendData.message !== "") {
             setMessagesList((prevList) => [...prevList, messageToSendData])
             socket?.emit('SendMessage', messageToSendData)
-            console.log('emit message', messageToSendData);
+            // console.log('emit message', messageToSendData);
         }
     }
     , [socket, messageToSendData])
@@ -98,7 +99,7 @@ export default function ChatDm () {
         // socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
         // setMessagesList((prevList) => [...prevList, receivedMessageData])
         socket?.on('message', (recMsg: MessageData) => {
-            console.log('recMsg: ', recMsg);
+            // console.log('recMsg: ', recMsg);
             setMessagesList((prevList) => [...prevList, recMsg])
         })
     }, [socket])
@@ -109,11 +110,11 @@ export default function ChatDm () {
             initialRender.current = false
             return
         }
-        console.log(messagesList)
+        // console.log(messagesList)
     }, [messagesList])
 
     const messagesElements = messagesList.map((msg:MessageData) => {
-        console.log(msg.authorId);
+        // console.log(msg.authorId);
         
         if (msg.message !== "") {
             return (
@@ -150,7 +151,7 @@ export default function ChatDm () {
                 <button type="submit">Send</button>
             </form>
         </div>
-        {/* <ChatOverview /> */} 
+        <ContactDetail id={params.id} /> 
         </>
     );
 }

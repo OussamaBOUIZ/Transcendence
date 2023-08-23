@@ -14,6 +14,6 @@ export default function ChatOverview () {
         {/* <p className="guide_text">
             {guidingText}
         </p> */}
-    <ContactDetail />
+
     </div>);
 }
