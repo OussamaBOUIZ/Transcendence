@@ -20,29 +20,27 @@ export default function ChatDm () {
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
 
     
-    function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
+    function handleChange (e) :void {
         setMessageToSendValue(e.target.value)
     }
 
-    function handleSubmit (e:  React.FormEvent<HTMLFormElement>): void {
+    function handleSubmit (e): void {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({
                 receiverId: Number(params.id),
+                authorId: user.id,
                 message: messageToSendValue,
                 creationTime : new Date()
             })
             setMessageToSendValue("")
-            console.log(messageToSendData);
-            
         }
     }
     
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${params.id}`)
-            console.log('res data', res.data);
-            
+            console.log(res.data);
             setMessagesList(res.data)
             
         } catch (error) {
@@ -50,7 +48,8 @@ export default function ChatDm () {
         }
     }
 
-
+    console.log("initialrender: ",initialRender.current);
+    
     
     /**EFFECTS     */
     useEffect(() => {
@@ -66,10 +65,7 @@ export default function ChatDm () {
         
         setSocket(newSocket)
 
-        // Getting the conversation 
         loadConversation();
-        // getUserOverview();
-
         
         //cleanup function
         return  () => {
@@ -86,11 +82,10 @@ export default function ChatDm () {
             return
         }
         if (messageToSendData.message !== "") {
+            setMessagesList((prevList) => [...prevList, messageToSendData])
             socket?.emit('SendMessage', messageToSendData)
-            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(params.id)}])
             console.log('emit message', messageToSendData);
         }
-        
     }
     , [socket, messageToSendData])
     
@@ -100,22 +95,22 @@ export default function ChatDm () {
             initialRender.current = false 
             return
         }
-        
-        socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
-        // console.log('on message', receivedMessageData);
-        
-        setMessagesList((prevList) => [...prevList, receivedMessageData])
-
-    }, [socket, receivedMessageData])
+        // socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
+        // setMessagesList((prevList) => [...prevList, receivedMessageData])
+        socket?.on('message', (recMsg: MessageData) => {
+            console.log('recMsg: ', recMsg);
+            setMessagesList((prevList) => [...prevList, recMsg])
+        })
+    }, [socket])
 
     
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     console.log(messagesList)
-    // }, [messagesList])
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+        console.log(messagesList)
+    }, [messagesList])
 
     const messagesElements = messagesList.map((msg:MessageData) => {
         console.log(msg.authorId);
@@ -155,7 +150,7 @@ export default function ChatDm () {
                 <button type="submit">Send</button>
             </form>
         </div>
-        <ChatOverview />
+        {/* <ChatOverview /> */} 
         </>
     );
 }

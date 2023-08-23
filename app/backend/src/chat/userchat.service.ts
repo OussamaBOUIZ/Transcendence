@@ -133,7 +133,7 @@ export class ChatGatewayService {
             ],
             order: {
                 messages:{ 
-                    CreatedAt: 'DESC'
+                    CreatedAt: 'ASC'
                 }
             },
             take: 30
@@ -149,7 +149,7 @@ export class ChatGatewayService {
             return {
                 authorId : item.author.id,
                 message: message?.message,
-                date: new Date(message?.CreatedAt)
+                creaionTime: new Date(message?.CreatedAt)
             }
         })
         console.log(transformedArray);

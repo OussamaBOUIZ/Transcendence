@@ -44,9 +44,9 @@ interface Leaders {
 
 export interface MessageData {
     receiverId?: number,
-        authorId?:number,
-        message: string,
-        creationTime: Date,
+    authorId?:number,
+    message: string,
+    creationTime: Date,
 }
 
 interface Data {
