@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {User_chat} from "./userchat.entity";
 import { Channel } from "./channel.entity";
 
@@ -16,7 +16,7 @@ export class Message extends BaseEntity {
     @Column({nullable: true})
     message: string
 
-    @Column({type: "timestamp", nullable: true})
+    @CreateDateColumn()
     CreatedAt: Date
 }
 

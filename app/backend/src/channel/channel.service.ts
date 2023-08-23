@@ -150,6 +150,8 @@ export class ChannelService {
     {
         const newMessage: Message = this.messageRepo.create({message: userMessage});
         newMessage.channel = channel;
+        console.log(`message is ${newMessage.message}`);
+        console.log('message channel is: ,', newMessage.channel);
         await this.messageRepo.save(newMessage);
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)

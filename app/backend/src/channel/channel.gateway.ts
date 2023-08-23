@@ -25,15 +25,15 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
     async handleConnection(client: Socket) {
         console.log(client.handshake.headers.cookie)
-        const AllCookies = client.handshake.headers.cookie;
-        const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
-        let end = AllCookies.indexOf(";", start);
-        end = end !== -1 ? end : AllCookies.length;
-        console.log('beg', start, 'end', end);
-        const accessToken = AllCookies.substring(start, end);
-        console.log(`access_token`, accessToken);
-        const user = await this.userService.getUserFromJwt(accessToken);
-        if(!user)
+        // const AllCookies = client.handshake.headers.cookie;
+        // const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
+        // let end = AllCookies.indexOf(";", start);
+        // end = end !== -1 ? end : AllCookies.length; 
+        // console.log('beg', start, 'end', end);
+        // const accessToken = AllCookies.substring(start, end);
+        // console.log(`access_token`, accessToken);
+        const user = await this.userService.getUserFromJwt(client.handshake.headers.cookie);
+        if(!user) 
         {
             client.disconnect();
             throw new WsException('user is not authenticated');
@@ -127,11 +127,15 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto, @ConnectedSocket() client: Socket)
-    {
+    { 
         if(await this.channelservice.userIsMuted(newMessage.fromUser) === true)
+        {
+            console.log('HEY1')
             return;
+        }
         if(await this.channelservice.userIsBanned(newMessage.channelName, newMessage.fromUser) === true)
         {
+            console.log('HEY2')
             client.leave(newMessage.channelName);
             return ;
         }
