@@ -12,12 +12,9 @@ export default function ChannelInfo() {
     const {user} = useContext(UserContext)
     const {room, showSearch} = useContext(SocketContext)
 
-    console.log(room)
-
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                console.log(room.id)
                 const res = await axios.get(`/api/channel/channelData/${room.id}`)
                 setData(res.data)
             }

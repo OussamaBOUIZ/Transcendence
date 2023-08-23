@@ -100,7 +100,7 @@ export default function ChatDm () {
             return
         }
         socket?.emit('SendMessage', messageToSendData)
-        // setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
+        setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
     }
     , [messageToSendData])
     
@@ -113,7 +113,6 @@ export default function ChatDm () {
         }
 
     }, [socket, receivedMessage])
-
     
     useEffect(() => {
         if (initialRender.current) {

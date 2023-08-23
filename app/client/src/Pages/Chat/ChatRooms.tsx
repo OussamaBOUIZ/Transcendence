@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, useRef, useContext} from 'react'
+import React, {createContext, useState, useCallback, useEffect, useRef, useContext} from 'react'
 import ChatOverview from './ChatOverview';
 import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
@@ -10,12 +10,14 @@ import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import Notification from "../../Components/Notification"
 import AddUser from "./addUser"
+// import useScrollableBox from "../../Hooks/useScrollableBox"
 
 
 export const SocketContext = createContext({});
 
 
 export default function ChatRooms () {
+
 
     const [room, setRoom] = useState<rooms>({id: 0, channel_name: "", channel_type: ""})
     const [socket, setSocket] = useState<Socket>()
@@ -25,8 +27,10 @@ export default function ChatRooms () {
     const {user} = useContext(UserContext)
     const initState = useRef<boolean>(false)
     const ini = useRef<boolean>(false)
+    // const {outerDiv, innerDiv, OuterProvider, InnerProvider, handleScrollButtonClick} = useScrollableBox(messageList);
     const outerDiv = useRef<HTMLDivElement>(null);
     const innerDiv = useRef<HTMLDivElement>(null);
+    const prevInnerDivHeight = useRef<HTMLDivElement>(null);
 
 
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
@@ -45,6 +49,15 @@ export default function ChatRooms () {
           };
           socket?.emit("channelMessage", messageData);
           setMessage("");
+          handleScrollButtonClick()
+        const outerDivHeight = outerDiv.current.clientHeight;
+        const innerDivHeight = innerDiv.current.clientHeight + 24;
+    
+        outerDiv.current.scrollTo({
+          top: innerDivHeight - outerDivHeight,
+          left: 0,
+          behavior: "smooth"
+        });
         }
       }
 
@@ -55,14 +68,14 @@ export default function ChatRooms () {
           })
         setSocket(fd)
 
-        const outerHeight = outerDiv.current.clientHeight;
-        const innerHeight = innerDiv.current.clientHeight + 24;
-        console.log('bg: ', innerHeight, " ", outerHeight);
-
-        outerDiv.current.scrollTo({
-            top: innerHeight - outerHeight,
-            left: 0
-        })
+        // const outerDivHeight = outerDiv.current.clientHeight;
+        // const innerDivHeight = innerDiv.current.clientHeight + 24;
+    
+        // outerDiv.current.scrollTo({
+        //   top: innerDivHeight - outerDivHeight,
+        //   left: 0,
+        //   behavior: "smooth"
+        // });
 
         return  () => {
             if (socket)
@@ -71,15 +84,27 @@ export default function ChatRooms () {
     }, [])
 
     useEffect(() => {
-        const outerHeight = outerDiv.current.clientHeight;
-        const innerHeight = innerDiv.current.clientHeight + 24;
-        console.log('ft: ', innerHeight, " ", outerHeight);
-        outerDiv.current.scrollTo({
-            top: innerHeight - outerHeight,
-            left: 0,
-            behavior: 'smooth'
-        })
-    }, [messageList])
+        const outerDivHeight = outerDiv.current.clientHeight;
+        console.log("🚀 ~ useEffect ~ outerDivHeight:", outerDivHeight)
+        const innerDivHeight = innerDiv.current.clientHeight + 24;
+        console.log("🚀 ~ useEffect ~ innerDivHeight:", innerDivHeight)
+        console.log("🚀 ~ useEffect ~ prevInnerDivHeight:", prevInnerDivHeight.current)
+        const outerDivScrollTop = outerDiv.current.scrollTop;
+        console.log("🚀 ~ useEffect ~ outerDivScrollTop:", outerDivScrollTop)
+
+        if (
+        !prevInnerDivHeight.current ||
+        outerDivScrollTop === prevInnerDivHeight.current - outerDivHeight
+        ) {
+            outerDiv.current.scrollTo({
+                top: innerDivHeight - outerDivHeight,
+                left: 0,
+                behavior: prevInnerDivHeight.current ? "smooth" : "auto"
+            });
+        }
+
+        prevInnerDivHeight.current = innerDivHeight;
+      }, [messageList]);
 
     useEffect(() => {
         if (!initState.current) {
@@ -157,10 +182,14 @@ export default function ChatRooms () {
             <InboxRooms />
             <div className="chat_main">
                 <RoomHeader />
+                {/* <OuterProvider className="chat_window bg-chat-body" outerDiv={outerDiv}>
+                    <InnerProvider innerDiv={innerDiv}> */}
                 <section className="chat_window bg-chat-body" ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
                     <div ref={innerDiv} style={{position: 'relative'}}>
                         {messagesElements}
                     </div>
+                    {/* </InnerProvider>
+                    </OuterProvider> */}
                 </section>
                 <form className="chat_input" onSubmit={sendMessage}>
                     <textarea

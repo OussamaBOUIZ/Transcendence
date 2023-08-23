@@ -13,8 +13,6 @@ function RoomItem({item}: {item: rooms}) {
   const [mode, setIsActive] = useState<boolean>(false);
   const {setRoom} = useContext(SocketContext)
 
-  console.log('mode: ', mode)
-
   return (
     <NavLink to={`/chat/rooms/${item.id}`} style={({isActive}) => setIsActive(isActive)}>
       <div
