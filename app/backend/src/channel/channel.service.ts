@@ -12,6 +12,7 @@ import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Socket } from 'dgram';
+import { channelMessageDto } from './dto/channelMessageDto';
 
 
 @Injectable()
@@ -101,6 +102,22 @@ export class ChannelService {
             take: 30
         });
     }
+
+    async getLatestMessages(channelName: string)
+    {
+        return await this.messageRepo.find({
+            relations: {
+                channel: true,
+            },
+            where: {channel: {channel_name: channelName}},
+            order: {CreatedAt: 'ASC'},
+            take: 40,
+            select: {
+                sender_id: true,
+                message: true,
+            }
+        });
+    }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
         console.log('kickUser', kickUser);
@@ -146,12 +163,11 @@ export class ChannelService {
         }
         await this.channelRepo.save(channel);
     }
-    async storeChannelMessage(userMessage: string, channel: Channel)
+    async storeChannelMessage(messageData: channelMessageDto, channel: Channel)
     {
-        const newMessage: Message = this.messageRepo.create({message: userMessage});
+        const newMessage: Message = this.messageRepo.create({message: messageData.message});
         newMessage.channel = channel;
-        console.log(`message is ${newMessage.message}`);
-        console.log('message channel is: ,', newMessage.channel);
+        newMessage.sender_id = messageData.fromUser;
         await this.messageRepo.save(newMessage);
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)

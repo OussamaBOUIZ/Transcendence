@@ -24,14 +24,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         console.log(`Init gateway`)
     }
     async handleConnection(client: Socket) {
-        console.log(client.handshake.headers.cookie)
-        // const AllCookies = client.handshake.headers.cookie;
-        // const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
-        // let end = AllCookies.indexOf(";", start);
-        // end = end !== -1 ? end : AllCookies.length; 
-        // console.log('beg', start, 'end', end);
-        // const accessToken = AllCookies.substring(start, end);
-        // console.log(`access_token`, accessToken);
+        const AllCookies = client.handshake.headers.cookie;
+        const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
+        let end = AllCookies.indexOf(";", start);
+        end = end !== -1 ? end : AllCookies.length;
+        const accessToken = AllCookies.substring(start, end);
         const user = await this.userService.getUserFromJwt(client.handshake.headers.cookie);
         if(!user) 
         {
@@ -39,12 +36,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
-        if(user.userRoleChannels !== null && user.userRoleChannels !== undefined)
-            user.userRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.adminRoleChannels !== null && user.adminRoleChannels !== undefined)
-            user.adminRoleChannels.forEach(channel => client.join(channel.channel_name));
-        if(user.ownerRoleChannels !== null && user.ownerRoleChannels !== undefined)
-            user.ownerRoleChannels.forEach(channel => client.join(channel.channel_name));
         await this.userService.saveUser(user);
     }
 
@@ -82,11 +73,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(channel !== null && channel.BannedUsers !== null && 
             channel.BannedUsers.some(user => user.id === channelData.userId))
         {
-            console.log('HEERE', channelData.userId);
             this.server.emit('userIsBanned', 'You are banned from this channel');
         }
         else
+        {
             client.join(channelData.channelName);
+            const messages = await this.channelservice.getLatestMessages(channelData.channelName);
+            this.server.to(user.socketId).emit('loadOldConversations', messages);
+        }
     }
 
     @SubscribeMessage('leavechannel')
@@ -130,12 +124,10 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     { 
         if(await this.channelservice.userIsMuted(newMessage.fromUser) === true)
         {
-            console.log('HEY1')
             return;
         }
         if(await this.channelservice.userIsBanned(newMessage.channelName, newMessage.fromUser) === true)
         {
-            console.log('HEY2')
             client.leave(newMessage.channelName);
             return ;
         }
@@ -145,7 +137,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     || channel.channelOwners !== null && channel.channelOwners.some(user => user.id === newMessage.fromUser))
         {
 
-            await this.channelservice.storeChannelMessage(newMessage.message, channel);
+            await this.channelservice.storeChannelMessage(newMessage, channel);
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }
     }
