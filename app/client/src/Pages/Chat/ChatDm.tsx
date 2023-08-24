@@ -9,6 +9,7 @@ import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
 import ContactDetail from './ContactDetail';
+import { getUserImage } from '../../Hooks/getUserImage';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
@@ -19,6 +20,7 @@ export default function ChatDm () {
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
     const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
+    const [avatar, setAvatar] = React.useState();
 
     
     function handleChange (e) :void {
@@ -41,16 +43,21 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${params.id}`)
-            // console.log(res.data);
             setMessagesList(res.data)
             
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     }
 
-    // console.log("initialrender: ",initialRender.current);
-    
+   const loadAvatar = async (id:string) => {
+        try {
+            const res = await getUserImage(Number(id));
+            setAvatar(res);
+        } catch (error) {
+            console.error(error);
+        }
+   }
     
     /**EFFECTS     */
     useEffect(() => {
@@ -65,8 +72,10 @@ export default function ChatDm () {
             }}) 
         
         setSocket(newSocket)
+        
 
         loadConversation();
+        loadAvatar(params.id);
         
         //cleanup function
         return  () => {
@@ -132,7 +141,8 @@ export default function ChatDm () {
         <>
         <InboxDm />
         <div className="chat_main">
-            <ChatHeader 
+            <ChatHeader
+             avatar={avatar}
              username={`user id: ${params.id}`}
              online={true}
              />
@@ -151,7 +161,7 @@ export default function ChatDm () {
                 <button type="submit">Send</button>
             </form>
         </div>
-        <ContactDetail id={params.id} /> 
+        <ContactDetail id={params.id} avatar={avatar}/> 
         </>
     );
 }

@@ -202,7 +202,7 @@ export class UserController {
     @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
-        const filename = id + '.jpg';
+        const filename = id % 14 !== 0 ? (id % 14) + '.jpg' : 14 + '.jpg'
         const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
