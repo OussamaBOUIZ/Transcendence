@@ -14,7 +14,9 @@ export default function ContactDetail ({id}: {id: number}) {
     const userOverview:PlayerData = useChatOverview(id)
     console.log('user overview: ', userOverview);
     
-    
+    if (userOverview == undefined)
+        console.log('it s undefined');
+        
     const AchievementsElements = userOverview?.stat?.achievements?.map((item:StatAchievement) => {
         return (
             <figure className="achievement">
@@ -38,22 +40,22 @@ export default function ContactDetail ({id}: {id: number}) {
                 <figcaption>
                     <h3>{userOverview?.firstname}</h3>
                     <h3>{userOverview?.lastname}</h3>
-                    <h6>{userOverview?.stat.ladder_level}</h6>
+                    <h6>{userOverview?.stat?.ladder_level}</h6>
                     <div className="level_bar"></div>
                 </figcaption>
             </figure>
                 <div className="results">
                     <figcaption className="results-item">
                         <p>Games</p>
-                        <h5>{userOverview?.stat.wins! + userOverview?.stat.losses!}</h5>
+                        <h5>{userOverview?.stat?.wins! + userOverview?.stat?.losses!}</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Wins</p>
-                        <h5>{userOverview?.stat.wins!}</h5>
+                        <h5>{userOverview?.stat?.wins!}</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Losses</p>
-                        <h5>{userOverview?.stat.losses!}</h5>
+                        <h5>{userOverview?.stat?.losses!}</h5>
                     </figcaption>
                 </div>
                 <h2>Achievements</h2>
