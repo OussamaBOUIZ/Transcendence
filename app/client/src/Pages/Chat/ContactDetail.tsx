@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from  'axios'
 import { PlayerData, StatAchievement } from '../../../../global/Interfaces';
 import Achievements from '../../Components/achievements';
@@ -6,7 +6,94 @@ import { isHtmlElement } from '../../../../../node_modules/react-router-dom/dist
 import { getUserImage } from '../../Hooks/getUserImage';
 import { getAchievementImage } from '../../Hooks/getAchievementImage';
 
+
+
+
+
 export default function ContactDetail ({id}) {
+    console.log('contact detail get called');
+    
+    const [userOverview, setUserOverview] = useState<PlayerData | null>(null);
+    const [counter, setCounter] = useState(0);
+    const getUserOverview = async () => {
+        try {
+            const res = await axios.get(`../api/user/user/details/${id}`)
+            console.log(res.data);
+            setUserOverview(res.data);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        console.log('hello from side effect');
+        
+        getUserOverview()
+        
+    }, [])
+    console.log(userOverview);
+
+    return (
+        <div className="chat_overview">
+            <div className="contact_details_container">
+            <h2>Contact details</h2>
+            <figure className="contact">
+                <img src="../src/Assets/cat.jpg" alt="cat" />
+                <figcaption>
+                    <h3>{userOverview?.firstname}</h3>
+                    <h3>{userOverview?.lastname}</h3>
+                    <h6>{userOverview?.stat.ladder_level}</h6>
+                    <div className="level_bar"></div>
+                </figcaption>
+            </figure>
+                <div className="results">
+                    <figcaption className="results-item">
+                        <p>Games</p>
+                        <h5>{userOverview?.stat.wins! + userOverview?.stat.losses!}</h5>
+                    </figcaption>
+                    <figcaption className="results-item">
+                        <p>Wins</p>
+                        <h5>{userOverview?.stat.wins!}</h5>
+                    </figcaption>
+                    <figcaption className="results-item">
+                        <p>Losses</p>
+                        <h5>{userOverview?.stat.losses!}</h5>
+                    </figcaption>
+                </div>
+                <h2>Achievements</h2>
+                <div className="achievement-container">
+                    
+                </div>
+        </div>  
+        </div>
+    );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** 
+ export default function ContactDetail ({id}) {
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
 
      const getUserOverview = async () => {
@@ -70,9 +157,9 @@ export default function ContactDetail ({id}) {
                 </div>
                 <h2>Achievements</h2>
                 <div className="achievement-container">
-                    {/* {AchievementsElements} */}
-                </div>
-                
-        </div>
-        )
-}
+                    
+                    </div>
+                    </div>
+                    )
+            }
+*/
