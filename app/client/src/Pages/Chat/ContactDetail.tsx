@@ -5,34 +5,29 @@ import Achievements from '../../Components/achievements';
 import { isHtmlElement } from '../../../../../node_modules/react-router-dom/dist/dom';
 import { getUserImage } from '../../Hooks/getUserImage';
 import { getAchievementImage } from '../../Hooks/getAchievementImage';
+import useChatOverview from '../../Hooks/useChatOverview'; 
 
 
 
-
-
-export default function ContactDetail ({id}) {
-    console.log('contact detail get called');
+export default function ContactDetail ({id}: {id: number}) {
+   
+    const userOverview:PlayerData = useChatOverview(id)
+    console.log('user overview: ', userOverview);
     
-    const [userOverview, setUserOverview] = useState<PlayerData | null>(null);
-    const [counter, setCounter] = useState(0);
-    const getUserOverview = async () => {
-        try {
-            const res = await axios.get(`../api/user/user/details/${id}`)
-            console.log(res.data);
-            setUserOverview(res.data);
+    
+    const AchievementsElements = userOverview?.stat?.achievements?.map((item:StatAchievement) => {
+        return (
+            <figure className="achievement">
+                {/* <img src={item.image} alt="" className="achievement-icon" /> */}
+                <img src="" alt="" className="achievement-icon" />
+                <figcaption className="achievement-info">
+                    <h5 className="achievement-title">{item?.badge_name}</h5>
+                    <h6 className="achievement-subtitle">{item?.description}</h6>
+                </figcaption>
+            </figure>
+        )
+    })
 
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        console.log('hello from side effect');
-        
-        getUserOverview()
-        
-    }, [])
-    console.log(userOverview);
 
     return (
         <div className="chat_overview">
@@ -63,7 +58,7 @@ export default function ContactDetail ({id}) {
                 </div>
                 <h2>Achievements</h2>
                 <div className="achievement-container">
-                    
+                    {AchievementsElements}
                 </div>
         </div>  
         </div>
@@ -113,18 +108,7 @@ export default function ContactDetail ({id}) {
     }, [])
 
     
-    // const AchievementsElements = userOverview?.stat?.achievements?.map((item:StatAchievement) => {
-    //     const achImg = getAchievementImage(item?.id)
-    //     return (
-    //         <figure className="achievement">
-    //             <img src={achImg} alt="" className="achievement-icon" />
-    //             <figcaption className="achievement-info">
-    //                 <h5 className="achievement-title">{item?.badge_name}</h5>
-    //                 <h6 className="achievement-subtitle">{item?.description}</h6>
-    //             </figcaption>
-    //         </figure>
-    //     )
-    // })
+    
 
     // return ;
     if (userOverview === undefined)
