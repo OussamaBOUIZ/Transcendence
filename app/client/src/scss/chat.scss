@@ -21,7 +21,7 @@ div.chat_container {
         "l l l m m m m m m m m m o o o"
     ;
     section.chat_account {
-        grid-area: a;
+        grid-area: a; 
         display: flex;
         padding: 10px;
         border-right: 0.5px solid $border-color;
