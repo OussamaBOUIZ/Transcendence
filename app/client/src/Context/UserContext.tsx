@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, JSXElementConstructor} from 'react'
+import React, {createContext, useState, useEffect} from 'react'
 import { User } from '../../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
@@ -27,8 +27,6 @@ export function UserProvider ({children}) {
         fetchUserData();
       }, [])
 
-    // console.log(user)
-    
 
     return (
         <>

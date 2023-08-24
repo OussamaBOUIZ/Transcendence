@@ -18,7 +18,6 @@ export default function ChatDm () {
     const [socket, setSocket] = React.useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
-    const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
     const [avatar, setAvatar] = React.useState();
 
@@ -114,13 +113,13 @@ export default function ChatDm () {
     }, [socket])
 
     
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
-        // console.log(messagesList)
-    }, [messagesList])
+    // useEffect(() => {
+    //     if (initialRender.current) {
+    //         initialRender.current = false
+    //         return
+    //     }
+    //     // console.log(messagesList)
+    // }, [messagesList])
 
     const messagesElements = messagesList.map((msg:MessageData) => {
         // console.log(msg.authorId);
