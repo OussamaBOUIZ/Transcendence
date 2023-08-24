@@ -4,7 +4,8 @@ import {
 	OnGatewayInit,
 	SubscribeMessage,
 	WebSocketGateway, 
-	WebSocketServer
+	WebSocketServer,
+	WsException
 } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io';
 import {ChatGatewayService} from "./userchat.service"
@@ -55,7 +56,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger = new Logger(ChatGateway.name);
 	}
 	
-	@UsePipes(new ValidationPipe({
+	@UsePipes(new ValidationPipe({ 
 		transform: true,
 	}))
 	@SubscribeMessage('SendMessage')
@@ -91,11 +92,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger.log(client.data.user.email)
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
-		const inbox = await  this.inboxService.getUserInboxByUnseenMessage(user)
-		if (inbox[1] > 0)
-			console.log('emit client side (User has unseen Messages)')
 		if (!user)
-			console.log('no such user or deleted');
+		throw new WsException("the user not found")
 		user.socketId = client.id
 		user.isActive = true
 		await this.userRepository.save(user)
@@ -104,8 +102,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	async handleDisconnect(client: Socket) {
 		const user = await this.chatGatewayService.getUserByEmail(client.data.user.email)
-		if (user == null)
-			this.logger.log('user not exist in DB : handle disconnect')
+		if (!user)
+			throw new WsException("the user not found")
 
 		user.isActive = false
 		await this.userRepository.save(user)
