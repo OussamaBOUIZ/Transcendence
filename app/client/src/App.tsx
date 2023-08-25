@@ -35,15 +35,6 @@ export default function App () {
 
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
-{/*                     
-                    <Route path="/chat/*" element={<ChatLayout />}>
-                      <Route index element={<ChatDm />} />
-                      <Route path="rooms" element={<ChatRooms />} />
-                        <Route path="init"  element={<ChatDmInit /> }/>
-                        <Route path="rooms/init"  element={<ChatRooomsInit /> }/>
-                        <Route path=":id" element={<ChatDm />} />
-                        <Route path="rooms:id" element={<ChatRooms />} />
-                      </Route> */}
                     
                     <Route path="chat" element={<ChatLayout />}>
                       <Route index element={<ChatDm />} />

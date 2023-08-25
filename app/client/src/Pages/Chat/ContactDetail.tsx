@@ -6,6 +6,8 @@ import useChatOverview from '../../Hooks/useChatOverview';
 
 export default function ContactDetail ({id, avatar}: {id: number, avatar:string}) {
    
+    if (id === undefined)
+        return (null)
     const userOverview:PlayerData = useChatOverview(id)
     console.log('user overview: ', userOverview);
     

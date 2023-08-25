@@ -89,6 +89,32 @@ div.chat_container {
     }
     div.chat_inbox {
         grid-area: l;
+        figure.message_oview {
+                    // height: 70px;
+                    padding: 8px;
+                    display: flex;
+                    img {
+                        height: 50px;
+                        width : 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                    figcaption {
+                        margin-left: 10px;
+                        p {
+                            font-size: 12px;
+                        }
+                        
+                    }
+                    time {
+                        font-size: 10px;
+                        margin-left: 10px;
+                    }
+                    &.active {
+                        background-color: $active-message-bg;
+                        border-left: 3px solid $border-color;
+                    }
+                }
     }
     div.chat_main {
         grid-area: m;
@@ -159,6 +185,9 @@ div.chat_container {
             @include center-styles;
             flex-direction: column;
             justify-content: flex-start;
+            &.chatvoid {
+                justify-content: center;
+            }
             article {
                 text-align: center;
                 width: 50%;

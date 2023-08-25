@@ -22,8 +22,6 @@ export default function Inbox () {
                         </p>
                     </aside>
                 }
-                <MessageOverview />
-                <MessageOverview />
                 <MessageOverview current={true}/>
                 <MessageOverview />
                 <MessageOverview />

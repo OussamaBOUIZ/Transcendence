@@ -1,27 +1,35 @@
 import React, {useEffect, useRef, useContext} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
-import ChatOverview from './ChatOverview';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { PlayerData, MessageData } from '../../../../global/Interfaces';
+import { MessageData, User } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
 import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
+import ChatVoid from './ChatVoid';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
     const params = useParams()
+    if (params.id === undefined) {
+        return (
+        <>
+            <InboxDm />
+            <ChatVoid />
+        </>
+        );
+    }
     const {user} = useContext(UserContext)
+    
     const [socket, setSocket] = React.useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
     const [avatar, setAvatar] = React.useState();
 
-    
     function handleChange (e) :void {
         setMessageToSendValue(e.target.value)
     }
@@ -91,9 +99,8 @@ export default function ChatDm () {
             return
         }
         if (messageToSendData.message !== "") {
-            setMessagesList((prevList) => [...prevList, messageToSendData])
+            setMessagesList((prevList:MessageData[]) => [...prevList, messageToSendData])
             socket?.emit('SendMessage', messageToSendData)
-            // console.log('emit message', messageToSendData);
         }
     }
     , [socket, messageToSendData])
@@ -104,26 +111,12 @@ export default function ChatDm () {
             initialRender.current = false 
             return
         }
-        // socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
-        // setMessagesList((prevList) => [...prevList, receivedMessageData])
         socket?.on('message', (recMsg: MessageData) => {
-            // console.log('recMsg: ', recMsg);
-            setMessagesList((prevList) => [...prevList, recMsg])
+            setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
         })
     }, [socket])
-
     
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     // console.log(messagesList)
-    // }, [messagesList])
-
     const messagesElements = messagesList.map((msg:MessageData) => {
-        // console.log(msg.authorId);
-        
         if (msg.message !== "") {
             return (
                 <MessageBox
@@ -141,17 +134,17 @@ export default function ChatDm () {
         <InboxDm />
         <div className="chat_main">
             <ChatHeader
-             avatar={avatar}
-             username={`user id: ${params.id}`}
-             online={true}
-             />
+            avatar={avatar}
+            username={`user id: ${params.id}`}
+            online={true}
+            />
 
-             <section className="chat_window">
+            <section className="chat_window">
                 {messagesElements}               
-             </section>
+            </section>
 
 
-             <form className="chat_input" onSubmit={handleSubmit}>
+            <form className="chat_input" onSubmit={handleSubmit}>
                 <textarea 
                 placeholder="Type something"
                 onChange={handleChange}
@@ -160,7 +153,7 @@ export default function ChatDm () {
                 <button type="submit">Send</button>
             </form>
         </div>
-        <ContactDetail id={params.id} avatar={avatar}/> 
-        </>
+        <ContactDetail id={params.id} avatar={avatar}/>
+    </>
     );
 }
