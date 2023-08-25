@@ -89,8 +89,7 @@ div.chat_container {
     }
     div.chat_inbox {
         grid-area: l;
-        figure.message_oview {
-                    // height: 70px;
+        .message_oview {
                     padding: 8px;
                     display: flex;
                     img {
