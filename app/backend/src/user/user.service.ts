@@ -94,6 +94,7 @@ export class UserService {
             },
             select: {
                 id: true,
+                socketId: true,
                 userRoleChannels: {
                     id: true,
                     channel_name: true,

@@ -75,18 +75,8 @@ interface channelData {
 }
 
 interface rooms {
-    id: number,
+    id: string | undefined,
     channel_name: string,
-    channel_type: string,
-    password?: string
-}
-
-interface Message {
-    message: string,
-    channelName: string,
-    fromUser: number,
-    Username: string,
-    image: string
 }
 
 interface roomData {
@@ -95,10 +85,15 @@ interface roomData {
     minutes?: number
 }
 
-interface OldMessages {
-    sender_id: number,
-    message: string
+interface Message {
+    id?: number,
+    message: string,
+    fromUser: number,
+    CreatedAt: Date,
+    channelName?: string,
+    image?: string,
+    username?: string,
 }
 
 
-export type {User, MessageData, OldMessages, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};
+export type {User, MessageData, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

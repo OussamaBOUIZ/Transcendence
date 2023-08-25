@@ -34,6 +34,11 @@ export class ChannelController {
     {
         return await this.channelservice.getChannelData(id);
     }
+    @Get('channelName/:id')
+    async getChannelNameById(@Param('id', ParseIntPipe) id: number)
+    {
+        return await this.channelservice.getChannelName(id);
+    }
     @Get('AllChannels/:id')
     async getAllChannels(@Param('id', ParseIntPipe) id: number)
     {

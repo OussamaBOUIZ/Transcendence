@@ -8,22 +8,22 @@ import { SocketContext } from "./ChatRooms";
 
 export default function ChannelInfo() {
     const {update} = useContext(UpdateContext)
-    const [channel, setData] = useState<channelData>()
+    const [channel, setChannelData] = useState<channelData>()
     const {user} = useContext(UserContext)
-    const {room, showSearch} = useContext(SocketContext)
+    const {id, showSearch} = useContext(SocketContext)
 
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelData/${room.id}`)
-                setData(res.data)
+                const res = await axios.get(`/api/channel/channelData/${id}`)
+                setChannelData(res.data)
             }
             catch (e) {
                 // console.log(e)
             }
         }
         void getChannelData()
-    }, [update, room, showSearch])
+    }, [update, id, showSearch])
 
     const [myGrade, setMyGrade] = useState<string>("")
     useEffect(() => {

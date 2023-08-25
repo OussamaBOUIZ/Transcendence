@@ -13,6 +13,9 @@ export class Message extends BaseEntity {
     @ManyToOne(() => Channel, (channel) => channel.messages, {nullable: true})
     channel: Channel
 
+    @Column()
+    fromUser: number
+    
     @Column({nullable: true})
     message: string
 

@@ -12,6 +12,7 @@ import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Socket } from 'dgram';
+import { channelMessageDto } from './dto/channelMessageDto';
 
 
 @Injectable()
@@ -101,6 +102,25 @@ export class ChannelService {
             take: 30
         });
     }
+
+    async getLatestMessages(channelName: string)
+    {
+        const latestMessages = await this.messageRepo.find({
+            relations: {
+                channel: true,
+            },
+            where: {channel: {channel_name: channelName}},
+            order: {CreatedAt: 'DESC'},
+            take: 40,
+            select: {
+                id: true,
+                message: true,
+                fromUser: true,
+                CreatedAt: true
+            }
+        });
+        return latestMessages.reverse();
+    }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
         console.log('kickUser', kickUser);
@@ -146,12 +166,11 @@ export class ChannelService {
         }
         await this.channelRepo.save(channel);
     }
-    async storeChannelMessage(userMessage: string, channel: Channel)
+    async storeChannelMessage(messageData: channelMessageDto, channel: Channel)
     {
-        const newMessage: Message = this.messageRepo.create({message: userMessage});
+        const newMessage: Message = this.messageRepo.create({message: messageData.message});
         newMessage.channel = channel;
-        console.log(`message is ${newMessage.message}`);
-        console.log('message channel is: ,', newMessage.channel);
+        newMessage.fromUser = messageData.fromUser;
         await this.messageRepo.save(newMessage);
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)
@@ -261,6 +280,13 @@ export class ChannelService {
             }
         });
         return channel;
+    }
+    async getChannelName(channelId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+        });
+        return channel.channel_name;
     }
     async getUserGrade(userId: number, channelId: number)
     {

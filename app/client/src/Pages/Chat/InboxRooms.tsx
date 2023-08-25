@@ -6,7 +6,6 @@ import Rooms from './Rooms';
 export default function InboxRooms () {
 
     const [isClick, setIsClick] = useState<boolean>(false)
-
     const [PublicMode, setPublicMode] = useState<boolean>(true)
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true)
     const [PrivateMode, setPrivateMode] = useState<boolean>(true)
