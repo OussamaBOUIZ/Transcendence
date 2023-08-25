@@ -1,24 +1,29 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import axios from "axios"
-import {channelData, User} from "../../../../global/Interfaces"
+import {channelData} from "../../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
+import {UpdateContext} from "./ChatOverview"
+import UserContext from "../../Context/UserContext";
+import { SocketContext } from "./ChatRooms";
 
-export default function ChannelInfo({user}: {user: User | null}) {
-
-    const [channel, setData] = useState<channelData>()
+export default function ChannelInfo() {
+    const {update} = useContext(UpdateContext)
+    const [channel, setChannelData] = useState<channelData>()
+    const {user} = useContext(UserContext)
+    const {id, showSearch} = useContext(SocketContext)
 
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelData/9`)
-                setData(res.data)
+                const res = await axios.get(`/api/channel/channelData/${id}`)
+                setChannelData(res.data)
             }
             catch (e) {
-                console.log(e)
+                // console.log(e)
             }
         }
-        getChannelData()
-    }, [])
+        void getChannelData()
+    }, [update, id, showSearch])
 
     const [myGrade, setMyGrade] = useState<string>("")
     useEffect(() => {
@@ -30,25 +35,25 @@ export default function ChannelInfo({user}: {user: User | null}) {
                 }
             }
             catch (err) {
-                console.log(err)
+                // console.log(err)
             }
         }
-        getInfo()
+        void getInfo()
     }, [user, channel])
 
 
     return (
-        <div className="info overflow-x-hidden overflow-y-auto ">
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Channel Owners</label>
+        <div className="info overflow-x-hidden overflow-y-auto">
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Channel Owners</label>
                 <ChannelProperty channel={channel} propertyName="owner" isUnderMyGrade={false}/>
             </div>
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Admins</label>
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Admins</label>
                 <ChannelProperty channel={channel} propertyName="admin" isUnderMyGrade={(myGrade === "owner") ? true : false}/>
             </div>
-            <div className="mt- mt-5 flex flex-col gap-4">
-                <label className="text- text-xl font-semibold ml-4">Members</label>
+            <div className="mt-5 flex flex-col gap-4 items-center">
+                <label className="text- text-xl font-semibold ml-4 mr-auto">Members</label>
                 <ChannelProperty channel={channel} propertyName="user" isUnderMyGrade={(myGrade === "owner" || myGrade === "admin") ? true : false}/>
             </div>
         </div>

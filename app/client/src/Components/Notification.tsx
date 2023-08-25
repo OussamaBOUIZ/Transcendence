@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
 
-export default function Notification({ message }) {
+export default function Notification({ message }: {message: string}) {
 
 	const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 

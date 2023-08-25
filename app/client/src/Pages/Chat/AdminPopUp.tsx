@@ -1,79 +1,60 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import muteIcon from "../../Assets/Icons/mute.svg"
 import kickIcon from "../../Assets/Icons/kick.svg"
-import blockIcon from "../../Assets/Icons/block.svg"
+import banIcon from "../../Assets/Icons/block.svg"
 import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
+import {UpdateContext} from "./ChatOverview"
 import axios from "axios"
+import { SocketContext } from './ChatRooms'
 
 
+export default function AdminPopUp({ channelId, id, setIsClicked}: {channelId: number, id: number, setIsClicked: any}) {
 
-export default function AdminPopUp({ channelId, id }: {channelId: number, id: number}) {
-    function promoteMember() {
-        const action = async () => {
-            try {
-                const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
-                console.log(res)
-            }
-            catch (err) {
-                console.log(err)
-            }
+    const {socket, roomData} = useContext(SocketContext)
+    const {setUpdate} = useContext(UpdateContext)
+
+    async function promoteMember() {
+        try {
+            const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
+            console.log(res)
+            setUpdate(prev => prev + 1)
         }
-        action()
+        catch (err) {
+            console.log(err)
+        }
     }
 
     function kickMember() {
-        const action = async () => {
-            try {
-                const res = await axios.post(`/api/channel/`)
-                console.log(res)
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-        action()
+        const data ={userId: id, channelName: roomData.channelName}
+        socket?.emit('kickuser', data);
+        setUpdate(prev => prev + 1)
     }
 
-    function blockMember() {
-        const action = async () => {
-            try {
-                const res = await axios.post(`/api/channel/`)
-                console.log(res)
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-        action()
+    function banMember() {
+        const data ={userId: id, channelName: roomData.channelName}
+        socket?.emit('banuser', data)
     }
 
     function muteMember() {
-        const action = async () => {
-            try {
-                const res = await axios.post(`/api/channel/`)
-                console.log(res)
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-        action()
+        const data ={userId: id, channelName: roomData.channelName, minutes: 1}
+        socket?.emit('muteuser', data)
     }
 
-    function handleClick(name: string) {
+    async function handleClick(name: string) {
         switch (name) {
             case "promote":
-                promoteMember()
+                await promoteMember()
                 break;
             case "kick":
                 kickMember()
                 break;
-            case "block":
-                blockMember()
+            case "ban":
+                banMember()
                 break;
             default:
-                muteMember()
+                setIsClicked(prev => !prev)
+                // muteMember()
                 break;
         }
     }
@@ -81,13 +62,14 @@ export default function AdminPopUp({ channelId, id }: {channelId: number, id: nu
     const allIcons = [
         {id: nanoid() ,value: promoteIcon, name:"promote"},
         {id: nanoid() ,value: kickIcon, name:"kick"},
-        {id: nanoid() ,value: blockIcon, name:"block"},
+        {id: nanoid() ,value: banIcon, name:"ban"},
         {id: nanoid() ,value: muteIcon, name:"mute"}
     ]
 
     const IconsArea = allIcons.map(icon => {
+        console.log('name is ', icon);
         return (
-            <img key={icon.id} className="cursor-pointer" src={icon.value} alt="" onClick={() => handleClick(icon.name)}/>
+            <img key={icon.id} className="cursor-pointer" src={icon.value} alt="" onClick={() => void handleClick(icon.name)}/>
         )
     })
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { ChannelService } from './channel.service';
 import { Response } from 'express';
@@ -34,19 +34,25 @@ export class ChannelController {
     {
         return await this.channelservice.getChannelData(id);
     }
-    @Get('publicChannels')
-    async getPublicChannels()
+    @Get('channelName/:id')
+    async getChannelNameById(@Param('id', ParseIntPipe) id: number)
     {
-        return await this.channelservice.getPublicChannels();
+        return await this.channelservice.getChannelName(id);
     }
-    @Get('publicChannels')
-    async getProtectedChannels()
+    @Get('AllChannels/:id')
+    async getAllChannels(@Param('id', ParseIntPipe) id: number)
     {
-        return await this.channelservice.getProtectedChannels();
+        return await this.channelservice.getAllChannels(id);
     }
-    @Get('publicChannels')
-    async getPrivateChannels()
+    @Get('addToChannel/:id')
+    async addToChannel(@Param('id', ParseIntPipe) id: number, @Query('channelName') channelName: string)
     {
-        return await this.channelservice.getPrivateChannels();
+        await this.channelservice.addUserToChannel(id, channelName);
     }
+    @Get('loadMessages/:id')
+    async getChannelMessages(@Param('id', ParseIntPipe) id: number)
+    {
+        await this.channelservice.getLatestMessages(id);
+    }
+
 }

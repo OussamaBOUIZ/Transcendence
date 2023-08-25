@@ -74,4 +74,26 @@ interface channelData {
     channelUsers: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[]
 }
 
-export type {User, MessageData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData};
+interface rooms {
+    id: string | undefined,
+    channel_name: string,
+}
+
+interface roomData {
+    channelName: string,
+    userId: number,
+    minutes?: number
+}
+
+interface Message {
+    id?: number,
+    message: string,
+    fromUser: number,
+    CreatedAt: Date,
+    channelName?: string,
+    image?: string,
+    username?: string,
+}
+
+
+export type {User, MessageData, Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

@@ -12,6 +12,7 @@ import { Message } from 'src/databases/message.entity';
 import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Socket } from 'dgram';
+import { channelMessageDto } from './dto/channelMessageDto';
 
 
 @Injectable()
@@ -22,6 +23,27 @@ export class ChannelService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService) {}
 
+    async findChannelWithMembers(channelName: string)
+    {
+        return await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                channelUsers: true,
+                channelAdmins: true,
+                channelOwners: true,
+            }
+        });
+    }
+
+    async findChannelBannedMembers(channelName: string)
+    {
+        return await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                BannedUsers: true,
+            }
+        });
+    }
     async channelUpdate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOne({
@@ -58,14 +80,16 @@ export class ChannelService {
         if(channelFound.channel_type === 'public')
         {
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = [...channelFound.channelUsers, user];
+            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
+            [...channelFound.channelUsers, user] : [user];
         }
         if(channelFound.channel_type === 'protected')
         {
             if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
                 return 'provided password is incorrect'
             const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = [...channelFound.channelUsers, user];
+            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
+            [...channelFound.channelUsers, user] : [user];
         }
         await this.channelRepo.save(channelFound);
         return await this.channelRepo.find({
@@ -78,19 +102,43 @@ export class ChannelService {
             take: 30
         });
     }
+
+    async getLatestMessages(channelId: number)
+    {
+        const latestMessages = await this.messageRepo.find({
+            relations: {
+                channel: true,
+            },
+            where: {channel: {id: channelId}},
+            order: {CreatedAt: 'DESC'},
+            take: 40,
+            select: {
+                id: true,
+                message: true,
+                fromUser: true,
+                CreatedAt: true
+            }
+        });
+        return latestMessages.reverse();
+    }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: kickUser.channelName});
+        console.log('kickUser', kickUser);
+        const channelFound = await this.findChannelWithMembers(kickUser.channelName);
         const user = await this.userService.findUserById(kickUser.userId);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
+        if(channelFound !== null && channelFound !== undefined && channelFound.channelUsers.length !== 0
+            && channelFound.channelUsers.some(user => user.id === kickUser.userId))
+            channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser.id !== user.id);
+        if(channelFound !== null && channelFound !== undefined && channelFound.channelAdmins.length !== 0
+            && channelFound.channelAdmins.some(user => user.id === kickUser.userId))
+            channelFound.channelAdmins = channelFound.channelAdmins.filter((currentUser) => currentUser.id !== user.id);
         await this.channelRepo.save(channelFound);
     }
     async banUserFromChannel(banUser: UserOperationDto)
     {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: banUser.channelName});
+        const channelFound = await this.findChannelBannedMembers(banUser.channelName);
         const user = await this.userService.findUserById(banUser.userId);
-        channelFound.channelUsers = channelFound.channelUsers.filter((currentUser) => currentUser !== user);
-        channelFound.BannedUsers = [...channelFound.BannedUsers, user];
+        channelFound.BannedUsers = channelFound.BannedUsers !== null ? [...channelFound.BannedUsers, user] : [user];
         await this.channelRepo.save(channelFound);
     }
     async promoteMember(userId: number, channelId: number)
@@ -104,6 +152,8 @@ export class ChannelService {
                 channelUsers: true,
             },
         });
+        console.log('REEES IS :');
+        console.log(channel);
         if(channel.channelUsers && channel.channelUsers.some(user => user.id === userId))
         {
             channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser.id !== user.id);
@@ -118,10 +168,11 @@ export class ChannelService {
         }
         await this.channelRepo.save(channel);
     }
-    async storeChannelMessage(userMessage: string, channel: Channel)
+    async storeChannelMessage(messageData: channelMessageDto, channel: Channel)
     {
-        const newMessage: Message = this.messageRepo.create({message: userMessage});
+        const newMessage: Message = this.messageRepo.create({message: messageData.message});
         newMessage.channel = channel;
+        newMessage.fromUser = messageData.fromUser;
         await this.messageRepo.save(newMessage);
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)
@@ -168,9 +219,18 @@ export class ChannelService {
         });
         return privateChannels;
     }
+    async userIsBanned(channelName: string, userId: number)
+    {
+        const channel = await this.findChannelBannedMembers(channelName);
+        if(channel !== null && channel.BannedUsers !== null && channel.BannedUsers.some(user => user.id === userId))
+            return true;
+        return false;
+    }
+
     async userIsMuted(userId: number)
     {
         const muted = await this.muteRepo.findOneBy({user_id: userId});
+        console.log(muted);
         if(muted)
             return true;
         return false;
@@ -223,6 +283,13 @@ export class ChannelService {
         });
         return channel;
     }
+    async getChannelName(channelId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+        });
+        return channel.channel_name;
+    }
     async getUserGrade(userId: number, channelId: number)
     {
         const channel = await this.channelRepo.findOne({
@@ -233,13 +300,52 @@ export class ChannelService {
                 channelOwners: true,
             },
         });
-        console.log(channel);
         if(channel.channelOwners.some(user => user.id === userId))
             return 'owner';
         else if(channel.channelAdmins.some(user => user.id === userId))
             return 'admin';
         else if(channel.channelUsers.some(user => user.id === userId))
             return 'user';
+    }
+    async getAllChannels(id: number)
+    {
+        const user = await this.userService.findUserWithChannels(id);
+        const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
+        return AllChannels;
+    }
+    async addUserToChannel(userId: number, channelName: string)
+    {
+        const user = await this.userService.findUserById(userId);
+        const channel = await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                channelUsers: true,
+            },
+        });
+        channel.channelUsers = channel.channelUsers !== null ? [...channel.channelUsers, user] : [user]; 
+        await this.channelRepo.save(channel);
+    }
+    
+    async leaveChannel(channelName: string, userId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                channelUsers: true,
+                channelAdmins: true
+            },
+        });
+        if(channel.channelAdmins.some(user => user.id === userId))
+        {
+            const user = await this.userService.findUserById(userId);
+            if(channel.channelAdmins !== null)
+                channel.channelAdmins = channel.channelAdmins.filter(user => user.id !== userId)
+        }
+        else if(channel.channelUsers.some(user => user.id === userId))
+        {
+            if(channel.channelUsers !== null)
+                channel.channelUsers = channel.channelUsers.filter(user => user.id !== userId)
+        }
     }
 }
  

@@ -32,7 +32,7 @@ export default function ChatSearchBox () {
         }
         async function getUserCard () {
             try {
-                const response = await axios(`../api/user/search/user/?username=${submittedName}`)
+                const response = await axios(`/api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data[0].id)
                 setSearchedUser({...response.data[0], image: imgRes})
             } catch (err: any) {
@@ -61,11 +61,9 @@ export default function ChatSearchBox () {
             {searchedUser
             && 
             <UserCard 
-                firstname={searchedUser.firstname}
-                lastname={searchedUser.lastname}
-                username={searchedUser.username}
-                avatar={searchedUser.image}
-                id={searchedUser.id}
+                user={searchedUser}
+                message={true}
+                friend={true}
             />
             }
         </section>

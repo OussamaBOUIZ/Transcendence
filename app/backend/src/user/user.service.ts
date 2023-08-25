@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
@@ -84,6 +84,36 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async findUserWithChannels(id: number): Promise<User> {
+        return await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                userRoleChannels: true,
+                adminRoleChannels: true,
+                ownerRoleChannels: true,
+            },
+            select: {
+                id: true,
+                socketId: true,
+                userRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                adminRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                ownerRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                }
+            },
+        });
+    }
+    
     async userHasAuth(email: string) {
         const user = await this.userRepo.findOne({
             where: { email: email }
@@ -96,6 +126,7 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
+        console.log(payload)
         return await this.userRepo.findOneBy({ id: payload.id });
     }
 
@@ -356,5 +387,33 @@ export class UserService {
             console.log(e)
             throw new HttpException("The User Not found", HttpStatus.NOT_FOUND)
         }
+    }
+
+    async getUserDetails(id: number) {
+        const user =  await this.userRepo.findOne({
+            relations: {
+                stat: {
+                    achievements: true
+                },
+            },
+            where: {
+                id: id,
+                stat: {
+                    achievements: {
+                        is_achieved: true
+                    }
+                }
+            },
+            select: {
+                id: true,
+                username: true,
+                firstname: true,
+                lastname: true
+                
+            }
+        })
+        if (!user)
+            throw new NotFoundException('user not found')
+        return user
     }
 }
