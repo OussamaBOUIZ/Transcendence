@@ -22,9 +22,10 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     afterInit() {
         console.log(`Init gateway`)
     }
+
     async handleConnection(client: Socket) {
         const AllCookies = client.handshake.headers.cookie;
-        const start = AllCookies.indexOf("access_token=") + 13; // 13 is the length of "access_token="
+        const start = AllCookies.indexOf("access_token=") + 13;
         let end = AllCookies.indexOf(";", start);
         end = end !== -1 ? end : AllCookies.length;
         const accessToken = AllCookies.substring(start, end);
@@ -106,7 +107,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('joinchannel')
     async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
     {
-        console.log('id:', newUser.channelNewUser)
         client.join(newUser.channelName);
         let channelFound = await this.channelservice.addToChannel(newUser);
         if(typeof channelFound === 'string')

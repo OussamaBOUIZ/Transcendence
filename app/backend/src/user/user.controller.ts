@@ -135,7 +135,6 @@ export class UserController {
         @Req() req: Request,
         @Res() res: Response
     ) {
-        // console.log(req.user['email'], "ok")
         const user = await this.userService.findUserByEmail(req.user['email'])
         console.log(user.id, userId)
         await this.userService.blockUser(userId, user)
@@ -202,6 +201,7 @@ export class UserController {
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
     }
+
     @Get('onlinefriends/:id')
     async getOnlineFriends(@Param('id') id: number)
     {
@@ -344,5 +344,3 @@ export class UserController {
         return this.userService.getUserDetails(id)
     }
 }
-
-// localhost:3000/api/user/:ael÷

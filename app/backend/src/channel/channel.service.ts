@@ -123,7 +123,6 @@ export class ChannelService {
     }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
-        console.log('kickUser', kickUser);
         const channelFound = await this.findChannelWithMembers(kickUser.channelName);
         const user = await this.userService.findUserById(kickUser.userId);
         if(channelFound !== null && channelFound !== undefined && channelFound.channelUsers.length !== 0
