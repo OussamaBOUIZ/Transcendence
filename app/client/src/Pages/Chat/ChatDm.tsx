@@ -10,10 +10,13 @@ import InboxDm from './InboxDm';
 import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
 import ChatVoid from './ChatVoid';
+import InboxContext, { InboxProvider } from '../../Context/InboxContext';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
     const params = useParams()
+    const {setInboxList} = useContext(InboxContext)
+
     if (params.id === undefined) {
         return (
         <>
@@ -112,7 +115,10 @@ export default function ChatDm () {
             return
         }
         socket?.on('message', (recMsg: MessageData) => {
-            setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
+            if (recMsg.authorId === Number(params.id))
+                setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
+            else
+                console.log('Update Inbox');
         })
     }, [socket])
     
@@ -128,32 +134,33 @@ export default function ChatDm () {
         return null
     })
     
-    
     return (
         <>
-        <InboxDm />
-        <div className="chat_main">
-            <ChatHeader
-            avatar={avatar}
-            username={`user id: ${params.id}`}
-            online={true}
-            />
-
-            <section className="chat_window">
-                {messagesElements}               
-            </section>
-
-
-            <form className="chat_input" onSubmit={handleSubmit}>
-                <textarea 
-                placeholder="Type something"
-                onChange={handleChange}
-                value={messageToSendValue}
+        <InboxProvider>
+            <InboxDm />
+            <div className="chat_main">
+                <ChatHeader
+                avatar={avatar}
+                username={`user id: ${params.id}`}
+                online={true}
                 />
-                <button type="submit">Send</button>
-            </form>
-        </div>
-        <ContactDetail id={params.id} avatar={avatar}/>
+
+                <section className="chat_window">
+                    {messagesElements}               
+                </section>
+
+
+                <form className="chat_input" onSubmit={handleSubmit}>
+                    <textarea 
+                    placeholder="Type something"
+                    onChange={handleChange}
+                    value={messageToSendValue}
+                    />
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+            <ContactDetail id={params.id} avatar={avatar}/>
+        </InboxProvider>
     </>
     );
 }

@@ -82,4 +82,12 @@ export interface SStat {
     stat: SStat;
 }
 
+export interface InboxItem {
+    id: number;
+    username: string;
+    lastMessage: string;
+    unseenMessage?: number;
+    creationTime?: Date;
+}
+
 export type { FriendUser, Achievement, Leaders, Data};
