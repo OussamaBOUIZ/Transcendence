@@ -47,7 +47,7 @@ export default function CreateRoom({action}: {action: string}) {
         }
     }
 
-    const style = (myGrade === "user" ? 'cursor-not-allowed' : '')
+    const style = (myGrade === "user" ? 'cursor-not-allowed pointer-events-none' : '')
 
     const passwordCard = <div className="setPassword flex flex-col">
                             <label>set a password</label>
@@ -101,7 +101,7 @@ export default function CreateRoom({action}: {action: string}) {
             <button className={`primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base bg-pink-500 ${style}`} onClick={handleSubmit}>
                 {action}
             </button>
-            {myGrade !== "owner" && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2" onClick={handleSubmit}>
+            {myGrade !== "owner" && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2 hover:bg-white hover:text-primary-color" onClick={handleSubmit}>
                 Leave channel
             </button>}
         </div>
