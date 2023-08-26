@@ -1,0 +1,221 @@
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+.backgroundHomeShadow {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 29.25rem;
+  height: 9.9375rem;
+  border-radius: 29.25rem;
+  background: #E72FD0;
+  filter: blur(125px);
+}
+
+.leaderboardShadow {
+  position: absolute;
+  bottom: 5%;
+  left: 30%;
+  width: 29.25rem;
+  height: 5.75rem;
+  border-radius: 29.25rem;
+  background: #E72FD0;
+  filter: blur(125px);
+}
+
+.homeComponent {
+  display: grid;
+  margin-left: 2%;
+  margin-top: 6%;
+  height: 80%;
+  width: 70%;
+  grid-gap: 0.6rem;
+  grid-template: 0.9fr 0.8fr 1fr/repeat(6, 1fr);
+  grid-template-areas: "battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal" "theBeast theBeast SpiderGround SpiderGround BrightGround BrightGround" "Leaderboard Leaderboard Leaderboard GameHistory GameHistory GameHistory";
+  z-index: 1;
+}
+.homeComponent .item {
+  background-color: #59189A;
+  border-radius: 1rem;
+  border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+.homeComponent .item:has(> span) {
+  display: flex;
+  align-items: flex-end;
+  color: white;
+  font-size: clamp(1rem, 2vw, 2.25rem);
+  font-style: italic;
+  font-weight: 900;
+  padding: 1rem 2rem;
+}
+.homeComponent .battleRoyal {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  grid-area: battleRoyal;
+  box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+}
+.homeComponent .battleRoyal .cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../Assets/Vintage_Style_Photography_ping_pong_table_dark_night_forest_bi_2.jpeg");
+  background-position: -2.5px -503px;
+  background-size: 102% 396.258%;
+  opacity: 0.6;
+  background-repeat: no-repeat;
+  border-radius: 1rem;
+}
+.homeComponent .battleRoyal img {
+  width: 21.4375em;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.homeComponent .battleRoyal .BattleRoyalCover {
+  height: 100%;
+  margin-left: 6em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+.homeComponent .battleRoyal .BattleRoyalCover span {
+  color: white;
+  font-size: clamp(1.6rem, 3vw, 3.75rem);
+  font-style: italic;
+  font-weight: 900;
+}
+.homeComponent .battleRoyal .BattleRoyalCover p {
+  margin-top: 0;
+  color: #EEE;
+  font-size: 1.25rem;
+  font-size: clamp(0.5rem, 1vw, 1.25rem);
+  font-weight: 300;
+}
+.homeComponent .battleRoyal .BattleRoyalCover .PlayButton {
+  font-family: "Poppins";
+  margin-top: 0.6em;
+  cursor: pointer;
+  background: #E72FD0;
+  border-radius: 1.5625em;
+  border: none;
+  box-shadow: 0px 0px 20px 0px #E72FD0;
+  width: 0;
+  padding: 0.7em 5em;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.homeComponent .battleRoyal .BattleRoyalCover .PlayButton span {
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+.homeComponent .theBeast {
+  grid-area: theBeast;
+  background-image: url("../Assets/TheBeast.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.homeComponent .SpiderGround {
+  grid-area: SpiderGround;
+  background-image: url("../Assets/SpiderGround.jpeg");
+  background-position: 0 -33px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.homeComponent .BrightGround {
+  grid-area: BrightGround;
+  background-image: url("../Assets/BrightGround.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.homeComponent .Leaderboard {
+  grid-area: Leaderboard;
+  background-image: url("../Assets/Leaderboard.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+}
+.homeComponent .Leaderboard p {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin: 1rem;
+}
+.homeComponent .Leaderboard .board {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.homeComponent .Leaderboard .board .rank {
+  width: 34%;
+  height: 100%;
+  background: var(--linear, linear-gradient(222deg, #270C42 0%, #270C42 0.01%, #3F1A64 100%));
+  border-radius: 1.5625rem 1.5625rem 0rem 0rem;
+}
+.homeComponent .Leaderboard .board .rank .rankContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -50px;
+}
+.homeComponent .Leaderboard .board .rank .rankContent span > h4 {
+  margin-bottom: 0;
+}
+.homeComponent .Leaderboard .board .rank .rankContent span {
+  color: #FFF;
+  font-size: 0.625rem;
+  font-weight: 400;
+  text-transform: lowercase;
+}
+.homeComponent .Leaderboard .board .rank2, .homeComponent .Leaderboard .board .rank3 {
+  height: 80%;
+}
+.homeComponent .GameHistory {
+  grid-area: GameHistory;
+  background-image: url("../Assets/GameHistory.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+}
+.homeComponent .GameHistory p {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin: 1rem;
+}
+.homeComponent .GameHistory .games {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 5px;
+  justify-items: center;
+  padding-bottom: 5px;
+}/*# sourceMappingURL=homeComponent.css.map */

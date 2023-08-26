@@ -1,0 +1,31 @@
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+.flex-sp {
+  display: flex;
+  justify-content: space-between;
+}
+
+.avatar {
+  width: 3em;
+  height: 3em;
+  background-color: red;
+  border-radius: 50%;
+}/*# sourceMappingURL=utils.css.map */

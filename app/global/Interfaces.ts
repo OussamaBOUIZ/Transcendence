@@ -75,24 +75,24 @@ interface channelData {
 }
 
 interface rooms {
-    id: number,
+    id: string | undefined,
     channel_name: string,
-    channel_type: string,
-    password?: string
-}
-
-interface Message {
-    message: string,
-    channelName: string,
-    fromUser: number,
-    Username: string,
-    image: string
 }
 
 interface roomData {
     channelName: string,
     userId: number,
     minutes?: number
+}
+
+interface Message {
+    id?: number,
+    message: string,
+    fromUser: number,
+    CreatedAt: Date,
+    channelName?: string,
+    image?: string,
+    username?: string,
 }
 
 

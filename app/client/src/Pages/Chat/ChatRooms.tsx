@@ -1,7 +1,8 @@
-import React, {createContext, useState, useCallback, useEffect, useRef, useContext} from 'react'
+import React, {createContext, useState, useEffect, useRef, useContext} from 'react'
 import ChatOverview from './ChatOverview';
 import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
+import axios from 'axios'
 import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
 import {rooms, roomData, Message} from "../../../../global/Interfaces"
@@ -10,7 +11,13 @@ import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import Notification from "../../Components/Notification"
 import AddUser from "./addUser"
-// import useScrollableBox from "../../Hooks/useScrollableBox"
+import ChatRoomWindow from "./ChatRoomWindow"
+import ChatInput from "./chatInput"
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import {scrollLogic} from "./scrollLogic"
+import {loadingMessages} from "./loadingMessages"
+import {listener} from "./listener"
+import {accessChannel} from "./accessChannel"
 
 
 export const SocketContext = createContext({});
@@ -19,63 +26,77 @@ export const SocketContext = createContext({});
 export default function ChatRooms () {
 
 
-    const [room, setRoom] = useState<rooms>({id: 0, channel_name: "", channel_type: ""})
+    const [room, setRoom] = useState<rooms>({} as rooms)
     const [socket, setSocket] = useState<Socket>()
+    const [init, setInit] = useState<boolean>(false)
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     const {user} = useContext(UserContext)
-    const initState = useRef<boolean>(false)
-    const ini = useRef<boolean>(false)
-    // const {outerDiv, innerDiv, OuterProvider, InnerProvider, handleScrollButtonClick} = useScrollableBox(messageList);
     const outerDiv = useRef<HTMLDivElement>(null);
     const innerDiv = useRef<HTMLDivElement>(null);
-    const prevInnerDivHeight = useRef<HTMLDivElement>(null);
-
-
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [notif, setNotif] = useState<string>("")
+    const prevInnerDivHeight = useRef<HTMLDivElement>(null);
+    const [data, setData] = useState<Message[]>([])
+
+
+    const {id} = useParams()
+
+    useEffectOnUpdate(() => {
+        console.log('id change play')
+        const getChannelName = async () => {
+            try {
+                const res = await axios.get(`/api/channel/channelName/${id}`);
+                setRoom({
+                    id: id,
+                    channel_name: res.data
+                })
+                setRoomData({
+                    channelName: res.data,
+                    userId: user?.id,
+                })
+                console.log('roomData is full now')
+            }
+            catch(error) {
+                // console.log(error)
+            }
+        }
+        void getChannelName()
+    }, [id, user])
 
     const sendMessage = (event: Event) => {
         event.preventDefault();
-        
+
         if (message !== "") {
-          const messageData: Message = {
-            message: message,
-            channelName: room.channel_name,
-            fromUser: user.id,
-            username: user.username,
-            image: user.image
-          };
-          socket?.emit("channelMessage", messageData);
-          setMessage("");
-          handleScrollButtonClick()
-        const outerDivHeight = outerDiv.current.clientHeight;
-        const innerDivHeight = innerDiv.current.clientHeight + 24;
-    
-        outerDiv.current.scrollTo({
-          top: innerDivHeight - outerDivHeight,
-          left: 0,
-          behavior: "smooth"
-        });
+            const messageData: Message = {
+                message: message,
+                channelName: room.channel_name,
+                fromUser: user.id,
+                username: user.username,
+                image: user.image
+            }
+            socket?.emit("channelMessage", messageData);
+            setMessage("");
+            const outerDivHeight = outerDiv.current.clientHeight;
+            const innerDivHeight = innerDiv.current.clientHeight + 24;
+        
+            outerDiv.current.scrollTo({
+                top: innerDivHeight - outerDivHeight,
+                left: 0,
+                behavior: "smooth"
+            });
         }
-      }
+    }
 
+    // create socket
     useEffect(() => {
-        // const value = document.cookie.split('=')[1]
-        const fd = io("ws://localhost:1313", {
+        console.log("create socket")
+        const fd = io("ws://localhost:1212", {
             withCredentials: true,
-          })
+        })
         setSocket(fd)
-
-        // const outerDivHeight = outerDiv.current.clientHeight;
-        // const innerDivHeight = innerDiv.current.clientHeight + 24;
-    
-        // outerDiv.current.scrollTo({
-        //   top: innerDivHeight - outerDivHeight,
-        //   left: 0,
-        //   behavior: "smooth"
-        // });
+        setInit(prev => !prev)
 
         return  () => {
             if (socket)
@@ -83,98 +104,35 @@ export default function ChatRooms () {
         }
     }, [])
 
-    useEffect(() => {
-        const outerDivHeight = outerDiv.current.clientHeight;
-        console.log("🚀 ~ useEffect ~ outerDivHeight:", outerDivHeight)
-        const innerDivHeight = innerDiv.current.clientHeight + 24;
-        console.log("🚀 ~ useEffect ~ innerDivHeight:", innerDivHeight)
-        console.log("🚀 ~ useEffect ~ prevInnerDivHeight:", prevInnerDivHeight.current)
-        const outerDivScrollTop = outerDiv.current.scrollTop;
-        console.log("🚀 ~ useEffect ~ outerDivScrollTop:", outerDivScrollTop)
-
-        if (
-        !prevInnerDivHeight.current ||
-        outerDivScrollTop === prevInnerDivHeight.current - outerDivHeight
-        ) {
-            outerDiv.current.scrollTo({
-                top: innerDivHeight - outerDivHeight,
-                left: 0,
-                behavior: prevInnerDivHeight.current ? "smooth" : "auto"
-            });
-        }
-
-        prevInnerDivHeight.current = innerDivHeight;
-      }, [messageList]);
-
-    useEffect(() => {
-        if (!initState.current) {
-            initState.current = true;
-            return;
-        }
-        socket?.emit("accessChannel", roomData);
-
-        return  () => {
-            if (socket)
-                socket.emit("leavechannel", roomData);
-        }
-    }, [roomData, socket]);
-    
-    useEffect(() => {
-        setRoomData({
-            channelName: room.channel_name,
-            userId: user?.id,
-        });
-    }, [user, room]);
-    
-
-    useEffect(() => {
-        console.log("ko")
-
-        if (ini.current === false)
-        {
-            ini.current = true
-            return ;
-        }
-        socket?.on("sendChannelMessage", (data: Message)  => {
-            setMessageList((list) => [...list, data]);
-        });
-
-        socket?.on('userIsBanned', (message: string) => setNotif(message))
-
-        socket?.on('socketDisconnect', (channelName: string) => {
-            const newData = {channelName: channelName, userId: user?.id}
-            socket?.emit('leavechannel', newData)
-        })
-    }, [socket]);
-
-
     const messagesElements = messageList.map((mess) => {
         return (
-            <MessageBox id={mess.fromUser !== user?.id}
-            username={mess?.username}
-            avatar={mess?.image}
-            >
+            <MessageBox key={mess.id} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} >
                 {mess.message}
             </MessageBox>
         )
     })
 
-    if (!socket && !room) {
-        return null;
-    }
-    const {id} = useParams()
+    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight)
+    , [messageList]);
 
-    function handleEnter(event) {
-        if (event.key === 'Enter') {
-            sendMessage(event);
-        }
-    }
+    // access channel after click
+    console.log(socket)
+    useEffectOnUpdate(accessChannel(socket, roomData), [roomData])
+
+    // load old messages
+    useEffectOnUpdate(loadingMessages(data, setMessageList), [data])
+
+    // listener
+    useEffectOnUpdate(listener(socket, setData, setMessageList, setNotif), [socket]);
+
+    if (!socket && !room)
+        return null;
 
     return (
-        <SocketContext.Provider value={{socket, setSocket, room, setRoom, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{outerDiv, innerDiv, room, showSearch, setShowSearch}}>
             {/* {notif && <Notification message={notif} />} */}
             {
-            showSearch &&
+                showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
                 </div>
@@ -182,24 +140,8 @@ export default function ChatRooms () {
             <InboxRooms />
             <div className="chat_main">
                 <RoomHeader />
-                {/* <OuterProvider className="chat_window bg-chat-body" outerDiv={outerDiv}>
-                    <InnerProvider innerDiv={innerDiv}> */}
-                <section className="chat_window bg-chat-body" ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
-                    <div ref={innerDiv} style={{position: 'relative'}}>
-                        {messagesElements}
-                    </div>
-                    {/* </InnerProvider>
-                    </OuterProvider> */}
-                </section>
-                <form className="chat_input" onSubmit={sendMessage}>
-                    <textarea
-                    placeholder="Type something"
-                    onKeyDown={handleEnter}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    />
-                    <button className='bg-primary-pink' type="submit">Send</button>
-                </form>
+                <ChatRoomWindow messagesElements={messagesElements}/>
+                <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
             </div>
             <ChatOverview />
         </SocketContext.Provider>

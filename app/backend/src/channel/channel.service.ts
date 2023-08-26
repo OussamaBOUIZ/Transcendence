@@ -105,20 +105,21 @@ export class ChannelService {
 
     async getLatestMessages(channelName: string)
     {
-        await this.messageRepo.find({
-            where: {channel: {channel_name: channelName}},
+        const latestMessages = await this.messageRepo.find({
             relations: {
                 channel: true,
             },
-            order: {CreatedAt: 'ASC'},
+            where: {channel: {channel_name: channelName}},
+            order: {CreatedAt: 'DESC'},
             take: 40,
             select: {
                 id: true,
                 message: true,
-                sender_id: true,
+                fromUser: true,
                 CreatedAt: true
             }
         });
+        return latestMessages.reverse();
     }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
@@ -168,7 +169,7 @@ export class ChannelService {
     {
         const newMessage: Message = this.messageRepo.create({message: messageData.message});
         newMessage.channel = channel;
-        newMessage.sender_id = messageData.fromUser;
+        newMessage.fromUser = messageData.fromUser;
         await this.messageRepo.save(newMessage);
     }
     async muteUserFromChannel(muteUser: UserOperationDto, channel: Channel)
@@ -279,6 +280,13 @@ export class ChannelService {
         });
         return channel;
     }
+    async getChannelName(channelId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+        });
+        return channel.channel_name;
+    }
     async getUserGrade(userId: number, channelId: number)
     {
         const channel = await this.channelRepo.findOne({
@@ -314,13 +322,6 @@ export class ChannelService {
         });
         channel.channelUsers = channel.channelUsers !== null ? [...channel.channelUsers, user] : [user]; 
         await this.channelRepo.save(channel);
-    }
-    async getChannelName(channelId: number)
-    {
-        const channel = await this.channelRepo.findOne({
-            where: {id: channelId},
-        });
-        return channel.channel_name;
     }
 }
  

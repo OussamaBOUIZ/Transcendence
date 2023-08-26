@@ -14,7 +14,7 @@ export class Message extends BaseEntity {
     channel: Channel
 
     @Column()
-    sender_id: number
+    fromUser: number
     
     @Column({nullable: true})
     message: string

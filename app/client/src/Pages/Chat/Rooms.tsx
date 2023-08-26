@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import {NavLink} from "react-router-dom"
 import cube from "../../Assets/Icons/cube.svg";
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
-import {SocketContext} from "./ChatRooms";
 import {rooms} from "../../../../global/Interfaces"
 
 interface propsType {
@@ -11,13 +10,11 @@ interface propsType {
 
 function RoomItem({item}: {item: rooms}) {
   const [mode, setIsActive] = useState<boolean>(false);
-  const {setRoom} = useContext(SocketContext)
 
   return (
     <NavLink to={`/chat/rooms/${item.id}`} style={({isActive}) => setIsActive(isActive)}>
       <div
-        className={`${mode ? 'bg-room-active-bar' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}
-        onClick={() => setRoom(item)}>
+        className={`${mode ? 'bg-room-active-bar' : ''} room h-14 p-2 flex justify-between items-center px-7 cursor-pointer`}>
             <div className="room-header flex gap-5">
               <img src={cube} alt="" />
               {item.channel_name}

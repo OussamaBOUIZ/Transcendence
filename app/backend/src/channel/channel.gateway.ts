@@ -7,10 +7,9 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
-import { channelDto } from "./dto/channelDto";
 import { channelAccess } from "./dto/channelAccess";
 
-@WebSocketGateway(1313, {cors: {
+@WebSocketGateway(1212, {cors: {
 	origin: "http://localhost:5173",
     credentials: true
 }}) 
@@ -30,7 +29,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         let end = AllCookies.indexOf(";", start);
         end = end !== -1 ? end : AllCookies.length;
         const accessToken = AllCookies.substring(start, end);
-        const user = await this.userService.getUserFromJwt(client.handshake.headers.cookie);
+        const user = await this.userService.getUserFromJwt(accessToken);
         if(!user) 
         {
             client.disconnect();
@@ -79,8 +78,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         else
         {
             client.join(channelData.channelName);
-            const messages = await this.channelservice.getLatestMessages(channelData.channelName);
-            this.server.to(user.socketId).emit('loadOldConversations', messages);
+            const channelName = channelData.channelName;
+            // const messages = await this.channelservice.getLatestMessages(channelName);
+            this.server.to(user.socketId).emit('loadOldConversations', 'ouz');
         }
     }
 
