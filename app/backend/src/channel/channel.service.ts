@@ -105,22 +105,23 @@ export class ChannelService {
 
     async getLatestMessages(channelName: string)
     {
-        return await this.messageRepo.find({
+        await this.messageRepo.find({
+            where: {channel: {channel_name: channelName}},
             relations: {
                 channel: true,
             },
-            where: {channel: {channel_name: channelName}},
             order: {CreatedAt: 'ASC'},
             take: 40,
             select: {
-                sender_id: true,
+                id: true,
                 message: true,
+                sender_id: true,
+                CreatedAt: true
             }
         });
     }
     async kickUserFromChannel(kickUser: UserOperationDto)
     {
-        console.log('kickUser', kickUser);
         const channelFound = await this.findChannelWithMembers(kickUser.channelName);
         const user = await this.userService.findUserById(kickUser.userId);
         if(channelFound !== null && channelFound !== undefined && channelFound.channelUsers.length !== 0
@@ -313,6 +314,13 @@ export class ChannelService {
         });
         channel.channelUsers = channel.channelUsers !== null ? [...channel.channelUsers, user] : [user]; 
         await this.channelRepo.save(channel);
+    }
+    async getChannelName(channelId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {id: channelId},
+        });
+        return channel.channel_name;
     }
 }
  
