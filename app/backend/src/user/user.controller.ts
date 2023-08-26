@@ -17,6 +17,7 @@ import {
     Logger,
     UsePipes,
     ValidationPipe,
+    NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -36,6 +37,7 @@ import { access } from 'fs/promises';
 import { userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
+import { plainToClass, plainToInstance } from 'class-transformer';
 // import { PlayerData} from "../../../global/Interfaces"
 
 
@@ -124,26 +126,31 @@ export class UserController {
         return await this.userService.findUserById(id)
     }
 
-    @Get('block/:userId')
+    @Get('blockedUsers/:userId')
     async getBlockedUser(
         @Param('userId', ParseIntPipe) userId: number,
         @Req() req: Request
     )
     {
-        const user = await this.userService.findUserByEmail(req.user["email"])
-        const User1 =  await this.userService.getBlockedUsers(user.id)
-        return await this.userService.getBlockedUsers(userId)
+        const user = await this.userService.findUserById(userId)
+        if (!user)
+            throw new NotFoundException('user not found')
+        const blockedUsers =  await this.userService.getBlockedUsers(user.id)
+        const trans = blockedUsers.blocked_users.map(user => ({id: user.id}))
+        
+        return trans
     }
+
+
     @Post('block/:userId')
     async blockUser(
         @Param('userId', ParseIntPipe) userId: number,
         @Req() req: Request,
         @Res() res: Response
     ) {
-        // console.log(req.user['email'], "ok")
-        const user = await this.userService.findUserByEmail(req.user['email'])
-        console.log(user.id, userId)
-        await this.userService.blockUser(userId, user)
+        console.log('aaa');
+        
+        await this.userService.blockUser(userId, req.user['email'])
         return res.status(HttpStatus.OK).send('the user blocked ')
     }
 
