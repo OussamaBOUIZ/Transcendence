@@ -103,8 +103,11 @@ export class ChannelService {
         });
     }
 
-    async getLatestMessages(channelId: number)
+    async getLatestMessages(channelId: number, userId: number)
     {
+        const user = await this.userService.findUserWithBanned(userId);
+        if(user.userBannedChannels.some(channel => channel.id === channelId))
+            return [];
         const latestMessages = await this.messageRepo.find({
             relations: {
                 channel: true,
