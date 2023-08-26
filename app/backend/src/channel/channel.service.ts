@@ -103,13 +103,13 @@ export class ChannelService {
         });
     }
 
-    async getLatestMessages(channelName: string)
+    async getLatestMessages(channelId: number)
     {
         const latestMessages = await this.messageRepo.find({
             relations: {
                 channel: true,
             },
-            where: {channel: {channel_name: channelName}},
+            where: {channel: {id: channelId}},
             order: {CreatedAt: 'DESC'},
             take: 40,
             select: {

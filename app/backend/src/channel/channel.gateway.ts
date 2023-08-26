@@ -9,7 +9,7 @@ import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 
-@WebSocketGateway(1212, {cors: {
+@WebSocketGateway(1313, {cors: {
 	origin: "http://localhost:5173",
     credentials: true
 }}) 
@@ -72,14 +72,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(channel !== null && channel.BannedUsers !== null && 
             channel.BannedUsers.some(user => user.id === channelData.userId))
         {
-            this.server.emit('userIsBanned', 'You are banned from this channel');
+            client.emit('userIsBanned');
         }
         else
         {
             client.join(channelData.channelName);
-            const channelName = channelData.channelName;
-            // const messages = await this.channelservice.getLatestMessages(channelName);
-            this.server.to(user.socketId).emit('loadOldConversations', 'ouz');
         }
     }
 
@@ -92,6 +89,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('banuser')
     async banuser(@MessageBody() banData: UserOperationDto, @ConnectedSocket() client: Socket)
     {
+        console.log("here")
         const user = await this.userService.findUserById(banData.userId);
         client.to(user.socketId).emit('socketDisconnect', banData.channelName);
         await this.channelservice.banUserFromChannel(banData);

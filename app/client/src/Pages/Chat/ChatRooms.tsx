@@ -9,15 +9,15 @@ import {rooms, roomData, Message} from "../../../../global/Interfaces"
 import MessageBox from "../../Components/MessageBox"
 import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
-import Notification from "../../Components/Notification"
 import AddUser from "./addUser"
 import ChatRoomWindow from "./ChatRoomWindow"
 import ChatInput from "./chatInput"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import {scrollLogic} from "./scrollLogic"
-import {loadingMessages} from "./loadingMessages"
 import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
+import {loadingMessages} from "./loadingMessages"
+import CreateRoom from './createRoom';
 
 
 export const SocketContext = createContext({});
@@ -36,9 +36,11 @@ export default function ChatRooms () {
     const outerDiv = useRef<HTMLDivElement>(null);
     const innerDiv = useRef<HTMLDivElement>(null);
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
-    const [notif, setNotif] = useState<string>("")
+    const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<HTMLDivElement>(null);
-    const [data, setData] = useState<Message[]>([])
+    const [myGrade, setMyGrade] = useState<string>("")
+    const [isClick, setIsClick] = useState<boolean>(false)
+    const [action, setAction] = useState<"create" | "update">("create")
 
 
     const {id} = useParams()
@@ -56,7 +58,13 @@ export default function ChatRooms () {
                     channelName: res.data,
                     userId: user?.id,
                 })
-                console.log('roomData is full now')
+                try {
+                    const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${id}`);
+                    setMyGrade(res.data)
+                }
+                catch (err) {
+                    // console.log(err)
+                }
             }
             catch(error) {
                 // console.log(error)
@@ -92,7 +100,7 @@ export default function ChatRooms () {
     // create socket
     useEffect(() => {
         console.log("create socket")
-        const fd = io("ws://localhost:1212", {
+        const fd = io("ws://localhost:1313", {
             withCredentials: true,
         })
         setSocket(fd)
@@ -112,29 +120,31 @@ export default function ChatRooms () {
         )
     })
 
-    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight)
-    , [messageList]);
+    useEffectOnUpdate(loadingMessages(id, isBanned, setMessageList), [isBanned])
+
+    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    console.log(socket)
-    useEffectOnUpdate(accessChannel(socket, roomData), [roomData])
-
-    // load old messages
-    useEffectOnUpdate(loadingMessages(data, setMessageList), [data])
+    useEffectOnUpdate(accessChannel(id, socket, roomData, setMessageList, setBanned), [roomData])
 
     // listener
-    useEffectOnUpdate(listener(socket, setData, setMessageList, setNotif), [socket]);
+    useEffectOnUpdate(listener(socket, setMessageList, setBanned), [socket]);
 
     if (!socket && !room)
         return null;
 
     return (
-        <SocketContext.Provider value={{outerDiv, innerDiv, room, showSearch, setShowSearch}}>
-            {/* {notif && <Notification message={notif} />} */}
+        <SocketContext.Provider value={{socket, id, myGrade, isBanned, isClick, setIsClick, setAction, outerDiv, innerDiv, room, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
+                </div>
+            }
+            {
+                isClick &&
+                <div className="popUp absolute flex items-center justify-center">
+                    <CreateRoom action={action} />
                 </div>
             }
             <InboxRooms />

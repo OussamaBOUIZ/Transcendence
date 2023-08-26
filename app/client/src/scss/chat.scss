@@ -20,6 +20,55 @@ div.chat_container {
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
+    .popUp {
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: rgba(44, 9, 78, 0.85);
+        z-index: 9999;
+        .createRoom {
+            width: 30%;
+            background-color: #38125E;
+            border-radius: 1em;
+            section.search_box {
+                input {
+                    width: 100%;
+                    padding: .5em;
+                    background: $input-background;
+                    border-radius: 6px;
+                    &::placeholder {
+                        color: $text-grey-color;
+                    }
+                }
+                figure {
+                    border-radius: 1rem;
+                    background: rgba(0, 0, 0, 0.20);
+                    margin-top: .5em;
+                    padding: .4em .6em;
+                }
+            }
+        }
+    }
+    input[type="radio"] {
+        appearance: none;
+        width: 1em;
+        height: 1em;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+        background-color: #ccc;
+        transition: background-color 0.2s, border-color 0.2s;
+        cursor: pointer;
+    }
+    input[type="text"], input[type="password"] {
+        background-color: rgba(171, 171, 171, 0.28);
+        border-radius: 6px;
+        padding: .5em;
+    }
+    input[type="radio"]:checked {
+        background-color: #007bff;
+    }
     section.chat_account {
         grid-area: a;
         display: flex;
@@ -89,55 +138,6 @@ div.chat_container {
     }
     div.chat_inbox {
         grid-area: l;
-        input[type="radio"] {
-            appearance: none;
-            width: 1em;
-            height: 1em;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            outline: none;
-            background-color: #ccc;
-            transition: background-color 0.2s, border-color 0.2s;
-            cursor: pointer;
-        }
-        input[type="text"], input[type="password"] {
-            background-color: rgba(171, 171, 171, 0.28);
-            border-radius: 6px;
-            padding: .5em;
-        }
-        input[type="radio"]:checked {
-            background-color: #007bff;
-        }
-        .popUp {
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            background: rgba(44, 9, 78, 0.85);
-            z-index: 9999;
-            .createRoom {
-                width: 30%;
-                background-color: #38125E;
-                border-radius: 1em;
-                section.search_box {
-                    input {
-                        width: 100%;
-                        padding: .5em;
-                        background: $input-background;
-                        border-radius: 6px;
-                        &::placeholder {
-                            color: $text-grey-color;
-                        }
-                    }
-                    figure {
-                        border-radius: 1rem;
-                        background: rgba(0, 0, 0, 0.20);
-                        margin-top: .5em;
-                        padding: .4em .6em;
-                    }
-                }
-            }
-        }
     }
     div.chat_main {
         grid-area: m;
@@ -272,17 +272,6 @@ div.chat_container {
                     button {    
                         &.secondary_btn {
                             @include secondary-button;
-                        }
-                        &.primary_btn {
-                            @include primary-button;
-                            @include center-styles;
-                            svg {
-                                fill: $text-color;
-                                width: 20px;
-                                height: 20px;
-                                margin-right: 10px;
-                                margin-left: -10px;
-                            }
                         }
                     }
                 }

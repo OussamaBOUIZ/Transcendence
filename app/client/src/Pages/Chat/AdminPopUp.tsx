@@ -9,14 +9,14 @@ import axios from "axios"
 import { SocketContext } from './ChatRooms'
 
 
-export default function AdminPopUp({ channelId, id, setIsClicked}: {channelId: number, id: number, setIsClicked: any}) {
+export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: any}) {
 
-    const {socket, roomData} = useContext(SocketContext)
+    const {id, socket, roomData} = useContext(SocketContext)
     const {setUpdate} = useContext(UpdateContext)
 
     async function promoteMember() {
         try {
-            const res = await axios.post(`/api/channel/promoteuser/${id}?channelId=${channelId}`)
+            const res = await axios.post(`/api/channel/promoteuser/${Userid}?channelId=${id}`)
             console.log(res)
             setUpdate(prev => prev + 1)
         }
@@ -26,18 +26,19 @@ export default function AdminPopUp({ channelId, id, setIsClicked}: {channelId: n
     }
 
     function kickMember() {
-        const data ={userId: id, channelName: roomData.channelName}
+        const data ={userId: Userid, channelName: roomData.channelName}
         socket?.emit('kickuser', data);
         setUpdate(prev => prev + 1)
     }
 
     function banMember() {
-        const data ={userId: id, channelName: roomData.channelName}
-        socket?.emit('banuser', data)
+        const data ={userId: Userid, channelName: roomData.channelName}
+        console.log(data)
+        socket.emit('banuser', data)
     }
 
     function muteMember() {
-        const data ={userId: id, channelName: roomData.channelName, minutes: 1}
+        const data ={userId: Userid, channelName: roomData.channelName, minutes: 1}
         socket?.emit('muteuser', data)
     }
 
