@@ -50,8 +50,8 @@ export class ChannelController {
         await this.channelservice.addUserToChannel(id, channelName);
     }
     @Get('loadMessages/:id')
-    async getChannelMessages(@Param('id', ParseIntPipe) id: number)
+    async getChannelMessages(@Param('id', ParseIntPipe) id: number, @Query('userId') userId: number)
     {
-        return await this.channelservice.getLatestMessages(id);
+        return await this.channelservice.getLatestMessages(id, userId);
     }
 }

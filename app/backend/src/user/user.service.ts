@@ -113,6 +113,17 @@ export class UserService {
             },
         });
     }
+
+    async findUserWithBanned(userId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+            relations: {
+                userBannedChannels: true,
+            },
+        });
+        return user;
+    }
     
     async userHasAuth(email: string) {
         const user = await this.userRepo.findOne({
