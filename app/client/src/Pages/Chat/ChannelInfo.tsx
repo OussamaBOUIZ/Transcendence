@@ -10,7 +10,7 @@ export default function ChannelInfo() {
     const {update} = useContext(UpdateContext)
     const [channel, setChannelData] = useState<channelData>()
     const {user} = useContext(UserContext)
-    const {id, showSearch} = useContext(SocketContext)
+    const {id, showSearch, myGrade} = useContext(SocketContext)
 
     useEffect(() => {
         const getChannelData = async () => {
@@ -25,23 +25,6 @@ export default function ChannelInfo() {
         void getChannelData()
     }, [update, id, showSearch])
 
-    const [myGrade, setMyGrade] = useState<string>("")
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                if (user && channel) {
-                    const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${channel?.id}`);
-                    setMyGrade(res.data)
-                }
-            }
-            catch (err) {
-                // console.log(err)
-            }
-        }
-        void getInfo()
-    }, [user, channel])
-
-
     return (
         <div className="info overflow-x-hidden overflow-y-auto">
             <div className="mt-5 flex flex-col gap-4 items-center">
@@ -54,7 +37,7 @@ export default function ChannelInfo() {
             </div>
             <div className="mt-5 flex flex-col gap-4 items-center">
                 <label className="text- text-xl font-semibold ml-4 mr-auto">Members</label>
-                <ChannelProperty channel={channel} propertyName="user" isUnderMyGrade={(myGrade === "owner" || myGrade === "admin") ? true : false}/>
+                <ChannelProperty channel={channel} propertyName="user" isUnderMyGrade={(myGrade !== "user") ? true : false}/>
             </div>
         </div>
         // <ChatOverview />

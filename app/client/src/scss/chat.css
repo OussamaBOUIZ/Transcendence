@@ -31,6 +31,58 @@ div.chat_container {
   grid-template: 80px 160px auto 90px/repeat(15, 1fr);
   grid-template-areas: "a a a m m m m m m m m m o o o" "n n n m m m m m m m m m o o o" "l l l m m m m m m m m m o o o" "l l l m m m m m m m m m o o o";
 }
+div.chat_container .popUp {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(44, 9, 78, 0.85);
+  z-index: 9999;
+}
+div.chat_container .popUp .createRoom {
+  width: 30%;
+  background-color: #38125E;
+  border-radius: 1em;
+}
+div.chat_container .popUp .createRoom section.search_box input {
+  width: 100%;
+  padding: 0.5em;
+  background: rgba(171, 171, 171, 0.28);
+  border-radius: 6px;
+}
+div.chat_container .popUp .createRoom section.search_box input::-moz-placeholder {
+  color: rgba(218, 218, 218, 0.5);
+}
+div.chat_container .popUp .createRoom section.search_box input::placeholder {
+  color: rgba(218, 218, 218, 0.5);
+}
+div.chat_container .popUp .createRoom section.search_box figure {
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 0.5em;
+  padding: 0.4em 0.6em;
+}
+div.chat_container input[type=radio] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 1em;
+  height: 1em;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  background-color: #ccc;
+  transition: background-color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+div.chat_container input[type=text], div.chat_container input[type=password] {
+  background-color: rgba(171, 171, 171, 0.28);
+  border-radius: 6px;
+  padding: 0.5em;
+}
+div.chat_container input[type=radio]:checked {
+  background-color: #007bff;
+}
 div.chat_container section.chat_account {
   grid-area: a;
   display: flex;
@@ -101,58 +153,6 @@ div.chat_container div.chat_nav nav .active {
 }
 div.chat_container div.chat_inbox {
   grid-area: l;
-}
-div.chat_container div.chat_inbox input[type=radio] {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  width: 1em;
-  height: 1em;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-  background-color: #ccc;
-  transition: background-color 0.2s, border-color 0.2s;
-  cursor: pointer;
-}
-div.chat_container div.chat_inbox input[type=text], div.chat_container div.chat_inbox input[type=password] {
-  background-color: rgba(171, 171, 171, 0.28);
-  border-radius: 6px;
-  padding: 0.5em;
-}
-div.chat_container div.chat_inbox input[type=radio]:checked {
-  background-color: #007bff;
-}
-div.chat_container div.chat_inbox .popUp {
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  background: rgba(44, 9, 78, 0.85);
-  z-index: 9999;
-}
-div.chat_container div.chat_inbox .popUp .createRoom {
-  width: 30%;
-  background-color: #38125E;
-  border-radius: 1em;
-}
-div.chat_container div.chat_inbox .popUp .createRoom section.search_box input {
-  width: 100%;
-  padding: 0.5em;
-  background: rgba(171, 171, 171, 0.28);
-  border-radius: 6px;
-}
-div.chat_container div.chat_inbox .popUp .createRoom section.search_box input::-moz-placeholder {
-  color: rgba(218, 218, 218, 0.5);
-}
-div.chat_container div.chat_inbox .popUp .createRoom section.search_box input::placeholder {
-  color: rgba(218, 218, 218, 0.5);
-}
-div.chat_container div.chat_inbox .popUp .createRoom section.search_box figure {
-  border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  margin-top: 0.5em;
-  padding: 0.4em 0.6em;
 }
 div.chat_container div.chat_main {
   grid-area: m;
@@ -316,24 +316,6 @@ div.chat_container div.chat_main.chat_main_init section.init_action_container di
   padding: 0px 25px;
   border: 1px solid #FFFBFB;
   background-color: transparent;
-}
-div.chat_container div.chat_main.chat_main_init section.init_action_container div.container button.primary_btn {
-  padding: 10px 25px;
-  border-radius: 23px;
-  font-size: 18px;
-  border-radius: 34px;
-  background: #E72FD0;
-  box-shadow: 0px 0px 20px 0px #E62FD0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-div.chat_container div.chat_main.chat_main_init section.init_action_container div.container button.primary_btn svg {
-  fill: #fff;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  margin-left: -10px;
 }
 div.chat_container div.chat_overview {
   background: var(--radial-purple, radial-gradient(58.23% 57.63% at 47.72% 47.11%, #7426C4 0%, #341057 100%));

@@ -1,16 +1,18 @@
-import React, {useState} from "react"
+import React, {useContext} from "react"
 import {FaPlus} from "react-icons/fa";
 import {IoChevronDown} from "react-icons/io5";
 import {IoChevronForward} from "react-icons/io5";
+import { SocketContext } from "./ChatRooms";
 
-export default function TopicRoom({roomType, mode, setter, clicked} : {roomType: string, mode: boolean, setter: any, clicked: any}) {
+export default function TopicRoom({roomType, mode, setter} : {roomType: string, mode: boolean, setter: any}) {
 
-    function handleChange() {
-        setter(prev => !prev)
-    }
+    const {setIsClick} = useContext(SocketContext)
+
 
     let icon;
-    (mode) ? icon = <IoChevronDown className="cursor-pointer" onClick={handleChange}/> : icon = <IoChevronForward className="cursor-pointer" onClick={handleChange}/>
+    (mode) ?
+    icon = <IoChevronDown className="cursor-pointer" onClick={() => setter(prev => !prev)}/> :
+    icon = <IoChevronForward className="cursor-pointer" onClick={() => setter(prev => !prev)}/>
     return (
         <>
             <div className="bg-room-bar topic h-9 p-2 flex items-center justify-between">
@@ -18,7 +20,7 @@ export default function TopicRoom({roomType, mode, setter, clicked} : {roomType:
                     {icon}
                     {roomType}
                 </div>
-                <FaPlus className="cursor-pointer" onClick={() => {clicked(prev => !prev)}} />
+                <FaPlus className="cursor-pointer" onClick={() => {setIsClick(prev => !prev)}} />
             </div>
         </>
     )

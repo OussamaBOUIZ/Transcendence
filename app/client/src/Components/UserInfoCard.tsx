@@ -43,7 +43,7 @@ export default function UserInfoCard(props: userInfoCard) {
                 <span><img src={wins} alt="" /> {props.wins.toString() + " wins"}</span>
                 <span><img src={losses} alt="" /> {props.losses.toString() + " losses"}</span>
             </div>
-            {props.isUnderMyGrade && isHovered && <AdminPopUp channelId={props.channelId as number} id={props.id} setIsClicked={setIsClicked} />}
+            {props.isUnderMyGrade && isHovered && <AdminPopUp Userid={props.id} setIsClicked={setIsClicked} />}
             {isHovered && isMuteClicked && <MutePopUp channelId={props.channelId as number} id={props.id} />}
         </div>
     )
