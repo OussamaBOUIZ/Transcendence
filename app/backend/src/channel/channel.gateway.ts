@@ -142,7 +142,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     || channel.channelAdmins !== null && channel.channelAdmins.some(user => user.id === newMessage.fromUser)
     || channel.channelOwners !== null && channel.channelOwners.some(user => user.id === newMessage.fromUser))
         {
-            console.log('server here')
             await this.channelservice.storeChannelMessage(newMessage, channel);
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }

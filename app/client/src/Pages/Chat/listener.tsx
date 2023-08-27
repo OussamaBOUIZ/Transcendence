@@ -2,7 +2,6 @@ import {Message} from "../../../../global/Interfaces"
 import { getUserImage } from "../../Hooks/getUserImage";
 
 export const listener = (socket, setMessageList, setBanned) => {
-    console.log('listener...')
     return () => {
         socket?.on("sendChannelMessage", async (data: Message)  => {
             console.log('getChannelMessage')

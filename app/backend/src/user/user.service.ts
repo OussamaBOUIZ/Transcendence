@@ -154,11 +154,7 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        console.log(typeof payload);
-        
-        // if (payload)
-        //     throw new UnauthorizedException('userToken not valid')
-        return await this.userRepo.findOneBy({ email: payload.email });
+        return await this.userRepo.findOneBy({ id: payload.id });
     }
 
     decodeJwtCode(userToken: string) {

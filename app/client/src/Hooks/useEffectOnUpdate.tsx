@@ -7,7 +7,7 @@ export default function useEffectOnUpdate (effectFunc, deps:any[]) {
             initialRender.current = false
             return ;
         }
-        deps.map(attribute => {if (!attribute) {console.log("okKO"); return ;}})
+        deps.map(attribute => {if (!attribute) return ;})
         effectFunc()
     }, deps)
 }

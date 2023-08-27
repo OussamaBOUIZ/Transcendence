@@ -39,7 +39,10 @@ export default function ChatRooms () {
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
+<<<<<<< HEAD
     const [blockedUsers, setBlockedUsers] = useState()
+=======
+>>>>>>> bcb61a13da53b6dd310d519158b3a433f0f449fc
 
 
     const {id} = useParams()
@@ -84,9 +87,15 @@ export default function ChatRooms () {
             const messageData: Message = {
                 message: message,
                 channelName: roomData.channelName,
+<<<<<<< HEAD
                 fromUser: user?.id,
                 username: user?.username,
                 isBlocked: false,
+=======
+                fromUser: user.id,
+                username: user.username,
+                image: user.image
+>>>>>>> bcb61a13da53b6dd310d519158b3a433f0f449fc
             }
 
             socket?.emit("channelMessage", messageData);
