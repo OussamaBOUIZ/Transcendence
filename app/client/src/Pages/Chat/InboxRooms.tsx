@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo}  from 'react';
 import TopicRoom from './TopicRoom';
 import Rooms from './Rooms';
 import { SocketContext } from './ChatRooms';
@@ -11,19 +11,18 @@ interface Elements {
 }
 
 export default function InboxRooms() {
-    const { update } = useContext(SocketContext);
     const [PublicMode, setPublicMode] = useState<boolean>(true);
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true);
     const [PrivateMode, setPrivateMode] = useState<boolean>(true);
     const [JoinedRooms, setJoinedRooms] = useState<JSX.Element[] | null>(null);
 
-    const array: Elements[] = [
+    const array = useMemo<Elements[]>(() => [
         { value: "Public Channels", mode: PublicMode, setter: setPublicMode, type: "public" },
         { value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, type: "protected" },
         { value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, type: "private" }
-    ];
+    ], [PublicMode, ProtectedMode, PrivateMode])
 
-    useEffect(() => {
+    useMemo(() => {
         const updatedRooms = array.map((element) => (
             <>
                 <TopicRoom roomType={element.value} mode={element.mode} setter={element.setter} />
@@ -31,7 +30,7 @@ export default function InboxRooms() {
             </>
         ));
         setJoinedRooms(updatedRooms);
-    }, [PublicMode, ProtectedMode, PrivateMode, update]);
+    }, [array]);
 
     return (
         <div className="chat_inbox">

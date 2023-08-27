@@ -2,12 +2,10 @@ import React, {useState, useContext, useEffect} from "react";
 import axios from "axios"
 import {channelData} from "../../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
-import UserContext from "../../Context/UserContext";
 import { SocketContext } from "./ChatRooms";
 
 export default function ChannelInfo() {
     const [channel, setChannelData] = useState<channelData>()
-    const {user} = useContext(UserContext)
     const {id, showSearch, myGrade, update} = useContext(SocketContext)
 
     useEffect(() => {

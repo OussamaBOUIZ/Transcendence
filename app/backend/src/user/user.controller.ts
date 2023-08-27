@@ -79,7 +79,6 @@ export class UserController {
     // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
-        console.log('hhhhhhhh')
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const userData = {
             id: user.id,
@@ -158,7 +157,6 @@ export class UserController {
     @Get()
     async getUserFromJwt(@Req() req: Request)
     {
-        console.log('hhhhhhh')
         const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
         if (!user)
             throw new UnauthorizedException()

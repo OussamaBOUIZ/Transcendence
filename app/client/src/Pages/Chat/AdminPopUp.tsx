@@ -35,11 +35,6 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
         socket.emit('banuser', data)
     }
 
-    function muteMember() {
-        const data ={userId: Userid, channelName: roomData.channelName, minutes: 1}
-        socket?.emit('muteuser', data)
-    }
-
     async function handleClick(name: string) {
         switch (name) {
             case "promote":
@@ -53,7 +48,6 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
                 break;
             default:
                 setIsClicked(prev => !prev)
-                // muteMember()
                 break;
         }
     }
