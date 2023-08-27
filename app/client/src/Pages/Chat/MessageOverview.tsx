@@ -1,7 +1,7 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
 
-export default function MessageOverview ({id} : {id:number}) {
+export default function MessageOverview ({id, lastMsg, time} : {id:number, lastMsg: string, time: string}) {
 
     return (
         <NavLink 
@@ -11,10 +11,10 @@ export default function MessageOverview ({id} : {id:number}) {
         >
             <img src="../src/Assets/cat.jpg" alt="Cat pic" />
             <figcaption>
-                <h4>Elegant</h4>
-                <p>Nothing received</p>
+                <h4>User: {id}</h4>
+                <p>{lastMsg}</p>
             </figcaption>
-            <time>Yesterday</time>
+            <time>{time}</time>
         </NavLink>
     );
 }

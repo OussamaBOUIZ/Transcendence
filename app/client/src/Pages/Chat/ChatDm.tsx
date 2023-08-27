@@ -1,21 +1,23 @@
-import React, {useEffect, useRef, useContext} from 'react'
+import React, {useEffect, useRef, useContext, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { MessageData, User } from '../../../../global/Interfaces';
+import { InboxItem, MessageData, User } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
 import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
 import ChatVoid from './ChatVoid';
-import InboxContext, { InboxProvider } from '../../Context/InboxContext';
+import InboxContext from '../../Context/InboxContext';
+import { shortenMessage } from '../../Helpers/utils';
 
 export default function ChatDm () {
+    const {user} = useContext(UserContext)
     const initialRender = useRef(true)
     const params = useParams()
-    const {setInboxList} = useContext(InboxContext)
+    const {inboxList, setInboxList} = useContext(InboxContext)
 
     if (params.id === undefined) {
         return (
@@ -25,13 +27,13 @@ export default function ChatDm () {
         </>
         );
     }
-    const {user} = useContext(UserContext)
     
-    const [socket, setSocket] = React.useState<Socket | null>(null)
-    const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
-    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
-    const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
-    const [avatar, setAvatar] = React.useState();
+    
+    const [socket, setSocket] = useState<Socket | null>(null)
+    const [messageToSendValue, setMessageToSendValue] = useState<string>("");
+    const [messageToSendData, setMessageToSendData] = useState<MessageData> ({} as MessageData);
+    const [messagesList, setMessagesList] = useState<MessageData[]>([]);
+    const [avatar, setAvatar] = useState();
 
     function handleChange (e) :void {
         setMessageToSendValue(e.target.value)
@@ -121,6 +123,27 @@ export default function ChatDm () {
                 console.log('Update Inbox');
         })
     }, [socket])
+
+    useEffect(() => {
+        setInboxList((prevList:InboxItem[]) => {
+            if (prevList?.length) {
+                prevList.map((item:InboxItem) => {
+                    return (
+                        item.id ===  Number(params.id) ?
+                        item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
+                        item
+                        )
+                    })
+            } else {
+              return  messagesList?.length ? [{
+                    id: Number(params.id), 
+                    lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
+                }] : [];
+            }
+        })
+    }, [messagesList])
+
+
     
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
@@ -136,7 +159,6 @@ export default function ChatDm () {
     
     return (
         <>
-        <InboxProvider>
             <InboxDm />
             <div className="chat_main">
                 <ChatHeader
@@ -160,7 +182,6 @@ export default function ChatDm () {
                 </form>
             </div>
             <ContactDetail id={params.id} avatar={avatar}/>
-        </InboxProvider>
     </>
     );
 }

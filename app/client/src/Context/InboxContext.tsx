@@ -1,11 +1,9 @@
-import React, {createContext, useState, useEffect} from 'react'
+import React, {createContext, useState} from 'react'
 import { InboxItem } from '../../../global/Interfaces';
 const InboxContext = createContext({});
 
-export function InboxProvider ({children}: {children: React.ReactNode}) {
-    const [inboxList, setInboxList] = useState<InboxItem[]>();
-
-
+export function InboxProvider ({children}) {
+    const [inboxList, setInboxList] = useState<InboxItem[]>([]);
 
     return (
         <InboxContext.Provider value={{

@@ -19,41 +19,40 @@ import ChatDmInit from './Pages/Chat/ChatDmInit'
 import ChatRooomsInit from './Pages/Chat/ChatRoomsInit'
 import ChatDm from './Pages/Chat/ChatDm'
 import ChatRooms from './Pages/Chat/ChatRooms'
+import { InboxProvider } from './Context/InboxContext'
 
 export default function App () {
   const {authenticated} = useContext(UserContext);
   return (
     <UserProvider>
-      <BrowserRouter>
-          <Routes>
+      <InboxProvider>
+        <BrowserRouter>
+            <Routes>
+                <Route element={<AuthRequired/>}>
+                  <Route path="/sign" element={<Sign />} />
 
+                  <Route element={<MainLayout />}>
+                      <Route path="/" element={<Home />}/>
+                      
+                      <Route path="chat" element={<ChatLayout />}>
+                        <Route index element={<ChatDm />} />
+                        <Route path="init" element={<ChatDmInit />} />
+                        <Route path=":id" element={<ChatDm />} />
+                        <Route path="rooms" element={<ChatRooms />} />
+                        <Route path="rooms:id" element={<ChatRooms />} />
+                      </Route>
 
-              <Route element={<AuthRequired/>}>
-                {/* {authenticated
-                   */}
-                <Route path="/sign" element={<Sign />} />
+                      <Route path="/game" element={<Game />} />
+                      <Route path="/friends" element={<Friends />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/info" element={<Prompt />} />
+                      <Route path="/profile" element={<Profile />} />
 
-                <Route element={<MainLayout />}>
-                    <Route path="/" element={<Home />}/>
-                    
-                    <Route path="chat" element={<ChatLayout />}>
-                      <Route index element={<ChatDm />} />
-                      <Route path="init" element={<ChatDmInit />} />
-                      <Route path=":id" element={<ChatDm />} />
-                      <Route path="rooms" element={<ChatRooms />} />
-                      <Route path="rooms:id" element={<ChatRooms />} />
-                    </Route>
-
-                    <Route path="/game" element={<Game />} />
-                    <Route path="/friends" element={<Friends />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/info" element={<Prompt />} />
-                    <Route path="/profile" element={<Profile />} />
-
-                    </Route>
-                </Route>
-          </Routes>
-        </BrowserRouter>
+                      </Route>
+                  </Route>
+            </Routes>
+          </BrowserRouter>
+        </InboxProvider>
       </UserProvider>
   );
 }
