@@ -14,4 +14,12 @@ export class channelMessageDto {
     @IsNotEmpty()
     @IsNumber()
     public fromUser: number
+
+    @IsNotEmpty()
+    @IsString()
+    public username: string
+
+    @IsNotEmpty()
+    @IsString()
+    public image: string
 }

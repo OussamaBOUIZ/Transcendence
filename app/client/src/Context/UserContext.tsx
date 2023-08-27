@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, JSXElementConstructor} from 'react'
+import React, {createContext, useState, useEffect} from 'react'
 import { User } from '../../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
@@ -14,31 +14,25 @@ export function UserProvider ({children}) {
           const response = await axios.get<User>("/api/user"); 
           const image = await getUserImage(response.data.id)
           setUser({...response.data, image});
-          console.log(user);
           
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       };
 
-    console.log(authenticated);
-    
     useEffect(() => {
-        fetchUserData();
+        void fetchUserData();
       }, [])
 
-    console.log(user)
-    
-
     return (
-        <>
-            <UserContext.Provider value={{
-                user, setUser,
-                authenticated, setAuthenticated
-            }}>
-                {children}
-            </UserContext.Provider>
-        </>
+      <>
+        <UserContext.Provider value={{
+            user, setUser,
+            authenticated, setAuthenticated
+        }}>
+            {children}
+        </UserContext.Provider>
+      </>
     );
 } 
 

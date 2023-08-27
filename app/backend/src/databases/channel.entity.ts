@@ -17,19 +17,19 @@ export class Channel extends BaseEntity {
     @Column({nullable: true})
     channel_password: string
 
-    @ManyToMany(() => User, {nullable: true})
+    @ManyToMany(() => User, (user) => user.userRoleChannels , {nullable: true})
     @JoinTable()
     channelUsers: User[]
 
-    @ManyToMany(() => User, {nullable: true})
+    @ManyToMany(() => User, (user) => user.adminRoleChannels , {nullable: true})
     @JoinTable()
     channelAdmins: User[]
 
-    @ManyToMany(() => User, {nullable: true})
+    @ManyToMany(() => User, (user) => user.ownerRoleChannels , {nullable: true})
     @JoinTable()
     channelOwners: User[]
 
-    @ManyToMany(() => User, {nullable: true})
+    @ManyToMany(() => User, (user) => user.userBannedChannels, {nullable: true})
     @JoinTable()
     BannedUsers: User[]
 

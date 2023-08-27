@@ -83,22 +83,22 @@ export class User extends BaseEntity {
     @OneToMany(() => Match_history, (Match_history) => Match_history.user, {nullable: true})
     match_history: Match_history[]
 
-    @OneToMany(() => User_chat, (user_char) => user_char.user)
+    @OneToMany(() => User_chat, (user_char) => user_char.author)
     user_chat: User_chat[]
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
     inbox_users: Inbox_user[]
 
-    @ManyToMany(() => Channel, {nullable: true})
+    @ManyToMany(() => Channel, (channel) => channel.channelUsers , {nullable: true})
     userRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel, {nullable: true})
+    @ManyToMany(() => Channel, (channel) => channel.channelAdmins ,{nullable: true})
     adminRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel, {nullable: true})
+    @ManyToMany(() => Channel, (channel) => channel.channelOwners, {nullable: true})
     ownerRoleChannels: Channel[]
 
-    @ManyToMany(() => Channel, {nullable: true})
+    @ManyToMany(() => Channel, (channel) => channel.BannedUsers , {nullable: true})
     userBannedChannels: Channel[]
 
 }

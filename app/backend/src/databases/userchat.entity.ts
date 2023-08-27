@@ -8,10 +8,10 @@ export class User_chat extends BaseEntity {
     id: number
 
     @ManyToOne(() => User, (user) => user.user_chat)
-    user: User
+    author: User
 
     @Column()
-    sender_id: number
+    receiverId: number
 
     @OneToMany(() => Message, (messages) => messages.user_chat)
     messages: Message[]

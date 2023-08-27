@@ -1,0 +1,59 @@
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+.profileImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3125rem;
+  border-radius: 1rem;
+  background: rgba(21, 4, 39, 0.5);
+  box-shadow: 0px 0px 100px 0px rgba(255, 255, 255, 0.1) inset;
+  cursor: pointer;
+}
+.profileImage .userImage {
+  width: 90%;
+  height: 90%;
+  border-radius: 1rem;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0px 0px 1px 0px rgba(255, 255, 255, 0.5) inset;
+}
+
+.small {
+  width: 2.4375rem;
+  height: 2.5rem;
+}
+
+.regular {
+  width: 2.9375rem;
+  height: 3rem;
+}
+
+.medium {
+  width: 3.25rem;
+  height: 3.36019rem;
+}
+
+.big {
+  width: 5.375rem;
+  height: 5.625rem;
+}/*# sourceMappingURL=profileImage.css.map */
