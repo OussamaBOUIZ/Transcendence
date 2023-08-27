@@ -1,9 +1,7 @@
 import { getAllFriends } from "../Hooks/getAllFriends"
-import image from "../Assets/SpiderGround.jpeg"
-import losses from "../Assets/Icons/losses.svg"
-import wins from "../Assets/Icons/wins.svg"
 import friendsIcon from "../Assets/Icons/group.svg"
 import {User} from "../../../global/Interfaces"
+import UserInfoCard from "./UserInfoCard"
 
 export default function FriendsCard({ user }: {user: User}) {
 
@@ -11,18 +9,16 @@ export default function FriendsCard({ user }: {user: User}) {
 
     const FriendsToggle = allFriends.map((friend) => {
         return (
-            <div className="friend-item" key={friend.username}>
-                <div className="userImage">
-                    <img src={friend.image} alt="" />
-                    <div className={`status ${friend.status}`}></div>
-                </div>
-                <div className="friend-name">
-                    <p>{friend.firstname + " " + friend.lastname}</p>
-                    <span>{friend.username}</span>
-                </div>
-                <span><img src={wins} alt="" /> {friend.stat.wins + " wins"}</span>
-                <span><img src={losses} alt="" /> {friend.stat.losses + " losses"}</span>
-            </div>
+            <UserInfoCard
+                image={friend.image}
+                status={friend.status}
+                firstname={friend.firstname}
+                lastname={friend.lastname}
+                username={friend.username}
+                wins={friend.stat.wins}
+                losses={friend.stat.losses}
+                flex="row"
+            />
         );
     });
 

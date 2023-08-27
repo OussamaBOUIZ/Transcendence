@@ -20,6 +20,55 @@ div.chat_container {
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
+    .popUp {
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: rgba(44, 9, 78, 0.85);
+        z-index: 9999;
+        .createRoom {
+            width: 30%;
+            background-color: #38125E;
+            border-radius: 1em;
+            section.search_box {
+                input {
+                    width: 100%;
+                    padding: .5em;
+                    background: $input-background;
+                    border-radius: 6px;
+                    &::placeholder {
+                        color: $text-grey-color;
+                    }
+                }
+                figure {
+                    border-radius: 1rem;
+                    background: rgba(0, 0, 0, 0.20);
+                    margin-top: .5em;
+                    padding: .4em .6em;
+                }
+            }
+        }
+    }
+    input[type="radio"] {
+        appearance: none;
+        width: 1em;
+        height: 1em;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+        background-color: #ccc;
+        transition: background-color 0.2s, border-color 0.2s;
+        cursor: pointer;
+    }
+    input[type="text"], input[type="password"] {
+        background-color: rgba(171, 171, 171, 0.28);
+        border-radius: 6px;
+        padding: .5em;
+    }
+    input[type="radio"]:checked {
+        background-color: #007bff;
+    }
     section.chat_account {
         grid-area: a; 
         display: flex;
@@ -101,7 +150,7 @@ div.chat_container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 25px;
+            padding: .7em 2em;
             border-bottom: .5px solid $border-color;
             figure {
                 display: flex;
@@ -127,8 +176,15 @@ div.chat_container {
         }
         section.chat_window {
             grid-row: 2/3;
-            overflow-y: scroll;
-            padding-right: .5em
+            padding-right: .5em;
+            &::-webkit-scrollbar {
+                width: .2em;
+                border-radius: 6em;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: rgb(210, 210, 210);
+                border-radius: 6em;
+            }
         }
         form.chat_input {
             grid-row: 3/4;
@@ -138,8 +194,8 @@ div.chat_container {
             textarea {
                 border-radius: 5px;
                 width: 80%;
-                height: 1.5em;
-                padding: 8px 10px;
+                height: 2.5em;
+                padding: .5em .7em;
                 background: #643D7F;
                 scrollbar-color: transparent;
                 scrollbar-width: 2px;
@@ -216,17 +272,6 @@ div.chat_container {
                     button {    
                         &.secondary_btn {
                             @include secondary-button;
-                        }
-                        &.primary_btn {
-                            @include primary-button;
-                            @include center-styles;
-                            svg {
-                                fill: $text-color;
-                                width: 20px;
-                                height: 20px;
-                                margin-right: 10px;
-                                margin-left: -10px;
-                            }
                         }
                     }
                 }

@@ -1,52 +1,42 @@
-import React, {useState} from 'react'
-// import TopicRoom from './TopicRoom';
-// import Rooms from './PublicRooms';
-// import { nanoid } from 'nanoid';
+import React, { useEffect, useState, useContext, useMemo}  from 'react';
+import TopicRoom from './TopicRoom';
+import Rooms from './Rooms';
+import { SocketContext } from './ChatRooms';
 
-// export default function InboxRooms () {
+interface Elements {
+    value: string;
+    mode: boolean;
+    setter: React.Dispatch<React.SetStateAction<boolean>>;
+    type: "public" | "protected" | "private";
+}
 
-//     const [PublicMode, setPublicMode] = useState<boolean>(true)
-//     const [ProtectedMode, setProtectedMode] = useState<boolean>(true)
-//     const [PrivateMode, setPrivateMode] = useState<boolean>(true)
-//     const initState = false;
-//     return (
-//         <div>
-//             <section className="inbox">
-//                 <nav>
-//                     <button>Messages<span></span></button>
-//                     <button className="active">Channels<span></span></button>
-//                 </nav>
-//                 {
-//                 initState 
-//                 &&
-//                     <aside>
-//                         <p>No DMs available Yet
-//                         Unlock a world of gaming
-//                         excitement, by creating 
-//                         or joining existing ones
-//                         </p>
-//                     </aside>
-//                 }
-//                 <div className="contentRooms">
-//                     <TopicRoom roomType="Public Channels" mode={PublicMode} setter={setPublicMode} />
-//                     {PublicMode && <Rooms />}
-//                     <TopicRoom roomType="Protected Channels"mode={ProtectedMode} setter={setProtectedMode} />
-//                     {ProtectedMode && <Rooms />}
-//                     {/* <ProtectedRooms /> */}
-//                     <TopicRoom roomType="Private Channels" mode={PrivateMode} setter={setPrivateMode} />
-//                     {PrivateMode && <Rooms />}
-//                     {/* <PrivateRooms /> */}
-//                 </div>
-//             </section>
-//         </div>
-//     );
-// }
+export default function InboxRooms() {
+    const [PublicMode, setPublicMode] = useState<boolean>(true);
+    const [ProtectedMode, setProtectedMode] = useState<boolean>(true);
+    const [PrivateMode, setPrivateMode] = useState<boolean>(true);
+    const [JoinedRooms, setJoinedRooms] = useState<JSX.Element[] | null>(null);
 
+    const array = useMemo<Elements[]>(() => [
+        { value: "Public Channels", mode: PublicMode, setter: setPublicMode, type: "public" },
+        { value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, type: "protected" },
+        { value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, type: "private" }
+    ], [PublicMode, ProtectedMode, PrivateMode])
 
-export default function InboxRooms () {
+    useMemo(() => {
+        const updatedRooms = array.map((element) => (
+            <>
+                <TopicRoom roomType={element.value} mode={element.mode} setter={element.setter} />
+                {element.mode && <Rooms type={element.type} />}
+            </>
+        ));
+        setJoinedRooms(updatedRooms);
+    }, [array]);
+
     return (
         <div className="chat_inbox">
-            <h2>ROOMS MESSAGES</h2>
+            <div className="contentRooms">
+                {JoinedRooms}
+            </div>
         </div>
     );
 }

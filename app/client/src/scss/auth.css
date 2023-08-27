@@ -1,0 +1,90 @@
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+/* GRADIENT VARIABLES */
+/*
+    border-radius: 0px 25px 25px 0px;
+border: 0.5px solid rgba(0, 0, 0, 0.05);
+box-shadow: -3px 0px 23px 0px rgba(207, 199, 199, 0.13);
+*/
+/*BOX SHADOWS */
+/* COLORS VARIABLES */
+/* FONTS VARIABLES */
+/* PROFILE IMAGE SIZE */
+.verify-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+.verify-container .verification {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 30%;
+  height: 60%;
+  padding: 20px;
+  border-radius: 51px;
+  box-shadow: 44px 44px 88px #cccccc, -44px -44px 88px #ffffff;
+}
+.verify-container .verification .title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: black;
+}
+.verify-container .verification .title p {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0;
+  margin: 0;
+}
+.verify-container .verification .title p > span {
+  color: #3f3f3f;
+  font-size: 1rem;
+  text-align: center;
+  margin: 0;
+}
+.verify-container .verification .qr-code-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.verify-container .verification .qr-code-container img {
+  width: 60%;
+}
+.verify-container .verification .qr-code-container .inputs {
+  margin-top: 10px;
+}
+.verify-container .verification .qr-code-container .inputs input {
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  border: none;
+  border-bottom: 1.5px solid #d2d2d2;
+  margin: 0 10px;
+}
+.verify-container .verification .qr-code-container .inputs input:focus {
+  border-bottom: 1.5px solid #531F8A;
+  outline: none;
+}
+.verify-container .verification .action {
+  margin-top: 1.6rem;
+  padding: 1rem 12rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #531F8A;
+  color: white;
+  cursor: pointer;
+}/*# sourceMappingURL=auth.css.map */

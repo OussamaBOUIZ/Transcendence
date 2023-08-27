@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: number,
     firstname: string,
     image?: string,
@@ -16,19 +16,20 @@ interface FriendUser {
     username: string,
 }
 
+
+interface Achievement {
+    id: number,
+    badge_name: string,
+    description: string,
+    image?: string,
+    is_achieved?: boolean,
+    user_id?: number,
+}
 interface Stat {
     ladder_level: number,
     losses: number,
     wins: number,
-}
-
-interface Achievement {
-    badge_name: string,
-    description: string,
-    id: number,
-    image?: string,
-    is_achieved: boolean,
-    user_id: number,
+    achievements?: Achievement[],
 }
 
 interface Leaders {
@@ -41,10 +42,11 @@ interface Leaders {
     xp: number | null,
 }
 
-interface MessageData {
-    userId: number,
-    message: string,
-    creationTime: Date,
+export interface MessageData {
+    receiverId?: number,
+        authorId?:number,
+        message: string,
+        creationTime: Date,
 }
 
 interface Data {
@@ -52,5 +54,78 @@ interface Data {
     lastname: string,
     username: string,
 }
+// interface DmUserOverview {
+//     id: number,
+//     firstname: string,
+//     lastname: string,
+//     stat: Stat,
+// }
 
-export type {User, MessageData, FriendUser, Achievement, Leaders, Data};
+interface userInfoCard {
+    id: number,
+    channelId?: number,
+    image: string | undefined,
+    status?: string,
+    firstname: string,
+    lastname: string,
+    username?: string,
+    wins: number,
+    losses: number,
+    flex: string,
+    isUnderMyGrade: boolean
+}
+
+interface channelData {
+    id: number,
+    channelOwners: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelAdmins: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelUsers: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[]
+}
+
+interface rooms {
+    id: string | undefined,
+    channel_name: string,
+}
+
+interface roomData {
+    channelName: string,
+    userId: number,
+    minutes?: number
+}
+
+interface Message {
+    id?: number,
+    message: string,
+    fromUser: number,
+    CreatedAt: Date,
+    channelName?: string,
+    image?: string,
+    username?: string,
+    isBlocked: boolean,
+}
+
+export interface StatAchievement {
+    id: number;
+    badge_name: string;
+    description: string;
+    image?: string;
+  }
+  
+export interface SStat {
+    achievements: StatAchievement[];
+    ladder_level: number;
+    losses: number;
+    wins: number;
+  }
+  
+  export interface PlayerData {
+    id: number;
+    firstname: string;
+    lastname: string;
+    username?: string;
+    image?: string;
+    stat: SStat;
+}
+
+
+export type {Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

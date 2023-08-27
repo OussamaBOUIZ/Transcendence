@@ -1,6 +1,5 @@
 import "../../scss/profileComponent.scss";
 import GameHistory from "../../Components/gameHistory";
-import profileImage from "../../Assets/DreamShaper_32_young_man_character_playing_ping_pong_full_body_3.jpeg"
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
