@@ -110,7 +110,6 @@ export class ChannelService {
 
     async getLatestMessages(channelId: number, userId: number)
     {
-        console.log(userId)
         const user = await this.userService.findUserWithBanned(userId);
         if(user.userBannedChannels.some(channel => channel.id === channelId))
             return [];
@@ -236,7 +235,6 @@ export class ChannelService {
     async userIsMuted(userId: number)
     {
         const muted = await this.muteRepo.findOneBy({user_id: userId});
-        console.log(muted);
         if(muted)
             return true;
         return false;
@@ -341,7 +339,6 @@ export class ChannelService {
     async getAllChannels(id: number)
     {
         const user = await this.userService.findUserWithChannels(id);
-        console.log(user)
         const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
         return AllChannels;
     }

@@ -17,7 +17,7 @@ import {scrollLogic} from "./scrollLogic"
 import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
-
+import {binarySearch} from "../../Hooks/binarySearch"
 
 export const SocketContext = createContext({});
 
@@ -39,6 +39,7 @@ export default function ChatRooms () {
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
+    const [blockedUsers, setBlockedUsers] = useState()
 
 
     const {id} = useParams()
@@ -56,6 +57,13 @@ export default function ChatRooms () {
                 try {
                     const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${id}`);
                     setMyGrade(res.data)
+                    try {
+                        const res = await axios.get(`/api/user/blockedUsers/${user?.id}`);
+                        setBlockedUsers(res.data)
+                    }
+                    catch (err) {
+                        // console.error(err)
+                    }
                 }
                 catch (err) {
                     // console.log(err)
@@ -76,10 +84,11 @@ export default function ChatRooms () {
             const messageData: Message = {
                 message: message,
                 channelName: roomData.channelName,
-                fromUser: user.id,
-                username: user.username,
-                image: user.image
+                fromUser: user?.id,
+                username: user?.username,
+                isBlocked: false,
             }
+
             socket?.emit("channelMessage", messageData);
             setMessage("");
             const outerDivHeight = outerDiv.current.clientHeight;
@@ -109,8 +118,14 @@ export default function ChatRooms () {
     }, [])
 
     const messagesElements = messageList.map((mess) => {
+        if (binarySearch(blockedUsers, mess.fromUser)) {
+            mess.message = 'Message from blocked user'
+            mess.image = ""
+            mess.username = ""
+            mess.isBlocked = true
+        }
         return (
-            <MessageBox key={mess.id} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} >
+            <MessageBox key={mess.id} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} isBlocked={mess.isBlocked} >
                 {mess.message}
             </MessageBox>
         )
@@ -119,7 +134,7 @@ export default function ChatRooms () {
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    useEffectOnUpdate(accessChannel(id, socket, roomData, setBanned, user, setMessageList), [roomData])
+    useEffectOnUpdate(accessChannel(id, socket, roomData, setBanned, user, setMessageList, blockedUsers), [roomData, blockedUsers])
 
     // listener
     useEffectOnUpdate(listener(socket, setMessageList, setBanned), [socket]);

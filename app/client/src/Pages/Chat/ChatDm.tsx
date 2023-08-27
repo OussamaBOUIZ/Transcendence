@@ -4,70 +4,54 @@ import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { User, MessageData } from '../../../../global/Interfaces';
+import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
+import axios from 'axios'
 import InboxDm from './InboxDm';
-
-const messages = [
-    {id: 1, message: "hello ossama", date: new Date()},
-    {id: 2, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
-    {id: 1, message: "hello yassinehello yassinehello yassinehello yassinehello yasshello yassinehello yassinehello yassineine", date: new Date()},
-    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-    {id: 2, message: "Axkat3awd", date: new Date()},
-    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-    {id: 2, message: "Axkat3awd", date: new Date()},
-    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-    {id: 1, message: "lhamdulilah nta bikhir", date: new Date()},
-    {id: 2, message: "Axkat3awd", date: new Date()},
-    {id: 1, message: "bikhir gulia t7rk maana l cafet", date: new Date()},
-    {id: 2, message: "ana tma ntla9aw ra gltha l3aziz", date: new Date()},
-    // {id: 1, message: "hello ossama", date: new Date()},
-    // {id: 2, message: "hello yassine", date: new Date()}
-]
 
 export default function ChatDm () {
     const initialRender = useRef(true)
     const params = useParams()
     const {user} = useContext(UserContext)
     const [socket, setSocket] = React.useState<Socket | null>(null)
-    const [receiver, setReceiver] = React.useState<User | null>(null);
-    const [receivedMessage, setReceivedMessage] = React.useState<string>("");
-
-    const [messages, setMessages] = React.useState<string[]>([]);
-    
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
-    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({
-        userId: Number(params.id),
-        message: "",
-        creationTime : new Date()
-    });
+    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
+    const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
+    const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
+
     
-    function handleChange (e) :void {
+    function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
         setMessageToSendValue(e.target.value)
     }
 
-   
-       
-
-      
-    function handleSubmit (e): void {
+    function handleSubmit (e:  React.FormEvent<HTMLFormElement>): void {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({
-                userId: Number(params.id),
+                receiverId: Number(params.id),
                 message: messageToSendValue,
                 creationTime : new Date()
             })
             setMessageToSendValue("")
+            console.log(messageToSendData);
+            
         }
     }
     
+    const loadConversation = async ()  => {
+        try {
+            const res = await axios.get(`../api/chat/${params.id}`)
+            console.log('res data', res.data);
+            
+            setMessagesList(res.data)
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+
+    
     /**EFFECTS     */
     useEffect(() => {
         if (initialRender.current) {
@@ -75,15 +59,17 @@ export default function ChatDm () {
             return
         }
         const value = document.cookie.split('=')[1]
-        // console.log(value);
-        
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
             }}) 
         
-
         setSocket(newSocket)
+
+        // Getting the conversation 
+        loadConversation();
+        // getUserOverview();
+
         
         //cleanup function
         return  () => {
@@ -99,49 +85,58 @@ export default function ChatDm () {
             initialRender.current = false 
             return
         }
-        socket?.emit('SendMessage', messageToSendData)
-        setMessages((prevMessages:string[]) => [...prevMessages, messageToSendData.message])
-    }
-    , [messageToSendData])
-    
-
-    useEffect(() => {
-        socket?.on('message', (mess: string) => setReceivedMessage(mess))
-        if (receivedMessage !== "") {
-        // setMessages((prevMessages:string[]) => [...prevMessages, receivedMessage])
-        console.log('Received: ', receivedMessage)
+        if (messageToSendData.message !== "") {
+            socket?.emit('SendMessage', messageToSendData)
+            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(params.id)}])
+            console.log('emit message', messageToSendData);
         }
-
-    }, [socket, receivedMessage])
+        
+    }
+    , [socket, messageToSendData])
     
+
     useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
+        if (initialRender.current) {    
+            initialRender.current = false 
             return
         }
-        console.log(messages)
-    }, [messages])
-
-    const messagesElements = messages.map((mess:any) => {
-        console.log('mess.id : ', mess.id);
         
-        return (
-            <MessageBox id={mess.id === user?.id}
-            // username={user?.username}
-            // avatar={user?.image}
-            >
-                {mess.message}
+        socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
+        // console.log('on message', receivedMessageData);
+        
+        setMessagesList((prevList) => [...prevList, receivedMessageData])
+
+    }, [socket, receivedMessageData])
+
+    
+    // useEffect(() => {
+    //     if (initialRender.current) {
+    //         initialRender.current = false
+    //         return
+    //     }
+    //     console.log(messagesList)
+    // }, [messagesList])
+
+    const messagesElements = messagesList.map((msg:MessageData) => {
+        console.log(msg.authorId);
+        
+        if (msg.message !== "") {
+            return (
+                <MessageBox
+                id={msg.authorId === user?.id}>
+                {msg.message}
             </MessageBox>
-        )
+           )
+        } 
+        return null
     })
-
-    console.log("okokokokokoko")
-
+    
+    
     return (
         <>
         <InboxDm />
         <div className="chat_main">
-             <ChatHeader 
+            <ChatHeader 
              username={`user id: ${params.id}`}
              online={true}
              />

@@ -55,7 +55,7 @@ export default function CreateRoom({action}: {action: string}) {
         window.location.replace('/chat/rooms')
     }
 
-    const style = (myGrade === "user" ? 'pointer-events-none' : '')
+    const style = ((myGrade === "user" && action === 'update') ? 'pointer-events-none' : '')
 
     const passwordCard = <div className="setPassword flex flex-col">
                             <label>set a password</label>
@@ -110,7 +110,7 @@ export default function CreateRoom({action}: {action: string}) {
             <button className={`primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base bg-pink-500 ${style}`} onClick={handleSubmit}>
                 {action}
             </button>
-            {myGrade !== "owner" && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2 hover:bg-white hover:text-primary-color" onClick={handleLeaving} >
+            {myGrade !== "owner" && action === 'update' && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2 hover:bg-white hover:text-primary-color" onClick={handleLeaving} >
                 Leave channel
             </button>}
         </div>
