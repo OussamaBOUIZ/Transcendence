@@ -1,13 +1,13 @@
 import "../../scss/home.scss";
-import SideBar from "../../Components/Sidebar";
 import ProfileComponent from "./ProfileComponent";
-import { getUserData } from "../../Hooks/getUserData";
+import { useContext } from "react";
+import UserContext from "../../Context/UserContext";
 
 export default function Profile() {
 
-  const userData = getUserData();
+  const {user} = useContext(UserContext)
 
-  if (!userData) {
+  if (!user) {
     return (
       <div className="Home">
       </div>
@@ -16,7 +16,7 @@ export default function Profile() {
   
   return (
     <div className="Home">
-      <ProfileComponent UserData={userData} />
+      <ProfileComponent UserData={user} />
     </div>
   );
 }

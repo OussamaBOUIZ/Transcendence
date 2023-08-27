@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
@@ -34,20 +34,34 @@ export class UserService {
        return await this.userRepo.save(user)
     }
 
-    async blockUser(userId: number, user: User) {
+    async blockUser(userId: number, user_email: string) {
+
+        const user = await this.userRepo.findOne({
+            relations: {
+                blocked_users: true
+            },
+            where: {
+                email: user_email
+            }
+        })
+
         const blockedUser = await this.userRepo.findOne({
             where: { id: userId }
         })
+        
         if (!blockedUser)
             throw new HttpException('user not found', HttpStatus.NOT_FOUND)
         if (user.id == userId) {
             throw new HttpException('You can not block yourself', HttpStatus.BAD_REQUEST)
         }
+        console.log('b user', user.blocked_users);
+        console.log('b user', user);
+        
         if (!user.blocked_users)
             user.blocked_users = []
 
         user.blocked_users = [...user.blocked_users, blockedUser]
-        console.log(await this.userRepo.save(user))
+        await this.userRepo.save(user)
     }
 
     async saveUser(user: User) {
@@ -65,10 +79,8 @@ export class UserService {
         return await this.userRepo.findOne({
             select: {
                 id: true,
-                username: true,
                 blocked_users: {
-                    id: true,
-                    username: true
+                    id: true
                 },
             },
             relations: {
@@ -76,6 +88,11 @@ export class UserService {
             },
             where: {
                 id: userId,
+            },
+            order: {
+                blocked_users: {
+                    id: 'ASC'
+                }
             }
         })
     }
@@ -84,6 +101,47 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
+    async findUserWithChannels(id: number): Promise<User> {
+        return await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                userRoleChannels: true,
+                adminRoleChannels: true,
+                ownerRoleChannels: true,
+            },
+            select: {
+                id: true,
+                socketId: true,
+                userRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                adminRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                ownerRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                }
+            },
+        });
+    }
+
+    async findUserWithBanned(userId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+            relations: {
+                userBannedChannels: true,
+            },
+        });
+        return user;
+    }
+    
     async userHasAuth(email: string) {
         const user = await this.userRepo.findOne({
             where: { email: email }
@@ -313,7 +371,6 @@ export class UserService {
             }
         })
 
-        console.log(user)
         if (!user || !user.stat)
             throw new HttpException('User Not found Or failed to create stat', HttpStatus.NOT_FOUND)
 
@@ -375,14 +432,24 @@ export class UserService {
             },
             select: {
                 id: true,
-                username: true,
                 firstname: true,
-                lastname: true
-                
+                lastname: true,
+                username: true,
+                stat: {
+                   achievements: {
+                        id: true,
+                        badge_name: true,
+                        description: true,
+                   },
+                   ladder_level: true,
+                   losses: true,
+                   wins: true, 
+                }
             }
         })
         if (!user)
             throw new NotFoundException('user not found')
+        
         return user
     }
 }

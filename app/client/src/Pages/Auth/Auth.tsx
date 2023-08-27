@@ -17,7 +17,7 @@ interface Inputs {
 
 export default function Auth() {
 
-    const [notif, setNotif] = useState("")
+    const [notif, setNotif] = useState<string>("")
 
     const QRcode = getQRcode();
 
@@ -47,7 +47,6 @@ export default function Auth() {
                     await axios.post("/api/user/2fa/login", collected);
                     window.location.replace('/home');
                 } catch (error) {
-                    console.log("error")
                     console.log(error);
                 }
             } else {

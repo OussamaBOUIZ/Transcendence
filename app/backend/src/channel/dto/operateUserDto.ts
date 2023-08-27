@@ -6,6 +6,8 @@ export class UserOperationDto {
     @IsNotEmpty()
     public userId: number;
 
+    
+
     @IsNotEmpty()
     @IsString()
     public channelName: string

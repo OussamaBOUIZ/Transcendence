@@ -39,7 +39,6 @@ export class InboxService {
             inbox.unseenMessages = 0
         else
             inbox.unseenMessages += 1
-        console.log(inbox)
         await this.inboxRepository.save(inbox)
     }
 

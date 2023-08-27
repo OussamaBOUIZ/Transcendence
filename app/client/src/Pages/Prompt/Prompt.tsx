@@ -1,18 +1,19 @@
+import React, { useContext } from "react";
 import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
 import axios from "axios";
 import { useState } from "react";
-import {getUserData} from "../../Hooks/getUserData";
 import {Data} from "../../../../global/Interfaces";
 import UserName from "./userName";
 import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
+import UserContext from "../../Context/UserContext";
 
 
 export default function Prompt() {
 
-    const userData = getUserData();
+    const {user} = useContext(UserContext)
     const [notif, setNotif] = useState("")
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -21,7 +22,7 @@ export default function Prompt() {
     const [val, increment] = useState<number>(0)
     const updateFullName = setFullName(setData);
 
-    if (!userData)
+    if (!user)
         return null;
 
     const clearFields = () => {
@@ -46,11 +47,13 @@ export default function Prompt() {
 
     const handleSubmit = () => {
         setNotif('')
-        const sendData = async (Path: string, data: Data | FormData, headers: object | null) => {
+        const sendData = async (Path: string, data: Data | FormData | null, headers: {'Content-Type': string} | null) => {
             try {
-                await axios.post(Path, data, headers)
-                increment(prev => prev + 1)
-                clearFields()
+                if (data) {
+                    await axios.post(Path, data, headers)
+                    increment(prev => prev + 1)
+                    clearFields()
+                }
                 if (val === 2)
                     window.location.replace('/')
             }
@@ -62,31 +65,30 @@ export default function Prompt() {
             return
         let Path: string;
         let headers = null;
-        (val === 2) ? Path = `/api/user/${userData.id}/upload` : Path = `/api/user/setUserData/${userData.id}`
+        (val === 2) ? Path = `/api/user/${user.id}/upload` : Path = `/api/user/setUserData/${user.id}`
         if (val === 2) {
             headers = {
                 'Content-Type': 'multipart/form-data',
             };
-            const formData = new FormData();
-            if (imagePreview !== null) {
-                formData.append('image', imagePreview);
-            }
-            sendData(Path, formData, headers);
-        } else {
-            sendData(Path, data, headers);
+            let formData: FormData | null = new FormData();
+            imagePreview ? formData.append('image', imagePreview) : formData = null
+            void sendData(Path, formData, headers);
+            
         }
+        else
+            void sendData(Path, data, headers);
     };
 
     let icon;
     switch (val) {
         case 1:
-            icon = <UserName username={data.username} user={userData.username} handleChange={updateFullName} />
+            icon = <UserName username={data.username} user={user.username} handleChange={updateFullName} />
             break;
         case 2:
-            icon = <ChangeAvatar user={userData} imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            icon = <ChangeAvatar user={user} imagePreview={imagePreview} setImagePreview={setImagePreview} />
             break;
         default:
-            icon = <FullName fullName={data} user={userData} handleChange={updateFullName} />
+            icon = <FullName fullName={data} user={user} handleChange={updateFullName} />
             break;
     }
 
