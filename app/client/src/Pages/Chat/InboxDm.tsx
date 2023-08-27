@@ -8,8 +8,8 @@ export default function InboxDm () {
     const {inboxList} = useContext(InboxContext)
     const [inbox, setInbox] = useState<InboxItem[]>(inboxList);
 
-    console.log('inboxList', inboxList);
     useEffect(() => {
+        console.log('inboxList', inboxList);
         setInbox(inboxList)
     }, [inboxList])
 

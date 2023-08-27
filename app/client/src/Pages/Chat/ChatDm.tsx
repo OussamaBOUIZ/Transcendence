@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useContext, useState} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
@@ -21,12 +21,7 @@ export default function ChatDm () {
     const {inboxList, setInboxList} = useContext(InboxContext)
 
     if (params.id === undefined) {
-        return (
-        <>
-            <InboxDm />
-            <ChatVoid />
-        </>
-        );
+        return (<Navigate to="/chat/init"/>);
     }
     
     
@@ -125,10 +120,12 @@ export default function ChatDm () {
         })
     }, [socket])
 
-    useEffectOnUpdate(() => {
+    useEffect(() => {
+        console.log("messagelist has changed and inboxLIst is : ", inboxList)
         setInboxList((prevList:InboxItem[]) => {
+            console.log("prevList: ", prevList);
             if (prevList?.length) {
-                prevList.map((item:InboxItem) => {
+                prevList?.map((item:InboxItem) => {
                     return (
                         item.id ===  Number(params.id) ?
                         item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
