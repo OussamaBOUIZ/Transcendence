@@ -142,13 +142,10 @@ export class UserService {
         return user;
     }
     
-    async userHasAuth(email: string) {
-        const user = await this.userRepo.findOne({
-            where: { email: email }
-        });
+    async userHasAuth(user: User) {
         if (user.is_two_factor === true)
-            return user;
-        return null;
+            return true;
+        return false;
     }
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
