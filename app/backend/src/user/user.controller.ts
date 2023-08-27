@@ -241,11 +241,18 @@ export class UserController {
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
+
     @Get('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
+        const isCodeValid = this.userService.isUserAuthValid(
+            req.body.token,
+            user
+        );
+        if(!isCodeValid)
+            return res.status(400).send('two factor token is invalid');
         user.two_factor_secret = null;
         user.otpPathUrl = null;
         user.is_two_factor = false;

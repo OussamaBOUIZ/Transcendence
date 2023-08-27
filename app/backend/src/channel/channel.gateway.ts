@@ -31,8 +31,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         const user = await this.userService.getUserFromJwt(accessToken);
         if(!user) 
         {
+            client.emit('exception', 'user is not authenticated');
             client.disconnect();
-            throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
         await this.userService.saveUser(user);
@@ -75,12 +75,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             this.server.emit('userIsBanned', 'You are banned from this channel');
         }
         else
-        { 
             client.join(channelData.channelName);
-            const channelName = channelData.channelName;
-            // const messages = await this.channelservice.getLatestMessages(channelName);
-            this.server.to(user.socketId).emit('loadOldConversations', 'ouz');
-        }
     }
 
     @SubscribeMessage('leaveAndRemoveChannel')
