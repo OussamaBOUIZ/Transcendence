@@ -4,15 +4,13 @@ import kickIcon from "../../Assets/Icons/kick.svg"
 import banIcon from "../../Assets/Icons/block.svg"
 import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
-import {UpdateContext} from "./ChatOverview"
 import axios from "axios"
 import { SocketContext } from './ChatRooms'
 
 
 export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: any}) {
 
-    const {id, socket, roomData} = useContext(SocketContext)
-    const {setUpdate} = useContext(UpdateContext)
+    const {id, socket, roomData, setUpdate} = useContext(SocketContext)
 
     async function promoteMember() {
         try {

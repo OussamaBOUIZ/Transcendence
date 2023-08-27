@@ -38,7 +38,7 @@ export default function ChatDm () {
     const [receiver, setReceiver] = React.useState<User | null>(null);
     const [receivedMessage, setReceivedMessage] = React.useState<string>("");
 
-    // const [messages, setMessages] = React.useState<string[]>([]);
+    const [messages, setMessages] = React.useState<string[]>([]);
     
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
     const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({

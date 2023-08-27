@@ -24,6 +24,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     async handleConnection(client: Socket) {
+        console.log('Connection established')
         const AllCookies = client.handshake.headers.cookie;
         const start = AllCookies.indexOf("access_token=") + 13;
         let end = AllCookies.indexOf(";", start);
@@ -81,6 +82,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         }
     }
 
+    @SubscribeMessage('leaveAndRemoveChannel')
+    async leaveAndRemoveChannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
+    {
+        client.leave(channelData.channelName);
+        await this.channelservice.leaveChannel(channelData.channelName, channelData.userId);
+    }
+    
     @SubscribeMessage('leavechannel')
     async leavechannel(@MessageBody() channelData: channelAccess, @ConnectedSocket() client: Socket)
     {
@@ -134,7 +142,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     || channel.channelAdmins !== null && channel.channelAdmins.some(user => user.id === newMessage.fromUser)
     || channel.channelOwners !== null && channel.channelOwners.some(user => user.id === newMessage.fromUser))
         {
-
+                
             await this.channelservice.storeChannelMessage(newMessage, channel);
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }

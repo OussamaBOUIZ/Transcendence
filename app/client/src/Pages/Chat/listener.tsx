@@ -1,7 +1,6 @@
 import {Message} from "../../../../global/Interfaces"
 
 export const listener = (socket, setMessageList, setBanned) => {
-    console.log('listener...')
     return () => {
         socket?.on("sendChannelMessage", (data: Message)  => setMessageList((list) => [...list, data]));
 

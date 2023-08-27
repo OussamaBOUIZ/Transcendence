@@ -15,7 +15,7 @@ export default function TopicRoom({roomType, mode, setter} : {roomType: string, 
     icon = <IoChevronForward className="cursor-pointer" onClick={() => setter(prev => !prev)}/>
     return (
         <>
-            <div className="bg-room-bar topic h-9 p-2 flex items-center justify-between">
+            <div className="bg-chat-body topic h-9 p-2 flex items-center justify-between">
                 <div className="topic-header flex items-center gap-2">
                     {icon}
                     {roomType}

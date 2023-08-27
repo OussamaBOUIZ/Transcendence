@@ -138,6 +138,7 @@ export class UserService {
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
         console.log(payload)
+        console.log("herewego")
         return await this.userRepo.findOneBy({ id: payload.id });
     }
 

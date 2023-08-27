@@ -44,7 +44,7 @@ export class ChannelService {
             }
         });
     }
-    async channelUpdate(channelData: channelDto)
+    async channelCreate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOne({
             where: {channel_name: channelData.channelName},
@@ -63,15 +63,20 @@ export class ChannelService {
             newChannel.channelOwners = [userFound];
             await this.channelRepo.save(newChannel);
         }
-        else {
-            if(channelData.channelName !== channelFound.channel_name)
-                channelFound.channel_name = channelData.channelName;
-            if(channelData.channelType !== channelFound.channel_type)
-                channelFound.channel_type = channelData.channelType;
-            if(channelFound.channel_type === 'protected')
-                channelFound.channel_password = await argon.hash(channelData.channelPassword);
-            await this.channelRepo.save(channelFound);
-        }
+    }
+    async channelUpdate(channelData: channelDto)
+    {
+        const channelFound = await this.channelRepo.findOne({
+            where: {channel_name: channelData.prevChannelName},
+            relations: {
+                channelOwners: true,
+            }
+        });
+        channelFound.channel_name = channelData.channelName;
+        channelFound.channel_type = channelData.channelType;
+        if(channelFound.channel_type === 'protected')
+            channelFound.channel_password = await argon.hash(channelData.channelPassword);
+        await this.channelRepo.save(channelFound);
     }
 
     async addToChannel(newUser: newUserDto)
@@ -105,6 +110,7 @@ export class ChannelService {
 
     async getLatestMessages(channelId: number, userId: number)
     {
+        console.log(userId)
         const user = await this.userService.findUserWithBanned(userId);
         if(user.userBannedChannels.some(channel => channel.id === channelId))
             return [];
@@ -235,6 +241,30 @@ export class ChannelService {
             return true;
         return false;
     }
+
+    async leaveChannel(channelName: string, userId: number)
+    {
+        const channel = await this.channelRepo.findOne({
+            where: {channel_name: channelName},
+            relations: {
+                channelUsers: true,
+                channelAdmins: true
+            },
+        });
+        if(channel.channelAdmins.some(user => user.id === userId))
+        {
+            const user = await this.userService.findUserById(userId);
+            if(channel.channelAdmins !== null)
+                channel.channelAdmins = channel.channelAdmins.filter(user => user.id !== userId)
+        }
+        else if(channel.channelUsers.some(user => user.id === userId))
+        {
+            if(channel.channelUsers !== null)
+                channel.channelUsers = channel.channelUsers.filter(user => user.id !== userId)
+        }
+        await this.channelRepo.save(channel);
+    }
+    
     async getChannelData(id: number)
     {
         const channel = await this.channelRepo.findOne({
@@ -281,6 +311,7 @@ export class ChannelService {
                 }
             }
         });
+
         return channel;
     }
     async getChannelName(channelId: number)

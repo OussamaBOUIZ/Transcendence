@@ -9,11 +9,18 @@ import { UserOperationDto } from './dto/operateUserDto';
 export class ChannelController {
     constructor(private readonly channelservice: ChannelService) {}
 
+    @Post('create')
+    async CreateChannel(@Body() channelData: channelDto, @Res() res: Response)
+    {
+        await this.channelservice.channelCreate(channelData);
+        return res.status(HttpStatus.CREATED).send('channel was created');
+    }
+
     @Post('update')
-    async updateOrCreateChannel(@Body() channelData: channelDto, @Res() res: Response)
+    async updateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
         await this.channelservice.channelUpdate(channelData);
-        return res.status(HttpStatus.CREATED).send('channel was created');
+        return res.status(HttpStatus.CREATED).send('channel was updated');
     }
 
     @Post('promoteuser/:id')

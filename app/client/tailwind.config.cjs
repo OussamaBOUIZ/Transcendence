@@ -13,8 +13,8 @@ export default {
         'bar-background': '#350D5C',
         'messages': '#A15FE4',
         'my-messages': '#DF59E1',
-        'chat-body': '#3B1662',
-        'room-bar': '#2C094E',
+        'room-bar': '#3B1662',
+        'chat-body': '#2C094E',
         'room-active-bar': '#531F8A',
         'input' : 'rgba(171, 171, 171, 0.28)'
       },
