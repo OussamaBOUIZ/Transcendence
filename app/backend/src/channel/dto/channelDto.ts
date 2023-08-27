@@ -2,7 +2,6 @@ import { IsArray, IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
 export class channelDto {
     
-    @IsNotEmpty()
     @IsString()
     public prevChannelName: string
 

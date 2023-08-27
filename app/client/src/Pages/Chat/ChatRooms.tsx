@@ -75,7 +75,7 @@ export default function ChatRooms () {
         }
         if (user && id)
             void getChannelName()
-    }, [id, user, update])
+    }, [id, user])
 
     const sendMessage = (event: Event) => {
         event.preventDefault();

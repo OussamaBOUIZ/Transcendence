@@ -20,7 +20,6 @@ export default function UserInfoCard(props: userInfoCard) {
       setIsClicked(false)
     };
 
-
     return (
         <div className={`element-${isHovered ? "hovered" : ""} friend-item relative overflow-hidden`}
             onMouseEnter={handleMouseEnter}

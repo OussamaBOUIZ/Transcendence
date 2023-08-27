@@ -36,16 +36,17 @@ export default function CreateRoom({action}: {action: string}) {
       setInputType(inputType === 'password' ? 'text' : 'password');
     };
 
-
     const handleSubmit = () => {
-        newRoom.prevChannelName = roomData.channelName;
+        newRoom.prevChannelName = "";
+        if (roomData?.channelName) newRoom.prevChannelName = roomData?.channelName
+        console.log(newRoom)
         try {
             void axios.post(`/api/channel/${action}`, newRoom)
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }
         catch (err) {
-            // console.log(err)
+            console.log(err)
         }
     }
 
