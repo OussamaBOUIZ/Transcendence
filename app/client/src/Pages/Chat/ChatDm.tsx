@@ -12,6 +12,7 @@ import { getUserImage } from '../../Hooks/getUserImage';
 import ChatVoid from './ChatVoid';
 import InboxContext from '../../Context/InboxContext';
 import { shortenMessage } from '../../Helpers/utils';
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
@@ -117,14 +118,14 @@ export default function ChatDm () {
             return
         }
         socket?.on('message', (recMsg: MessageData) => {
-            if (recMsg.authorId === Number(params.id))
+            if (recMsg?.authorId === Number(params.id))
                 setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
             else
                 console.log('Update Inbox');
         })
     }, [socket])
 
-    useEffect(() => {
+    useEffectOnUpdate(() => {
         setInboxList((prevList:InboxItem[]) => {
             if (prevList?.length) {
                 prevList.map((item:InboxItem) => {
@@ -136,7 +137,7 @@ export default function ChatDm () {
                     })
             } else {
               return  messagesList?.length ? [{
-                    id: Number(params.id), 
+                    id: Number(params.id),
                     lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
                 }] : [];
             }
