@@ -7,12 +7,12 @@ import axios from "axios"
 
 
 export default function UserCard ({user, message, friend, add}: {user: User | null, message: boolean, friend: boolean, add: boolean}) {
-    const {room, setShowSearch} = useContext(SocketContext)
+    const {roomData, setShowSearch} = useContext(SocketContext)
 
     const handleAddUser = () => {
         const fetch = async () => {
             try {
-                await axios.get(`/api/channel/addToChannel/${user.id}?channelName=${room.channel_name}`)
+                await axios.get(`/api/channel/addToChannel/${user.id}?channelName=${roomData.channelName}`)
                 setShowSearch(prev => !prev)
             }
             catch (err) {

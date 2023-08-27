@@ -16,7 +16,6 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import {scrollLogic} from "./scrollLogic"
 import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
-import {loadingMessages} from "./loadingMessages"
 import CreateRoom from './createRoom';
 
 
@@ -25,8 +24,6 @@ export const SocketContext = createContext({});
 
 export default function ChatRooms () {
 
-
-    const [room, setRoom] = useState<rooms>({} as rooms)
     const [socket, setSocket] = useState<Socket>()
     const [init, setInit] = useState<boolean>(false)
     const [message, setMessage] = useState<string>("")
@@ -41,19 +38,17 @@ export default function ChatRooms () {
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
+    const [update, setUpdate] = useState<number>(0);
 
 
     const {id} = useParams()
 
+
+    //set myGrade and room data
     useEffectOnUpdate(() => {
-        console.log('id change play')
         const getChannelName = async () => {
             try {
                 const res = await axios.get(`/api/channel/channelName/${id}`);
-                setRoom({
-                    id: id,
-                    channel_name: res.data
-                })
                 setRoomData({
                     channelName: res.data,
                     userId: user?.id,
@@ -70,8 +65,9 @@ export default function ChatRooms () {
                 // console.log(error)
             }
         }
-        void getChannelName()
-    }, [id, user])
+        if (user && id)
+            void getChannelName()
+    }, [id, user, update])
 
     const sendMessage = (event: Event) => {
         event.preventDefault();
@@ -79,7 +75,7 @@ export default function ChatRooms () {
         if (message !== "") {
             const messageData: Message = {
                 message: message,
-                channelName: room.channel_name,
+                channelName: roomData.channelName,
                 fromUser: user.id,
                 username: user.username,
                 image: user.image
@@ -104,7 +100,7 @@ export default function ChatRooms () {
             withCredentials: true,
         })
         setSocket(fd)
-        setInit(prev => !prev)
+        setInit(prev => !prev) 
 
         return  () => {
             if (socket)
@@ -120,21 +116,19 @@ export default function ChatRooms () {
         )
     })
 
-    useEffectOnUpdate(loadingMessages(id, isBanned, setMessageList), [isBanned])
-
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    useEffectOnUpdate(accessChannel(id, socket, roomData, setMessageList, setBanned), [roomData])
+    useEffectOnUpdate(accessChannel(id, socket, roomData, setBanned, user, setMessageList), [roomData])
 
     // listener
     useEffectOnUpdate(listener(socket, setMessageList, setBanned), [socket]);
 
-    if (!socket && !room)
+    if (!socket && !roomData)
         return null;
 
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isBanned, isClick, setIsClick, setAction, outerDiv, innerDiv, room, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, id, myGrade, isBanned, isClick, update, setUpdate, setIsClick, setAction, outerDiv, innerDiv, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
@@ -153,7 +147,7 @@ export default function ChatRooms () {
                 <ChatRoomWindow messagesElements={messagesElements}/>
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
             </div>
-            <ChatOverview />
+            <ChatOverview id={id}/>
         </SocketContext.Provider>
     );
 }

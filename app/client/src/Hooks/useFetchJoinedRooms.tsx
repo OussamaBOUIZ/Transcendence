@@ -2,14 +2,14 @@ import {useState, useContext, useEffect} from "react"
 import axios from "axios"
 import UserContext from "../Context/UserContext"
 import {rooms} from "../../../global/Interfaces"
+import { SocketContext } from "../Pages/Chat/ChatRooms"
 
 export function useFetchJoinedRooms() {
     const {user} = useContext(UserContext)
+    const {update} = useContext(SocketContext)
     const [publicRooms, setPublicRooms] = useState<rooms[]>([]);
     const [protectedRooms, setProtectedRooms] = useState<rooms[]>([]);
     const [privateRooms, setPrivateRooms] = useState<rooms[]>([]);
-    
-
     useEffect(() => {
         const getData = async () => {
             try {
@@ -26,7 +26,7 @@ export function useFetchJoinedRooms() {
             }
         }
         void getData()
-    }, [user])
+    }, [user, update])
 
     return {publicRooms, protectedRooms, privateRooms};
 }

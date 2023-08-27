@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {NavLink} from "react-router-dom"
 import cube from "../../Assets/Icons/cube.svg";
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
@@ -25,7 +25,6 @@ function RoomItem({item}: {item: rooms}) {
 }
 
 export default function Rooms({type} : propsType) {
-
   const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
 
     // Choose the appropriate rooms array based on the provided type

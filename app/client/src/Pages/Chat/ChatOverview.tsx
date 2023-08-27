@@ -1,12 +1,9 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext } from 'react';
 import ChannelInfo from './ChannelInfo';
-
-// type SetUpdateFunction = (update: number) => void;
 
 export const UpdateContext = createContext({})
 
-export default function ChatOverview() {
-    const [update, setUpdate] = useState<number>(0);
+export default function ChatOverview({id}: {id: string | undefined}) {
 
     const guidingText = "As channels come alive this box will \
     soon be filled with fellow members. Engage in captivating conversations, share\
@@ -15,11 +12,12 @@ export default function ChatOverview() {
     like-minded individuals\
     ";
 
+    const customField = <div className='flex justify-center items-center w-full h-full px-2 text-center'><p>{guidingText}</p></div>
+
     return (
         <div className="chat_overview overflow-hidden">
-            <UpdateContext.Provider value={{ update, setUpdate }}>
-                <ChannelInfo />
-            </UpdateContext.Provider>
+            {!id && customField}
+            {id && <ChannelInfo />}
         </div>
     );
 }

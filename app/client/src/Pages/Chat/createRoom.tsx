@@ -7,19 +7,19 @@ import UserContext from "../../Context/UserContext"
 import { SocketContext } from "./ChatRooms";
 
 interface newRoom {
+    prevChannelName: string,
     channelName: string,
     channelType: "public" | "private" | "protected",
     channelPassword: string,
-    joinedUsers: number[],
     channelOwner: number,
 }
 
 export default function CreateRoom({action}: {action: string}) {
 
     const {user} = useContext(UserContext)
-    const {myGrade, setIsClick, setAction} = useContext(SocketContext)
+    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ channelName: "", channelPassword: "", channelType: "public", joinedUsers: [] } as unknown as newRoom)
+    const [newRoom, setNewRoom] = useState<newRoom>({ prevChannelName: "",channelName: "", channelPassword: "", channelType: "public"} as newRoom)
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -38,16 +38,24 @@ export default function CreateRoom({action}: {action: string}) {
 
 
     const handleSubmit = () => {
+        newRoom.prevChannelName = roomData.channelName;
         try {
-            void axios.post(`/api/channel/update`, newRoom)
-            setter(prev => !prev)
+            void axios.post(`/api/channel/${action}`, newRoom)
+            setIsClick(prev => !prev)
+            setUpdate(prev => prev + 1)
         }
         catch (err) {
             // console.log(err)
         }
     }
 
-    const style = (myGrade === "user" ? 'cursor-not-allowed pointer-events-none' : '')
+    const handleLeaving = () => {
+        socket?.emit('leaveAndRemoveChannel', roomData);
+        setIsClick(prev => !prev);
+        window.location.replace('/chat/rooms')
+    }
+
+    const style = (myGrade === "user" ? 'pointer-events-none' : '')
 
     const passwordCard = <div className="setPassword flex flex-col">
                             <label>set a password</label>
@@ -74,6 +82,7 @@ export default function CreateRoom({action}: {action: string}) {
             <input
                 type="text"
                 placeholder="channel name"
+                className={`${style}`}
                 name="channelName"
                 onChange={handleChange}
                 value={newRoom.channelName}>
@@ -83,15 +92,15 @@ export default function CreateRoom({action}: {action: string}) {
             <label>Accessiblity</label>
             <form className="flex justify-between items-center" >
                 <div className="flex gap-2 items-center">
-                    <input type="radio" name="channelType" value="public" onChange={handleChange} defaultChecked/>
+                    <input type="radio" className={style} name="channelType" value="public" onChange={handleChange} defaultChecked/>
                     <label>Public</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <input type="radio" name="channelType" value="private" onChange={handleChange} />
+                    <input type="radio" className={style} name="channelType" value="private" onChange={handleChange} />
                     <label>Private</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                <input type="radio" name="channelType" value="protected" onChange={handleChange} />
+                <input type="radio" className={style} name="channelType" value="protected" onChange={handleChange} />
                     <label>Protected</label>
                 </div>
             </form>
@@ -101,7 +110,7 @@ export default function CreateRoom({action}: {action: string}) {
             <button className={`primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base bg-pink-500 ${style}`} onClick={handleSubmit}>
                 {action}
             </button>
-            {myGrade !== "owner" && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2 hover:bg-white hover:text-primary-color" onClick={handleSubmit}>
+            {myGrade !== "owner" && <button className="primary_btn flex items-center justify-center py-3 px-9 rounded-3xl text-base border-white border-2 hover:bg-white hover:text-primary-color" onClick={handleLeaving} >
                 Leave channel
             </button>}
         </div>

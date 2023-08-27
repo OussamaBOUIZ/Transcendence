@@ -4,6 +4,10 @@ export class channelDto {
     
     @IsNotEmpty()
     @IsString()
+    public prevChannelName: string
+
+    @IsNotEmpty()
+    @IsString()
     public channelName: string
 
     @IsNotEmpty()
@@ -12,10 +16,6 @@ export class channelDto {
 
     @IsString()
     public channelPassword: string
-
-    @IsArray()
-    @IsNumber({}, { each: true })
-    public joinedUsers: number[];
 
     @IsNumber()
     @IsNotEmpty()

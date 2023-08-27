@@ -219,8 +219,8 @@ div.chat_container div.chat_main form.chat_input {
 div.chat_container div.chat_main form.chat_input textarea {
   border-radius: 5px;
   width: 80%;
-  height: 1.5em;
-  padding: 8px 10px;
+  height: 2.5em;
+  padding: 0.5em 0.7em;
   background: #643D7F;
   scrollbar-color: transparent;
   scrollbar-width: 2px;
