@@ -163,7 +163,8 @@ div.chat_container {
             textarea {
                 border-radius: 5px;
                 width: 80%;
-                height: 1.5em;
+                height: 2.5em;
+                resize: none;
                 padding: 8px 10px;
                 background: #643D7F;
                 scrollbar-color: transparent;

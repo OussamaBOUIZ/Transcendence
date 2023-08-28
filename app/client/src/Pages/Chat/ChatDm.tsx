@@ -18,7 +18,6 @@ export default function ChatDm () {
     const {user} = useContext(UserContext)
     const initialRender = useRef(true)
     const params = useParams()
-    // const {inboxList, setInboxList} = useContext(InboxContext)
     const [inbox, setInbox] = useState<InboxItem[]>([]);
 
     if (params.id === undefined) {
@@ -120,27 +119,45 @@ export default function ChatDm () {
                 console.log('Update Inbox');
         })
     }, [socket])
-
-    useEffect(() => {
-        console.log("messagelist has changed and inboxLIst is : ", inbox)
+    useEffectOnUpdate(() => {
+        console.log('messages list got updated!!!', messagesList);
+        console.log('inbox : ', inbox)
         setInbox((prevInbox:InboxItem[]) => {
-            console.log("prevInbox: ", prevInbox);
-            if (prevInbox?.length) {
-              return  prevInbox?.map((item:InboxItem) => {
-                    return (
-                        item.id ===  Number(params.id) ?
-                        item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
-                        item
-                        )
-                    })
-            } else {
-              return  messagesList?.length ? [{
-                    id: Number(params.id),
-                    lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
-                }] : [];
-            }
-        })
-    }, [messagesList])
+                if (prevInbox?.length) {
+                    return prevInbox?.map((item:InboxItem) => {
+                        return (
+                            item.id ===  Number(params.id) ?
+                            {...item, lastMessage : shortenMessage(messagesList[messagesList.length - 1].message)}:
+                            item
+)
+                        })
+                } else {
+                    return  messagesList?.length ? [{
+                        id: Number(params.id),
+                        lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
+                    }] : [];
+                }
+            })
+    },[messagesList])
+
+    // useEffect(() => {
+    //     setInbox((prevInbox) => {
+    //         if (prevInbox?.length) {
+    //           return  prevInbox?.map((item:InboxItem) => {
+    //                 return (
+    //                     item.id ===  Number(params.id) ?
+    //                     item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
+    //                     item
+    //                     )
+    //                 })
+    //         } else {
+    //           return  messagesList?.length ? [{
+    //                 id: Number(params.id),
+    //                 lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
+    //             }] : [];
+    //         }
+    //     })
+    // }, [messagesList])
 
 
     
