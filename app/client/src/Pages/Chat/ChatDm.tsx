@@ -38,13 +38,16 @@ export default function ChatDm () {
     function handleSubmit (e): void {
         e.preventDefault()
         if (messageToSendValue !== "") {
-            setMessageToSendData({
+            const msgToSend: MessageData = {
                 receiverId: Number(params.id),
                 authorId: user.id,
                 message: messageToSendValue,
                 creationTime : new Date()
-            })
+            }
+
             setMessageToSendValue("")
+            setMessagesList((prevList:MessageData[]) => [...prevList, msgToSend])
+            socket?.emit('SendMessage', msgToSend)
         }
     }
     
@@ -93,25 +96,7 @@ export default function ChatDm () {
     } 
     , []) 
 
-    
     useEffect(() => {
-        if (initialRender.current) {    
-            initialRender.current = false 
-            return
-        }
-        if (messageToSendData.message !== "") {
-            setMessagesList((prevList:MessageData[]) => [...prevList, messageToSendData])
-            socket?.emit('SendMessage', messageToSendData)
-        }
-    }
-    , [socket, messageToSendData])
-    
-
-    useEffect(() => {
-        if (initialRender.current) {    
-            initialRender.current = false 
-            return
-        }
         socket?.on('message', (recMsg: MessageData) => {
             if (recMsg?.authorId === Number(params.id))
                 setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
@@ -119,7 +104,8 @@ export default function ChatDm () {
                 console.log('Update Inbox');
         })
     }, [socket])
-    useEffectOnUpdate(() => {
+
+    useEffect(() => {
         console.log('messages list got updated!!!', messagesList);
         console.log('inbox : ', inbox)
         setInbox((prevInbox:InboxItem[]) => {
@@ -139,27 +125,6 @@ export default function ChatDm () {
                 }
             })
     },[messagesList])
-
-    // useEffect(() => {
-    //     setInbox((prevInbox) => {
-    //         if (prevInbox?.length) {
-    //           return  prevInbox?.map((item:InboxItem) => {
-    //                 return (
-    //                     item.id ===  Number(params.id) ?
-    //                     item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
-    //                     item
-    //                     )
-    //                 })
-    //         } else {
-    //           return  messagesList?.length ? [{
-    //                 id: Number(params.id),
-    //                 lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
-    //             }] : [];
-    //         }
-    //     })
-    // }, [messagesList])
-
-
     
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
