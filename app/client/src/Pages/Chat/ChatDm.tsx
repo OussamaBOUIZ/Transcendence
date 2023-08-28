@@ -18,7 +18,8 @@ export default function ChatDm () {
     const {user} = useContext(UserContext)
     const initialRender = useRef(true)
     const params = useParams()
-    const {inboxList, setInboxList} = useContext(InboxContext)
+    // const {inboxList, setInboxList} = useContext(InboxContext)
+    const [inbox, setInbox] = useState<InboxItem[]>([]);
 
     if (params.id === undefined) {
         return (<Navigate to="/chat/init"/>);
@@ -121,11 +122,11 @@ export default function ChatDm () {
     }, [socket])
 
     useEffect(() => {
-        console.log("messagelist has changed and inboxLIst is : ", inboxList)
-        setInboxList((prevList:InboxItem[]) => {
-            console.log("prevList: ", prevList);
-            if (prevList?.length) {
-                prevList?.map((item:InboxItem) => {
+        console.log("messagelist has changed and inboxLIst is : ", inbox)
+        setInbox((prevInbox:InboxItem[]) => {
+            console.log("prevInbox: ", prevInbox);
+            if (prevInbox?.length) {
+              return  prevInbox?.map((item:InboxItem) => {
                     return (
                         item.id ===  Number(params.id) ?
                         item.lastMessage = shortenMessage(messagesList[messagesList.length - 1].message):
@@ -157,7 +158,7 @@ export default function ChatDm () {
     
     return (
         <>
-            <InboxDm />
+            <InboxDm inbox={inbox}/>
             <div className="chat_main">
                 <ChatHeader
                 avatar={avatar}

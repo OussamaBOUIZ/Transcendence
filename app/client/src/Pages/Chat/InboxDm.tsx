@@ -4,15 +4,10 @@ import InboxContext from '../../Context/InboxContext';
 import { InboxItem } from '../../../../global/Interfaces';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
-export default function InboxDm () {
-    const {inboxList} = useContext(InboxContext)
-    const [inbox, setInbox] = useState<InboxItem[]>(inboxList);
+export default function InboxDm ({inbox}: {inbox:InboxItem[]}) {
 
-    useEffect(() => {
-        console.log('inboxList', inboxList);
-        setInbox(inboxList)
-    }, [inboxList])
-
+    console.log('inboxDm: ', inbox);
+    
     return (
         <div className="chat_inbox">
             {inbox?.map((item:InboxItem) => {
