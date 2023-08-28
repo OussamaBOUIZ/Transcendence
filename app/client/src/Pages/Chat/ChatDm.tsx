@@ -8,10 +8,11 @@ import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
+import ChatDmInit from './ChatDmInit';
 
 export default function ChatDm () {
     const initialRender = useRef(true)
-    const params = useParams()
+    const {id} = useParams()
     const {user} = useContext(UserContext)
     const [socket, setSocket] = React.useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
@@ -28,7 +29,7 @@ export default function ChatDm () {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({
-                receiverId: Number(params.id),
+                receiverId: Number(id),
                 message: messageToSendValue,
                 creationTime : new Date()
             })
@@ -40,7 +41,7 @@ export default function ChatDm () {
     
     const loadConversation = async ()  => {
         try {
-            const res = await axios.get(`../api/chat/${params.id}`)
+            const res = await axios.get(`../api/chat/${id}`)
             console.log('res data', res.data);
             
             setMessagesList(res.data)
@@ -87,7 +88,7 @@ export default function ChatDm () {
         }
         if (messageToSendData.message !== "") {
             socket?.emit('SendMessage', messageToSendData)
-            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(params.id)}])
+            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(id)}])
             console.log('emit message', messageToSendData);
         }
         
@@ -123,9 +124,9 @@ export default function ChatDm () {
         if (msg.message !== "") {
             return (
                 <MessageBox
-                id={msg.authorId === user?.id}>
-                {msg.message}
-            </MessageBox>
+                    id={msg.authorId === user?.id}>
+                    {msg.message}
+                </MessageBox>
            )
         } 
         return null
@@ -137,12 +138,13 @@ export default function ChatDm () {
         <InboxDm />
         <div className="chat_main">
             <ChatHeader 
-             username={`user id: ${params.id}`}
+             username={`user id: ${id}`}
              online={true}
              />
 
              <section className="chat_window bg-chat-body">
-                {messagesElements}               
+                {id && messagesElements}
+                {!id && <ChatDmInit />}           
              </section>
 
 
