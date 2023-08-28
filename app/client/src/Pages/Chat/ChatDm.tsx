@@ -80,10 +80,9 @@ export default function ChatDm () {
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
-        // setInbox((prevInbox:InboxItem[]) => {
-
-        //     return prevInbox?.map((inbx) => inbx.id === Number(id) ? {...inbx, unseenMessage: 0}: inbx)
-        // })
+        setInbox((prevInbox:InboxItem[]) => {
+            return prevInbox?.map((inbx) => inbx.id === Number(id) ? {...inbx, unseenMessage: 0}: inbx)
+        })
         //cleanup function
         return  () => {
             if (socket)
