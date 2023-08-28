@@ -1,4 +1,5 @@
 import {
+	ConnectedSocket,
     MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
@@ -6,12 +7,14 @@ import {
 	SubscribeMessage,
 	WebSocketGateway, 
 	WebSocketServer,
-	WsException
+	WsException,
+	
 } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/databases/game.entity';
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { brotliDecompressSync } from "zlib";
 
 
 @WebSocketGateway(4343, {cors: {
@@ -41,9 +44,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	// ) {}
 
     @SubscribeMessage('game')
-	onNewMessage(@MessageBody() body: any) {
-        this.server.emit("movePad", body);
+	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		console.log(body)
+        socket.broadcast.emit("movePad", body);
 	}
-
-
 }

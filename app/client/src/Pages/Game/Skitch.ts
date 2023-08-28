@@ -3,6 +3,7 @@ import { SketchProps, P5CanvasInstance } from "react-p5-wrapper";
 interface MySketchProps extends SketchProps {
     rotation: number;
     theme: string;
+    socket: any;
 }
 
 interface Velocity {
@@ -91,14 +92,16 @@ class Pad {
         p5.rect(this.x, this.y, this.w, this.h);
     }
     
-    updatePad(p5: any, ball: Ball) {
+    updatePad(p5: any, ball: Ball, myPad: boolean) {
         this.drawPad(p5);
         
-        if (p5.keyIsDown(p5.UP_ARROW) && this.y > GAP)
-            this.y -= PSPEED;
-        
-        if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - GAP)
-            this.y += PSPEED;
+        if (myPad) {
+            if (p5.keyIsDown(p5.UP_ARROW) && this.y > GAP)
+                this.y -= PSPEED;
+            
+            if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - GAP)
+                this.y += PSPEED;
+        }
 
         if (collision(this, ball)) {
             const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
@@ -132,6 +135,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
         rotation: 0,
         theme: "",
+        socket: null,
     }
 
     p5.updateWithProps = (p: any) => {
@@ -139,7 +143,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
 
     p5.setup = (): void => {
-        p5.createCanvas(600, 400);
+        p5.createCanvas(400, 250);
         reset(p5);
     }
 
@@ -152,8 +156,15 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme === "grey")
             p5.background(200);
 
-        leftPad.updatePad(p5, ball);
-        rightPad.updatePad(p5, ball);
+        props.socket?.emit("game", {padX: rightPad.y, ballX: ball.x, ballY: ball.y});
+        props.socket?.on("movePad", (data: any) => {
+            leftPad.y = data.padX;
+            ball.x = data.ballX;
+            ball.y = data.ballY;
+        })
+
+        leftPad.updatePad(p5, ball, false);
+        rightPad.updatePad(p5, ball, true);
         ball.updateBall(p5);
     }
 }
