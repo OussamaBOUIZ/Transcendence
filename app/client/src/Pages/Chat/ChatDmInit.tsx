@@ -1,7 +1,5 @@
 import React from 'react'
 import ChatSearchBox from './ChatSearchBox';
-import ChatOverview from './ChatOverview';
-
 
 export default function ChatDmInit () {
     return (
