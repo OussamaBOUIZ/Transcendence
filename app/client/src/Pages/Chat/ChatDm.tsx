@@ -27,7 +27,6 @@ export default function ChatDm () {
     
     const [socket, setSocket] = useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
-    const [messageToSendData, setMessageToSendData] = useState<MessageData> ({} as MessageData);
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState();
 
