@@ -10,7 +10,7 @@ import {Status} from "../interfaces/enums";
 export class InboxService {
     constructor(@InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>) {
     }
-    async getUserInboxByUnseenMessage(user: User) {
+    async getUserInboxByunseenMessage(user: User) {
         return await this.inboxRepository.findAndCount({
             relations: {user: true},
             select: ["unseenMessages"],

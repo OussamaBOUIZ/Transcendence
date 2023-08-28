@@ -9,29 +9,32 @@ import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
 import {Outlet, Routes, Route, NavLink, useLocation} from 'react-router-dom'
+import { InboxProvider } from '../../Context/InboxContext';
 
 export default function ChatLayout () {
     
     return (
-        <div className="chat_container">
-            <ChatAccount />
-            <div className="chat_nav">
-                 <OnlineNow />
-                    <nav className='flex justify-between'>
-                        <NavLink  
-                        className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`} 
-                        to="/chat" end>
-                            Messages
-                            <span></span>
-                        </NavLink>
-                        <NavLink 
-                        className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  
-                        to="/chat/rooms">
-                            Channels
-                        </NavLink>
-                    </nav>
+        <InboxProvider>
+            <div className="chat_container">
+                <ChatAccount />
+                <div className="chat_nav">
+                    <OnlineNow />
+                        <nav className='flex justify-between'>
+                            <NavLink  
+                            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`} 
+                            to="/chat" end>
+                                Messages
+                                <span></span>
+                            </NavLink>
+                            <NavLink 
+                            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  
+                            to="/chat/rooms">
+                                Channels
+                            </NavLink>
+                        </nav>
+                </div>
+                <Outlet />
             </div>
-            <Outlet />
-        </div>
+        </InboxProvider>
     );
 }
