@@ -18,11 +18,13 @@ export function UserProvider ({children}) {
         } catch (error) {
           // console.log(error);
         }
-      };
+    };
+
+    console.log(user);
 
     useEffect(() => {
         void fetchUserData();
-      }, [])
+    }, [])
 
     return (
       <>

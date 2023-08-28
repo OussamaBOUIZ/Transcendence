@@ -102,7 +102,7 @@ class Pad {
 
         if (collision(this, ball)) {
             const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
-            const angle: number = (p5.PI / 8) * diff;
+            const angle: number = (p5.PI / 10) * diff;
 
             let dir: number = ball.x > p5.width / 2 ? -1 : 1;
 

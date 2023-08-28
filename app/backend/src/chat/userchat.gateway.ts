@@ -37,7 +37,7 @@ import { WsExceptionFilter } from "src/Filter/ws.filter";
  */
 
 @UseFilters(WsExceptionFilter)
- @WebSocketGateway(4000, {cors: {
+@WebSocketGateway(4000, {cors: {
 	origin: "http://localhost:5173",
 		credentials: true
 }})
