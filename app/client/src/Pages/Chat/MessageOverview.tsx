@@ -1,7 +1,7 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
 
-export default function MessageOverview ({id, lastMsg, time} : {id:number, lastMsg: string, time: string}) {
+export default function MessageOverview ({id, lastMsg, time, unsMsg} : {id:number, lastMsg: string, time: string, unsMsg:number}) {
 
     return (
         <NavLink 
@@ -15,6 +15,7 @@ export default function MessageOverview ({id, lastMsg, time} : {id:number, lastM
                 <p>{lastMsg}</p>
             </figcaption>
             <time>{time}</time>
+            <span>{unsMsg}</span>
         </NavLink>
     );
 }

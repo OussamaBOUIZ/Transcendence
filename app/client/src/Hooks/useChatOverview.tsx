@@ -35,6 +35,6 @@ export default function useChatOverview(id: number) {
   useEffect(()=> {
     fetchChatOverview(id, setUserOverview)
 
-  }, [])
+  }, [id])
   return (userOverview)
 }

@@ -17,10 +17,10 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 export default function ChatDm () {
     const {user} = useContext(UserContext)
     const initialRender = useRef(true)
-    const params = useParams()
+    const {id} = useParams()
     const [inbox, setInbox] = useState<InboxItem[]>([]);
 
-    if (params.id === undefined) {
+    if (id === undefined) {
         return (<Navigate to="/chat/init"/>);
     }
     
@@ -38,7 +38,7 @@ export default function ChatDm () {
         e.preventDefault()
         if (messageToSendValue !== "") {
             const msgToSend: MessageData = {
-                receiverId: Number(params.id),
+                receiverId: Number(id),
                 authorId: user.id,
                 message: messageToSendValue,
                 creationTime : new Date()
@@ -52,7 +52,7 @@ export default function ChatDm () {
     
     const loadConversation = async ()  => {
         try {
-            const res = await axios.get(`../api/chat/${params.id}`)
+            const res = await axios.get(`../api/chat/${id}`)
             setMessagesList(res.data)
             
         } catch (error) {
@@ -71,36 +71,52 @@ export default function ChatDm () {
     
     /**EFFECTS     */
     useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
             }}) 
-        
+        console.log('id has changed: ', id);
         setSocket(newSocket)
-        
-
         loadConversation();
-        loadAvatar(params.id);
-        
+        loadAvatar(id);
+        // setInbox((prevInbox:InboxItem[]) => {
+
+        //     return prevInbox?.map((inbx) => inbx.id === Number(id) ? {...inbx, unseenMessage: 0}: inbx)
+        // })
         //cleanup function
         return  () => {
             if (socket)
                 socket.disconnect();
         }
     } 
-    , []) 
+    , [id])
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
-            if (recMsg?.authorId === Number(params.id))
+            if (recMsg?.authorId === Number(id))
                 setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
-            else
-                console.log('Update Inbox');
+            else {
+                console.log('recMsg : ', recMsg.message)
+                setInbox((prevInbox:InboxItem[]) => {
+                    if (prevInbox.find((inbx) => inbx.id === recMsg?.authorId) === undefined) {
+                        return [...prevInbox, 
+                                {id: recMsg?.authorId, 
+                                 lastMessage: shortenMessage(recMsg?.message),
+                                 unseenMessage: 1
+                                } as InboxItem
+                                ]
+                    } else {
+                        return prevInbox.map((inbx) => {
+                            return inbx?.id === recMsg?.authorId 
+                            ? {...inbx, lastMessage:shortenMessage(recMsg?.message), 
+                                unseenMessage: inbx?.unseenMessage ?  inbx.unseenMessage + 1 : 1}
+                            : inbx
+                        })
+                    }
+                    
+                })
+            }
         })
     }, [socket])
 
@@ -111,14 +127,14 @@ export default function ChatDm () {
                 if (prevInbox?.length) {
                     return prevInbox?.map((item:InboxItem) => {
                         return (
-                            item.id ===  Number(params.id) ?
+                            item.id ===  Number(id) ?
                             {...item, lastMessage : shortenMessage(messagesList[messagesList.length - 1].message)}:
                             item
 )
                         })
                 } else {
                     return  messagesList?.length ? [{
-                        id: Number(params.id),
+                        id: Number(id),
                         lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
                     }] : [];
                 }
@@ -143,14 +159,13 @@ export default function ChatDm () {
             <div className="chat_main">
                 <ChatHeader
                 avatar={avatar}
-                username={`user id: ${params.id}`}
+                username={`user id: ${id}`}
                 online={true}
                 />
 
                 <section className="chat_window">
                     {messagesElements}               
                 </section>
-
 
                 <form className="chat_input" onSubmit={handleSubmit}>
                     <textarea 
@@ -161,7 +176,7 @@ export default function ChatDm () {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <ContactDetail id={params.id} avatar={avatar}/>
+            <ContactDetail id={id} avatar={avatar}/>
     </>
     );
 }

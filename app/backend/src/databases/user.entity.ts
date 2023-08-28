@@ -87,6 +87,7 @@ export class User extends BaseEntity {
     user_chat: User_chat[]
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
+    @JoinColumn()
     inbox_users: Inbox_user[]
 
     @ManyToMany(() => Channel, {nullable: true})

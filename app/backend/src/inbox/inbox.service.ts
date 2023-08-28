@@ -23,7 +23,11 @@ export class InboxService {
     async saveInbox(receiver: User, author: User, msgDto: MessageDto) {
         let inbox: Inbox_user
         inbox = await this.getInboxBySenderId(author, receiver)
+        console.log(inbox);
+        
         if (!inbox) {
+            console.log('new inbox');
+            
             inbox = new Inbox_user()
             inbox.author = author; // id of the receiver
             inbox.lastMessage = msgDto.message;
@@ -39,6 +43,8 @@ export class InboxService {
             inbox.unseenMessages = 0
         else
             inbox.unseenMessages += 1
+        console.log(inbox);
+        
         await this.inboxRepository.save(inbox)
     }
 

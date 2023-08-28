@@ -7,8 +7,7 @@ export class Inbox_user extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @OneToOne(type => User)
-    @JoinColumn()
+    @ManyToOne(() => User, (user) => user.inbox_users)
     author: User
 
     @Column()

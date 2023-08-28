@@ -12,7 +12,7 @@ export default function InboxDm ({inbox}: {inbox:InboxItem[]}) {
                     key={item?.id}
                     id={item?.id}
                     lastMsg={item?.lastMessage}
-                    time="undefined"
+                    unsMsg={item?.unseenMessage ? item?.unseenMessage: 0}
                     />)
             })}
         </div>

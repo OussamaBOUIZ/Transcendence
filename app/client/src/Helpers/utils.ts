@@ -1,4 +1,4 @@
-const MAX_LENGTH:number = 20
+const MAX_LENGTH:number = 30
 
 function shortenMessage(mess:string) :string {
     if (mess?.length < MAX_LENGTH)
