@@ -138,6 +138,14 @@ div.chat_container {
     }
     div.chat_inbox {
         grid-area: l;
+        &::-webkit-scrollbar {
+            width: .2em;
+            border-radius: 6em;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: rgb(210, 210, 210);
+            border-radius: 6em;
+        }
     }
     div.chat_main {
         grid-area: m;

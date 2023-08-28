@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import {NavLink} from "react-router-dom"
 import cube from "../../Assets/Icons/cube.svg";
-import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import {rooms} from "../../../../global/Interfaces"
 
 interface propsType {
-  type: 'public' | 'protected' | 'private';
+  roomsToRender: unknown;
 }
 
 function RoomItem({item}: {item: rooms}) {
@@ -24,18 +23,7 @@ function RoomItem({item}: {item: rooms}) {
   )
 }
 
-export default function Rooms({type} : propsType) {
-  const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
-
-    // Choose the appropriate rooms array based on the provided type
-    let roomsToRender = null;
-    if (type === 'public')
-      roomsToRender = publicRooms
-    else if (type === "protected") {
-      roomsToRender = protectedRooms;
-    } else {
-      roomsToRender = privateRooms;
-    }
+export default function Rooms({roomsToRender} : propsType) {
 
   return (
     <>

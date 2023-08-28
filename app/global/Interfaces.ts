@@ -83,6 +83,7 @@ interface channelData {
 }
 
 interface rooms {
+    channel_type: string;
     id: string | undefined,
     channel_name: string,
 }

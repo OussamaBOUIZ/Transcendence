@@ -1,5 +1,5 @@
-import {useState, useContext, useEffect} from "react"
-import axios from "axios"
+import {useContext, useState, useEffect} from "react"
+import axios, {AxiosResponse} from "axios"
 import UserContext from "../Context/UserContext"
 import {rooms} from "../../../global/Interfaces"
 import { SocketContext } from "../Pages/Chat/ChatRooms"
@@ -11,23 +11,25 @@ export function useFetchJoinedRooms() {
     const [protectedRooms, setProtectedRooms] = useState<rooms[]>([]);
     const [privateRooms, setPrivateRooms] = useState<rooms[]>([]);
 
-
     useEffect(() => {
-        const getData = async () => {
-            try {
-                if (user) {
-                    const res = await axios.get(`/api/channel/AllChannels/${user?.id}`);
-                    const roomData = res.data as rooms[];
-                    setPublicRooms(roomData.filter((room) => room.channel_type === 'public'));
-                    setProtectedRooms(roomData.filter((room) => room.channel_type === 'protected'));
-                    setPrivateRooms(roomData.filter((room) => room.channel_type === 'private'));
-                }
-            }
-            catch (err) {
-                // console.log(err)
+        try {
+            if (user) {
+                setTimeout( () => {
+                    const getInfo = async () => {
+                        const res: AxiosResponse<rooms[]> = await axios.get(`/api/channel/AllChannels/${user?.id}`);
+                        console.log(res.data)
+                        setPublicRooms(res.data.filter((room) => room.channel_type === 'public'));
+                        setProtectedRooms(res.data.filter((room) => room.channel_type === 'protected'));
+                        setPrivateRooms(res.data.filter((room) => room.channel_type === 'private'));
+                    }
+                    void getInfo();
+                }, 500)
+                
             }
         }
-        void getData()
+        catch (err) {
+            // console.log(err)
+        }
     }, [user, update])
 
     return {publicRooms, protectedRooms, privateRooms};
