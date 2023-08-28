@@ -185,6 +185,36 @@ div.chat_container {
                 background-color: rgb(210, 210, 210);
                 border-radius: 6em;
             }
+            .channels_list {
+                &::-webkit-scrollbar {
+                    width: .4em;
+                    border-radius: 6em;
+                }
+                &::-webkit-scrollbar-thumb {
+                    background-color: rgb(210, 210, 210);
+                    border-radius: 6em;
+                }
+            }
+            // div {
+            //     width: 100%;
+            //     height: 100%;
+            //     section.init_action_container {
+            //         width: 100%;
+            //         height: 100%;
+            //         background: #000;
+            //         @include center-styles;
+            //         flex-direction: column;
+            //         div.container {
+            //             // display: flex;
+            //             background-color: red;
+            //             button {
+            //                 &.secondary_btn {
+            //                     @include secondary-button;
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
         form.chat_input {
             grid-row: 3/4;
@@ -257,22 +287,6 @@ div.chat_container {
                         background-color: $primary-pink;
                         padding: .4em;
                         margin: 1em;
-                    }
-                }
-            }
-            section.init_action_container {
-                @include center-styles;
-                flex-direction: column;
-                div.container {
-                    display: flex;
-                    margin-top: 30px;
-                    gap: 25px;
-                    padding: 0 25px;
-                    margin-left: 40px; // should be fixed
-                    button {    
-                        &.secondary_btn {
-                            @include secondary-button;
-                        }
                     }
                 }
             }

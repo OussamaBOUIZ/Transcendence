@@ -18,6 +18,7 @@ import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
+import Notification from "../../Components/Notification"
 
 export const SocketContext = createContext({});
 
@@ -29,7 +30,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {user} = useContext(UserContext)
+    const {user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
     const outerDiv = useRef<HTMLDivElement>(null);
     const innerDiv = useRef<HTMLDivElement>(null);
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
@@ -40,14 +41,14 @@ export default function ChatRooms () {
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
     const [blockedUsers, setBlockedUsers] = useState()
+    const [notif, setNotif] = useState<string>("")
 
 
     const {id} = useParams()
 
-
     //set myGrade and room data
     useEffectOnUpdate(() => {
-        const getChannelName = async () => {
+        const getInfo = async () => {
             try {
                 const res = await axios.get(`/api/channel/channelName/${id}`);
                 setRoomData({
@@ -74,7 +75,7 @@ export default function ChatRooms () {
             }
         }
         if (user && id)
-            void getChannelName()
+            void getInfo()
     }, [id, user])
 
     const sendMessage = (event: Event) => {
@@ -105,7 +106,7 @@ export default function ChatRooms () {
     // create socket
     useEffect(() => {
         console.log("create socket")
-        const fd = io("ws://localhost:1313", {
+        const fd = io("ws://localhost:1212", {
             withCredentials: true,
         })
         setSocket(fd)
@@ -139,6 +140,8 @@ export default function ChatRooms () {
     // listener
     useEffectOnUpdate(listener(socket, setMessageList, setBanned), [socket]);
 
+    useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
+
     if (!socket && !roomData)
         return null;
 
@@ -156,10 +159,11 @@ export default function ChatRooms () {
                     <CreateRoom action={action} />
                 </div>
             }
+            {notif && <Notification message={notif} />}
             <InboxRooms />
             <div className="chat_main">
-                <RoomHeader />
-                <ChatRoomWindow messagesElements={messagesElements}/>
+            <RoomHeader />
+                <ChatRoomWindow messagesElements={messagesElements} setNotif={setNotif} />
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
             </div>
             <ChatOverview id={id}/>

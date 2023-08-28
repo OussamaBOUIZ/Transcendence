@@ -8,6 +8,7 @@ const UserContext = createContext({});
 export function UserProvider ({children}) {
     const [user, setUser] = useState<User | null>(null);
     const [authenticated, setAuthenticated] = useState<boolean>(false);
+    const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
     const fetchUserData = async () => {
         try {
@@ -28,7 +29,8 @@ export function UserProvider ({children}) {
       <>
         <UserContext.Provider value={{
             user, setUser,
-            authenticated, setAuthenticated
+            authenticated, setAuthenticated,
+            isAnimationFinished, setIsAnimationFinished,
         }}>
             {children}
         </UserContext.Provider>

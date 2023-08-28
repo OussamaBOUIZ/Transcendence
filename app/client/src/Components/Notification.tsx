@@ -1,11 +1,11 @@
-import {useState} from "react"
-import { useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react"
 import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
+import UserContext from "../Context/UserContext";
 
 export default function Notification({ message }: {message: string}) {
 
-	const [isAnimationFinished, setIsAnimationFinished] = useState(false)
+	const {isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
 
   useEffect(() => {
     const roundTimeBarDiv = document.querySelector('.round-time-bar div')
@@ -14,10 +14,10 @@ export default function Notification({ message }: {message: string}) {
       setIsAnimationFinished(true)
     };
 
-    roundTimeBarDiv.addEventListener('animationend', handleAnimationEnd)
+    roundTimeBarDiv?.addEventListener('animationend', handleAnimationEnd)
 
     return () => {
-      roundTimeBarDiv.removeEventListener('animationend', handleAnimationEnd)
+      roundTimeBarDiv?.removeEventListener('animationend', handleAnimationEnd)
     };
   }, []);
 

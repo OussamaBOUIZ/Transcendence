@@ -1,0 +1,46 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "channel_name": "general",
+            "channel_type": "public",
+            "isClick": false
+        },
+        {
+            "id": 6,
+            "channel_name": "avito",
+            "channel_type": "protected",
+            "isClick": false
+        },
+        {
+            "id": 5,
+            "channel_name": "lost_and_found",
+            "channel_type": "public",
+            "isClick": false
+        },
+        {
+            "id": 4,
+            "channel_name": "msc",
+            "channel_type": "protected",
+            "isClick": false
+        },
+        {
+            "id": 3,
+            "channel_name": "global",
+            "channel_type": "public",
+            "isClick": false
+        },
+        {
+            "id": 2,
+            "channel_name": "random",
+            "channel_type": "public",
+            "isClick": false
+        },
+        {
+            "id": 8,
+            "channel_name": "bocal",
+            "channel_type": "protected",
+            "isClick": false
+        }
+    ]
+}

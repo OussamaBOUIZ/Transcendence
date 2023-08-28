@@ -4,6 +4,7 @@ import { ChannelService } from './channel.service';
 import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { UserOperationDto } from './dto/operateUserDto';
+import { protectedChannelDto } from './dto/protectedChannelDto';
 
 @Controller('channel')
 export class ChannelController {
@@ -51,10 +52,30 @@ export class ChannelController {
     {
         return await this.channelservice.getAllChannels(id);
     }
+
+    @Get('AccessibleChannels')
+    async getAccessibleChannels()
+    {
+        return await this.channelservice.getAccessibleChannels();
+    }
+    
+    @Post('checkProtected/:id')
+    async checkProtected(@Param('id', ParseIntPipe) id: number, @Body() protectedData: protectedChannelDto)
+    {
+        const protectedIsValid = await this.channelservice.checkProtectedChannel(protectedData, id);
+        if(typeof protectedIsValid ===  'string')
+            return protectedIsValid;
+        if(protectedIsValid === true)
+            await this.channelservice.addUserToChannel(id, protectedData.channelName);
+        return protectedIsValid;
+    }
+
+
     @Get('addToChannel/:id')
     async addToChannel(@Param('id', ParseIntPipe) id: number, @Query('channelName') channelName: string)
     {
-        await this.channelservice.addUserToChannel(id, channelName);
+        const ret = await this.channelservice.addUserToChannel(id, channelName);
+        return ret;
     }
     @Get('loadMessages/:id')
     async getChannelMessages(@Param('id', ParseIntPipe) id: number, @Query('userId') userId: number)

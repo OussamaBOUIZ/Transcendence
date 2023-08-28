@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { SocketContext } from './ChatRooms';
 import cube from "../../Assets/Icons/cube.svg"
 import settings from "../../Assets/Icons/gear-solid.svg"

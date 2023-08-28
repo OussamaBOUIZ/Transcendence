@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext, useMemo}  from 'react';
+import React, { useState, useMemo }  from 'react';
 import TopicRoom from './TopicRoom';
 import Rooms from './Rooms';
-import { SocketContext } from './ChatRooms';
 
 interface Elements {
     value: string;
