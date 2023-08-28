@@ -9,7 +9,7 @@ import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 
-@WebSocketGateway(1313, {cors: {
+@WebSocketGateway(1212, {cors: {
 	origin: "http://localhost:5173",
     credentials: true
 }}) 

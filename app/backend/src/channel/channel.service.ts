@@ -13,6 +13,7 @@ import { UserService } from 'src/user/user.service';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Socket } from 'dgram';
 import { channelMessageDto } from './dto/channelMessageDto';
+import { protectedChannelDto } from './dto/protectedChannelDto';
 
 
 @Injectable()
@@ -341,11 +342,53 @@ export class ChannelService {
     {
         const user = await this.userService.findUserWithChannels(id);
         const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
+        console.log('GET ALL channels')
         return AllChannels;
     }
+
+    async getAccessibleChannels()
+    {
+        return await this.channelRepo.find({
+            where: [
+                { channel_type: 'public' },
+                { channel_type: 'protected' },
+            ],
+            select: {
+                id: true,
+                channel_name: true,
+                channel_type: true,
+            }
+        });
+    }
+    
+    async checkProtectedChannel(channelData: protectedChannelDto, userId)
+    {
+        const user = await this.userService.findUserWithChannels(userId);
+        if(user.ownerRoleChannels.some(channel => channel.channel_name === channelData.channelName))
+            return 'You are already a member';
+        else if(user.adminRoleChannels.some(channel => channel.channel_name === channelData.channelName))
+            return 'You are already a member';
+        else if(user.userRoleChannels.some(channel => channel.channel_name === channelData.channelName))
+            return 'You are already a member';
+        const channel = await this.channelRepo.findOne({
+            where: {channel_name: channelData.channelName},
+        });
+        const checkPassword = await argon.verify(channel.channel_password, channelData.channelPassword);
+        console.log(checkPassword);
+        if(!checkPassword)
+            return false;
+        return true;
+    }
+
     async addUserToChannel(userId: number, channelName: string)
     {
-        const user = await this.userService.findUserById(userId);
+        const user = await this.userService.findUserWithChannels(userId);
+        if(user.ownerRoleChannels.some(channel => channel.channel_name === channelName))
+            return 'You are already a member';
+        else if(user.adminRoleChannels.some(channel => channel.channel_name === channelName))
+            return 'You are already a member';
+        else if(user.userRoleChannels.some(channel => channel.channel_name === channelName))
+            return 'You are already a member';
         const channel = await this.channelRepo.findOne({
             where: {channel_name: channelName},
             relations: {
@@ -354,6 +397,7 @@ export class ChannelService {
         });
         channel.channelUsers = channel.channelUsers !== null ? [...channel.channelUsers, user] : [user]; 
         await this.channelRepo.save(channel);
+        return null;
     }
 }
  
