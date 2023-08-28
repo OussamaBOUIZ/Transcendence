@@ -81,6 +81,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		
 	}
  
+	@SubscribeMessage('updateInbox')
+	async onUpdateInbox(socket: Socket, payload: number) {
+
+		// the author is the payload the receiver is who is connected to socket 
+		const author = await this.userService.findUserById(payload)
+		const receiver = socket.data.user.email;
+
+		// check if Two users are in database otherwise emit error
+		
+		const inbox = await this.inboxService.getInboxBySenderId(author, receiver)
+		this.server.to(socket.id).emit('updateInbox', inbox)
+	}
+
 
 	async afterInit(client: Socket) {
 		await client.use(SocketAuthMiddleware(this.userService) as any)
