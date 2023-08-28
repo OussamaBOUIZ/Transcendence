@@ -10,6 +10,8 @@ export function useFetchJoinedRooms() {
     const [publicRooms, setPublicRooms] = useState<rooms[]>([]);
     const [protectedRooms, setProtectedRooms] = useState<rooms[]>([]);
     const [privateRooms, setPrivateRooms] = useState<rooms[]>([]);
+
+
     useEffect(() => {
         const getData = async () => {
             try {
