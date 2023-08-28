@@ -34,20 +34,34 @@ export class UserService {
        return await this.userRepo.save(user)
     }
 
-    async blockUser(userId: number, user: User) {
+    async blockUser(userId: number, user_email: string) {
+
+        const user = await this.userRepo.findOne({
+            relations: {
+                blocked_users: true
+            },
+            where: {
+                email: user_email
+            }
+        })
+
         const blockedUser = await this.userRepo.findOne({
             where: { id: userId }
         })
+        
         if (!blockedUser)
             throw new HttpException('user not found', HttpStatus.NOT_FOUND)
         if (user.id == userId) {
             throw new HttpException('You can not block yourself', HttpStatus.BAD_REQUEST)
         }
+        console.log('b user', user.blocked_users);
+        console.log('b user', user);
+        
         if (!user.blocked_users)
             user.blocked_users = []
 
         user.blocked_users = [...user.blocked_users, blockedUser]
-        console.log(await this.userRepo.save(user))
+        await this.userRepo.save(user)
     }
 
     async saveUser(user: User) {
@@ -65,10 +79,8 @@ export class UserService {
         return await this.userRepo.findOne({
             select: {
                 id: true,
-                username: true,
                 blocked_users: {
-                    id: true,
-                    username: true
+                    id: true
                 },
             },
             relations: {
@@ -76,6 +88,11 @@ export class UserService {
             },
             where: {
                 id: userId,
+            },
+            order: {
+                blocked_users: {
+                    id: 'ASC'
+                }
             }
         })
     }
