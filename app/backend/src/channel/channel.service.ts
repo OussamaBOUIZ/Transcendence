@@ -342,7 +342,6 @@ export class ChannelService {
     {
         const user = await this.userService.findUserWithChannels(id);
         const AllChannels = [...user.userRoleChannels, ...user.adminRoleChannels, ...user.ownerRoleChannels];
-        console.log('GET ALL channels')
         return AllChannels;
     }
 

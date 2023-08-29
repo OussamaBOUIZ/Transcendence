@@ -26,7 +26,6 @@ export const SocketContext = createContext({});
 export default function ChatRooms () {
 
     const [socket, setSocket] = useState<Socket>()
-    const [init, setInit] = useState<boolean>(false)
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
@@ -110,7 +109,6 @@ export default function ChatRooms () {
             withCredentials: true,
         })
         setSocket(fd)
-        setInit(prev => !prev) 
 
         return  () => {
             if (socket)

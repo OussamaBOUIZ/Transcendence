@@ -2,7 +2,6 @@ import React from 'react'
 import "../../scss/utils.scss"
 import axios from "axios"
 import {User} from '../../../../global/Interfaces'
-// import { getUserData } from '../../Hooks/getUserData'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 

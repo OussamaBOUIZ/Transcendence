@@ -1,7 +1,5 @@
-import { useContext } from "react"
 import {getUserData} from "../../Hooks/getUserData" 
 import axios from 'axios'
-import UserContext from "../../Context/UserContext"
 
 export const loadingMessages = (id, user, isBanned, setMessageList) => {
     return () => {
