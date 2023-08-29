@@ -6,7 +6,7 @@ import { SocketContext } from './ChatRooms'
 import axios from "axios"
 
 
-export default function UserCard ({user, message, friend, add}: {user: User | null, message: boolean, friend: boolean, add: boolean}) {
+export default function UserCard ({user, message, friend, add}: {user: User, message?: boolean, friend?: boolean, add?: boolean}) {
     const {roomData, setShowSearch} = useContext(SocketContext)
 
     const handleAddUser = () => {

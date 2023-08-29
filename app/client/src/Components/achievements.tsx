@@ -1,5 +1,5 @@
 import React, {useEffect} from "react"
-import axios from "axios"
+import axios, {AxiosResponse} from "axios"
 import "../scss/achievements.scss"
 import Achieve from "../Assets/Isometric_Fantasy_3d_vray_render_antiquities_black_statue_liqu_2.jpeg"
 import lock from "../Assets/Icons/lock-solid.svg"

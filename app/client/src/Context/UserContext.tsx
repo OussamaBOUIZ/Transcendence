@@ -3,12 +3,21 @@ import { User } from '../../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 
-const UserContext = createContext({});
+type typeProps = {
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  authenticated: boolean;
+  setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  isAnimationFinished: boolean;
+  setIsAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export function UserProvider ({children}) {
-    const [user, setUser] = useState<User | null>(null);
+const UserContext = createContext<typeProps>({} as typeProps);
+
+export function UserProvider ({children}: {children: React.ReactNode}) {
+    const [user, setUser] = useState<User>({} as User);
     const [authenticated, setAuthenticated] = useState<boolean>(false);
-    const [isAnimationFinished, setIsAnimationFinished] = useState(false)
+    const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false)
 
     const fetchUserData = async () => {
         try {

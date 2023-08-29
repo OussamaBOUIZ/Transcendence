@@ -2,12 +2,15 @@ import React, { useState, useMemo }  from 'react';
 import TopicRoom from './TopicRoom';
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import Rooms from './Rooms';
+import {rooms} from "../../../../global/Interfaces"
+import {nanoid} from "nanoid"
 
 interface Elements {
+    key: string;
     value: string;
     mode: boolean;
     setter: React.Dispatch<React.SetStateAction<boolean>>;
-    type: "public" | "protected" | "private";
+    rooms: rooms[]
 }
 
 export default function InboxRooms() {
@@ -20,17 +23,17 @@ export default function InboxRooms() {
 
 
     const array = useMemo<Elements[]>(() => [
-        { value: "Public Channels", mode: PublicMode, setter: setPublicMode, rooms: publicRooms },
-        { value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, rooms: protectedRooms },
-        { value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, rooms: privateRooms }
+        { key: nanoid(), value: "Public Channels", mode: PublicMode, setter: setPublicMode, rooms: publicRooms },
+        { key: nanoid(), value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, rooms: protectedRooms },
+        { key: nanoid(), value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, rooms: privateRooms }
     ], [PublicMode, publicRooms, ProtectedMode, protectedRooms, PrivateMode, privateRooms])
 
     useMemo(() => {
         const updatedRooms = array.map((element) => (
-            <>
+            <div key={element.key}>
                 <TopicRoom roomType={element.value} mode={element.mode} setter={element.setter} />
                 {element.mode && <Rooms roomsToRender={element.rooms} />}
-            </>
+            </div>
         ));
         setJoinedRooms(updatedRooms);
     }, [array]);

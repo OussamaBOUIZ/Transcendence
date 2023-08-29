@@ -240,7 +240,7 @@ export class UserService {
 
 
     async searchUser(username: string) {
-        return await this.userRepo.find({
+        return await this.userRepo.findOne({
             where: {
                 username: username
             },

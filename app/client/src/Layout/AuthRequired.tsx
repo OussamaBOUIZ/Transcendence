@@ -1,5 +1,5 @@
 import React, {useEffect, useContext} from 'react'
-import {Outlet, Navigate} from 'react-router-dom'
+import {Outlet} from 'react-router-dom'
 import axios from 'axios'
 import UserContext from '../Context/UserContext'
 
@@ -12,7 +12,7 @@ export default function AuthRequired () {
         const verifyAuthentication = async () => {
             
             try {
-                const response = await axios.get("/api/auth/tokenValidity");
+                const response = await axios.get<boolean>("/api/auth/tokenValidity");
                 setAuthenticated(response.data)
             }
             catch (error) {
@@ -21,7 +21,7 @@ export default function AuthRequired () {
             }
 
         }
-        verifyAuthentication();
+        void verifyAuthentication();
     }, [authenticated])
 
     

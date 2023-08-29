@@ -3,14 +3,14 @@ import {useState, useEffect} from "react";
 import { getUserImage } from "./getUserImage";
 import {FriendUser} from "../../../global/Interfaces"
 
-export const getAllFriends = (id: number): FriendUser[] | [] => {
+export const useFetchAllFriends = (id: number): FriendUser[] | [] => {
 
   const [allFriends, setAllFriends] = useState<FriendUser[]>([]);
 
     const getData = async (id: number): Promise<FriendUser[] | []> => {
         try {
           if (id) {
-            const res = await axios.get(`/api/user/allfriends/${id}`);
+            const res = await axios.get<{id: number, friends: FriendUser[]}>(`/api/user/allfriends/${id}`);
             return res.data.friends;
           }
         } catch (err) {
@@ -33,8 +33,8 @@ export const getAllFriends = (id: number): FriendUser[] | [] => {
           setAllFriends(friendswithImage);
         };
     
-        fetchFriends();
-      }, []);
+      void fetchFriends();
+      }, [id]);
     
     return allFriends
 }

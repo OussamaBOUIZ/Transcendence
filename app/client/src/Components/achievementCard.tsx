@@ -1,17 +1,18 @@
-import { getAllAchievements } from "../Hooks/getAllAchievements"
+import { useAllAchievements } from "../Hooks/useAllAchievements"
 import awardIcon from "../Assets/Icons/award.svg";
 import ProfileImage from "./profileImage";
 import locked from "../Assets/Icons/lock-solid.svg"
 import unlocked from "../Assets/Icons/lock-open-solid.svg"
 import {User} from "../../../global/Interfaces"
+import React from "react";
 
 export default function AchievementCard({ user }: {user: User}) {
 
-    const allAchievements = getAllAchievements(user?.id);
+    const allAchievements = useAllAchievements(user?.id);
 
     const AchievementsToggle = allAchievements.map((award) => {
         return (
-            <div className={`award-item ${award.is_achieved}`} key={award.id}>
+            <div className={`award-item ${String(award.is_achieved)}`} key={award.id}>
                 <ProfileImage image={award.image} size="medium" />
                 <div className="achievement-name">
                     <p>{award.badge_name}</p>

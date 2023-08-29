@@ -1,7 +1,9 @@
 import {Message} from "../../../../global/Interfaces"
 import { getUserImage } from "../../Hooks/getUserImage";
+import {Socket} from "socket.io-client"
+import {User} from "../../../../global/Interfaces"
 
-export const listener = (socket, setMessageList, setBanned) => {
+export const listener = (socket: Socket | undefined, user: User, setMessageList: React.Dispatch<React.SetStateAction<Message[]>>, setBanned: React.Dispatch<React.SetStateAction<boolean>>) => {
     return () => {
         socket?.on("sendChannelMessage", async (data: Message)  => {
             console.log('getChannelMessage')
