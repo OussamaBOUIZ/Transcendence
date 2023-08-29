@@ -55,7 +55,7 @@ const handleReceivedMsg = (recMsg: MessageData,
 }
 
 
-const resetUnseenMsgCounter = (prevInbox: InboxItem[], id) => {
+const resetUnseenMsgCounter = (prevInbox: InboxItem[], id:number) => {
     return prevInbox?.map((inbx) => inbx.id === id ? {...inbx, unseenMessage: 0}: inbx)
 }
 

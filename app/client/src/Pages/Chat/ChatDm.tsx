@@ -9,15 +9,12 @@ import axios from 'axios'
 import InboxDm from './InboxDm';
 import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
-import ChatVoid from './ChatVoid';
 import InboxContext from '../../Context/InboxContext';
-import { shortenMessage } from '../../Helpers/utils';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import { handleReceivedMsg, resetUnseenMsgCounter, updateInbox } from '../../Helpers/chatdm.utils';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
-    const initialRender = useRef(true)
     const {id} = useParams()
     const {inboxList, setInboxList} = useContext(InboxContext)
 
@@ -40,7 +37,6 @@ export default function ChatDm () {
                 message: messageToSendValue,
                 creationTime : new Date()
             }
-
             setMessageToSendValue("")
             setMessagesList((prevList:MessageData[]) => [...prevList, msgToSend])
             socket?.emit('SendMessage', msgToSend)
@@ -68,17 +64,19 @@ export default function ChatDm () {
 
     /**EFFECTS     */
     useEffect(() => {
+        console.log('inbox at start', inboxList);
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
-            }}) 
+            }})
+        
         console.log('id has changed: ', id);
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
 
-        setInboxList((prevInbox) => resetUnseenMsgCounter(prevInbox, id))
+        setInboxList((prevInbox:InboxItem[]) => resetUnseenMsgCounter(prevInbox, id))
         //cleanup function
         return  () => {
             if (socket)

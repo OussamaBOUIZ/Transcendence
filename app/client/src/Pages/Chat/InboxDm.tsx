@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MessageOverview from './MessageOverview';
 import { InboxItem } from '../../../../global/Interfaces';
 import InboxContext from '../../Context/InboxContext';
@@ -6,7 +6,8 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 export default function InboxDm () {
     const {inboxList} = useContext(InboxContext);
-    useEffectOnUpdate(() => console.log('inboxlist update', inboxList), [inboxList])
+
+
     return (
         <div className="chat_inbox">
             {inboxList?.map((item:InboxItem) => {
@@ -19,7 +20,7 @@ export default function InboxDm () {
                     time=""
                     username={item?.user?.username}
                     />
-                    )
+                )
             })}
         </div>
     );
