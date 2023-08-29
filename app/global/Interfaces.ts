@@ -84,7 +84,7 @@ interface channelData {
 
 interface rooms {
     channel_type: string;
-    id: string | undefined,
+    id: number;
     channel_name: string,
 }
 
@@ -98,7 +98,7 @@ interface Message {
     id?: number,
     message: string,
     fromUser: number,
-    CreatedAt: Date,
+    CreatedAt?: Date,
     channelName?: string,
     image?: string,
     username?: string,

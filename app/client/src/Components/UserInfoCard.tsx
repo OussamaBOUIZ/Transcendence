@@ -8,8 +8,8 @@ import MutePopUp from "../Pages/Chat/MutePopUp"
 
 export default function UserInfoCard(props: userInfoCard) {
 
-    const [isHovered, setIsHovered] = useState(false);
-    const [isMuteClicked, setIsClicked] = useState(false);
+    const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [isMuteClicked, setIsClicked] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
       setIsHovered(true);

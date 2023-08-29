@@ -1,11 +1,12 @@
-import { getAllFriends } from "../Hooks/getAllFriends"
+import { useFetchAllFriends } from "../Hooks/useFetchAllFriends"
 import friendsIcon from "../Assets/Icons/group.svg"
 import {User} from "../../../global/Interfaces"
 import UserInfoCard from "./UserInfoCard"
+import React from "react";
 
 export default function FriendsCard({ user }: {user: User}) {
 
-    const allFriends = getAllFriends(user?.id);
+    const allFriends = useFetchAllFriends(user?.id);
 
     const FriendsToggle = allFriends.map((friend) => {
         return (
@@ -18,6 +19,8 @@ export default function FriendsCard({ user }: {user: User}) {
                 wins={friend.stat.wins}
                 losses={friend.stat.losses}
                 flex="row"
+                id={friend.id}
+                isUnderMyGrade={false}
             />
         );
     });
@@ -31,8 +34,8 @@ export default function FriendsCard({ user }: {user: User}) {
                     <span>
                     {
                         allFriends.length > 1 ?
-                        allFriends.length + " friends" :
-                        allFriends.length + " friend"
+                        String(allFriends.length) + " friends" :
+                        String(allFriends.length) + " friend"
                     }
                     </span>
                 </div>

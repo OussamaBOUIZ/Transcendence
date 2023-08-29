@@ -3,7 +3,7 @@ import GameHistory from "../../Components/gameHistory";
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import {User} from "../../../../global/Interfaces"
 
 
@@ -19,8 +19,8 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                 console.log(err)
             }
         }
-        SendRequest();
-    }, [])
+        void SendRequest();
+    }, [UserData.id])
 
     const level = 70
     return (

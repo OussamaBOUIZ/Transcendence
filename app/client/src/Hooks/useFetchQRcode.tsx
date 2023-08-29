@@ -1,19 +1,19 @@
 import {useState, useEffect} from "react";
 import axios from 'axios';
 
-export const getQRcode = (): string => {
+export const useFetchQRcode = (): string => {
     const [QRcode, setQRcode] = useState<string>("");
     
     useEffect(() => {
         const getInfo = async () => {
           try {
-            const response = await axios.get("/api/auth/qrcode");
+            const response = await axios.get<string>("/api/auth/qrcode");
             setQRcode(response.data);
           } catch (error) {
             console.log(error);
           }
         };
-        getInfo();
+        void getInfo();
       }, []);
 
     return QRcode;

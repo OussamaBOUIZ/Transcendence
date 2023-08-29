@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { SocketContext } from './ChatRooms';
 import ChannelInitAction from "./ChannelInitAction"
 
-export default function ChatRoomWindow({messagesElements, setNotif}) {
+export default function ChatRoomWindow({messagesElements, setNotif}: {messagesElements: React.JSX.Element[], setNotif: React.Dispatch<React.SetStateAction<string>>}) {
     const {id, outerDiv, innerDiv, isBanned} = useContext(SocketContext)
     if (!id) {
         return (

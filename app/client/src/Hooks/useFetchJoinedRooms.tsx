@@ -17,7 +17,6 @@ export function useFetchJoinedRooms() {
                 setTimeout( () => {
                     const getInfo = async () => {
                         const res: AxiosResponse<rooms[]> = await axios.get(`/api/channel/AllChannels/${user?.id}`);
-                        console.log(res.data)
                         setPublicRooms(res.data.filter((room) => room.channel_type === 'public'));
                         setProtectedRooms(res.data.filter((room) => room.channel_type === 'protected'));
                         setPrivateRooms(res.data.filter((room) => room.channel_type === 'private'));

@@ -1,7 +1,5 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import ChannelInfo from './ChannelInfo';
-
-export const UpdateContext = createContext({})
 
 export default function ChatOverview({id}: {id: string | undefined}) {
 

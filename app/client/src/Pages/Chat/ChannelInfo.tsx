@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import axios from "axios"
+import axios, {AxiosResponse} from "axios"
 import {channelData} from "../../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
 import { SocketContext } from "./ChatRooms";
@@ -11,7 +11,7 @@ export default function ChannelInfo() {
     useEffect(() => {
         const getChannelData = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelData/${id}`)
+                const res: AxiosResponse<channelData> = await axios.get(`/api/channel/channelData/${id}`)
                 setChannelData(res.data)
             }
             catch (e) {

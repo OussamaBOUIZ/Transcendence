@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import { getUserImage } from "./getUserImage";
 import {PlayerData} from "../../../global/Interfaces"
 

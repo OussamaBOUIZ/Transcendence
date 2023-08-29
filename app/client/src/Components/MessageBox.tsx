@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function MessageBox ({children, username, avatar, id, isBlocked}) {
+export default function MessageBox ({children, username, avatar, id, isBlocked}: {children: React.ReactNode, username: string| undefined, avatar: string | undefined, id: boolean, isBlocked: boolean}) {
     const styleHiddenMessage = (isBlocked) ? 'bg-room-active-bar opacity-80' : 'bg-messages rounded-tl-none'
     return (
         <article className={`flex ${id ? "items-start" : "items-end"} my-3 flex-col`}>

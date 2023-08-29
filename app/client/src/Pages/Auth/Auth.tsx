@@ -1,8 +1,8 @@
 import "../../scss/auth.scss";
 import axios from "axios"
-import {useState} from "react"
+import React, {useState} from "react"
 import Notification from "../../Components/Notification"
-import { getQRcode } from "../../Hooks/getQRcode"
+import { useFetchQRcode } from "../../Hooks/useFetchQRcode"
 
 interface Inputs {
     [id: number]: string;
@@ -19,7 +19,7 @@ export default function Auth() {
 
     const [notif, setNotif] = useState<string>("")
 
-    const QRcode = getQRcode();
+    const QRcode = useFetchQRcode();
 
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -54,7 +54,7 @@ export default function Auth() {
                 setNotif("The code is not numeric");
             }
         }
-        sendCode();
+        void sendCode();
     };
 
     const handleChange = (event: { target: { id: string; value: string; }; }) => {
