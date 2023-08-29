@@ -83,14 +83,13 @@ export class ChatGatewayService {
         console.log('message:', messageDto)
 
         const receiver = await this.getUserById(messageDto.receiverId)
-        console.log(receiver);
         
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
         this.logger.log({receiver})
         this.logger.log(socket.data.user.email)
         this.logger.log({author})
  
-        if (!author || !receiver) {
+        if (!author || !receiver) { 
             throw {
                 msg: 'Invalid sender or receiver',
                 socket: author.socketId
@@ -111,7 +110,8 @@ export class ChatGatewayService {
         await this.inboxService.saveInbox(receiver, author, messageDto)
         const ss: sentMsg = {
             authorId: author.id,
-            socketId: receiver.socketId
+            socketId: receiver.socketId,
+            username: author.username
         }
         return ss
     }

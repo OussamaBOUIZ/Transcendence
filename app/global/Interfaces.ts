@@ -45,6 +45,7 @@ interface Leaders {
 export interface MessageData {
     receiverId?: number,
     authorId?:number,
+    username?:string,
     message: string,
     creationTime: Date,
 }
@@ -82,8 +83,10 @@ export interface SStat {
     stat: SStat;
 }
 
+
 export interface InboxItem {
-    id: number;
+    id?: number;
+    user: {id:number, username:string};
     lastMessage: string;
     userName?: string;
     unseenMessage?: number;

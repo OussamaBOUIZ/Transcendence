@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useContext, useState} from 'react'
+import React, {useEffect, useRef, useContext, useState, SetStateAction} from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import io, {Socket} from 'socket.io-client'
@@ -13,12 +13,13 @@ import ChatVoid from './ChatVoid';
 import InboxContext from '../../Context/InboxContext';
 import { shortenMessage } from '../../Helpers/utils';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import { handleReceivedMsg, resetUnseenMsgCounter, updateInbox } from '../../Helpers/chatdm.utils';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
     const initialRender = useRef(true)
     const {id} = useParams()
-    const [inbox, setInbox] = useState<InboxItem[]>([]);
+    const {inboxList, setInboxList} = useContext(InboxContext)
 
     if (id === undefined) {
         return (<Navigate to="/chat/init"/>);
@@ -30,11 +31,7 @@ export default function ChatDm () {
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState();
 
-    function handleChange (e) :void {
-        setMessageToSendValue(e.target.value)
-    }
-
-    function handleSubmit (e): void {
+    function handleSubmit (e: React.FormEventHandler) {
         e.preventDefault()
         if (messageToSendValue !== "") {
             const msgToSend: MessageData = {
@@ -68,7 +65,7 @@ export default function ChatDm () {
             console.error(error);
         }
    }
-    
+
     /**EFFECTS     */
     useEffect(() => {
         const value = document.cookie.split('=')[1]
@@ -80,9 +77,8 @@ export default function ChatDm () {
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
-        setInbox((prevInbox:InboxItem[]) => {
-            return prevInbox?.map((inbx) => inbx.id === Number(id) ? {...inbx, unseenMessage: 0}: inbx)
-        })
+
+        setInboxList((prevInbox) => resetUnseenMsgCounter(prevInbox, id))
         //cleanup function
         return  () => {
             if (socket)
@@ -93,52 +89,14 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
-            if (recMsg?.authorId === Number(id))
-                setMessagesList((prevList:MessageData[]) => [...prevList, recMsg])
-            else {
-                console.log('recMsg : ', recMsg.message)
-                setInbox((prevInbox:InboxItem[]) => {
-                    if (prevInbox.find((inbx) => inbx.id === recMsg?.authorId) === undefined) {
-                        return [...prevInbox, 
-                                {id: recMsg?.authorId, 
-                                 lastMessage: shortenMessage(recMsg?.message),
-                                 unseenMessage: 1
-                                } as InboxItem
-                                ]
-                    } else {
-                        return prevInbox.map((inbx) => {
-                            return inbx?.id === recMsg?.authorId 
-                            ? {...inbx, lastMessage:shortenMessage(recMsg?.message), 
-                                unseenMessage: inbx?.unseenMessage ?  inbx.unseenMessage + 1 : 1}
-                            : inbx
-                        })
-                    }
-                    
-                })
-            }
+            return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
         })
     }, [socket])
 
-    useEffect(() => {
-        console.log('messages list got updated!!!', messagesList);
-        console.log('inbox : ', inbox)
-        setInbox((prevInbox:InboxItem[]) => {
-                if (prevInbox?.length) {
-                    return prevInbox?.map((item:InboxItem) => {
-                        return (
-                            item.id ===  Number(id) ?
-                            {...item, lastMessage : shortenMessage(messagesList[messagesList.length - 1].message)}:
-                            item
-)
-                        })
-                } else {
-                    return  messagesList?.length ? [{
-                        id: Number(id),
-                        lastMessage: shortenMessage(messagesList[messagesList.length - 1].message),
-                    }] : [];
-                }
-            })
-    },[messagesList])
+    useEffectOnUpdate(() => {
+        updateInbox(setInboxList, messagesList, Number(id))
+    }, [messagesList])
+    
     
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
@@ -154,7 +112,7 @@ export default function ChatDm () {
     
     return (
         <>
-            <InboxDm inbox={inbox}/>
+            <InboxDm/>
             <div className="chat_main">
                 <ChatHeader
                 avatar={avatar}
@@ -169,7 +127,7 @@ export default function ChatDm () {
                 <form className="chat_input" onSubmit={handleSubmit}>
                     <textarea 
                     placeholder="Type something"
-                    onChange={handleChange}
+                    onChange={(e) => setMessageToSendValue(e.target.value)}
                     value={messageToSendValue}
                     />
                     <button type="submit">Send</button>

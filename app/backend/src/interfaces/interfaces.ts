@@ -31,11 +31,13 @@ export class  MessageDto {
 
 export interface sentMsg {
 	authorId: number,
-	socketId: string
+	socketId: string,
+	username: string
 }
 
 export interface MessageData {
 	authorId: number,
+	username: string,
     message: string,
     creationTime: Date,
 }

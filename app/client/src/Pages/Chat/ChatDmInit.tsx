@@ -1,10 +1,13 @@
 import React from 'react'
 import ChatSearchBox from './ChatSearchBox';
 import ChatOverview from './ChatOverview';
+import InboxDm from './InboxDm';
 
 
 export default function ChatDmInit () {
     return (
+        <>
+        <InboxDm />
         <div className="chat_main chat_main_init">
             <article>
                 <h2>
@@ -21,5 +24,6 @@ export default function ChatDmInit () {
             </article>
             <ChatSearchBox />
         </div>
+        </>
     );
 }
