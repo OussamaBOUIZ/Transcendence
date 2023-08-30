@@ -90,7 +90,7 @@ export interface InboxItem {
     lastMessage: string;
     userName?: string;
     unseenMessages: number;
-    CreatedAt: Date;
+    CreatedAt: string;
 }
 
 export type { FriendUser, Achievement, Leaders, Data};
