@@ -1,5 +1,4 @@
 import { InboxItem, MessageData } from "../../../global/Interfaces";
-import { shortenMessage } from "./utils";
 import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
@@ -8,7 +7,7 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                     return prevInbox.map((item) => {
                         return (
                             item.user.id ===  id ?
-                            {...item, lastMessage : shortenMessage(messages[messages?.length - 1]?.message),
+                            {...item, lastMessage : messages[messages?.length - 1]?.message,
                              CreatedAt: messages[messages?.length - 1]?.creationTime
                             }:
                             item
@@ -17,7 +16,7 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                 } else {
                     return  [...prevInbox, {
                         user: {id: id, username: messages[messages?.length - 1]?.username},
-                        lastMessage: shortenMessage(messages[messages?.length - 1]?.message),
+                        lastMessage: messages[messages?.length - 1]?.message,
                         CreatedAt: messages[messages?.length - 1]?.creationTime,
                     } as InboxItem];
                 }
@@ -38,7 +37,7 @@ const handleReceivedMsg = (recMsg: MessageData,
             if (prevInbox.find((inbx) => inbx.user.id === recMsg?.authorId) === undefined) {
                 return [...prevInbox, 
                         {user: {id: recMsg?.authorId, username: recMsg?.username}, 
-                            lastMessage: shortenMessage(recMsg?.message),
+                            lastMessage: recMsg?.message,
                             unseenMessages: 1,
                             CreatedAt: recMsg.creationTime
                         } as InboxItem
@@ -46,7 +45,7 @@ const handleReceivedMsg = (recMsg: MessageData,
             } else {
                 return prevInbox.map((inbx) => {
                     return inbx.user.id === recMsg?.authorId
-                    ? {...inbx, lastMessage:shortenMessage(recMsg?.message),
+                    ? {...inbx, lastMessage:recMsg?.message,
                         unseenMessages: inbx?.unseenMessages ?  inbx.unseenMessages + 1 : 1,
                         CreatedAt: recMsg.creationTime
                     }

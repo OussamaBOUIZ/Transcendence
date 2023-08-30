@@ -7,6 +7,6 @@ export default function useEffectOnUpdate (effectFunc, deps:any[]) {
             initialRender.current = false
             return
         }
-        effectFunc()
+        return effectFunc()
     }, deps)
 }

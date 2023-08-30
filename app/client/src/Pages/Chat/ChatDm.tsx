@@ -75,23 +75,26 @@ export default function ChatDm () {
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
+
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
                 console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
-                return inbx.user.id === id ? {...inbx, unseenMessages: 0}: inbx
+                return inbx.user.id == id ? {...inbx, unseenMessages: 0}: inbx
             })
         })
+        
         console.log("inbox", inboxList)
         //cleanup function
         return  () => {
-            if (socket)
-                socket.disconnect();
+            // if (socket) 
+                newSocket.disconnect();
         }
     } 
     , [id])
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
+            console.log('recMsg: ', recMsg)
             return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
         })
         setUpdate((prevUpdate:number) => prevUpdate + 1);
