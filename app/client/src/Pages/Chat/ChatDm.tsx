@@ -75,7 +75,12 @@ export default function ChatDm () {
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
-        resetUnseenMsgCounter(setInboxList, id);
+        setInboxList((prevInbox:InboxItem[]) => {
+            return prevInbox.map((inbx) => {
+                console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
+                return inbx.user.id === id ? {...inbx, unseenMessages: 0}: inbx
+            })
+        })
         console.log("inbox", inboxList)
         //cleanup function
         return  () => {
@@ -87,6 +92,7 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
+            reorderInbox(recMsg.authorId, setInboxList)
             return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
         })
     }, [socket])

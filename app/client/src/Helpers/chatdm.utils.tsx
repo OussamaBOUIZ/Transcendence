@@ -18,6 +18,7 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                         lastMessage: shortenMessage(messages[messages?.length - 1]?.message),
                     } as InboxItem];
                 }
+            //reordering the inbox;
             })
     }
 
@@ -51,14 +52,17 @@ const handleReceivedMsg = (recMsg: MessageData,
     }
 }
 
+const reorderInbox = (userId:number, setter:React.Dispatch<SetStateAction<InboxItem[]>>) => {
+    setter((prevInbox) => {
+    const recentElement:InboxItem = prevInbox.find((inbx) => inbx?.user.id === userId)
 
-const resetUnseenMsgCounter = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, id:number) => {
-    setter((prevInbox:InboxItem[]) => {
-        return prevInbox.map((inbx) => {
-            console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
-            return inbx.user.id === id ? {...inbx, unseenMessages: 0}: inbx
-        })
+    return [recentElement, ...prevInbox.filter((item) => item.user.id !== userId)]
     })
 }
 
-export {updateInbox, handleReceivedMsg, resetUnseenMsgCounter};
+// const resetUnseenMsgCounter = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, id:number) => {
+    
+// }
+
+// export {updateInbox, handleReceivedMsg, resetUnseenMsgCounter};
+export {updateInbox, handleReceivedMsg, reorderInbox};
