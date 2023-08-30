@@ -41,7 +41,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log(this.server.sockets.adapter.rooms.get("room").size);
 
 		if (this.server.sockets.adapter.rooms.get("room").size == 2) {
-			socket.emit("notHost", "host")
+			socket.emit("notHost")
 		}
     }
 

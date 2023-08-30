@@ -18,7 +18,7 @@ const PW: number = 10;
 const GAP: number = 10;
 const PSPEED: number = 10;
 const RADIUS: number = 10;
-const SPEED: number = 1;
+const SPEED: number = 2;
 
 const vel: Velocity = {
     x: 0,
@@ -65,15 +65,18 @@ class Ball {
     
     updateBall(p5: any, isHost: boolean) {
         this.drawBall(p5);
-        this.x += vel.x;
-        this.y += vel.y;
-        
-        if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
-            vel.y *= -1;
 
-        if (this.x < 0 || this.x > p5.width) {
-            if (isHost)
-                reset(p5, isHost);
+        if (isHost) {
+            this.x += vel.x;
+            this.y += vel.y;
+            
+            if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
+                vel.y *= -1;
+
+            if (this.x < 0 || this.x > p5.width) {
+                if (isHost)
+                    reset(p5, isHost);
+            }
         }
     }
 }
@@ -108,7 +111,7 @@ class Pad {
 
         if (isHost && collision(this, ball)) {
             const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
-            const angle: number = (p5.PI / 10) * diff;
+            const angle: number = (p5.PI / 8) * diff;
 
             let dir: number = ball.x > p5.width / 2 ? -1 : 1;
 
@@ -165,10 +168,14 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (props.isHost)
             props.socket?.emit("game", {padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
         else 
-            props.socket?.emit("game", {padX: rightPad.y});
+            props.socket?.emit("game", {padX: leftPad.y});
 
         props.socket?.on("movePad", (data: any) => {
-            leftPad.y = data.padX;
+            if (props.isHost)    
+                leftPad.y = data.padX;
+            else
+                rightPad.y = data.padX;
+
             if (!props.isHost) {
                 ball.x = data.ballX;
                 ball.y = data.ballY;
@@ -181,10 +188,14 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             console.log(data);
         })
 
-        leftPad.updatePad(p5, ball, false, props.isHost);
-        rightPad.updatePad(p5, ball, true, props.isHost);
-        if (props.isHost)
-            ball?.updateBall(p5, props.isHost);
+        if (props.isHost) {
+            leftPad.updatePad(p5, ball, false, props.isHost);
+            rightPad.updatePad(p5, ball, true, props.isHost);
+        } else {
+            leftPad.updatePad(p5, ball, true, props.isHost);
+            rightPad.updatePad(p5, ball, false, props.isHost);
+        }
+        ball?.updateBall(p5, props.isHost);
     }
 }
 

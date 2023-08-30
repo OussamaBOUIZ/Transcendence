@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import {io, Socket} from "socket.io-client";
 
 import { ReactP5Wrapper } from "react-p5-wrapper"
@@ -14,8 +14,17 @@ export default function Game () {
     // const { user } = useContext(UserContext);
 
     useEffectOnUpdate( () => {
-        setSocket(io("ws://localhost:4343"));
+        const newSocket: any = io("ws://localhost:4343");
+        setSocket(newSocket);
+
+        return () => {
+            console.log("component unmount");
+            newSocket.disconnect();
+        };
     }, [])
+
+    console.log(socket);
+    
 
 
     return (
