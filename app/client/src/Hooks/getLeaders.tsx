@@ -18,7 +18,7 @@ export const getLeaders = (): Leaders[] | [] => {
           );
           setLeaders(leadersWithImages);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       };
   

@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react'
-import { io } from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 
 import { ReactP5Wrapper } from "react-p5-wrapper"
 
@@ -9,9 +9,9 @@ import UserContext from '../../Context/UserContext';
 
 
 export default function Game () {
-    const [rotation, setRotation] = useState(6);
-    const [socket, setSocket] = useState<any | null>();
-    const { user } = useContext(UserContext);
+    const [isHost, setIsHost] = useState<boolean>(true);
+    const [socket, setSocket] = useState<any>(null);
+    // const { user } = useContext(UserContext);
 
     useEffectOnUpdate( () => {
         setSocket(io("ws://localhost:4343"));
@@ -19,6 +19,12 @@ export default function Game () {
 
 
     return (
-        <ReactP5Wrapper sketch={sketch} socket={socket} theme="black"/>
+        <ReactP5Wrapper 
+            sketch={sketch}
+            socket={socket}
+            theme="black"
+            isHost={isHost}
+            setIsHost={setIsHost}
+        />
     );
 }

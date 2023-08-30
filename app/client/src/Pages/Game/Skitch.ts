@@ -4,6 +4,8 @@ interface MySketchProps extends SketchProps {
     rotation: number;
     theme: string;
     socket: any;
+    isHost: boolean;
+    setIsHost: any;
 }
 
 interface Velocity {
@@ -16,7 +18,7 @@ const PW: number = 10;
 const GAP: number = 10;
 const PSPEED: number = 10;
 const RADIUS: number = 10;
-const SPEED: number = 6;
+const SPEED: number = 1;
 
 const vel: Velocity = {
     x: 0,
@@ -61,7 +63,7 @@ class Ball {
         p5.ellipse(this.x, this.y, this.r * 2);
     }
     
-    updateBall(p5: any) {
+    updateBall(p5: any, isHost: boolean) {
         this.drawBall(p5);
         this.x += vel.x;
         this.y += vel.y;
@@ -70,7 +72,8 @@ class Ball {
             vel.y *= -1;
 
         if (this.x < 0 || this.x > p5.width) {
-            reset(p5);
+            if (isHost)
+                reset(p5, isHost);
         }
     }
 }
@@ -92,7 +95,7 @@ class Pad {
         p5.rect(this.x, this.y, this.w, this.h);
     }
     
-    updatePad(p5: any, ball: Ball, myPad: boolean) {
+    updatePad(p5: any, ball: Ball, myPad: boolean, isHost: boolean) {
         this.drawPad(p5);
         
         if (myPad) {
@@ -103,7 +106,7 @@ class Pad {
                 this.y += PSPEED;
         }
 
-        if (collision(this, ball)) {
+        if (isHost && collision(this, ball)) {
             const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
             const angle: number = (p5.PI / 10) * diff;
 
@@ -119,7 +122,7 @@ let leftPad: Pad;
 let rightPad: Pad;
 let ball: Ball;
 
-function reset(p5: any): void {
+function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
     vel.x = SPEED * p5.cos(angle);
     vel.y = SPEED * p5.sin(angle);
@@ -128,7 +131,8 @@ function reset(p5: any): void {
 
     leftPad = new Pad(GAP, (p5.height / 2) - PH / 2, PW, PH);
     rightPad = new Pad(p5.width - PW - GAP, (p5.height / 2) - PH / 2, PW, PH);
-    ball = new Ball(p5.width / 2, p5.height / 2, RADIUS);
+    if (isHost)
+        ball = new Ball(p5.width / 2, p5.height / 2, RADIUS);
 }
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
@@ -136,6 +140,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         rotation: 0,
         theme: "",
         socket: null,
+        isHost: true,
+        setIsHost: () => {},
     }
 
     p5.updateWithProps = (p: any) => {
@@ -143,8 +149,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
 
     p5.setup = (): void => {
-        p5.createCanvas(400, 250);
-        reset(p5);
+        p5.createCanvas(500, 300);
+        reset(p5, props.isHost);
     }
 
 
@@ -156,16 +162,29 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme === "grey")
             p5.background(200);
 
-        props.socket?.emit("game", {padX: rightPad.y, ballX: ball.x, ballY: ball.y});
+        if (props.isHost)
+            props.socket?.emit("game", {padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
+        else 
+            props.socket?.emit("game", {padX: rightPad.y});
+
         props.socket?.on("movePad", (data: any) => {
             leftPad.y = data.padX;
-            ball.x = data.ballX;
-            ball.y = data.ballY;
+            if (!props.isHost) {
+                ball.x = data.ballX;
+                ball.y = data.ballY;
+            }
         })
 
-        leftPad.updatePad(p5, ball, false);
-        rightPad.updatePad(p5, ball, true);
-        ball.updateBall(p5);
+        props.socket?.on("notHost", (data: any) => {
+            props.isHost = false;
+            console.log(props.isHost);
+            console.log(data);
+        })
+
+        leftPad.updatePad(p5, ball, false, props.isHost);
+        rightPad.updatePad(p5, ball, true, props.isHost);
+        if (props.isHost)
+            ball?.updateBall(p5, props.isHost);
     }
 }
 

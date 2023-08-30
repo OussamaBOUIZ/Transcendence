@@ -15,7 +15,13 @@ import { Game } from 'src/databases/game.entity';
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { brotliDecompressSync } from "zlib";
+import { log } from "console";
 
+
+interface players {
+	host: any;
+	guest: any;
+}
 
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
@@ -27,25 +33,26 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     afterInit(server: any) {
         console.log('after init');
     }
-    handleConnection(client: any, ...args: any[]) {
-        console.log('handle connection');
+
+    handleConnection(@ConnectedSocket() socket: Socket, ...args: any[]) {
+        console.log('handle connect');
+		socket.join("room");
+
+		console.log(this.server.sockets.adapter.rooms.get("room").size);
+
+		if (this.server.sockets.adapter.rooms.get("room").size == 2) {
+			socket.emit("notHost", "host")
+		}
     }
-    handleDisconnect(client: any) {
+
+    handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
+		socket.leave("room");
     }
-    
-    // constructor(
-	// 	@InjectRepository(Game) private gameRepository: Repository<Game>,
-	// 	// private chatGatewayService: ChatGatewayService,
-	// 	// private inboxService: InboxService,
-	// 	// private userService: UserService,
-	// 	// // private readonly jwt: JwtService,
-	// 	// private readonly configService: ConfigService
-	// ) {}
 
     @SubscribeMessage('game')
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		console.log(body)
+
         socket.broadcast.emit("movePad", body);
 	}
 }
