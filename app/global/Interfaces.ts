@@ -89,7 +89,7 @@ export interface InboxItem {
     user: {id:number, username:string};
     lastMessage: string;
     userName?: string;
-    unseenMessage?: number;
+    unseenMessages: number;
     creationTime?: Date;
 }
 

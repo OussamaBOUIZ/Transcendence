@@ -16,7 +16,7 @@ export default function InboxDm () {
                     key={item.id}
                     id={item?.user?.id}
                     lastMsg={item?.lastMessage}
-                    unsMsg={item.unseenMessage ? item.unseenMessage: 0}
+                    unsMsg={item.unseenMessages ? item.unseenMessages: 0}
                     time=""
                     username={item?.user?.username}
                     />

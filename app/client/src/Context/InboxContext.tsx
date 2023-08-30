@@ -4,7 +4,7 @@ const InboxContext = createContext({});
 import axios, {AxiosResponse} from 'axios'
 
 export function InboxProvider ({children}) {
-    const [inboxList, setInboxList] = useState<InboxItem[]>([] as InboxItem[]);
+    const [inboxList, setInboxList] = useState<InboxItem[]>([]);
     const fetchInbox = async () => {
         try {
             const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');

@@ -63,7 +63,7 @@ export default function ChatDm () {
    }
 
     /**EFFECTS     */
-    useEffect(() => {
+    useEffectOnUpdate(() => {
         console.log('inbox at start', inboxList);
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
@@ -75,8 +75,8 @@ export default function ChatDm () {
         setSocket(newSocket)
         loadConversation();
         loadAvatar(id);
-
-        setInboxList((prevInbox:InboxItem[]) => resetUnseenMsgCounter(prevInbox, id))
+        resetUnseenMsgCounter(setInboxList, id);
+        console.log("inbox", inboxList)
         //cleanup function
         return  () => {
             if (socket)

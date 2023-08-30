@@ -4,22 +4,19 @@ import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
         setter((prevInbox) => {
-                console.log('hereeee')
-                    if (prevInbox.find((inbx) => inbx?.user.id === Number(id)) === undefined) {
-                        console.log("new friend")
-                    console.log('entered here')
-                    return prevInbox?.map((item) => {
+                    if (prevInbox.find((inbx) => inbx?.user.id === id) !== undefined) {
+                    return prevInbox.map((item) => {
                         return (
-                            item.user.id ===  Number(id) ?
+                            item.user.id ===  id ?
                             {...item, lastMessage : shortenMessage(messages[messages?.length - 1]?.message)}:
                             item
-)
+                            )
                         })
                 } else {
-                    return  [{
-                        user: {id: Number(id), username: 'user ' + id},
+                    return  [...prevInbox, {
+                        user: {id: id, username: messages[messages?.length - 1]?.username},
                         lastMessage: shortenMessage(messages[messages?.length - 1]?.message),
-                    }];
+                    } as InboxItem];
                 }
             })
     }
@@ -38,14 +35,14 @@ const handleReceivedMsg = (recMsg: MessageData,
                 return [...prevInbox, 
                         {user: {id: recMsg?.authorId, username: recMsg?.username}, 
                             lastMessage: shortenMessage(recMsg?.message),
-                            unseenMessage: 1
+                            unseenMessages: 1
                         } as InboxItem
                     ]
             } else {
                 return prevInbox.map((inbx) => {
                     return inbx.user.id === recMsg?.authorId
                     ? {...inbx, lastMessage:shortenMessage(recMsg?.message), 
-                        unseenMessage: inbx?.unseenMessage ?  inbx.unseenMessage + 1 : 1}
+                        unseenMessages: inbx?.unseenMessages ?  inbx.unseenMessages + 1 : 1}
                     : inbx
                 })
             }
@@ -55,8 +52,13 @@ const handleReceivedMsg = (recMsg: MessageData,
 }
 
 
-const resetUnseenMsgCounter = (prevInbox: InboxItem[], id:number) => {
-    return prevInbox?.map((inbx) => inbx.id === id ? {...inbx, unseenMessage: 0}: inbx)
+const resetUnseenMsgCounter = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, id:number) => {
+    setter((prevInbox:InboxItem[]) => {
+        return prevInbox.map((inbx) => {
+            console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
+            return inbx.user.id === id ? {...inbx, unseenMessages: 0}: inbx
+        })
+    })
 }
 
 export {updateInbox, handleReceivedMsg, resetUnseenMsgCounter};
