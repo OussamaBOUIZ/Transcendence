@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { SocketContext } from './ChatRooms';
 
 
-export default function ChatInput({message, setMessage, sender}) {
+export default function ChatInput({message, setMessage, sender}: {message: string, setMessage: React.Dispatch<React.SetStateAction<string>>, sender: React.FormEventHandler<HTMLElement>}) {
     const {id, isBanned} = useContext(SocketContext)
-    function handleEnter(event) {
+    const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.key === 'Enter') sender(event)
     }
 

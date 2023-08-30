@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import {data} from './rooms.json'
 import cube from "../../Assets/Icons/cube.svg"
 import useEffectOnUpdate from "../../Hooks/useEffectOnUpdate"
 import axios, {AxiosResponse} from 'axios';
@@ -13,7 +12,7 @@ interface channel {
     isClick: boolean;
 }
 
-export default function ChannelInitAction ({setNotif}) {
+export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch<React.SetStateAction<string>>}) {
 
     const [channelPassword, setChannelPassword] = useState<string>("")
     const [selectedChannel, setSelectedChannel] = useState<channel>({} as channel)

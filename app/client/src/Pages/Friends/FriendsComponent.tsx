@@ -1,12 +1,15 @@
 import "../../scss/friendsComponent.scss";
-import { getAllFriends } from "../../Hooks/getAllFriends"
+import { useFetchAllFriends } from "../../Hooks/useFetchAllFriends"
 import ProfileImage from "../../Components/profileImage";
-import {User} from "../../../../global/Interfaces"
+import React, {useContext} from "react";
+import UserContext from "../../Context/UserContext";
 
 
-export default function FriendsComponent({UserData} : {UserData: User}) {
+export default function FriendsComponent() {
 
-    const allFriends = getAllFriends(UserData?.id);
+    const allFriends = useFetchAllFriends(user?.id);
+    const {user} = useContext(UserContext)
+
 
     const FriendsMessage = <div className="friend-empty">
         <p>Looks like you're new here and you don't have any friends yet</p>
@@ -380,7 +383,7 @@ export default function FriendsComponent({UserData} : {UserData: User}) {
         )
     })
 
-    if (!UserData) {
+    if (!user) {
         return null;
     }
     

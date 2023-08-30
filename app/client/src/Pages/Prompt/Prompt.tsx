@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import { useState } from "react";
 import {Data} from "../../../../global/Interfaces";
 import UserName from "./userName";

@@ -8,14 +8,13 @@ import axios from "axios"
 import { SocketContext } from './ChatRooms'
 
 
-export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: any}) {
+export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: React.Dispatch<React.SetStateAction<boolean>>}) {
 
     const {id, socket, roomData, setUpdate} = useContext(SocketContext)
 
     async function promoteMember() {
         try {
-            const res = await axios.post(`/api/channel/promoteuser/${Userid}?channelId=${id}`)
-            console.log(res)
+            await axios.post(`/api/channel/promoteuser/${Userid}?channelId=${id}`)
             setUpdate(prev => prev + 1)
         }
         catch (err) {

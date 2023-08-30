@@ -4,7 +4,7 @@ import {IoChevronDown} from "react-icons/io5";
 import {IoChevronForward} from "react-icons/io5";
 import { SocketContext } from "./ChatRooms";
 
-export default function TopicRoom({roomType, mode, setter} : {roomType: string, mode: boolean, setter: any}) {
+export default function TopicRoom({roomType, mode, setter} : {roomType: string, mode: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>}) {
 
     const {setIsClick} = useContext(SocketContext)
 

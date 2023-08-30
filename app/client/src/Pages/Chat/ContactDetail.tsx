@@ -11,7 +11,7 @@ export default function ContactDetail ({id}) {
 
      const getUserOverview = async () => {
         try {
-            const res = await axios.get(`../api/user/user/details/${id}`)
+            const res = await axios.get<PlayerData>(`../api/user/user/details/${id}`)
             setUserOverview(res.data);
         } catch (error) {
             console.log(error);
@@ -19,7 +19,7 @@ export default function ContactDetail ({id}) {
     }
 
     useEffect(() => {
-        getUserOverview()
+        void getUserOverview()
     })
 
 

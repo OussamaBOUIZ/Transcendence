@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react'
-import axios from "axios"
+import axios, {AxiosResponse} from "axios"
 import {User} from '../../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
@@ -10,11 +10,11 @@ export default function AddUser() {
     const [searchedUser, setSearchedUser] = useState<User | null>(null);
     const initialRender = useRef(true)
 
-    function handleChange (e) {
+    function handleChange (e: { target: { value: string; }; }) {
         setCurrentSearch(e.target.value)
     }
 
-    function handleSubmit (e) {
+    function handleSubmit (e: React.MouseEvent<HTMLElement>) {
         e.preventDefault()
         if (currentSearch !== "")
             setSubmittedName(currentSearch)
@@ -27,11 +27,11 @@ export default function AddUser() {
         }
         async function getUserCard () {
             try {
-                const response = await axios(`/api/user/search/user/?username=${submittedName}`)
-                const imgRes = await getUserImage(response.data[0].id)
-                setSearchedUser({...response.data[0], image: imgRes})
-            } catch (err: any) {
-                console.log(err.message)
+                const response: AxiosResponse<User> = await axios(`/api/user/search/user/?username=${submittedName}`)
+                const imgRes = await getUserImage(response.data.id)
+                setSearchedUser({...response.data, image: imgRes})
+            } catch (err) {
+                // console.log(err.message)
             }
         }
         if (submittedName !== "")

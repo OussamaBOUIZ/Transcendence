@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { channelData } from "../../../../global/Interfaces";
 import { getUserImage } from "../../Hooks/getUserImage";
 import UserInfoCard from "../../Components/UserInfoCard";
@@ -19,7 +19,7 @@ interface channelProperty {
 }
 
 export default function ChannelProperty({ channel, propertyName, isUnderMyGrade }: ChannelProps) {
-  const [Components, setComponents] = useState();
+  const [Components, setComponents] = useState<React.JSX.Element[]>([]);
 
   useEffect(() => {
     const getInfo = async () => {

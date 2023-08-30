@@ -6,7 +6,7 @@ import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
 import { PlayerData, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import InboxDm from './InboxDm';
 import ChatDmInit from './ChatDmInit';
 
@@ -21,11 +21,11 @@ export default function ChatDm () {
     const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
 
     
-    function handleChange (e: React.ChangeEvent<HTMLElement> ) :void {
+    function handleChange (e: {target: {value: string}} ) {
         setMessageToSendValue(e.target.value)
     }
 
-    function handleSubmit (e:  React.FormEvent<HTMLFormElement>): void {
+    function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
         if (messageToSendValue !== "") {
             setMessageToSendData({

@@ -12,14 +12,14 @@ export default function ChatLayout () {
             <div className="chat_nav">
                  <OnlineNow />
                     <nav className='flex justify-between'>
-                        <NavLink  
-                        className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`} 
+                        <NavLink
+                        className={({isActive}) => isActive ? 'nav_link active' : 'nav_link'} 
                         to="/chat" end>
                             Messages
                             <span></span>
                         </NavLink>
-                        <NavLink 
-                        className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  
+                        <NavLink
+                        className={({isActive}) => isActive ? 'nav_link active' : 'nav_link'} 
                         to="/chat/rooms">
                             Channels
                         </NavLink>

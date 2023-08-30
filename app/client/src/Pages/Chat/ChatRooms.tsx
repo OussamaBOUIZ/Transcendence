@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, useRef, useContext} from 'react'
+import React, {createContext, useState, useEffect, useRef, useContext, SetStateAction} from 'react'
 import ChatOverview from './ChatOverview';
 import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
@@ -20,7 +20,24 @@ import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import Notification from "../../Components/Notification"
 
-export const SocketContext = createContext({});
+type typeProps = {
+    socket: Socket | undefined;
+    id: string | undefined;
+    myGrade: string;
+    isBanned: boolean;
+    isClick: boolean;
+    update: number;
+    setUpdate: React.Dispatch<SetStateAction<number>>;
+    setIsClick: React.Dispatch<SetStateAction<boolean>>;
+    setAction: React.Dispatch<SetStateAction<"create" | "update">>;
+    outerDiv: React.RefObject<HTMLDivElement>;
+    innerDiv: React.RefObject<HTMLDivElement>;
+    roomData: roomData;
+    showSearch: boolean;
+    setShowSearch: React.Dispatch<SetStateAction<boolean>>;
+}
+
+export const SocketContext = createContext<typeProps>({} as typeProps);
 
 
 export default function ChatRooms () {
@@ -34,12 +51,12 @@ export default function ChatRooms () {
     const innerDiv = useRef<HTMLDivElement>(null);
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [isBanned, setBanned] = useState<boolean>(false)
-    const prevInnerDivHeight = useRef<HTMLDivElement>(null);
+    const prevInnerDivHeight = useRef<number>(0);
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
-    const [blockedUsers, setBlockedUsers] = useState()
+    const [blockedUsers, setBlockedUsers] = useState<{id: number}[]>([])
     const [notif, setNotif] = useState<string>("")
 
 
@@ -49,16 +66,16 @@ export default function ChatRooms () {
     useEffectOnUpdate(() => {
         const getInfo = async () => {
             try {
-                const res = await axios.get(`/api/channel/channelName/${id}`);
+                const res = await axios.get<string>(`/api/channel/channelName/${String(id)}`);
                 setRoomData({
                     channelName: res.data,
                     userId: user?.id,
                 })
                 try {
-                    const res = await axios.get(`/api/channel/userGrade/${user?.id}?channelId=${id}`);
+                    const res = await axios.get<string>(`/api/channel/userGrade/${user?.id}?channelId=${String(id)}`);
                     setMyGrade(res.data)
                     try {
-                        const res = await axios.get(`/api/user/blockedUsers/${user?.id}`);
+                        const res = await axios.get<{id: number}[]>(`/api/user/blockedUsers/${user?.id}`);
                         setBlockedUsers(res.data)
                     }
                     catch (err) {
@@ -77,7 +94,7 @@ export default function ChatRooms () {
             void getInfo()
     }, [id, user])
 
-    const sendMessage = (event: Event) => {
+    const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();
 
         if (message !== "") {
@@ -91,10 +108,11 @@ export default function ChatRooms () {
 
             socket?.emit("channelMessage", messageData);
             setMessage("");
-            const outerDivHeight = outerDiv.current.clientHeight;
-            const innerDivHeight = innerDiv.current.clientHeight + 24;
+            const outerDivHeight = outerDiv?.current?.clientHeight ?? 0;
+            const innerDivHeight = innerDiv?.current?.clientHeight !== undefined
+            ? innerDiv.current.clientHeight + 24 : 24;
         
-            outerDiv.current.scrollTo({
+            outerDiv?.current?.scrollTo({
                 top: innerDivHeight - outerDivHeight,
                 left: 0,
                 behavior: "smooth"
@@ -104,7 +122,6 @@ export default function ChatRooms () {
 
     // create socket
     useEffect(() => {
-        console.log("create socket")
         const fd = io("ws://localhost:1212", {
             withCredentials: true,
         })
@@ -134,10 +151,10 @@ export default function ChatRooms () {
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    useEffectOnUpdate(accessChannel(id, socket, roomData, setBanned, user, setMessageList, blockedUsers), [roomData, blockedUsers])
+    useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user, setMessageList, blockedUsers), [roomData, blockedUsers])
 
     // listener
-    useEffectOnUpdate(listener(socket, setMessageList, setBanned), [socket]);
+    useEffectOnUpdate(listener(socket, user, setMessageList, setBanned), [socket]);
 
     useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
 

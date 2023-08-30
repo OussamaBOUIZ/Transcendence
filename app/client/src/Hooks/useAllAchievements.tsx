@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from "react";
 import {Achievement} from "../../../global/Interfaces"
+import {getAchievementImage} from "./getAchievementImage"
 
-export const getAllAchievements = (id: number): Achievement[] | [] => {
+export const useAllAchievements = (id: number): Achievement[] | [] => {
   const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
 
   const getData = async (id: number): Promise<Achievement[] | []> => {
     try {
-      const res = await axios.get(`/api/user/achievements/${id}`);
-      console.log(res);
+      const res = await axios.get<Achievement[]>(`/api/user/achievements/${id}`);
       return res.data;
     } catch (err) {
       console.log("Error: Failed to fetch all friends.");
@@ -31,8 +31,8 @@ export const getAllAchievements = (id: number): Achievement[] | [] => {
       setAllAchievements(achievementsWithImages);
     };
 
-    fetchAchievements();
-  }, []);
+    void fetchAchievements();
+  }, [id]);
 
   return allAchievements;
 };
