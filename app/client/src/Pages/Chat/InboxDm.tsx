@@ -5,8 +5,15 @@ import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 export default function InboxDm () {
-    const {inboxList} = useContext(InboxContext);
-
+    const {inboxList, setInboxList, update} = useContext(InboxContext);
+    console.log('update : ', update)
+    useEffectOnUpdate(() => {
+        console.log('UPDATE');
+        setInboxList((prevInbox:InboxItem[]) => {
+            return prevInbox.sort((a:InboxItem, b:InboxItem) => (a.CreatedAt - b.CreatedAt))
+        })
+    }
+    , [update])
 
     return (
         <div className="chat_inbox">

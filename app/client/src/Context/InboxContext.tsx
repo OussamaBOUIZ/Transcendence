@@ -1,10 +1,12 @@
-import {createContext, useEffect, useState} from 'react'
+import React, {createContext, useEffect, useState} from 'react'
 import { InboxItem } from '../../../global/Interfaces';
 const InboxContext = createContext({});
 import axios, {AxiosResponse} from 'axios'
 
 export function InboxProvider ({children}) {
     const [inboxList, setInboxList] = useState<InboxItem[]>([]);
+    const [update, setUpdate] = useState<number>(0);
+
     const fetchInbox = async () => {
         try {
             const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');
@@ -22,7 +24,8 @@ export function InboxProvider ({children}) {
 
     return (
         <InboxContext.Provider value={{
-            inboxList,setInboxList
+            inboxList,setInboxList,
+            update, setUpdate
         }}>
         {children}
         </InboxContext.Provider>

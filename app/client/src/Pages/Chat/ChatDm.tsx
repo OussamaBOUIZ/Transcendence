@@ -16,7 +16,7 @@ import { handleReceivedMsg, resetUnseenMsgCounter, updateInbox } from '../../Hel
 export default function ChatDm () {
     const {user} = useContext(UserContext)
     const {id} = useParams()
-    const {inboxList, setInboxList} = useContext(InboxContext)
+    const {inboxList, setInboxList, setUpdate} = useContext(InboxContext)
 
     if (id === undefined) {
         return (<Navigate to="/chat/init"/>);
@@ -92,13 +92,14 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
-            reorderInbox(recMsg.authorId, setInboxList)
             return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
         })
+        setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [socket])
 
     useEffectOnUpdate(() => {
         updateInbox(setInboxList, messagesList, Number(id))
+        setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])
     
     

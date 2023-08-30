@@ -135,8 +135,7 @@ export class ChatGatewayService {
                 messages:{ 
                     CreatedAt: 'ASC'
                 }
-            },
-            take: 30
+            }
         })
     }
 
