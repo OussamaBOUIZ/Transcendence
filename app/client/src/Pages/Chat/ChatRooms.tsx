@@ -111,8 +111,9 @@ export default function ChatRooms () {
         setSocket(fd)
 
         return  () => {
-            if (socket)
+            if (socket) {
                 socket.disconnect();
+            }
         }
     }, [])
 
