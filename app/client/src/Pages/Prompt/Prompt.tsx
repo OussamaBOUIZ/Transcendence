@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import { useState } from "react";
 import {Data} from "../../../../global/Interfaces";
 import UserName from "./userName";
@@ -9,7 +9,6 @@ import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
-
 
 export default function Prompt() {
 
@@ -47,7 +46,7 @@ export default function Prompt() {
 
     const handleSubmit = () => {
         setNotif('')
-        const sendData = async (Path: string, data: Data | FormData | null, headers: {'Content-Type': string} | null) => {
+        const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
                 if (data) {
                     await axios.post(Path, data, headers)
@@ -57,14 +56,14 @@ export default function Prompt() {
                 if (val === 2)
                     window.location.replace('/')
             }
-            catch (error) {
+            catch (error: any) {
                 setNotif(error.response.data)
             }
         }
         if (checkInput())
             return
         let Path: string;
-        let headers = null;
+        let headers = {};
         (val === 2) ? Path = `/api/user/${user.id}/upload` : Path = `/api/user/setUserData/${user.id}`
         if (val === 2) {
             headers = {
@@ -82,13 +81,13 @@ export default function Prompt() {
     let icon;
     switch (val) {
         case 1:
-            icon = <UserName username={data.username} user={user.username} handleChange={updateFullName} />
+            icon = <UserName username={data.username} handleChange={updateFullName} handleSubmit={handleSubmit} />
             break;
         case 2:
-            icon = <ChangeAvatar user={user} imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            icon = <ChangeAvatar user={user} setImagePreview={setImagePreview} />
             break;
         default:
-            icon = <FullName fullName={data} user={user} handleChange={updateFullName} />
+            icon = <FullName fullName={data} handleChange={updateFullName} handleSubmit={handleSubmit} />
             break;
     }
 

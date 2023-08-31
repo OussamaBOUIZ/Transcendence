@@ -390,8 +390,8 @@ export default function FriendsComponent() {
         <div className="friendsComponent">
             <p>My friends</p>
             <div className="friends-list">
-                {allFriends && FriendsToggle}
-                {!allFriends && FriendsMessage}
+                {allFriends.length > 0 && FriendsToggle}
+                {!allFriends.length && FriendsMessage}
             </div>
         </div>
     )

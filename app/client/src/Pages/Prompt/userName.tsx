@@ -1,6 +1,15 @@
-// import Notification from "../../Components/Notification"
+import React from 'react'
+interface typeProps {
+  username: string;
+  handleChange: (event: {target: {name: string; value: string};}) => void;
+  handleSubmit: () => void
+}
 
-export default function userName({username, user, handleChange} : {username: string, user: string, handleChange: any}) {
+export default function userName({username, handleChange, handleSubmit} : typeProps) {
+
+  const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
+    if (event.key === 'Enter') handleSubmit()
+  }
 
   return (
     <>
@@ -10,6 +19,7 @@ export default function userName({username, user, handleChange} : {username: str
               placeholder="User Name"
               type="text"
               name="username"
+              onKeyDown={handleEnter}
               value={username}
               onChange={handleChange}
             />

@@ -50,6 +50,7 @@ const multerConfig = () => ({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
 			const supportedExt = ['.png', '.jpeg', '.jpg']
+            console.log('interceptor')
 			if (isNaN(parseInt(req.params['userId'], 10)))
 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
@@ -57,39 +58,44 @@ const multerConfig = () => ({
 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
 			const extention = path.parse(file.originalname).ext
 			const filename = req.params['userId'] + extention
+            console.log('filname1'); 
+            
+            console.log(filename);
 			try {
 				await fsPromises.access(DirUpload + filename)
-                console.log('interceptor')
 				cb(new HttpException(`Wrong Http Method`, HttpStatus.METHOD_NOT_ALLOWED))
 			}
 			catch (e) {
+                console.log('filename', filename);
 				cb(null, filename)
 			}
 		}
 	})
 })
 
-const updateMuliterConfig = () => ({
-	storage: diskStorage({
-		destination: DirUpload,
-		filename: async (req: any, file: any, cb: any) => {
-			const supportedExt = ['.png', '.jpeg', '.jpg']
-			if (isNaN(parseInt(req.params['userId'], 10)))
-				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+// const updateMuliterConfig = () => ({
+// 	storage: diskStorage({
+// 		destination: DirUpload,
+// 		filename: async (req: any, file: any, cb: any) => {
+//             console.log('111');
+            
+// 			const supportedExt = ['.png', '.jpeg', '.jpg']
+// 			if (isNaN(parseInt(req.params['userId'], 10)))
+// 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
-			if (!supportedExt.includes(extname(file.originalname)))
-				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
-			const extention = path.parse(file.originalname).ext
-			const filename = req.params['userId'] + extention
-			// try {
-				cb(null, filename)
-			// }
-			// catch (e) {
-				// cb(null, filename)
-			// }
-		}
-	})
-})
+// 			if (!supportedExt.includes(extname(file.originalname)))
+// 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+// 			const extention = path.parse(file.originalname).ext
+// 			const filename = req.params['userId'] + extention
+// 			// try {
+// 				cb(null, filename)
+// 			// }
+// 			// catch (e) {
+// 				// cb(null, filename)
+// 			// }
+// 		}
+// 	})
+// })
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -124,25 +130,25 @@ export class UserController {
 		@Res() res: Response
 	) {
 	    await this.userService.saveUserAvatarPath(id, image.path)
-      return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+        return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
-    @Put('/:userId/avatar/')
-	@UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
-	async updateAvatar(
-		@Param('userId', ParseIntPipe) id: number,
-		@UploadedFile(new ParseFilePipe({
-			fileIsRequired: true
-		})) image: Express.Multer.File,
-		@Res() res: Response
-	) {
-		const user = await this.userService.saveUserAvatarPath(id, image.path)
-		if (!user) {
-			await unlink(image.path)
-			throw new NotFoundException('The User Not Found')
-		}
-		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
-	}
+    // @Put('/:userId/avatar/')
+	// @UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
+	// async updateAvatar(
+	// 	@Param('userId', ParseIntPipe) id: number,
+	// 	@UploadedFile(new ParseFilePipe({
+	// 		fileIsRequired: true
+	// 	})) image: Express.Multer.File,
+	// 	@Res() res: Response
+	// ) {
+	// 	const user = await this.userService.saveUserAvatarPath(id, image.path)
+	// 	if (!user) {
+	// 		await unlink(image.path)
+	// 		throw new NotFoundException('The User Not Found')
+	// 	}
+	// 	return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	// }
 
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
