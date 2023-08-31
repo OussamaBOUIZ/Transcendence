@@ -54,40 +54,57 @@ export class InboxController {
 
     
             const userSet = new Set<string>();
-            const arrayOfInbox = [] // size 1;
+            var arrayOfInbox: InboxItem[] = []; // size 1;
+            console.log(arrayOfInbox);
             inboxes.forEach((inbox) => {
+                // console.log('DATA IS ', inbox.user.id, inbox.author.id);
                 const findThePeer = inboxes.filter((friend) => {
                     return (inbox.user.id === friend.author.id && inbox.author.id === friend.user.id);
-                });
+                }); 
                 if(findThePeer)
                 {
-                    const checkId = `${user.id}${findThePeer[0].user.id}`;
-                    const reverseCheckId = `${findThePeer[0].user.id}${user.id}`;
-                    if(userSet.has(checkId) || userSet.has(reverseCheckId))
-                        return ;
                     const latestTimeObj = findThePeer[0].CreatedAt > inbox.CreatedAt ? 
                                                 findThePeer[0] : inbox;
-                    
-                    var result : InboxItem = {
-                        author: findThePeer[0].user,
-                        lastMessage: latestTimeObj.lastMessage,
-                        CreatedAt: latestTimeObj.CreatedAt,
-                        unseenMessages: latestTimeObj.unseenMessages,
-                    };
-
-                    console.log('result is', result);
-                    // arrayOfInbox.push(latestTimeObj);
+                    if(findThePeer[0].user.id !== user.id) 
+                    {
+                        const checkId = `${user.id}${findThePeer[0].user.id}`;
+                        const reverseCheckId = `${findThePeer[0].user.id}${user.id}`;
+                        if(userSet.has(checkId) || userSet.has(reverseCheckId))
+                            return ;
+                        var result : InboxItem = {
+                            author: findThePeer[0].user,
+                            lastMessage: latestTimeObj.lastMessage,
+                            CreatedAt: latestTimeObj.CreatedAt,
+                            unseenMessages: latestTimeObj.unseenMessages,
+                        };
+                        const userId: string = `${user.id}${findThePeer[0].user.id}`;
+                        userSet.add(userId);
+                    }
+                    else {
+                        const checkId = `${user.id}${findThePeer[0].author.id}`;
+                        const reverseCheckId = `${findThePeer[0].author.id}${user.id}`;
+                        if(userSet.has(checkId) || userSet.has(reverseCheckId))
+                            return ;
+                        var result : InboxItem = {
+                            author: findThePeer[0].author,
+                            lastMessage: latestTimeObj.lastMessage,
+                            CreatedAt: latestTimeObj.CreatedAt,
+                            unseenMessages: latestTimeObj.unseenMessages,
+                        };
+                        const userId: string = `${user.id}${findThePeer[0].author.id}`;
+                        userSet.add(userId);
+                    }
+                    arrayOfInbox.push(result);
                 }
-                // else
-                //     arrayOfInbox.push(inbox);
-                const userId: string = `${user.id}${findThePeer[0].user.id}`;
-                userSet.add(userId);
 
-            });     
+            });
+            console.log('ARRAY IS: ');
+            console.log(arrayOfInbox);     
         // let inb = await this.inboxService.getAllInboxOfUser(user.id)
 
         // console.log(inb);
         // return inb
+        return arrayOfInbox
     }
 }
 /*
