@@ -47,7 +47,7 @@ export interface MessageData {
     authorId?:number,
     username?:string,
     message: string,
-    creationTime: Date,
+    creationTime: string,
 }
 
 interface Data {
@@ -90,17 +90,9 @@ export interface InboxItem {
     lastMessage: string;
     userName?: string;
     unseenMessages?: number;
-    CreatedAt: Date;
+    CreatedAt: string;
+    online: boolean;
+    image: string;
 }
-
-
-/**
- * 
- *     {user: {id: recMsg?.authorId, username: recMsg?.username}, 
-        lastMessage: recMsg?.message,
-        unseenMessages: 1,
-        CreatedAt: recMsg.creationTime
-    }
- */
 
 export type { FriendUser, Achievement, Leaders, Data};

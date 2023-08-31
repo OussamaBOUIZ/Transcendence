@@ -7,17 +7,17 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                     return prevInbox.map((item) => {
                         return (
                             item.user.id ===  id ?
-                            {...item, lastMessage : messages[messages?.length - 1].message,
-                             CreatedAt: messages[messages?.length - 1].creationTime
+                            {...item, lastMessage : messages[messages.length - 1]?.message,
+                             CreatedAt: messages[messages.length - 1]?.creationTime
                             }:
                             item
                             )
                         })
                 } else {
                     return  [...prevInbox, {
-                        user: {id: id, username: messages[messages?.length - 1]?.username},
-                        lastMessage: messages[messages?.length - 1]?.message,
-                        CreatedAt: messages[messages?.length - 1]?.creationTime,
+                        user: {id: id, username: messages[messages.length - 1]?.username},
+                        lastMessage: messages[messages.length - 1]?.message,
+                        CreatedAt: messages[messages.length - 1]?.creationTime,
                     } as InboxItem];
                 }
             //reordering the inbox;
@@ -32,7 +32,6 @@ const handleReceivedMsg = (recMsg: MessageData,
     if (recMsg?.authorId === id)
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {
-        console.log('recMsg : ', recMsg)
         setInL((prevInbox:InboxItem[]) => {
             if (prevInbox.find((inbx) => inbx.user.id === recMsg?.authorId) === undefined) {
                 return [...prevInbox, 

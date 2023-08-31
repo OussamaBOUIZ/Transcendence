@@ -4,23 +4,23 @@ import { InboxItem } from '../../../../global/Interfaces';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
-export default function InboxDm () {
-    const {inboxList, setInboxList, update} = useContext(InboxContext);
-//     useEffect(() => {
-//         console.log('UPDATE');
-//         setInboxList((prevInbox:InboxItem[]) => {
-//             return prevInbox.sort((a:InboxItem, b:InboxItem) => 
-//                 {
-//                     const dateA:Date = new Date(a.CreatedAt);
-//                     const dateB:Date = new Date(b.CreatedAt);
-//                     return (dateB.getTime() - dateA.getTime())
-//                 })
-            
-//            })
 
-//     console.log("sorted ", inboxList);
-// }, [update])
+export default function InboxDm () {
+
+    const {inboxList, setInboxList, update} = useContext(InboxContext);
+
+    useEffect(() => {
+        setInboxList((prevInbox:InboxItem[]) => {
+            return prevInbox.sort((a:InboxItem, b:InboxItem) => {
+                const dateA:Date = new Date(a.CreatedAt);
+                const dateB:Date = new Date(b.CreatedAt);
+                return dateB.getTime() - dateA.getTime();
+            });
+        })
+        console.log(inboxList)
+}, [update])
     
+
     return (
         <div className="chat_inbox">
             {inboxList?.map((item:InboxItem) => {
@@ -32,6 +32,7 @@ export default function InboxDm () {
                     unsMsg={item.unseenMessages ? item.unseenMessages: 0}
                     time=""
                     username={item?.user?.username}
+                    img={item.image}
                     />
                 )
             })}

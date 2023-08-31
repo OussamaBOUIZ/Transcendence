@@ -62,6 +62,7 @@ div.chat_container {
             }
             .content {
                 padding: 8px auto;
+                overflow-x: scroll;
                 p {
                     text-align: center;
                     width: 80%;
@@ -89,6 +90,7 @@ div.chat_container {
     }
     div.chat_inbox {
         grid-area: l;
+        overflow: scroll;
         .message_oview {
                     padding: 8px;
                     display: flex;

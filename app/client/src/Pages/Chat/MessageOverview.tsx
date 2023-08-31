@@ -1,8 +1,16 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
 import { shortenMessage } from '../../Helpers/utils';
+interface PropType {
+    id:number;
+    lastMsg: string;
+    time: string;
+    unsMsg:number;
+    username:string;
+    img: string;
+}
 
-export default function MessageOverview ({id, lastMsg, time, unsMsg, username} : {id:number, lastMsg: string, time: string, unsMsg:number, username:string}) {
+export default function MessageOverview ({id, lastMsg, time, unsMsg, username, img} :PropType) {
 
     return (
         <NavLink 
@@ -10,7 +18,7 @@ export default function MessageOverview ({id, lastMsg, time, unsMsg, username} :
         className={`message_oview 
                  ${(isActive: boolean) => isActive ? 'active' : ''}`}
         >
-            <img src="../src/Assets/cat.jpg" alt="Cat pic" />
+            <img src={img} alt="Cat pic" />
             <figcaption>
                 <h4>{username}</h4>
                 <p>{shortenMessage(lastMsg)}</p>
