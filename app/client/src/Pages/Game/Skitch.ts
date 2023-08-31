@@ -6,6 +6,7 @@ interface MySketchProps extends SketchProps {
     socket: any;
     isHost: boolean;
     setIsHost: any;
+    gameKey: string;
 }
 
 interface Velocity {
@@ -145,6 +146,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         socket: null,
         isHost: true,
         setIsHost: () => {},
+        gameKey: "",
     }
 
     p5.updateWithProps = (p: any) => {
@@ -166,9 +168,9 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             p5.background(200);
 
         if (props.isHost)
-            props.socket?.emit("game", {padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
+            props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
         else 
-            props.socket?.emit("game", {padX: leftPad.y});
+            props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
 
         props.socket?.on("movePad", (data: any) => {
             if (props.isHost)    

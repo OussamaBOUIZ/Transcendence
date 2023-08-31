@@ -17,12 +17,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { brotliDecompressSync } from "zlib";
 import { log } from "console";
 
-
-interface players {
-	host: any;
-	guest: any;
-}
-
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
 	credentials: true
@@ -36,23 +30,34 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     handleConnection(@ConnectedSocket() socket: Socket, ...args: any[]) {
         console.log('handle connect');
-		socket.join("room");
-
-		console.log(this.server.sockets.adapter.rooms.get("room").size);
-
-		if (this.server.sockets.adapter.rooms.get("room").size == 2) {
-			socket.emit("notHost")
-		}
     }
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
-		socket.leave("room");
     }
+
+	@SubscribeMessage('joinGame')
+	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		console.log('join game');
+		
+		socket.join(roomKey);
+
+		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
+
+		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
+			socket.emit("notHost")
+		}
+	}
+
+	@SubscribeMessage('gameEnd')
+	onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		console.log('leave game');
+		
+		socket.leave(roomKey);
+	}
 
     @SubscribeMessage('game')
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-
-        socket.broadcast.emit("movePad", body);
+		socket.to(body.gameKey).emit("movePad", body);
 	}
 }

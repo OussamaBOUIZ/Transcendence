@@ -54,6 +54,7 @@ export default function App () {
                     </Route>
 
                     <Route path="/game" element={<Game />} />
+                    <Route path="/game/:key" element={<Game />} />
                     <Route path="/friends" element={<Friends />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/info" element={<Prompt />} />
