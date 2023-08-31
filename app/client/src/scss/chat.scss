@@ -72,9 +72,11 @@ div.chat_container {
     section.chat_account {
         grid-area: a; 
         display: flex;
-        padding: 10px;
+        justify-content: center;
         border-right: 0.5px solid $border-color;
         border-bottom: 0.5px solid $border-color;
+        align-items: center;
+        gap: 1em;
         img {
             height: 60px;
             width: 60px;
@@ -82,8 +84,6 @@ div.chat_container {
             border-radius: 50%;
         }
         figcaption {
-            margin-left: 20px;
-            p { color: $text-color; }
             p.account_name {
                 font-size: 28px;
                 font-weight: 600;

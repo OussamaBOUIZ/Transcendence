@@ -7,9 +7,8 @@ import UserContext from "../../Context/UserContext";
 
 export default function FriendsComponent() {
 
-    const allFriends = useFetchAllFriends(user?.id);
     const {user} = useContext(UserContext)
-
+    const allFriends = useFetchAllFriends(user?.id);
 
     const FriendsMessage = <div className="friend-empty">
         <p>Looks like you're new here and you don't have any friends yet</p>

@@ -2,7 +2,7 @@
 @import "../scss/mixins.scss";
 
 .Home {
-    background: linear-gradient(135deg, $bg-color-left 0%, $bg-color-right 100%);
     height: 100vh;
+    width: 100%;
     display: flex;
 }

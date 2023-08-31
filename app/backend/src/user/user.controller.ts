@@ -18,6 +18,7 @@ import {
     UsePipes,
     ValidationPipe,
     NotFoundException,
+    Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -33,7 +34,8 @@ import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import { diskStorage } from 'multer'
 import { extname } from 'path';
-import { access } from 'fs/promises';
+import { access, unlink } from 'fs/promises';
+
 import { userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
@@ -63,6 +65,28 @@ const multerConfig = () => ({
 			catch (e) {
 				cb(null, filename)
 			}
+		}
+	})
+})
+
+const updateMuliterConfig = () => ({
+	storage: diskStorage({
+		destination: DirUpload,
+		filename: async (req: any, file: any, cb: any) => {
+			const supportedExt = ['.png', '.jpeg', '.jpg']
+			if (isNaN(parseInt(req.params['userId'], 10)))
+				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+
+			if (!supportedExt.includes(extname(file.originalname)))
+				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+			const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+			// try {
+				cb(null, filename)
+			// }
+			// catch (e) {
+				// cb(null, filename)
+			// }
 		}
 	})
 })
@@ -101,6 +125,23 @@ export class UserController {
 	) {
 	    await this.userService.saveUserAvatarPath(id, image.path)
       return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	}
+
+    @Put('/:userId/avatar/')
+	@UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
+	async updateAvatar(
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: true
+		})) image: Express.Multer.File,
+		@Res() res: Response
+	) {
+		const user = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user) {
+			await unlink(image.path)
+			throw new NotFoundException('The User Not Found')
+		}
+		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
     @Delete('delete/:id')
