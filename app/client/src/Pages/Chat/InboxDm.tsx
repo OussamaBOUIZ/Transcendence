@@ -7,21 +7,22 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 export default function InboxDm () {
     const {inboxList, setInboxList, update} = useContext(InboxContext);
     console.log('update : ', update)
-    useEffect(() => {
-        console.log('UPDATE');
-        setInboxList((prevInbox:InboxItem[]) => {
-            return prevInbox.sort((a:InboxItem, b:InboxItem) => 
-                {
-                    const dateA:Date = new Date(a.CreatedAt);
-                    const dateB:Date = new Date(b.CreatedAt);
-                    return (dateB.getTime() - dateA.getTime())
-                })
+//     useEffect(() => {
+//         console.log('UPDATE');
+//         setInboxList((prevInbox:InboxItem[]) => {
+//             return prevInbox.sort((a:InboxItem, b:InboxItem) => 
+//                 {
+//                     const dateA:Date = new Date(a.CreatedAt);
+//                     const dateB:Date = new Date(b.CreatedAt);
+//                     return (dateB.getTime() - dateA.getTime())
+//                 })
             
-           })
+//            })
 
-    console.log("sorted ", inboxList);
-}, [update])
-
+//     console.log("sorted ", inboxList);
+// }, [update])
+    console.log('inboxlist', inboxList);
+    
     return (
         <div className="chat_inbox">
             {inboxList?.map((item:InboxItem) => {

@@ -63,8 +63,7 @@ export default function ChatDm () {
    }
 
     /**EFFECTS     */
-    useEffectOnUpdate(() => {
-        console.log('inbox at start', inboxList);
+    useEffect(() => {
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -79,11 +78,10 @@ export default function ChatDm () {
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
                 console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
-                return inbx.user.id == id ? {...inbx, unseenMessages: 0}: inbx
+                return inbx.user.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
             })
         })
-        
-        console.log("inbox", inboxList)
+
         //cleanup function
         return  () => {
             // if (socket) 
@@ -94,7 +92,6 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
-            console.log('recMsg: ', recMsg)
             return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
         })
         setUpdate((prevUpdate:number) => prevUpdate + 1);
@@ -141,7 +138,7 @@ export default function ChatDm () {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <ContactDetail id={id} avatar={avatar}/>
+            <ContactDetail id={Number(id)} avatar={avatar}/>
     </>
     );
 }
