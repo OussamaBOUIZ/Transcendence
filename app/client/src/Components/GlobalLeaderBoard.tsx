@@ -67,12 +67,14 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                     <path d="M1 1.56158C83 -7.43836 143.4 94.7616 189 91.5616C286 91.5616 292 -59.4384 390 44.5616" stroke="white" strokeOpacity="0.2"/>
                 </svg>
             </div>
-            <div className="board">
-                {ThreeUsers}
-            </div>
-            <div className="topEleven">
-                {users.length < 12 && topEleven}
-            </div>
+            <section className="flex flex-col justify-between h-5/6 w-full">
+                <div className="board h-full">
+                    {ThreeUsers}
+                </div>
+                <div className="topEleven">
+                    {users.length < 12 && topEleven}
+                </div>
+            </section>
         </div>
     )
 }
