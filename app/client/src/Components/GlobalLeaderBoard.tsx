@@ -68,7 +68,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                 </svg>
             </div>
             <section className="flex flex-col justify-between h-5/6 w-full">
-                <div className="board h-full">
+                <div className="board">
                     {ThreeUsers}
                 </div>
                 <div className="topEleven">
