@@ -55,14 +55,14 @@ export class InboxController {
     
             const userSet = new Set<string>();
             var arrayOfInbox: InboxItem[] = []; // size 1;
-            console.log(arrayOfInbox);
             inboxes.forEach((inbox) => {
                 // console.log('DATA IS ', inbox.user.id, inbox.author.id);
                 const findThePeer = inboxes.filter((friend) => {
                     return (inbox.user.id === friend.author.id && inbox.author.id === friend.user.id);
-                }); 
-                if(findThePeer)
+                });
+                if(findThePeer.length !== 0)
                 {
+                    console.log(findThePeer);
                     const latestTimeObj = findThePeer[0].CreatedAt > inbox.CreatedAt ? 
                                                 findThePeer[0] : inbox;
                     if(findThePeer[0].user.id !== user.id) 
@@ -93,6 +93,27 @@ export class InboxController {
                         };
                         const userId: string = `${user.id}${findThePeer[0].author.id}`;
                         userSet.add(userId);
+                    }
+                    arrayOfInbox.push(result);
+                }
+                else
+                {
+                    if(inbox.user.id !== user.id) 
+                    {
+                        var result : InboxItem = {
+                            author: inbox.user,
+                            lastMessage: inbox.lastMessage,
+                            CreatedAt: inbox.CreatedAt,
+                            unseenMessages: inbox.unseenMessages,
+                        };
+                    }
+                    else {
+                        var result : InboxItem = {
+                            author: inbox.author,
+                            lastMessage: inbox.lastMessage,
+                            CreatedAt: inbox.CreatedAt,
+                            unseenMessages: inbox.unseenMessages,
+                        };
                     }
                     arrayOfInbox.push(result);
                 }
