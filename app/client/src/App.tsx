@@ -33,6 +33,7 @@ export default function App () {
                    */}
                 <Route path="/sign" element={<Sign />} />
 
+                <Route path="/info" element={<Prompt />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
 {/*                     
@@ -56,7 +57,6 @@ export default function App () {
                     <Route path="/game" element={<Game />} />
                     <Route path="/friends" element={<Friends />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/info" element={<Prompt />} />
                     <Route path="/profile" element={<Profile />} />
 
                     </Route>

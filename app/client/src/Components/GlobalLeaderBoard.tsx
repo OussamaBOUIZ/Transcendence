@@ -1,9 +1,21 @@
 import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
+import React from "react"
 import StarRank from "./starRank";
 import { Leaders } from "../../../global/Interfaces";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
+
+    if (Leaders.length < 3) {
+        return (
+            <div className="globalLeaderboard">
+                <p>Leaderboard</p>
+                <div className="w-full h-full flex items-center justify-center text-center p-8">
+                    <h2>There is not currently enough data</h2>
+                </div>
+            </div>
+        )
+    }
 
     const users = [
         {id: nanoid(), rank: 2, userData: Leaders[1], size: "medium"},

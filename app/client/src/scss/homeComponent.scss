@@ -24,7 +24,7 @@
 .homeComponent {
     display: grid;
     margin-left: 2%;
-    margin-top: 6%;
+    margin-top: 3.5%;
     height: 80%;
     width: 70%;
     grid-gap: 0.6rem;
@@ -37,6 +37,7 @@
     .item {
         background-color: #59189A;
         border-radius: 1rem;
+        overflow: hidden;
         border: 0.5px solid rgba(0, 0, 0, 0.05);
     }
     .item:has(> span) {
@@ -137,43 +138,53 @@
     
     .Leaderboard {
         grid-area: Leaderboard;
-        background-image: url("../Assets/Leaderboard.png");
-        background-size: cover;
-        background-repeat: no-repeat;
         display: flex;
         flex-direction: column;
-        p {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: white;
-            margin: 1rem;
-        }
-        .board {
+        position: relative;
+        img {
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: flex-end;
-            .rank {
-                width: 34%;
+            z-index: 0;
+            opacity: 8%;
+        }
+        div {
+            z-index: 1;
+            p {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: white;
+                margin: 1rem;
+            }
+            .board {
+                width: 100%;
                 height: 100%;
-                background: var(--linear, linear-gradient(222deg, #270C42 0%, #270C42 0.01%, #3F1A64 100%));
-                border-radius: 1.5625rem 1.5625rem 0rem 0rem;
-                .rankContent {
-                    @include center-columns;
-                    margin-top: -50px;
-                    span > h4 {
-                        margin-bottom: 0;
-                    }
-                    span {
-                        color: #FFF;
-                        font-size: 0.625rem;
-                        font-weight: 400;
-                        text-transform: lowercase;
+                display: flex;
+                align-items: flex-end;
+                .rank {
+                    width: 34%;
+                    height: 100%;
+                    background: var(--linear, linear-gradient(222deg, #270C42 0%, #270C42 0.01%, #3F1A64 100%));
+                    border-radius: 1.5625rem 1.5625rem 0rem 0rem;
+                    .rankContent {
+                        @include center-columns;
+                        margin-top: -50px;
+                        span > h4 {
+                            margin-bottom: 0;
+                        }
+                        span {
+                            color: #FFF;
+                            font-size: 0.625rem;
+                            font-weight: 400;
+                            text-transform: lowercase;
+                        }
                     }
                 }
-            }
-            .rank2, .rank3 {
-                height: 80%;
+                .rank2, .rank3 {
+                    height: 80%;
+                }
             }
         }
     }

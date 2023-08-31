@@ -5,6 +5,8 @@
     @include center-styles;
     width: 100vw;
     height: 100vh;
+    background: white;
+    color: black;
     .info-container {
         @include center-columns;
         justify-content: center;
