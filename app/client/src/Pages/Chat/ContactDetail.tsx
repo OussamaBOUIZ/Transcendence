@@ -1,8 +1,19 @@
 import React from 'react'
-import { PlayerData } from '../../../../global/Interfaces';
+import { PlayerData, StatAchievement } from '../../../../global/Interfaces';
 import useChatOverview from '../../Hooks/useChatOverview'; 
 
-
+function Achievement ({item} :{item: StatAchievement}) {
+    return (
+        <figure className="achievement">
+            <img src={item.image} alt="" className="achievement-icon" />
+            {/* <img src="" alt="" className="achievement-icon" /> */}
+            <figcaption className="achievement-info">
+                <h5 className="achievement-title">{item?.badge_name}</h5>
+                <h6 className="achievement-subtitle">{item?.description}</h6>
+            </figcaption>
+        </figure>
+    )
+}
 
 export default function ContactDetail ({id, avatar}: {id: number, avatar:string}) {
    
@@ -13,18 +24,7 @@ export default function ContactDetail ({id, avatar}: {id: number, avatar:string}
     if (userOverview == undefined)
         console.log('it s undefined');
         
-    const AchievementsElements = userOverview?.stat?.achievements?.map((item:StatAchievement) => {
-        return (
-            <figure className="achievement">
-                <img src={item.image} alt="" className="achievement-icon" />
-                {/* <img src="" alt="" className="achievement-icon" /> */}
-                <figcaption className="achievement-info">
-                    <h5 className="achievement-title">{item?.badge_name}</h5>
-                    <h6 className="achievement-subtitle">{item?.description}</h6>
-                </figcaption>
-            </figure>
-        )
-    })
+    const AchievementsElements = userOverview?.stat?.achievements?.map((item:StatAchievement) => <Achievement key={item.id} item={item} />)
 
 
     return (

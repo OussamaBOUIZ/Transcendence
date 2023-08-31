@@ -89,8 +89,18 @@ export interface InboxItem {
     user: {id:number, username:string};
     lastMessage: string;
     userName?: string;
-    unseenMessages: number;
-    CreatedAt: string;
+    unseenMessages?: number;
+    CreatedAt: Date;
 }
+
+
+/**
+ * 
+ *     {user: {id: recMsg?.authorId, username: recMsg?.username}, 
+        lastMessage: recMsg?.message,
+        unseenMessages: 1,
+        CreatedAt: recMsg.creationTime
+    }
+ */
 
 export type { FriendUser, Achievement, Leaders, Data};

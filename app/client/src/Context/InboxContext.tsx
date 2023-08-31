@@ -3,9 +3,9 @@ import { InboxItem } from '../../../global/Interfaces';
 const InboxContext = createContext({});
 import axios, {AxiosResponse} from 'axios'
 
-export function InboxProvider ({children}) {
+export function InboxProvider ({children}: {children:React.ReactNode}) {
+
     const [inboxList, setInboxList] = useState<InboxItem[]>([]);
-    
     const [update, setUpdate] = useState<number>(0);
 
     const fetchInbox = async () => {

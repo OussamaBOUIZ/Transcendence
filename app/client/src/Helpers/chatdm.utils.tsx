@@ -2,13 +2,13 @@ import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
-        setter((prevInbox:InboxItem[]) => {
+        setter((prevInbox) => {
                     if (prevInbox.find((inbx) => inbx?.user.id === id) !== undefined) {
                     return prevInbox.map((item) => {
                         return (
                             item.user.id ===  id ?
-                            {...item, lastMessage : messages[messages?.length - 1]?.message,
-                             CreatedAt: messages[messages?.length - 1]?.creationTime
+                            {...item, lastMessage : messages[messages?.length - 1].message,
+                             CreatedAt: messages[messages?.length - 1].creationTime
                             }:
                             item
                             )
@@ -18,7 +18,7 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                         user: {id: id, username: messages[messages?.length - 1]?.username},
                         lastMessage: messages[messages?.length - 1]?.message,
                         CreatedAt: messages[messages?.length - 1]?.creationTime,
-                    }];
+                    } as InboxItem];
                 }
             //reordering the inbox;
             })
@@ -36,8 +36,8 @@ const handleReceivedMsg = (recMsg: MessageData,
         setInL((prevInbox:InboxItem[]) => {
             if (prevInbox.find((inbx) => inbx.user.id === recMsg?.authorId) === undefined) {
                 return [...prevInbox, 
-                        {user: {id: recMsg?.authorId, username: recMsg?.username}, 
-                            lastMessage: recMsg?.message,
+                        {user: {id: recMsg.authorId, username: recMsg.username}, 
+                            lastMessage: recMsg.message,
                             unseenMessages: 1,
                             CreatedAt: recMsg.creationTime
                         } as InboxItem
@@ -57,13 +57,4 @@ const handleReceivedMsg = (recMsg: MessageData,
     }
 }
 
-// const reorderInbox = (userId:number, setter:React.Dispatch<SetStateAction<InboxItem[]>>) => {
-//     setter((prevInbox) => {
-//     const recentElement:InboxItem = prevInbox.find((inbx) => inbx?.user.id === userId);
-
-//     return [recentElement, ...prevInbox.filter((item) => item.user.id !== userId)]
-//     })
-// }
-
-// export {updateInbox, handleReceivedMsg, resetUnseenMsgCounter};
 export {updateInbox, handleReceivedMsg};

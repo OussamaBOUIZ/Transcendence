@@ -64,6 +64,7 @@ export default function ChatDm () {
 
     /**EFFECTS     */
     useEffect(() => {
+        console.log("inboxList", inboxList)
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -84,8 +85,8 @@ export default function ChatDm () {
 
         //cleanup function
         return  () => {
-            // if (socket) 
-                newSocket.disconnect();
+            if (socket)
+                socket.disconnect()
         }
     } 
     , [id])
@@ -107,6 +108,7 @@ export default function ChatDm () {
         if (msg.message !== "") {
             return (
                 <MessageBox
+                key={msg.creationTime?.getTime()}
                 id={msg.authorId === user?.id}>
                 {msg.message}
             </MessageBox>

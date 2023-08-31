@@ -6,7 +6,6 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 export default function InboxDm () {
     const {inboxList, setInboxList, update} = useContext(InboxContext);
-    console.log('update : ', update)
 //     useEffect(() => {
 //         console.log('UPDATE');
 //         setInboxList((prevInbox:InboxItem[]) => {
@@ -21,7 +20,6 @@ export default function InboxDm () {
 
 //     console.log("sorted ", inboxList);
 // }, [update])
-    console.log('inboxlist', inboxList);
     
     return (
         <div className="chat_inbox">
