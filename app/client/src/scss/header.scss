@@ -2,16 +2,6 @@
 
 div.header {
    display: flex;
-   justify-content: flex-start; 
-//    background-color: red;
-   padding: 15px;
-   border-bottom: 1px solid white;
-   div.logo-container {
-        .logo {
-            font-size: $logo-font-size;
-            font-weight: $logo-font-weight;
-            text-align: center;
-            color: $text-color;
-        }
-   }
+   justify-content: flex-start;
+   padding-left: 2%;
 }

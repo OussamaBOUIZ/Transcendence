@@ -42,16 +42,16 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                     <p>{user.userData.user.username}</p>
                     <span><p>{`level 0`}</p></span>
                 </div>
-                <div className={`topRank`} >
-                    <StarRank RankNumber={4} color="#A0A0A0" />
-                    <p>{user.userData.user.username}</p>
-                    <span><p>{`level 0`}</p></span>
-                </div>
-                <div className={`topRank`} >
-                    <StarRank RankNumber={4} color="#A0A0A0" />
-                    <p>{user.userData.user.username}</p>
-                    <span><p>{`level 0`}</p></span>
-                </div>
+                    <div className={`topRank`} >
+                        <StarRank RankNumber={4} color="#A0A0A0" />
+                        <p>{user.userData.user.username}</p>
+                        <span><p>{`level 0`}</p></span>
+                    </div>
+                    <div className={`topRank`} >
+                        <StarRank RankNumber={4} color="#A0A0A0" />
+                        <p>{user.userData.user.username}</p>
+                        <span><p>{`level 0`}</p></span>
+                    </div>
             </>
         )
     })
