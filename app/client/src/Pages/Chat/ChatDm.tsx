@@ -108,7 +108,7 @@ export default function ChatDm () {
         if (msg.message !== "") {
             return (
                 <MessageBox
-                key={msg.creationTime?.getTime()}
+                // key={msg.creationTime?.getTime()}
                 id={msg.authorId === user?.id}>
                 {msg.message}
             </MessageBox>
