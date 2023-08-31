@@ -3,6 +3,7 @@ import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
         setter((prevInbox) => {
+            console.log(messages)
                     if (prevInbox.find((inbx) => inbx?.user.id === id) !== undefined) {
                     return prevInbox.map((item) => {
                         return (

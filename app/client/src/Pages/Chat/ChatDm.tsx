@@ -46,7 +46,8 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${id}`)
-            setMessagesList(res.data)
+            if (res.data.length)
+                setMessagesList(res.data)
             
         } catch (error) {
             console.log(error);
@@ -78,8 +79,8 @@ export default function ChatDm () {
 
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
-                console.log('inbox n ', inbx.user.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
-                return inbx.user.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
+                console.log('inbox n ', inbx.author.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
+                return inbx.author.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
             })
         })
 
@@ -99,6 +100,7 @@ export default function ChatDm () {
     }, [socket])
 
     useEffectOnUpdate(() => {
+        console.log(messagesList)
         updateInbox(setInboxList, messagesList, Number(id))
         setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])

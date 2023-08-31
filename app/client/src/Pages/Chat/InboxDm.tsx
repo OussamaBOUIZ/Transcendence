@@ -27,11 +27,11 @@ export default function InboxDm () {
                 return (
                 <MessageOverview 
                     key={item.id}
-                    id={item?.user?.id}
+                    id={item?.author?.id}
                     lastMsg={item?.lastMessage}
                     unsMsg={item.unseenMessages ? item.unseenMessages: 0}
                     time=""
-                    username={item?.user?.username}
+                    username={item?.author?.username}
                     />
                 )
             })}

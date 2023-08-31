@@ -86,7 +86,7 @@ export interface SStat {
 
 export interface InboxItem {
     id?: number;
-    user: {id:number, username:string};
+    author: {id:number, username:string};
     lastMessage: string;
     userName?: string;
     unseenMessages?: number;
