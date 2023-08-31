@@ -5,10 +5,8 @@ div.chat_container {
     background-color: orchid;
     width: 90vw;
     height: 84vh;
-
     background: $primary-color;
-    box-shadow: -5px 7px 17px 0px rgba(255, 255, 255, 0.19);
-
+    box-shadow: rgba(255, 255, 255, 0.05) 0px 0px 0px 1px;
     margin: auto 20px;
     border-radius: 25px;
     overflow: hidden;
@@ -72,25 +70,20 @@ div.chat_container {
     section.chat_account {
         grid-area: a; 
         display: flex;
-        justify-content: center;
-        border-right: 0.5px solid $border-color;
-        border-bottom: 0.5px solid $border-color;
+        padding: 0 1em;
+        border-right: .2px solid $border-color;
+        border-bottom: .2px solid $border-color;
         align-items: center;
         gap: 1em;
-        img {
-            height: 60px;
-            width: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
         figcaption {
             p.account_name {
-                font-size: 28px;
+                font-size: 1.5em;
                 font-weight: 600;
                 margin-bottom: -8px;
             }
             p.my_account {
-                font-size: 14px;
+                font-size: 1em;
+                font-weight: 400;
             }
         }
         
@@ -100,7 +93,7 @@ div.chat_container {
     }
     div.chat_nav {
         grid-area: n;
-        border-right: 1px solid $border-color;
+        border-right: .2px solid $border-color;
         
         section.online_now {
             border-bottom: .5px solid $border-color;
@@ -123,7 +116,7 @@ div.chat_container {
             display: flex;
             padding: 0 8px;
             .nav_link {
-                border-bottom: 1px solid $border-color;
+                border-bottom: 1px solid #F7BAF8;
                 width: 50%;
                 padding: 8px;
                 background: transparent;
@@ -131,13 +124,14 @@ div.chat_container {
                 color: $text-light-color;
             }
             .active {
-                border-bottom: 3px solid $border-color;
+                border-bottom: 3px solid #F7BAF8;
                 color: $text-pink-color;
             }
         }
     }
     div.chat_inbox {
         grid-area: l;
+        border-right: 1px solid $border-color;
         &::-webkit-scrollbar {
             width: .2em;
             border-radius: 6em;
@@ -159,7 +153,7 @@ div.chat_container {
             justify-content: space-between;
             align-items: center;
             padding: .7em 2em;
-            border-bottom: .5px solid $border-color;
+            border-bottom: .2px solid $border-color;
             figure {
                 display: flex;
                 img {
@@ -227,7 +221,7 @@ div.chat_container {
         form.chat_input {
             grid-row: 3/4;
             height: 90px;
-            border-top: 0.5px solid #F7BAF8;
+            border-top: .2px solid $border-color;
             @include center-styles;
             textarea {
                 border-radius: 5px;

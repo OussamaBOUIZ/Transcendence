@@ -10,7 +10,7 @@ export default function FriendsComponent() {
     const {user} = useContext(UserContext)
     const allFriends = useFetchAllFriends(user?.id);
 
-    const FriendsMessage = <div className="friend-empty">
+    const FriendsMessage = <div className="friend-empty bg-violet-900 bg-opacity-10 rounded-2xl">
         <p>Looks like you're new here and you don't have any friends yet</p>
         <p><span>Make</span> some new <span>friends</span> and start having fun!</p>
     </div>
@@ -389,7 +389,7 @@ export default function FriendsComponent() {
     return (
         <div className="friendsComponent">
             <p>My friends</p>
-            <div className="friends-list">
+            <div className="friends-list rounded-2xl">
                 {allFriends.length > 0 && FriendsToggle}
                 {!allFriends.length && FriendsMessage}
             </div>

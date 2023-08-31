@@ -8,7 +8,7 @@ export default function ChatAccount () {
         <section className="chat_account">
             <ProfileImage image={user?.image} size="medium" />
             <figcaption>
-                <p className="account_name">{user?.firstname}</p>
+                <p className="account_name">{`${user?.firstname} ${user?.lastname}`}</p>
                 <p className="my_account">My Account</p>
             </figcaption>
         </section>

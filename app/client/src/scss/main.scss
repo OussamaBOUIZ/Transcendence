@@ -20,7 +20,15 @@ body {
 main {
     display: flex;
     align-items: center;
-    height: 80%;
+    margin: 3em 0;
+    gap: 1em;
+    width: 100%;
+    height: 85%;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
 }
 
 button {
