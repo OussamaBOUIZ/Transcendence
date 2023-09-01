@@ -81,6 +81,30 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		
 	}
+
+	@SubscribeMessage('messageSeen')
+	async  updateUnseenMessage(socket: Socket, peerDto: number) {
+		const userEmail = socket.data.user.email
+
+		console.log('in messageSeen')
+		const user = await this.userService.findUserByEmail(userEmail);
+		const peer = await this.userService.findUserById(peerDto)
+
+		console.log(peer)
+		if (!user || !peer)
+		{
+			console.log('peer not exist')
+			const message = !user ? 'The user not exist' : 'The Peer not exist'
+			throw new WsException(message)
+		}
+
+		 const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
+		console.log(inbox)
+		if (!inbox)
+			throw new WsException('there is no prior conversation !')
+		inbox.unseenMessages = 0
+		await this.inboxService.updateInbox(inbox)
+	}
  
 	@SubscribeMessage('updateInbox')
 	async onUpdateInbox(socket: Socket, payload: number) {
@@ -97,7 +121,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 
 	async afterInit(client: Socket) {
-		await client.use(SocketAuthMiddleware(this.userService) as any)
+		client.use(SocketAuthMiddleware(this.userService) as any)
 		console.log('after init called')
 	}
 

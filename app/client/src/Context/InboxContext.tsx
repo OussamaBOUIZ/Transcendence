@@ -16,20 +16,19 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [inboxList, setInboxList] = useState<InboxItem[]>([]);
     const [update, setUpdate] = useState<number>(0);
 
-    // const fetchInbox = async () => {
-    //     try {
-    //         const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');
-    //         console.log('fetched inbox : ',res.data.length);
-    //         if (res.data.length !== 0)
-    //             setInboxList(res.data)
-    //     } catch (error) {
-    //         console.error();
-    //     }
-    // }
+    const fetchInbox = async () => {
+        try {
+            const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');
+            console.log('fetched inbox : ',res.data.length);
+            if (res.data.length !== 0)
+                setInboxList(res.data)
+            } catch (error) {
+                console.error();
+        }
+    }
     
     useEffect(() => {
-        // fetchInbox()
-        setInboxList(data)
+        fetchInbox()
     },[])
 
     return (

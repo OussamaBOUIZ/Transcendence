@@ -23,3 +23,9 @@ export class Inbox_user extends BaseEntity {
     user: User
 }
 
+
+/*
+    const inboxes = await this.InboxRepo.find({
+        where: {userId: 3}
+    })
+*/

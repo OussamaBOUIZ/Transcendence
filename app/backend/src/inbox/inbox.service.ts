@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {User} from "../databases/user.entity";
 import {MoreThan, Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {MessageDto} from "../interfaces/interfaces";
 import {Status} from "../interfaces/enums";
+import { log } from 'console';
 
 @Injectable()
 export class InboxService {
@@ -22,9 +23,12 @@ export class InboxService {
     }
     async saveInbox(receiver: User, author: User, msgDto: MessageDto) {
         let inbox: Inbox_user
-        inbox = await this.getInboxBySenderId(author, receiver)
-        console.log(inbox);
+
+        console.log('receiver::  ', receiver);
+        console.log('author::  ', author);
         
+        inbox = await this.getInboxBySenderId(author, receiver)
+
         if (!inbox) {
             console.log('new inbox');
             
@@ -68,16 +72,18 @@ export class InboxService {
     }
 
     async getAllInboxOfUser(authorId: number) {
+
+        console.log(authorId);
+        
         return await this.inboxRepository.find({
             relations: {
                 user: true,
                 author: true
             },
-            where: {
-                 author: {
-                    id: authorId
-                 },
-            },
+            where: [
+                { author: { id: authorId } },
+                { user: {id: authorId } },
+            ],
             order: {
                 CreatedAt: 'DESC'
             },
@@ -93,4 +99,23 @@ export class InboxService {
             }
         })
     }
+
+    async updateInbox(inbox: Inbox_user)
+    {
+        await this.inboxRepository.save(inbox) // todo : if failed to save the inbox ??
+    }
+
+
+    // async getUserPeers(user: User) {
+    //     await this.inboxRepository.find({
+    //         where: [
+    //             { author: { id: user.id } },
+    //             { user: {id: user.id } },
+    //         ],
+    //     })
+    // }
+    //
+    // async listFriends() {
+    //
+    // }
 }

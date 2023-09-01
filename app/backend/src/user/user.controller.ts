@@ -12,13 +12,12 @@ import {
 	UseInterceptors,
 	Post, Req, Res, HttpStatus,
 	UploadedFile, Body, Patch, HttpCode, Query,
-	HttpException, ParseFilePipe, 
-    UseFilters,
-    Logger,
-    UsePipes,
-    ValidationPipe,
-    NotFoundException,
-    Put,
+	HttpException, ParseFilePipe,
+	UseFilters,
+	Logger,
+	UsePipes,
+	ValidationPipe,
+	NotFoundException, Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -133,23 +132,15 @@ export class UserController {
         return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
-    // @Put('/:userId/avatar/')
-	// @UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
-	// async updateAvatar(
-	// 	@Param('userId', ParseIntPipe) id: number,
-	// 	@UploadedFile(new ParseFilePipe({
-	// 		fileIsRequired: true
-	// 	})) image: Express.Multer.File,
-	// 	@Res() res: Response
-	// ) {
-	// 	const user = await this.userService.saveUserAvatarPath(id, image.path)
-	// 	if (!user) {
-	// 		await unlink(image.path)
-	// 		throw new NotFoundException('The User Not Found')
-	// 	}
-	// 	return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
-	// }
-
+	@Put('updateStatus')
+	async updateUserStatus(@Req() req: Request, status: string) {
+		const userEmail = req.user['email']
+		const user = await this.userService.findUserByEmail(userEmail)
+		if (!user)
+			throw new NotFoundException('user not exist')
+		user.status = status
+		await this.userService.saveUser(user)
+	}
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
     {

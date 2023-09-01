@@ -3,10 +3,11 @@ import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
         setter((prevInbox) => {
-                    if (prevInbox.find((inbx) => inbx?.user.id === id) !== undefined) {
+            console.log(messages)
+                    if (prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
                     return prevInbox.map((item) => {
                         return (
-                            item.user.id ===  id ?
+                            item.author.id ===  id ?
                             {...item, lastMessage : messages[messages.length - 1]?.message,
                              CreatedAt: messages[messages.length - 1]?.creationTime
                             }:
@@ -15,7 +16,7 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                         })
                 } else {
                     return  [...prevInbox, {
-                        user: {id: id, username: messages[messages.length - 1]?.username},
+                        author: {id: id, username: messages[messages.length - 1]?.username},
                         lastMessage: messages[messages.length - 1]?.message,
                         CreatedAt: messages[messages.length - 1]?.creationTime,
                     } as InboxItem];
@@ -33,9 +34,9 @@ const handleReceivedMsg = (recMsg: MessageData,
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {
         setInL((prevInbox:InboxItem[]) => {
-            if (prevInbox.find((inbx) => inbx.user.id === recMsg?.authorId) === undefined) {
+            if (prevInbox.find((inbx) => inbx.author.id === recMsg?.authorId) === undefined) {
                 return [...prevInbox, 
-                        {user: {id: recMsg.authorId, username: recMsg.username}, 
+                        {author: {id: recMsg.authorId, username: recMsg.username}, 
                             lastMessage: recMsg.message,
                             unseenMessages: 1,
                             CreatedAt: recMsg.creationTime
@@ -43,7 +44,7 @@ const handleReceivedMsg = (recMsg: MessageData,
                     ]
             } else {
                 return prevInbox.map((inbx) => {
-                    return inbx.user.id === recMsg?.authorId
+                    return inbx.author.id === recMsg?.authorId
                     ? {...inbx, lastMessage:recMsg?.message,
                         unseenMessages: inbx?.unseenMessages ?  inbx.unseenMessages + 1 : 1,
                         CreatedAt: recMsg.creationTime
