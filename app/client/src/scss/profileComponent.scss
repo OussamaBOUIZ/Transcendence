@@ -17,8 +17,8 @@
         grid-area: profile;
         margin: 0 3em;
         @include center-columns;
-        justify-content: center;
         color: white;
+        gap: .5em;
         padding-top: 1.75em;
         .image {
             img {
@@ -28,18 +28,25 @@
                 border: 1px solid white;
             }
         }
-        h2 {
-            margin: 0;
+        h1 {
+            margin-top: 3px;
+            font-size: 1.125em;
+            font-weight: 700;
             text-transform: uppercase;
         }
-        p {
+        h2, p {
+            text-transform: lowercase;
+            font-size: 1em;
             margin-top: 0;
-            font-size: 0.75rem;
             font-weight: 500;
         }
+        p {
+            font-size: 0.75rem;
+        }
         .level_bar {
-            width: 40%;
-            height: 0.4rem;
+            margin-top: 3px;
+            width: 30%;
+            height: .625em;
             position: relative;
             background-color: $bar-background;
             border-radius: 1em;
@@ -60,7 +67,7 @@
                 background: white;
                 color: black;
                 flex-grow: 1;
-                padding: 1.5em 3em;
+                padding: 1em 3em;
                 border-radius: 0 0 0 1em;
                 border: none;
                 font-weight: 500;

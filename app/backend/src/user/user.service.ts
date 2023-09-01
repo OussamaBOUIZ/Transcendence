@@ -422,6 +422,7 @@ export class UserService {
                 firstname: true,
                 lastname: true,
                 username: true,
+                status: true,
             }
         })
     }

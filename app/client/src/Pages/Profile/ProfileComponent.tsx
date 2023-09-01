@@ -3,8 +3,10 @@ import GameHistory from "../../Components/gameHistory";
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {User} from "../../../../global/Interfaces"
+import UserContext from "../../Context/UserContext";
+import block from "../../Assets/Icons/block.svg"
 
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
@@ -22,24 +24,35 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     //     void SendRequest();
     // }, [UserData.id])
 
+  const {user} = useContext(UserContext)
+
+
     const level = 70
     return (
         <div className="profileComponent">
-            <div className="item ProfileCard">
-                <div className="image">
-                    <img src={UserData.image} alt="" />
+            <div className="item ProfileCard relative">
+                <img className="absolute top-3 right-3" src={block} alt="blockUser" />
+                <div className="flex flex-col items-center">
+                    <div className="image">
+                        <img src={UserData.image} alt="" />
+                    </div>
+                    <h1>{UserData.firstname + " " + UserData.lastname}</h1>
+                    <h2>{UserData.username}</h2>
                 </div>
-                <h2>{UserData.firstname + " " + UserData.lastname}</h2>
-                <p>{UserData.username}</p>
-                <p>online</p>
-                <p>level 14</p>
-                <div className="level_bar">
-                    <div className="level-bar-fill" style={{ width: `${level}%` }}></div>
+                <h2>{UserData.status}</h2>
+                <div className="flex flex-col w-full items-center">
+                    <p>level 14</p>
+                    <div className="level_bar">
+                        <div className="level-bar-fill" style={{ width: `${level}%` }}></div>
+                    </div>
                 </div>
-                <div className="footer">
-                    <button className="friend-request">add as friend</button>
-                    <button className="DM">send message</button>
-                </div>
+                {
+                    user.id !== UserData.id &&
+                    <div className="footer">
+                        <button className="friend-request">add as friend</button>
+                        <button className="DM">send message</button>
+                    </div>
+                }
             </div>
             <GameHistory UserData={UserData} />
             <FriendsCard user={UserData} />

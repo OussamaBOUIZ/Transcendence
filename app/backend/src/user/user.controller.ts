@@ -104,6 +104,18 @@ export class UserController {
         , private readonly jwt: JwtService
         , private readonly BlockedTokenService: BlockedTokenlistService) {}
 
+    @Put('updateStatus')
+    async updateUserStatus(@Req() req: Request, status: string) {
+        console.log(status);
+        
+        const userEmail = req.user['email']
+        const user = await this.userService.findUserByEmail(userEmail)
+        if (!user)
+            throw new NotFoundException('user not exist')
+        user.status = status
+        await this.userService.saveUser(user)
+    }
+    
     @Get()
     @UseGuards(JwtGuard)
     // @UseFilters(V)
