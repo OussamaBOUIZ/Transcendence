@@ -10,14 +10,17 @@ export default function Sign() {
     const [signInImage, setSignInImage] = useState<string>("");
 
     useEffect(() => {
-      const random = Math.floor(Math.random() * 4);
-      import(`../../Assets/${random}file.jpg`)
-        .then((imageModule) => {
-          setSignInImage(imageModule.default);
-        })
-        .catch((error) => {
-          console.error("Error loading image:", error);
-        });
+        const getImage = async () => {
+            const random = Math.floor(Math.random() * 4);
+              try {
+                  const imageModule = await import(`../../Assets/${random}file.jpg`);
+                  setSignInImage(imageModule.default);
+              }
+              catch (error) {
+                  console.error("Error loading image:", error);
+              }
+        }
+        void getImage();
     }, []);
 
     function handleAuth(props: string) {
