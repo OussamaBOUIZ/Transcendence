@@ -26,7 +26,7 @@ export default function UserCard ({user, message, friend, add}: {user: User, mes
         <figure className='flex justify-between items-center bg-violet-900 rounded-md m-2 p-2'>
                 <figcaption>
                     <div className='flex gap-6'>
-                        <ProfileImage image={user.image} size="small"/>
+                        <ProfileImage image={user.image} name={user.username} size="small"/>
                         <div>
                             <h5>{user.firstname} {user.lastname}</h5>
                             <p>{user.username}</p>

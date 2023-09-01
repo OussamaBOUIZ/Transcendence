@@ -3,21 +3,19 @@
 
 .profileComponent {
     display: grid;
-    margin: 6% 2% 4.6% 3%;
-    width: 85%;
-    grid-template: 1fr 0.9fr / 0.75fr 1fr;
+    width: 95%;
+    grid-template: 1fr 0.9fr/0.75fr 1fr;
     grid-template-areas:
-    "profile history"
-    "friends achievements";
-    grid-gap: 50px;
-    color: white;
+        "profile history"
+        "friends achievements";
+    grid-gap: 2em;
     .item {
         border-radius: 2rem;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 58.33%), rgba(89, 24, 154, 0.50);
     }
     .ProfileCard {
         grid-area: profile;
-        margin: 0 5em;
+        margin: 0 3em;
         @include center-columns;
         justify-content: center;
         color: white;
@@ -116,6 +114,7 @@
             }
             .NbFriends {
                 display: flex;
+                align-items: center;
                 span {
                     margin-left: .5em;
                 }
@@ -157,6 +156,7 @@
             }
             .NbAchived {
                 display: flex;
+                align-items: center;
                 span {
                     margin-left: .5em;
                 }

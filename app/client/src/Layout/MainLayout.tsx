@@ -8,7 +8,7 @@ import Sidebar from '../Components/Sidebar'
 
 export default function MainLayout () {
     return (
-        <div>
+        <div className='h-full'>
             <Header />
             <main>
                 <Sidebar />

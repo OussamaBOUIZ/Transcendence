@@ -20,13 +20,17 @@ export default function UserInfoCard(props: userInfoCard) {
       setIsClicked(false)
     };
 
+    function handleProfileClick() {
+        window.location.replace(`/profile/${props.username}`)
+    }
+
     return (
         <div className={`element-${isHovered ? "hovered" : ""} friend-item relative overflow-hidden`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             key={props.username}>
             <div className="useData">
-                <div className='userImage'>
+                <div className='userImage' onClick={handleProfileClick}>
                     <img src={props.image} alt="" />
                     {props.status && <div className={`status ${props.status}`}></div>}
                 </div>

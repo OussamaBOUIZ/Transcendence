@@ -23,16 +23,14 @@
 }
 .homeComponent {
     display: grid;
-    margin-left: 2%;
-    margin-top: 3.5%;
-    height: 80%;
-    width: 70%;
+    height: 100%;
+    width: 75%;
     grid-gap: 0.6rem;
-    grid-template: 0.9fr 0.8fr 1fr / repeat(6, 1fr);
-    grid-template-areas: 
-    "battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal"
-    "theBeast theBeast SpiderGround SpiderGround BrightGround BrightGround"
-    "Leaderboard Leaderboard Leaderboard GameHistory GameHistory GameHistory";
+    grid-template: 0.9fr 0.8fr 1fr/repeat(6, 1fr);
+    grid-template-areas:
+        "battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal"
+        "theBeast theBeast SpiderGround SpiderGround BrightGround BrightGround"
+        "Leaderboard Leaderboard Leaderboard GameHistory GameHistory GameHistory";
     z-index: 1;
     .item {
         background-color: #59189A;
@@ -170,14 +168,17 @@
                     border-radius: 1.5625rem 1.5625rem 0rem 0rem;
                     .rankContent {
                         @include center-columns;
-                        margin-top: -50px;
+                        margin-top: -40px;
+                        .profileImage {
+                            margin: .5em 0;
+                        }
                         span > h4 {
                             margin-bottom: 0;
                         }
                         span {
                             color: #FFF;
                             font-size: 0.625rem;
-                            font-weight: 400;
+                            font-weight: 600;
                             text-transform: lowercase;
                         }
                     }

@@ -412,6 +412,20 @@ export class UserService {
         }
     }
 
+    async getUserProfile(username: string) {
+        return await this.userRepo.findOne({
+            where: {
+                username: username
+            },
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+            }
+        })
+    }
+
     async getUserDetails(id: number) {
         const user =  await this.userRepo.findOne({
             relations: {
