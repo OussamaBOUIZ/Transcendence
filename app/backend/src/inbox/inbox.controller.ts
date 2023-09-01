@@ -1,4 +1,4 @@
-import {ClassSerializerInterceptor, Controller, Get, Req, UseGuards, UseInterceptors} from '@nestjs/common';
+import {ClassSerializerInterceptor, Controller, Get, Inject, Req, UseGuards, UseInterceptors} from '@nestjs/common';
 
 import {AuthGuard} from '@nestjs/passport';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import {UserService} from "../user/user.service";
 import {InboxService} from "./inbox.service";
 import {Request} from 'express';
 import {find} from "rxjs";
+import {ChatGateway} from "../chat/userchat.gateway";
 
 type InboxItem = {
     author: { id: number, username: string },
@@ -20,6 +21,7 @@ type InboxItem = {
 @Controller('inbox')
 export class InboxController {
     constructor(
+        // @Inject('ChatGateway') private  readonly chatGateway: ChatGateway,
         private readonly chatService: ChatGatewayService,
         private readonly userService: UserService,
         private readonly inboxService: InboxService,
@@ -38,6 +40,7 @@ export class InboxController {
 
         }
     }
+
     @Get('/all')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(ClassSerializerInterceptor)

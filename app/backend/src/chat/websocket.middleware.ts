@@ -14,9 +14,11 @@ export const SocketAuthMiddleware = (
     return  async (client, next) => {
         try {
             const {auth} = client.handshake;
-            
-            console.log('authorization' , auth.token)
-            client.data.user = await userService.getUserFromJwt(auth.token);
+            console.log(client.handshake.headers.authorization  )
+            const token = auth.token || client.handshake.headers.authorization
+            console.log(auth.token)
+            client.data.user = await userService.getUserFromJwt(token);
+            console.log(client.data.user)
             if (client.data.user == null)
                 throw new UnauthorizedException()
             next();

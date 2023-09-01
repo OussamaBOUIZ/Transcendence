@@ -100,33 +100,22 @@ export class InboxService {
         })
     }
 
-    // async getAllInboxOfReceiver(authorId: number) {
+    async updateInbox(inbox: Inbox_user)
+    {
+        await this.inboxRepository.save(inbox) // todo : if failed to save the inbox ??
+    }
 
-    //     console.log(authorId);
-        
-    //     return await this.inboxRepository.find({
-    //         relations: {
-    //             user: true,
-    //             author: true
-    //         },
-    //         where: {
-    //              user: {
-    //                 id: authorId
-    //              },
-    //         },
-    //         order: {
-    //             CreatedAt: 'DESC'
-    //         },
-    //         select: {
-    //             user: {
-    //                 id: true,
-    //                 username: true,
-    //             },
-    //             author: {
-    //                 id: true,
-    //                 username: true,
-    //             }
-    //         }
+
+    // async getUserPeers(user: User) {
+    //     await this.inboxRepository.find({
+    //         where: [
+    //             { author: { id: user.id } },
+    //             { user: {id: user.id } },
+    //         ],
     //     })
+    // }
+    //
+    // async listFriends() {
+    //
     // }
 }

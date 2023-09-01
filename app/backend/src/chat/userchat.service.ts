@@ -40,6 +40,7 @@ export class ChatGatewayService {
         });
     }
 
+
     async getUserByEmail(email: string) {
         return await this.userRepository.findOneBy({email: email})
     }
