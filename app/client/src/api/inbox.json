@@ -1,0 +1,114 @@
+[
+  {
+  "id": 1,
+  "user": {
+  "id": 1,
+  "username": "john"
+  },
+  "lastMessage": "Hello!",
+  "CreatedAt": "2022-01-01T12:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/1.jpg"
+  },
+  {
+  "id": 2,
+  "user": {
+  "id": 2,
+  "username": "jane"
+  },
+  "lastMessage": "Hi!",
+  "unseenMessages": 3,
+  "CreatedAt": "2022-01-02T10:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/2.jpg"
+  },
+  {
+  "id": 3,
+  "user": {
+  "id": 3,
+  "username": "mike"
+  },
+  "lastMessage": "What's up?",
+  "userName": "michael",
+  "CreatedAt": "2022-01-03T08:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/3.jpg"
+  },
+  {
+  "id": 4,
+  "user": {
+  "id": 4,
+  "username": "lisa"
+  },
+  "lastMessage": "How are you?",
+  "CreatedAt": "2022-01-04T16:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/4.jpg"
+  },
+  {
+  "id": 5,
+  "user": {
+  "id": 5,
+  "username": "sarah"
+  },
+  "lastMessage": "Hello there!",
+  "CreatedAt": "2022-01-05T14:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/women/5.jpg"
+  },
+  {
+  "id": 6,
+  "user": {
+  "id": 6,
+  "username": "jack"
+  },
+  "lastMessage": "What's new?",
+  "CreatedAt": "2022-01-06T20:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/men/6.jpg"
+  },
+  {
+  "id": 7,
+  "user": {
+  "id": 7,
+  "username": "anna"
+  },
+  "lastMessage": "Good morning!",
+  "CreatedAt": "2022-01-07T08:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/women/7.jpg"
+  },
+  {
+  "id": 8,
+  "user": {
+  "id": 8,
+  "username": "daniel"
+  },
+  "lastMessage": "Talk soon!",
+  "CreatedAt": "2022-01-08T18:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/men/8.jpg"
+  },
+  {
+  "id": 9,
+  "user": {
+  "id": 9,
+  "username": "william"
+  },
+  "lastMessage": "Catch up later!",
+  "CreatedAt": "2022-01-09T22:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/9.jpg"
+  },
+  {
+  "id": 10,
+  "user": {
+  "id": 10,
+  "username": "emma"
+  },
+  "lastMessage": "Have a good day!",
+  "CreatedAt": "2022-01-10T12:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/10.jpg"
+  }
+]
