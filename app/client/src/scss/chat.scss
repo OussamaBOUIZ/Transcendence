@@ -52,24 +52,24 @@ div.chat_container {
     div.chat_nav {
         grid-area: n;
         border-right: 1px solid $border-color;
-        
         section.online_now {
             border-bottom: .5px solid $border-color;
+         
             h3 {
                 font-size: 22px;
                 margin: 8px;
                 font-weight: 600;
             }
-            .content {
-                padding: 8px auto;
-                overflow-x: scroll;
-                p {
-                    text-align: center;
-                    width: 80%;
-                    color: $text-grey-color;
-                    margin: 8px auto;
-                }
-            }
+            // .content {
+            //     padding: 8px auto;
+            //     overflow-x: scroll;
+            //     p {
+            //         text-align: center;
+            //         width: 80%;
+            //         color: $text-grey-color;
+            //         margin: 8px auto;
+            //     }
+            // }
         }
         nav {
             display: flex;

@@ -17,15 +17,15 @@ export default function OnlineNow ({} :PropType) {
     })
 
     return (
-        <section className="online_now overflow-x-hidden">
+        <section className="online_now">
             <h3>Online now</h3>
-            <div className="content overflow-y-scroll gap-4 flex ">
+            <div className="flex p-4 overflow-hidden">
                 {
                     inboxList.length === 0 
                     ?
                     <p>Here's where your online friend will light up</p>
                     :
-                    onlineElements
+                    <div className='flex overflow-x-auto gap-x-2'>{onlineElements}</div>
                 }
                 
             </div>

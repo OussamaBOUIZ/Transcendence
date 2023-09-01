@@ -110,5 +110,27 @@
   "CreatedAt": "2022-01-10T12:00:00Z",
   "online": true,
   "image": "https://randomuser.me/api/portraits/women/10.jpg"
-  }
+  },
+  {
+    "id": 10,
+    "user": {
+    "id": 10,
+    "username": "emma"
+    },
+    "lastMessage": "Have a good day!",
+    "CreatedAt": "2022-01-10T12:00:00Z",
+    "online": true,
+    "image": "https://randomuser.me/api/portraits/women/10.jpg"
+    },
+    {
+      "id": 10,
+      "user": {
+      "id": 10,
+      "username": "emma"
+      },
+      "lastMessage": "Have a good day!",
+      "CreatedAt": "2022-01-10T12:00:00Z",
+      "online": true,
+      "image": "https://randomuser.me/api/portraits/women/10.jpg"
+      }
 ]
