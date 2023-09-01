@@ -18,6 +18,7 @@ export default function fullName({fullName, handleChange, handleSubmit} : typePr
         <p className="text-3xl lg:text-5xl md:text-4xl">Enter Full Name</p>
         <div className="inputs flex-col sm:flex-row">
             <input
+              autoFocus
               placeholder="First Name"
               type="text"
               name="firstname"

@@ -10,7 +10,7 @@ import MessageBox from "../../Components/MessageBox"
 import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import AddUser from "./addUser"
-import ChatRoomWindow from "./ChatRoomWindow"
+import ChatWindow from "./ChatWindow"
 import ChatInput from "./chatInput"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import {scrollLogic} from "./scrollLogic"
@@ -179,7 +179,9 @@ export default function ChatRooms () {
             <InboxRooms />
             <div className="chat_main">
             <RoomHeader />
-                <ChatRoomWindow messagesElements={messagesElements} setNotif={setNotif} />
+                <ChatWindow setNotif={setNotif} >
+                    {messagesElements}
+                </ChatWindow>
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
             </div>
             <ChatOverview id={id}/>

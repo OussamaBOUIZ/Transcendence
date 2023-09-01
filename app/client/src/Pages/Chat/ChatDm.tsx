@@ -13,6 +13,7 @@ import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import { handleReceivedMsg, updateInbox } from '../../Helpers/chatdm.utils';
 import useChatOverview from '../../Hooks/useChatOverview';
+import ChatWindow from "./ChatWindow"
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
@@ -132,9 +133,9 @@ export default function ChatDm () {
                 online={true}
                 />
 
-                <section className="chat_window">
-                    {messagesElements}               
-                </section>
+                <ChatWindow>
+                    {messagesElements}
+                </ChatWindow>
 
                 <form className="chat_input" onSubmit={handleSubmit}>
                     <textarea 
