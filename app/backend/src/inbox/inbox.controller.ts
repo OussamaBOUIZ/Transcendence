@@ -40,8 +40,7 @@ export class InboxController {
         const user = await this.userService.findUserByEmail(req.user['email'])
         if (user === null)
             return 'Not authorized';
-        const inb = await this.inboxService.getAllInboxOfUser(user.id)
-        console.log(inb);
-        return inb
+        // const user = await this.chatService.getUserByEmail(userFromToken.email)
+        return await this.inboxService.getAllInboxOfUser(user.id)
     }
 }

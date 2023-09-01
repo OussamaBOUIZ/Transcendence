@@ -1,25 +1,16 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
 import { getUserImage } from "./getUserImage";
-import {User} from "../../../global/Interfaces"
+import {PlayerData} from "../../../global/Interfaces"
 
-export const getUserData = (): User | null => {
+export const getUserData = async (user: number | string, type: "username" | "id"): Promise<PlayerData> => {
 
-  const [userData, setUserData] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<User>("/api/user");
-        const image = await getUserImage(response.data.id)
-        setUserData({...response.data, image});
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return userData;
+  const path = type === 'username' ? `/api/user/user/profile/${user}` : `/api/user/user/details/${user}`
+  try {
+    const response = await axios.get<PlayerData>(path);
+    const image = await getUserImage(response.data.id)
+    return {...response.data, image};
+  } catch (error) {
+    console.log(error)
+    return ({} as PlayerData);
+  }
 };

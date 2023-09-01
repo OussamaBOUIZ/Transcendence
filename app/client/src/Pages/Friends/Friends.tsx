@@ -1,17 +1,17 @@
 import "../../scss/home.scss";
-import SideBar from "../../Components/Sidebar";
 import FriendsComponent from "./FriendsComponent";
-import { getUserData } from "../../Hooks/getUserData";
 import GlobalLeaderBoard from "../../Components/GlobalLeaderBoard";
-import { getLeaders } from "../../Hooks/getLeaders";
+import { useFetchLeaders } from "../../Hooks/useFetchLeaders";
+import React, { useContext } from "react";
+import UserContext from "../../Context/UserContext";
 
 export default function Friends() {
 
-  const userData = getUserData();
-  const leaders = getLeaders();
+  const {user} = useContext(UserContext)
+  const leaders = useFetchLeaders();
 
 
-  if (!userData) {
+  if (!user) {
     return (
         <div className="Home">
           
@@ -21,14 +21,14 @@ export default function Friends() {
   if (!leaders) {
     return (
       <div className="Home">
-        <FriendsComponent UserData={userData} />
+        <FriendsComponent />
       </div>
     )
   }
 
   return (
     <div className="Home">
-      <FriendsComponent UserData={userData} />
+      <FriendsComponent />
       <GlobalLeaderBoard Leaders={leaders}/>
     </div>
   );

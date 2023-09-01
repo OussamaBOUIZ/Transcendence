@@ -7,7 +7,11 @@ div.user_overview {
     grid-area: o;
     margin-left: auto;
     width: 22.45%;
-    height: 95%;
+    height: 97%;
+    border-radius:  0 0 0 1rem;
+    position: absolute;
+    right: 0;
+    top: 0;
     &.chat_overview_init {
         @include center-styles; 
         p {

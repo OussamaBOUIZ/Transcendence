@@ -1,17 +1,22 @@
 import React from 'react'
 
-const flexEnd = {
-    justifyContent: "flex-end"
+interface PropType {
+    children: React.ReactNode;
+    username?: string;
+    avatar?: string;
+    id: boolean;
+    isBlocked?: boolean;
 }
 
-const flexStart = {
-    justifyContent: "flex-start"
-}
-
-export default function MessageBox ({children, id}) {
+export default function MessageBox ({children, username, avatar, id, isBlocked}: PropType) {
+    const styleHiddenMessage = (isBlocked) ? 'bg-room-active-bar opacity-80' : 'bg-messages rounded-tl-none'
     return (
-        <article className={`flex my-3`} style={id ? flexEnd : flexStart}>
-            <p className={`max-w-sm break-all p-4 ${id ? 'bg-pink-500' : 'bg-purple-400'} rounded-md ${id ? "ml-2": "mr-2"}`}>{children}</p>
+        <article className={`flex ${id ? "items-start" : "items-end"} my-3 flex-col`}>
+            {id && <p className='ml-14 font-medium text-sm mb-1 lowercase'>{username}</p>}
+            <div className={`UserMessage flex ${id ? "ml-2": "mr-2"}`}>
+                {id && avatar && <img className="w-9 h-9 rounded-full mr-2" src={avatar} alt="" />}
+                <p className={`max-w-sm break-all ${isBlocked ? 'py-2' : 'py-3'} px-4 ${id ? styleHiddenMessage : 'bg-my-messages rounded-tr-none'} rounded-2xl`}>{children}</p>
+            </div>
         </article>
     );
 }

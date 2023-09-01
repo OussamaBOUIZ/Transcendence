@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Leaders} from "../../../global/Interfaces"
 import { getUserImage } from "./getUserImage";
 
-export const getLeaders = (): Leaders[] | [] => {
+export const useFetchLeaders = (): Leaders[] | [] => {
     const [leaders, setLeaders] = useState<Leaders[]>([]);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export const getLeaders = (): Leaders[] | [] => {
         }
       };
   
-      getInfo();
+    void getInfo();
     }, []);
 
     return leaders;

@@ -5,8 +5,9 @@ export default function useEffectOnUpdate (effectFunc, deps:any[]) {
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false
-            return
+            return ;
         }
-        return effectFunc()
+        deps.map(attribute => {if (!attribute) return ;})
+        effectFunc()
     }, deps)
 }

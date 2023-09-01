@@ -18,6 +18,7 @@ import {
     UsePipes,
     ValidationPipe,
     NotFoundException,
+    Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -33,7 +34,8 @@ import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
 import { diskStorage } from 'multer'
 import { extname } from 'path';
-import { access } from 'fs/promises';
+import { access, unlink } from 'fs/promises';
+
 import { userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
@@ -48,6 +50,7 @@ const multerConfig = () => ({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
 			const supportedExt = ['.png', '.jpeg', '.jpg']
+            console.log('interceptor')
 			if (isNaN(parseInt(req.params['userId'], 10)))
 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
@@ -55,17 +58,44 @@ const multerConfig = () => ({
 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
 			const extention = path.parse(file.originalname).ext
 			const filename = req.params['userId'] + extention
+            console.log('filname1'); 
+            
+            console.log(filename);
 			try {
 				await fsPromises.access(DirUpload + filename)
-                console.log('interceptor')
 				cb(new HttpException(`Wrong Http Method`, HttpStatus.METHOD_NOT_ALLOWED))
 			}
 			catch (e) {
+                console.log('filename', filename);
 				cb(null, filename)
 			}
 		}
 	})
 })
+
+// const updateMuliterConfig = () => ({
+// 	storage: diskStorage({
+// 		destination: DirUpload,
+// 		filename: async (req: any, file: any, cb: any) => {
+//             console.log('111');
+            
+// 			const supportedExt = ['.png', '.jpeg', '.jpg']
+// 			if (isNaN(parseInt(req.params['userId'], 10)))
+// 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+
+// 			if (!supportedExt.includes(extname(file.originalname)))
+// 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+// 			const extention = path.parse(file.originalname).ext
+// 			const filename = req.params['userId'] + extention
+// 			// try {
+// 				cb(null, filename)
+// 			// }
+// 			// catch (e) {
+// 				// cb(null, filename)
+// 			// }
+// 		}
+// 	})
+// })
 
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -100,8 +130,25 @@ export class UserController {
 		@Res() res: Response
 	) {
 	    await this.userService.saveUserAvatarPath(id, image.path)
-      return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+        return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
+
+    // @Put('/:userId/avatar/')
+	// @UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
+	// async updateAvatar(
+	// 	@Param('userId', ParseIntPipe) id: number,
+	// 	@UploadedFile(new ParseFilePipe({
+	// 		fileIsRequired: true
+	// 	})) image: Express.Multer.File,
+	// 	@Res() res: Response
+	// ) {
+	// 	const user = await this.userService.saveUserAvatarPath(id, image.path)
+	// 	if (!user) {
+	// 		await unlink(image.path)
+	// 		throw new NotFoundException('The User Not Found')
+	// 	}
+	// 	return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	// }
 
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
@@ -214,6 +261,7 @@ export class UserController {
         const fileContent = createReadStream(imagePath);
         return new StreamableFile(fileContent);
     }
+
     @Get('onlinefriends/:id')
     async getOnlineFriends(@Param('id') id: number)
     {
@@ -355,9 +403,12 @@ export class UserController {
 	}
 
     @Get('user/details/:id')
-    async getUserDetails(@Param('id') id: number) {
+    async getUserDetails(@Param('id', ParseIntPipe) id: number) {
         return this.userService.getUserDetails(id)
     }
-}
 
-// localhost:3000/api/user/:ael÷
+    @Get('user/profile/:username')
+    async getUserProfile(@Param('username') username: string) {
+        return this.userService.getUserProfile(username)
+    }
+}

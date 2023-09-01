@@ -12,10 +12,9 @@
 }
 @mixin secondary-button {
     @include rounded-button;
-    border-radius: 34px;
-    padding: 0px 25px;
+    border-radius: 2em;
+    padding: 0 1.75em;
     border: 1px solid #FFFBFB;
-    background-color: transparent;
 }
 
 @mixin primary-button {

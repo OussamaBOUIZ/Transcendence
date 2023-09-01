@@ -101,23 +101,57 @@ export class UserService {
         return await this.userRepo.findOneBy({id: id});
     }
 
-    async userHasAuth(email: string) {
-        const user = await this.userRepo.findOne({
-            where: { email: email }
+    async findUserWithChannels(id: number): Promise<User> {
+        return await this.userRepo.findOne({
+            where: {id: id},
+            relations: {
+                userRoleChannels: true,
+                adminRoleChannels: true,
+                ownerRoleChannels: true,
+            },
+            select: {
+                id: true,
+                socketId: true,
+                userRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                adminRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                },
+                ownerRoleChannels: {
+                    id: true,
+                    channel_name: true,
+                    channel_type: true
+                }
+            },
         });
+    }
+
+    async findUserWithBanned(userId: number)
+    {
+        const user = await this.userRepo.findOne({
+            where: {id: userId},
+            relations: {
+                userBannedChannels: true,
+            },
+        });
+        return user;
+    }
+    
+    async userHasAuth(user: User) {
         if (user.is_two_factor === true)
-            return user;
-        return null;
+            return true;
+        return false;
     }
     async getUserFromJwt(userToken: string): Promise<User> {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        console.log(typeof payload);
-        
-        // if (payload)
-        //     throw new UnauthorizedException('userToken not valid')
-        return await this.userRepo.findOneBy({ email: payload.email });
+        return await this.userRepo.findOneBy({ id: payload.id });
     }
 
     decodeJwtCode(userToken: string) {
@@ -206,7 +240,7 @@ export class UserService {
 
 
     async searchUser(username: string) {
-        return await this.userRepo.find({
+        return await this.userRepo.findOne({
             where: {
                 username: username
             },
@@ -334,7 +368,6 @@ export class UserService {
             }
         })
 
-        console.log(user)
         if (!user || !user.stat)
             throw new HttpException('User Not found Or failed to create stat', HttpStatus.NOT_FOUND)
 
@@ -379,6 +412,20 @@ export class UserService {
         }
     }
 
+    async getUserProfile(username: string) {
+        return await this.userRepo.findOne({
+            where: {
+                username: username
+            },
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+            }
+        })
+    }
+
     async getUserDetails(id: number) {
         const user =  await this.userRepo.findOne({
             relations: {
@@ -398,6 +445,7 @@ export class UserService {
                 id: true,
                 firstname: true,
                 lastname: true,
+                username: true,
                 stat: {
                    achievements: {
                         id: true,
@@ -412,7 +460,6 @@ export class UserService {
         })
         if (!user)
             throw new NotFoundException('user not found')
-        console.log(user);
         
         return user
     }

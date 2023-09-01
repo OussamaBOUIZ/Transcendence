@@ -1,0 +1,21 @@
+version: '3.8'
+
+# volumes:
+#   frontend_code:
+#     driver: local
+#     driver_opts:
+#       device: ./
+#       o: bind
+#       type: none
+
+services:
+  frontend:
+    container_name: frontend
+    build: ./
+    image: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    

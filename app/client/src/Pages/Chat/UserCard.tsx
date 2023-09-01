@@ -1,29 +1,47 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ProfileImage from '../../Components/profileImage'
 import {Link} from 'react-router-dom'
+import {User} from "../../../../global/Interfaces"
+import { SocketContext } from './ChatRooms'
+import axios from "axios"
 
 interface PropType {
-    firstname: string;
-    lastname: string;
-    username: string;
-    avatar: string;
-    id: string;
-
+    user: User,
+    message?: boolean,
+    friend?: boolean,
+    add?: boolean
 }
+export default function UserCard ({user, message, friend, add}: PropType ) {
+    const {roomData, setShowSearch} = useContext(SocketContext)
 
-export default function UserCard ({firstname, lastname, username, avatar, id}: PropType) {
-    return (
-        <figure className='flex-sp'>
+    const handleAddUser = () => {
+        const fetch = async () => {
+            try {
+                await axios.get(`/api/channel/addToChannel/${user.id}?channelName=${roomData.channelName}`)
+                setShowSearch(prev => !prev)
+            }
+            catch (err) {
+                // console.log(err)
+            }      
+        }
+        void fetch();
+    }
+
+     return (
+        <figure className='flex justify-between items-center bg-violet-900 rounded-md m-2 p-2'>
                 <figcaption>
-                    <div>
-                        <ProfileImage image={avatar} size="small"/>
-                        <h5>{firstname} {lastname}</h5>
-                        <p>{username}</p>
+                    <div className='flex gap-6'>
+                        <ProfileImage image={user.image} name={user.username} size="small"/>
+                        <div>
+                            <h5>{user.firstname} {user.lastname}</h5>
+                            <p>{user.username}</p>
+                        </div>
                     </div>
                 </figcaption>
                 <div>
-                    <Link to={`/chat/${id}`}>DM</Link>
-                    <button>ADD</button>
+                    {message && <Link to={`/chat/${user.id}`}>DM</Link>}
+                    {friend && <button className='bg-primary-pink py-2 px-4 rounded-2xl'>Add</button>}
+                    {add && <button className='bg-primary-pink py-2 px-4 rounded-2xl' onClick={handleAddUser} >Add</button>}
                 </div>
             </figure>
     )

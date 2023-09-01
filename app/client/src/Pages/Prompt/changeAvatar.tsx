@@ -2,7 +2,8 @@ import {User} from "../../../../global/Interfaces"
 import React, {useState} from 'react';
 import { BsFillPenFill } from 'react-icons/bs';
 
-export default function ChangeAvatar({ user, imagePreview, setImagePreview }: {user: User, imagePreview: string | null, setImagePreview: any}) {
+export default function ChangeAvatar({ user, setImagePreview }: {user: User, setImagePreview: any}) {
+
 
   const [image, setImage] = useState<string | null>(null)
 
@@ -35,7 +36,7 @@ export default function ChangeAvatar({ user, imagePreview, setImagePreview }: {u
         <div
           id="imagePreview"
           style={{
-            backgroundImage: `url(${image || 'http://i.pravatar.cc/500?img=7'})`,
+            backgroundImage: `url(${image || user.image})`,
           }}
         ></div>
         </div>

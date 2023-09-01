@@ -102,8 +102,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	async handleConnection(client: Socket) {
-		this.logger.log('On Connection')
-		this.logger.log(client.data.user.email)
+		console.log('On Connection');
+		this.logger.log(client.data.user.email) 
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)

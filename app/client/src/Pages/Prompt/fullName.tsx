@@ -1,7 +1,17 @@
-// import Notification from "../../Components/Notification"
-import {User, Data} from "../../../../global/Interfaces"
+import React from 'react'
+import {Data} from "../../../../global/Interfaces"
 
-export default function fullName({fullName, user, handleChange} : {fullName: Data, user: User, handleChange: any}) {
+interface typeProps {
+  fullName: Data;
+  handleChange: (event: {target: {name: string; value: string};}) => void;
+  handleSubmit: () => void
+}
+
+export default function fullName({fullName, handleChange, handleSubmit} : typeProps) {
+
+  const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
+    if (event.key === 'Enter') handleSubmit()
+  }
 
   return (
     <>
@@ -11,6 +21,7 @@ export default function fullName({fullName, user, handleChange} : {fullName: Dat
               placeholder="First Name"
               type="text"
               name="firstname"
+              onKeyDown={handleEnter}
               value={fullName.firstname}
               onChange={handleChange}
             />
@@ -18,6 +29,7 @@ export default function fullName({fullName, user, handleChange} : {fullName: Dat
               placeholder="Last Name"
               type="text"
               name="lastname"
+              onKeyDown={handleEnter}
               value={fullName.lastname}
               onChange={handleChange}
             />

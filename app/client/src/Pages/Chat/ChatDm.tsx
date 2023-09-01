@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useContext, useState, SetStateAction} from 'react'
+import React, {useEffect, useRef, useContext, useState} from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import io, {Socket} from 'socket.io-client'
@@ -19,18 +19,17 @@ export default function ChatDm () {
     const {id} = useParams()
     const {inboxList, setInboxList, setUpdate} = useContext(InboxContext)
 
-    if (id === undefined) {
-        return (<Navigate to="/chat/init"/>);
-    }
+    // if (id === undefined) {
+    //     return (<Navigate to="/chat/init"/>);
     
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     
     const [socket, setSocket] = useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
-    const [avatar, setAvatar] = useState();
+    const [avatar, setAvatar] = useState<string>();
 
-    function handleSubmit (e: Event) {
+    function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
         if (messageToSendValue !== "") {
             const msgToSend: MessageData = {
@@ -48,6 +47,7 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${id}`)
+            console.log('res data', res.data);
             setMessagesList(res.data)
             
         } catch (error) {
@@ -79,7 +79,7 @@ export default function ChatDm () {
         console.log('id has changed: ', id);
         setSocket(newSocket)
         loadConversation();
-        loadAvatar(id);
+        loadAvatar(String(id));
 
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {

@@ -3,7 +3,7 @@ export interface User {
     firstname: string,
     image?: string,
     lastname: string,
-    username: string,
+    username?: string,
 }
 
 interface FriendUser {
@@ -34,6 +34,7 @@ interface Stat {
 
 interface Leaders {
     image?: string,
+    username: string,
     id: number,
     ladder_level: number,
     losses: number,
@@ -62,6 +63,50 @@ interface Data {
 //     stat: Stat,
 // }
 
+interface userInfoCard {
+    id: number,
+    channelId?: number,
+    image: string | undefined,
+    status?: string,
+    firstname: string,
+    lastname: string,
+    username?: string,
+    wins: number,
+    losses: number,
+    flex: string,
+    isUnderMyGrade: boolean
+}
+
+interface channelData {
+    id: number,
+    channelOwners: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelAdmins: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelUsers: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[]
+}
+
+interface rooms {
+    channel_type: string;
+    id: number;
+    channel_name: string,
+}
+
+interface roomData {
+    channelName: string,
+    userId: number,
+    minutes?: number
+}
+
+interface Message {
+    id?: number,
+    message: string,
+    fromUser: number,
+    CreatedAt?: Date,
+    channelName?: string,
+    image?: string,
+    username?: string,
+    isBlocked: boolean,
+}
+
 export interface StatAchievement {
     id: number;
     badge_name: string;
@@ -85,7 +130,6 @@ export interface SStat {
     stat: SStat;
 }
 
-
 export interface InboxItem {
     id?: number;
     user: {id:number, username:string};
@@ -97,4 +141,4 @@ export interface InboxItem {
     image: string;
 }
 
-export type { FriendUser, Achievement, Leaders, Data};
+export type {Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

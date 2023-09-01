@@ -1,18 +1,15 @@
 import "../scss/profileImage.scss"
-import source from "../Assets/Icons/istockphoto-1356959038-612x612.jpg"
+import React from "react"
 
-export default function ProfileImage({image, size}) {
+export default function ProfileImage({image, name, size}: {image: string |undefined, name?: string, size: string}) {
 
-    // to be modified using link
     function handleClick() {
-        window.location.replace('/profile')
+        window.location.replace(`/profile/${name}`)
     }
+
     return (
         <div onClick={handleClick} className={`profileImage ${size}`}>
-            <div
-            className="userImage"
-            style={{backgroundImage: `url(${image})`}}
-            ></div>
+            <div className="userImage" style={{backgroundImage: `url(${image})`}}></div>
         </div>
     )
 }
