@@ -3,7 +3,7 @@ import { useParams, Navigate } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { InboxItem, MessageData, User } from '../../../../global/Interfaces';
+import { InboxItem, MessageData, PlayerData, User } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
@@ -11,7 +11,8 @@ import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-import { handleReceivedMsg, resetUnseenMsgCounter, updateInbox } from '../../Helpers/chatdm.utils';
+import { handleReceivedMsg, updateInbox } from '../../Helpers/chatdm.utils';
+import useChatOverview from '../../Hooks/useChatOverview';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
@@ -22,20 +23,21 @@ export default function ChatDm () {
         return (<Navigate to="/chat/init"/>);
     }
     
+    const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     
     const [socket, setSocket] = useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState();
 
-    function handleSubmit (e: React.FormEventHandler) {
+    function handleSubmit (e: Event) {
         e.preventDefault()
         if (messageToSendValue !== "") {
             const msgToSend: MessageData = {
                 receiverId: Number(id),
                 authorId: user.id,
                 message: messageToSendValue,
-                creationTime : new Date()
+                creationTime : new Date().toString()
             }
             setMessageToSendValue("")
             setMessagesList((prevList:MessageData[]) => [...prevList, msgToSend])
@@ -63,7 +65,10 @@ export default function ChatDm () {
    }
 
     /**EFFECTS     */
-    useEffect(() => {
+    useEffectOnUpdate(() => {
+
+        // setUserOverview(useChatOverview(Number(id))); 
+
         console.log("inboxList", inboxList)
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
@@ -122,8 +127,8 @@ export default function ChatDm () {
             <InboxDm/>
             <div className="chat_main">
                 <ChatHeader
-                avatar={avatar}
-                username={`user id: ${id}`}
+                avatar={userOverview.image}
+                username={userOverview.username}
                 online={true}
                 />
 
@@ -140,7 +145,7 @@ export default function ChatDm () {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <ContactDetail id={Number(id)} avatar={avatar}/>
+            <ContactDetail oview={userOverview}/>
     </>
     );
 }

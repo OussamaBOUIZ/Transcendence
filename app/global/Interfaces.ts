@@ -80,6 +80,8 @@ export interface SStat {
     id: number;
     firstname: string;
     lastname: string;
+    username?:string;
+    image?:string;
     stat: SStat;
 }
 

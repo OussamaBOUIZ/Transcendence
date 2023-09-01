@@ -6,11 +6,11 @@ import { getAchievementImage } from './getAchievementImage'
 
 const mapImageToAch = async (ach:StatAchievement) => {
   const img = await getAchievementImage(ach.id);
-  return {...ach, img};
+  return {...ach, image: img};
 }
 
 const fetchAchievementsImages = async (achs: StatAchievement[]): Promise<StatAchievement[]> => {
-  const achsWithImages =  Promise.all<StatAchievement[]>(
+  const achsWithImages =  Promise.all<StatAchievement>(
     achs.map(mapImageToAch)
   )
   return achsWithImages;

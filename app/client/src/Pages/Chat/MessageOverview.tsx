@@ -24,7 +24,7 @@ export default function MessageOverview ({id, lastMsg, time, unsMsg, username, i
                 <p>{shortenMessage(lastMsg)}</p>
             </figcaption>
             <time>{time}</time>
-            {unsMsg !== 0 && <span>{unsMsg}</span>}
+            {unsMsg !== 0 && <span className=' rounded-lg block bg-pink-500 px-2 h-5 text-sm'>{unsMsg}</span>}
         </NavLink>
     );
 }

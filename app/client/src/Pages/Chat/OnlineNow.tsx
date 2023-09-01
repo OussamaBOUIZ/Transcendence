@@ -3,11 +3,9 @@ import { InboxItem } from '../../../../global/Interfaces';
 import Avatar from '../../Components/Avatar';
 import InboxContext from '../../Context/InboxContext';
 
-interface PropType {
-    image: string;
-}
 
-export default function OnlineNow ({} :PropType) {
+
+export default function OnlineNow () {
     const {inboxList} = useContext(InboxContext);
 
     const onlineElements = inboxList.filter((item:InboxItem) => (item.online === true)).map((item:InboxItem) => {

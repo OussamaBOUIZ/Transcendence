@@ -2,8 +2,16 @@ import React from 'react'
 import ProfileImage from '../../Components/profileImage'
 import {Link} from 'react-router-dom'
 
+interface PropType {
+    firstname: string;
+    lastname: string;
+    username: string;
+    avatar: string;
+    id: string;
 
-export default function UserCard ({firstname, lastname, username, avatar, id}) {
+}
+
+export default function UserCard ({firstname, lastname, username, avatar, id}: PropType) {
     return (
         <figure className='flex-sp'>
                 <figcaption>

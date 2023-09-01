@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ChatList from './ChatList';
 import ChatOverview from './ChatOverview';
 import ChatInput from './ChatInput';
@@ -8,8 +8,28 @@ import ChatInfo from './ChatInfo';
 import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
 import OnlineNow from './OnlineNow';
-import {Outlet, Routes, Route, NavLink, useLocation} from 'react-router-dom'
-import { InboxProvider } from '../../Context/InboxContext';
+import {Outlet, NavLink} from 'react-router-dom'
+import InboxContext, { InboxProvider } from '../../Context/InboxContext';
+
+function Navi () {
+    const {inboxList} = useContext(InboxContext);
+    const counter = inboxList.reduce((accum, current) => accum += current.unseenMessages ? current.unseenMessages : 0, 0)
+    return (
+        <nav className='flex justify-between'>
+            <NavLink  
+            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''} flex`} 
+            to="/chat" end>
+                Messages
+                <span className=' rounded-lg block bg-pink-500 px-2 h-5 text-sm'>{counter}</span>
+            </NavLink>
+            <NavLink 
+            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  
+            to="/chat/rooms">
+                Channels
+            </NavLink>
+        </nav>
+    )
+}
 
 export default function ChatLayout () {
     
@@ -19,19 +39,7 @@ export default function ChatLayout () {
                 <ChatAccount />
                 <div className="chat_nav">
                     <OnlineNow />
-                        <nav className='flex justify-between'>
-                            <NavLink  
-                            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`} 
-                            to="/chat" end>
-                                Messages
-                                <span></span>
-                            </NavLink>
-                            <NavLink 
-                            className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  
-                            to="/chat/rooms">
-                                Channels
-                            </NavLink>
-                        </nav>
+                    <Navi />
                 </div>
                 <Outlet />
             </div>

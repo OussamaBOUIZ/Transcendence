@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ChatHeader ({username, online, avatar}: {username:string, online: boolean, avatar:string}) {
+export default function ChatHeader ({username, online, avatar}: {username:string | undefined, online: boolean, avatar:string | undefined}) {
     return (
         <header className='chat_header'>
             <figure>
