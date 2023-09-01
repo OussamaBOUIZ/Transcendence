@@ -8,7 +8,6 @@ import {
 	WebSocketGateway, 
 	WebSocketServer,
 	WsException,
-	
 } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/databases/game.entity';
@@ -16,6 +15,9 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { brotliDecompressSync } from "zlib";
 import { log } from "console";
+import { subscribe } from "diagnostics_channel";
+
+let waitingSockets: Socket[] = [];
 
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
@@ -54,6 +56,23 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log('leave game');
 		
 		socket.leave(roomKey);
+	}
+
+	@SubscribeMessage("gameMatching")
+	onGameMatching(@ConnectedSocket() socket: Socket) {
+
+		if (waitingSockets.length >= 1) {
+			socket.emit("matched", socket.id);
+			console.log("socket id: ", socket.id);
+
+			const oppSocket: Socket = waitingSockets[0];
+			waitingSockets.unshift();
+			oppSocket.emit("matched", socket.id);
+			waitingSockets = [];
+		} else {
+			waitingSockets.push(socket);
+			socket.join(socket.id)
+		}
 	}
 
     @SubscribeMessage('game')

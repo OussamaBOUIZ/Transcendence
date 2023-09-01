@@ -18,22 +18,28 @@ export default function Game () {
     const {key}: {key: string} = useParams();
 
     useEffectOnUpdate( () => {
-        if (key) {
-            const newSocket: any = io("ws://localhost:4343");
-            setSocket(newSocket);
+        const newSocket: any = io("ws://localhost:4343");
+        setSocket(newSocket);
 
+        if (key) {
             setGameKey(key);
             newSocket.emit("joinGame", key);
+        } else {
+            newSocket.emit("gameMatching")
 
-            return () => {
-                console.log("component unmount");
-                newSocket.emit("gameEnd", key)
-                newSocket.disconnect();
-            };
+            newSocket.on("matched", (roomKey: string) => {
+                console.log("matched room key: ", roomKey);
+                setGameKey(roomKey);
+                newSocket.emit("joinGame", roomKey);
+            })
         }
-    }, [])
 
-    console.log(key);
+        return () => {
+            console.log("component unmount");
+            newSocket.emit("gameEnd", key)
+            newSocket.disconnect();
+        };
+    }, [])
 
 
     return (

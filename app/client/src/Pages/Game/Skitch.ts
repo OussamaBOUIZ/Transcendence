@@ -19,7 +19,7 @@ const PW: number = 10;
 const GAP: number = 10;
 const PSPEED: number = 10;
 const RADIUS: number = 10;
-const SPEED: number = 2;
+const SPEED: number = 3;
 
 const vel: Velocity = {
     x: 0,
@@ -184,10 +184,9 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             }
         })
 
-        props.socket?.on("notHost", (data: any) => {
+        props.socket?.on("notHost", () => {
             props.isHost = false;
             console.log(props.isHost);
-            console.log(data);
         })
 
         if (props.isHost) {
