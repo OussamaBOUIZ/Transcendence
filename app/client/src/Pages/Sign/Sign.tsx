@@ -1,12 +1,25 @@
 import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
 import logo42 from "../../Assets/Icons/42Logo.png"
-import logo from "../../Assets/Icons/logo.png"
-import SignInImage from '../../Assets/2f964e6c-a41e-4baa-b88c-4e7237f2e606.jpg'
-import UserProvider from "../../context/UserProvider"
+import logo from "../../Assets/Icons/logo1.png"
+import React, {useEffect, useState} from "react"
+
 
 export default function Sign() {
-    
+
+    const [signInImage, setSignInImage] = useState<string>("");
+
+    useEffect(() => {
+      const random = Math.floor(Math.random() * 4);
+      import(`../../Assets/${random}file.jpg`)
+        .then((imageModule) => {
+          setSignInImage(imageModule.default);
+        })
+        .catch((error) => {
+          console.error("Error loading image:", error);
+        });
+    }, []);
+
     function handleAuth(props: string) {
         window.location.replace(`http://localhost:3000/api/auth/${props}`)
     }
@@ -33,7 +46,7 @@ export default function Sign() {
 
     return (
         <div className="main">
-            <img className="bg" src={SignInImage} alt="" />
+            <img className="bg" src={signInImage} alt="" />
             <div className='content'>
                 <div className='container'>
                     {welcome}
@@ -41,7 +54,7 @@ export default function Sign() {
                 </div>
                 <div
                     className='cover'
-                    style={{backgroundImage: `url(${SignInImage})`}}>
+                    style={{backgroundImage: `url(${signInImage})`}}>
                 </div>
             </div>
         </div>
