@@ -1,8 +1,10 @@
 import "../scss/userOverview.scss";
 import Achieve from "../Assets/Isometric_Fantasy_3d_vray_render_antiquities_black_statue_liqu_2.jpeg"
 import ProfileImage from './profileImage';
+import {User} from "../../../global/Interfaces"
+import React from "react";
 
-export default function UserOverview ({UserData}) {
+export default function UserOverview ({UserData}: {UserData: User}) {
 
     const level = 70
     return (
@@ -10,7 +12,7 @@ export default function UserOverview ({UserData}) {
             <div className="contact_details_container">
                 <h2>My profile</h2>
                 <figure className="contact">
-                    <ProfileImage image={UserData?.image} size="big" />
+                    <ProfileImage image={UserData.image} name={UserData.username} size="big" />
                     <figcaption>
                         <span>{UserData?.firstname}</span>
                         <span>{UserData?.lastname}</span>

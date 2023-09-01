@@ -3,7 +3,7 @@ export interface User {
     firstname: string,
     image?: string,
     lastname: string,
-    username: string,
+    username?: string,
 }
 
 interface FriendUser {
@@ -34,6 +34,7 @@ interface Stat {
 
 interface Leaders {
     image?: string,
+    username: string,
     id: number,
     ladder_level: number,
     losses: number,
@@ -125,7 +126,7 @@ export interface SStat {
     lastname: string;
     username?: string;
     image?: string;
-    stat: SStat;
+    stat?: SStat;
 }
 
 

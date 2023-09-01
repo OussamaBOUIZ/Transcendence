@@ -6,6 +6,8 @@ import { Leaders } from "../../../global/Interfaces";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 
+    console.log(Leaders)
+
     if (Leaders.length < 3) {
         return (
             <div className="globalLeaderboard">
@@ -32,6 +34,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
     ]
 
     const ThreeUsers = users.map(user => {
+        console.log(user)
         return (
             <div className={`rank rank${user.rank}`} >
                 <RankContent

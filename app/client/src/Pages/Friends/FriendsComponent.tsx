@@ -20,7 +20,7 @@ export default function FriendsComponent() {
             <>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -38,7 +38,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -56,7 +56,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -74,7 +74,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -92,7 +92,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -110,7 +110,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -128,7 +128,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -146,7 +146,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -164,7 +164,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -182,7 +182,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -200,7 +200,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -218,7 +218,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -236,7 +236,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -254,7 +254,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -272,7 +272,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -290,7 +290,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -308,7 +308,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -326,7 +326,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -344,7 +344,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
@@ -362,7 +362,7 @@ export default function FriendsComponent() {
             </div>
             <div className="friend-item" key={friend.id}>
                 <header>
-                    <ProfileImage image={friend.image} size="big" />
+                    <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>

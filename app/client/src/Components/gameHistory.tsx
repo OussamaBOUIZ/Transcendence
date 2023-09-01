@@ -2,7 +2,7 @@ import History from "./history";
 import React from "react"
 import {User} from "../../../global/Interfaces"
 
-export default function GameHistory({UserData}: {UserData: User | null}) {
+export default function GameHistory({UserData}: {UserData: User}) {
 
     // if (leaders.length < 3) {
     //     return (

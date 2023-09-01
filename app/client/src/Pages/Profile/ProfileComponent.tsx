@@ -9,18 +9,18 @@ import {User} from "../../../../global/Interfaces"
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
 
-    useEffect(() => {
-        const SendRequest = async () => {
-            try {
-                await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
-            }
-            catch (err) {
-                console.log("error : adding an existing friend")
-                console.log(err)
-            }
-        }
-        void SendRequest();
-    }, [UserData.id])
+    // useEffect(() => {
+    //     const SendRequest = async () => {
+    //         try {
+    //             await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
+    //         }
+    //         catch (err) {
+    //             console.log("error : adding an existing friend")
+    //             console.log(err)
+    //         }
+    //     }
+    //     void SendRequest();
+    // }, [UserData.id])
 
     const level = 70
     return (

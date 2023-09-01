@@ -34,7 +34,7 @@ export default function AchievementCard({ user }: {user: User}) {
             <header>
                 <p>Achievements</p>
                 <div className="NbAchived">
-                    <img src={awardIcon} alt="" />
+                    <img width="32px" src={awardIcon} alt="" />
                     <span>
                         {allAchievements.filter((award) => award.is_achieved).length}/
                         {allAchievements.length} achievement

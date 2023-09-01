@@ -30,7 +30,7 @@ export default function FriendsCard({ user }: {user: User}) {
             <header>
                 <p>Friends</p>
                 <div className="NbFriends">
-                    <img src={friendsIcon} alt="" />
+                    <img width="32px" src={friendsIcon} alt="" />
                     <span>
                     {
                         allFriends.length > 1 ?

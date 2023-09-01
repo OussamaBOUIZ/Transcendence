@@ -57,7 +57,9 @@ export default function App () {
                     <Route path="/game" element={<Game />} />
                     <Route path="/friends" element={<Friends />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile" element={<Profile />} >
+                      <Route path='/profile:username' element={<Profile />} />
+                    </Route>
 
                     </Route>
                 </Route>

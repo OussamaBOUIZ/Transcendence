@@ -403,7 +403,12 @@ export class UserController {
 	}
 
     @Get('user/details/:id')
-    async getUserDetails(@Param('id') id: number) {
+    async getUserDetails(@Param('id', ParseIntPipe) id: number) {
         return this.userService.getUserDetails(id)
+    }
+
+    @Get('user/profile/:username')
+    async getUserProfile(@Param('username') username: string) {
+        return this.userService.getUserProfile(username)
     }
 }
