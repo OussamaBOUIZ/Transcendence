@@ -7,7 +7,7 @@ interface PropType {
     time: string;
     unsMsg:number;
     username:string;
-    img: string;
+    img?: string;
 }
 
 export default function MessageOverview ({id, lastMsg, time, unsMsg, username, img} :PropType) {

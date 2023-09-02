@@ -82,9 +82,7 @@ export default function ChatDm () {
               token: value
             }})
         setSocket(newSocket)
-        console.log("messagesList", messagesList)
         loadConversation();
-        console.log("messagesList", messagesList)
         loadAvatar(String(id));
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
@@ -103,6 +101,7 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
+            console.log("recMsg", recMsg);
             const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
             setUpdate((prevUpdate:number) => prevUpdate + 1);
            return handle;
@@ -110,14 +109,12 @@ export default function ChatDm () {
     }, [socket])
 
     useEffectOnUpdate(() => {
-        updateInbox(setInboxList, messagesList, Number(id))
-        console.log("var")
+        updateInbox(setInboxList, messagesList, Number(id), userOverview.image, userOverview.username)
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
         setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])
 
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
-    console.log("messagesList", messagesList)
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
             return (
@@ -137,6 +134,7 @@ export default function ChatDm () {
             <InboxDm/>
             <div className="chat_main">
                 <ChatHeader
+                id={id}
                 avatar={userOverview.image}
                 username={userOverview.username}
                 online={true}

@@ -14,7 +14,7 @@ function Achievement ({item} :{item: StatAchievement}) {
 }
 
 export default function ContactDetail ({oview} : {oview?: PlayerData}) {
-    console.log("oview", oview)
+    
     const AchievementsElements = oview?.stat?.achievements?.map((item:StatAchievement) => <Achievement key={item.id} item={item} />)
 
     return (

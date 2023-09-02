@@ -1,7 +1,7 @@
 import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 
-const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number) => {
+const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number, image:string, username:string) => {
         setter((prevInbox) => {
                     if (prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
                     return prevInbox.map((item) => {
@@ -14,10 +14,12 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                             )
                         })
                 } else {
+                    console.log('empty inbox')
                     return  [...prevInbox, {
-                        author: {id: id, username: messages[messages.length - 1]?.username},
+                        author: {id: id, username: username},
                         lastMessage: messages[messages.length - 1]?.message,
                         CreatedAt: messages[messages.length - 1]?.creationTime,
+                        image: image
                     } as InboxItem];
                 }
             //reordering the inbox;

@@ -12,7 +12,8 @@ export default function ChatInput({message, setMessage, sender, id}: {message: s
 
     if (!id) {
         return (
-            <form className="chat_input" onSubmit={sender}></form>
+            // <form className="chat_input bg-purple-800" onSubmit={sender}></form>
+            null
         )
     }
 
