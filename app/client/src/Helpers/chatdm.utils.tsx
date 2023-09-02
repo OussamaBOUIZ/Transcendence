@@ -1,14 +1,14 @@
 import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 
-const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, messages:MessageData[], id:number, image:string, username:string) => {
+const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
         setter((prevInbox) => {
-                    if (prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
+                    if (prevInbox.find((inbx) => inbx.author?.id === lastMsg.authorId) !== undefined) {
                     return prevInbox.map((item) => {
                         return (
                             item.author.id ===  id ?
-                            {...item, lastMessage : messages[messages.length - 1]?.message,
-                             CreatedAt: messages[messages.length - 1]?.creationTime
+                            {...item, lastMessage : lastMsg.message,
+                             CreatedAt: lastMsg.creationTime
                             }:
                             item
                             )
@@ -17,8 +17,8 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, message
                     console.log('empty inbox')
                     return  [...prevInbox, {
                         author: {id: id, username: username},
-                        lastMessage: messages[messages.length - 1]?.message,
-                        CreatedAt: messages[messages.length - 1]?.creationTime,
+                        lastMessage: lastMsg.message,
+                        CreatedAt: lastMsg.creationTime,
                         image: image
                     } as InboxItem];
                 }
@@ -31,6 +31,7 @@ const handleReceivedMsg = (recMsg: MessageData,
                         setMsgs:React.Dispatch<SetStateAction<MessageData[]>>, 
                         setInL:React.Dispatch<SetStateAction<InboxItem[]>>,
                         id:number) => {
+    console.log("recMsg.authorId", recMsg.authorId)
     if (recMsg?.authorId === id)
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {

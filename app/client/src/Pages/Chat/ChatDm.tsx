@@ -109,7 +109,7 @@ export default function ChatDm () {
     }, [socket])
 
     useEffectOnUpdate(() => {
-        updateInbox(setInboxList, messagesList, Number(id), userOverview.image, userOverview.username)
+        updateInbox(setInboxList, messagesList[messagesList.length - 1], Number(id), userOverview.image, userOverview.username)
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
         setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])
