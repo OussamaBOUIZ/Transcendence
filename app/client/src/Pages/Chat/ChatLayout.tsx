@@ -15,7 +15,7 @@ function Navi () {
             className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''} flex`} 
             to="/chat" end>
                 Messages
-                <span className=' rounded-lg block bg-pink-500 px-2 h-5 text-sm'>{counter}</span>
+                {counter !== 0 && <span className=' rounded-lg block bg-pink-500 px-2 h-5 text-sm'>{counter}</span>}
             </NavLink>
             <NavLink 
             className={`nav_link ${(isActive:boolean) => isActive ? 'active' : ''}`}  

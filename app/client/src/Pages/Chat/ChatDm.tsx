@@ -12,29 +12,29 @@ import { getUserImage } from '../../Hooks/getUserImage';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import { handleReceivedMsg, updateInbox } from '../../Helpers/chatdm.utils';
-import useChatOverview from '../../Hooks/useChatOverview';
+import useChatOverview, { fetchChatOverview } from '../../Hooks/useChatOverview';
 import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
+import {scrollLogic} from "./scrollLogic"
+import ChatInput from './chatInput';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
     const {id} = useParams()
     const {inboxList, setInboxList, setUpdate} = useContext(InboxContext)
-
-    // if (id === undefined) {
-    //     return (<Navigate to="/chat/init"/>);
     
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
-    
     const [socket, setSocket] = useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState<string>();
 
+    const {outerDiv, innerDiv, prevInnerDivHeight} = useContext(InboxContext)
+
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
         console.log('submitting')
-        if (messageToSendValue !== "") {
+        if (messageToSendValue.trim() !== "") {
             const msgToSend: MessageData = {
                 receiverId: Number(id),
                 authorId: user.id,
@@ -53,7 +53,7 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${id}`)
-            setMessagesList(res.data[0])
+            setMessagesList(res.data)
         } catch (error) {
             // console.log(error);
         }
@@ -71,15 +71,16 @@ export default function ChatDm () {
     /**EFFECTS     */
     useEffectOnUpdate(() => {
 
-        // setUserOverview(useChatOverview(Number(id))); 
+     
         if (id === undefined)
-            return 
+          return 
+        // setUserOverview(useChatOverview(Number(id))); 
+        fetchChatOverview(Number(id), setUserOverview)
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
             }})
-        
         setSocket(newSocket)
         console.log("messagesList", messagesList)
         loadConversation();
@@ -99,6 +100,7 @@ export default function ChatDm () {
     } 
     , [id])
 
+
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
             const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
@@ -109,16 +111,20 @@ export default function ChatDm () {
 
     useEffectOnUpdate(() => {
         updateInbox(setInboxList, messagesList, Number(id))
+        console.log("var")
+        scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
         setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])
-    
-    
+
+    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
+    console.log("messagesList", messagesList)
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
             return (
                 <MessageBox
                 // key={msg.creationTime?.getTime()}
-                id={msg.authorId === user?.id}>
+                id={msg.authorId !== user?.id}
+                >
                 {msg.message}
             </MessageBox>
            )
@@ -136,18 +142,15 @@ export default function ChatDm () {
                 online={true}
                 />
 
-                <ChatWindow>
+                <ChatWindow id={id}>
                     {messagesElements}
                 </ChatWindow>
-
-                <form className="chat_input" onSubmit={handleSubmit}>
-                    <textarea 
-                    placeholder="Type something"
-                    onChange={(e) => setMessageToSendValue(e.target.value)}
-                    value={messageToSendValue}
-                    />
-                    <button type="submit">Send</button>
-                </form>
+                <ChatInput 
+                message={messageToSendValue} 
+                setMessage={setMessageToSendValue} 
+                sender={handleSubmit} 
+                id={id} 
+                />
             </div>
             {/* <ContactDetail oview={userOverview} id={(String(id))}/> */}
             <ChatOverview oview={userOverview} id={id}/>

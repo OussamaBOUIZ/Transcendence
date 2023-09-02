@@ -62,6 +62,7 @@ export default function CreateRoom({action}: {action: string}) {
                             <label>set a password</label>
                             <form className="flex justify-between gap-3">
                                 <input
+                                autoFocus
                                 className="flex-grow"
                                     type={inputType}
                                     placeholder="type password"
@@ -81,6 +82,7 @@ export default function CreateRoom({action}: {action: string}) {
         <div className="channelName flex flex-col">
             <label>Channel Name</label>
             <input
+                autoFocus
                 type="text"
                 placeholder="channel name"
                 className={`${style}`}

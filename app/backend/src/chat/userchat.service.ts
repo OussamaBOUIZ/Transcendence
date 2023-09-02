@@ -102,13 +102,13 @@ export class ChatGatewayService {
                 socket: author.socketId
             }
         if (await this.isReceiverInBlocked(author.id, receiver.id) === true || await this.isReceiverInBlocked(receiver.id, author.id) == true)
-            throw {
+            throw { 
                 msg: 'the user blocked',
                 socket: author.socketId
             }
         await this.saveMessage(messageDto, receiver, author)
         // check status of receiver
-        await this.inboxService.saveInbox(receiver, author, messageDto)
+        await this.inboxService.saveInbox(receiver, author, messageDto) 
         const ss: sentMsg = {
             authorId: author.id,
             socketId: receiver.socketId,
@@ -142,10 +142,12 @@ export class ChatGatewayService {
 
     async loadMessage(user: User, receiver: number) {
         const message = await this.getAllMessages(user.id, receiver)
+        console.log('messages', message);
+        
         const transformedArray = message.map(item => {
             const message = item.messages[0]
             if (!message)
-                return []
+                return 
             return {
                 authorId : item.author.id,
                 message: message?.message,
@@ -153,6 +155,7 @@ export class ChatGatewayService {
             }
         })
 
+        console.log('tronsform', transformedArray);
         
         return transformedArray
     }

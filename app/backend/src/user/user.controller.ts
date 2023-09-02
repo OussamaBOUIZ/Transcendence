@@ -390,7 +390,10 @@ export class UserController {
 	) {
 		const { username } = dto
 		Logger.log(username)
-		return this.userService.searchUser(username)
+		const user = await this.userService.searchUser(username)
+        if (!user)
+            throw new NotFoundException('User not found')
+        return user
 	}
 
     @Get('user/details/:id')

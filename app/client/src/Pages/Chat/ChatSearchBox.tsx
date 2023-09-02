@@ -9,6 +9,7 @@ export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState<string>("")
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
+    const [userExist, setUserExist] = React.useState<boolean>(true);
     const initialRender = React.useRef<boolean>(true)
 
     const submitStyle = {
@@ -32,10 +33,11 @@ export default function ChatSearchBox () {
         async function getUserCard () {
             try {
                 const response: AxiosResponse<User> = await axios(`/api/user/search/user/?username=${submittedName}`)
+                console.log("response.data.id", response.data.id)
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                // console.log(err.message)
+                setUserExist(false)
             }
         }
         if (submittedName !== "")

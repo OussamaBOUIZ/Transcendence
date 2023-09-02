@@ -19,19 +19,20 @@ import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import Notification from "../../Components/Notification"
+import InboxContext from '../../Context/InboxContext';
 
 type typeProps = {
     socket: Socket | undefined;
     id: string | undefined;
     myGrade: string;
-    isBanned: boolean;
+    // isBanned: boolean;
     isClick: boolean;
     update: number;
     setUpdate: React.Dispatch<SetStateAction<number>>;
     setIsClick: React.Dispatch<SetStateAction<boolean>>;
     setAction: React.Dispatch<SetStateAction<"create" | "update">>;
-    outerDiv: React.RefObject<HTMLDivElement>;
-    innerDiv: React.RefObject<HTMLDivElement>;
+    // outerDiv: React.RefObject<HTMLDivElement>;
+    // innerDiv: React.RefObject<HTMLDivElement>;
     roomData: roomData;
     showSearch: boolean;
     setShowSearch: React.Dispatch<SetStateAction<boolean>>;
@@ -47,11 +48,11 @@ export default function ChatRooms () {
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     const {user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
-    const outerDiv = useRef<HTMLDivElement>(null);
-    const innerDiv = useRef<HTMLDivElement>(null);
+    // const outerDiv = useRef<HTMLDivElement>(null);
+    // const innerDiv = useRef<HTMLDivElement>(null);
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
-    const [isBanned, setBanned] = useState<boolean>(false)
-    const prevInnerDivHeight = useRef<number>(0);
+    // const [isBanned, setBanned] = useState<boolean>(false)
+    // const prevInnerDivHeight = useRef<number>(0);
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
@@ -61,6 +62,7 @@ export default function ChatRooms () {
 
 
     const {id} = useParams()
+    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned} = useContext(InboxContext)
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -162,7 +164,7 @@ export default function ChatRooms () {
         return null;
 
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isBanned, isClick, update, setUpdate, setIsClick, setAction, outerDiv, innerDiv, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
@@ -179,10 +181,10 @@ export default function ChatRooms () {
             <InboxRooms />
             <div className="chat_main">
             <RoomHeader />
-                <ChatWindow setNotif={setNotif} >
+                <ChatWindow setNotif={setNotif} id={id} >
                     {messagesElements}
                 </ChatWindow>
-                <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
+                <ChatInput message={message} setMessage={setMessage} sender={sendMessage} id={id}/>
             </div>
             <ChatOverview id={id}/>
         </SocketContext.Provider>

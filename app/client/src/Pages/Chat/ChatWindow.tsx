@@ -3,15 +3,18 @@ import {useLocation} from 'react-router-dom';
 import { SocketContext } from './ChatRooms';
 import ChannelInitAction from "./ChannelInitAction"
 import ChatDmInit from './ChatDmInit';
+import InboxContext from '../../Context/InboxContext';
 
 interface PropType {
-    children: React.JSX.Element[],
-    setNotif: React.Dispatch<React.SetStateAction<string>>
+    children: (React.JSX.Element | null)[],
+    setNotif?: React.Dispatch<React.SetStateAction<string>>
+    id: string | undefined;
 }
 
-export default function ChatWindow({children, setNotif}: PropType) {
+export default function ChatWindow({children, setNotif, id}: PropType) {
+    
     const {pathname} = useLocation()
-    const {id, outerDiv, innerDiv, isBanned} = useContext(SocketContext)
+    const {outerDiv, innerDiv, isBanned} = useContext(InboxContext)
 
     const chatRegex = /^\/chat(\/)?$/;
     const chatRoomsRegex = /^\/chat\/rooms(\/)?$/;

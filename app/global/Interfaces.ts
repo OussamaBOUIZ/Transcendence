@@ -138,7 +138,7 @@ export interface InboxItem {
     unseenMessages?: number;
     CreatedAt: string;
     online: boolean;
-    image: string;
+    image?: string;
 }
 
 export type {Message, roomData, FriendUser, Achievement, Leaders, Data, userInfoCard, channelData, rooms};

@@ -3,6 +3,7 @@ import { StatAchievement } from '../../../global/Interfaces'
 import { PlayerData } from '../../../global/Interfaces'
 import axios from 'axios'
 import { getAchievementImage } from './getAchievementImage'
+import { getUserImage } from './getUserImage'
 
 const mapImageToAch = async (ach:StatAchievement) => {
   const img = await getAchievementImage(ach.id);
@@ -16,13 +17,14 @@ const fetchAchievementsImages = async (achs: StatAchievement[]): Promise<StatAch
   return achsWithImages;
 }
 
-const fetchChatOverview  = async (id:number, 
+export const fetchChatOverview  = async (id:number, 
   setUserOverview: (P:PlayerData) => void ) => {
   try {
     const res = await axios.get(`../api/user/user/details/${id}`)
     const data:PlayerData = res.data;
+    const imgRes = await getUserImage(id)
     data.stat.achievements = await fetchAchievementsImages(data.stat.achievements)
-    setUserOverview(data)
+    setUserOverview({...data, image: imgRes})
   } catch (error) {
     console.error(error);
   }
@@ -34,7 +36,6 @@ export default function useChatOverview(id: number) {
 
   useEffect(()=> {
     fetchChatOverview(id, setUserOverview)
-
   }, [id])
   return (userOverview)
 }

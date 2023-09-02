@@ -26,7 +26,7 @@ export default function UserCard ({user, message, friend, add}: PropType ) {
         }
         void fetch();
     }
-
+    // console.log("user.id", user.id)
      return (
         <figure className='flex justify-between items-center bg-violet-900 rounded-md m-2 p-2'>
                 <figcaption>

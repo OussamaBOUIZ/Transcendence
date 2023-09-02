@@ -6,7 +6,7 @@ import {User} from "../../../../global/Interfaces"
 export const listener = (socket: Socket | undefined, user: User, setMessageList: React.Dispatch<React.SetStateAction<Message[]>>, setBanned: React.Dispatch<React.SetStateAction<boolean>>) => {
     return () => {
         socket?.on("sendChannelMessage", async (data: Message)  => {
-            console.log('getChannelMessage')
+            console.log("sendChannelMessage")
             data.image = await getUserImage(data.fromUser)
             setMessageList((list) => [...list, data])
         });
