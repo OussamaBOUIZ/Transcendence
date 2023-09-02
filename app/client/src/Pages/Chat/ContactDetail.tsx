@@ -19,7 +19,6 @@ export default function ContactDetail ({oview} : {oview: PlayerData}) {
         return (null)
     const AchievementsElements = oview?.stat?.achievements?.map((item:StatAchievement) => <Achievement key={item.id} item={item} />)
 
-    console.log(oview)
     return (
         <div className="chat_overview">
             <div className="contact_details_container">

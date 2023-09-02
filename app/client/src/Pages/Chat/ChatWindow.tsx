@@ -11,7 +11,6 @@ interface PropType {
 
 export default function ChatWindow({children, setNotif}: PropType) {
     const {pathname} = useLocation()
-    console.log("pathnmae: ", pathname);
     const {id, outerDiv, innerDiv, isBanned} = useContext(SocketContext)
 
     if (!id) {

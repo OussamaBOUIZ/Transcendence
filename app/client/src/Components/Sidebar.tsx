@@ -24,7 +24,6 @@ export default function Sidebar () {
         return (
             <SidebarButton
             key={icon.id} 
-            className="sidebar_button"
             to={icon.to}
             >
                 {icon.value}

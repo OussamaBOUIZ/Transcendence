@@ -19,7 +19,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const fetchInbox = async () => {
         try {
             const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');
-            console.log('fetched inbox : ',res.data.length);
             if (res.data.length !== 0)
                 setInboxList(res.data)
             } catch (error) {

@@ -8,7 +8,6 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 export default function InboxDm () {
 
     const {inboxList, setInboxList, update} = useContext(InboxContext);
-    console.log('inboxList : ', inboxList)
 
     useEffect(() => {
         setInboxList((prevInbox:InboxItem[]) => {
@@ -18,7 +17,6 @@ export default function InboxDm () {
                 return dateB.getTime() - dateA.getTime();
             });
         })
-        console.log(inboxList)
 }, [update])
     
 

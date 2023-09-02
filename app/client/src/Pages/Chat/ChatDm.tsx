@@ -52,7 +52,7 @@ export default function ChatDm () {
             setMessagesList(res.data)
             
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -70,21 +70,18 @@ export default function ChatDm () {
 
         // setUserOverview(useChatOverview(Number(id))); 
 
-        console.log("inboxList", inboxList)
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
             }})
         
-        console.log('id has changed: ', id);
         setSocket(newSocket)
         loadConversation();
         loadAvatar(String(id));
 
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
-                console.log('inbox n ', inbx.author?.id , 'unseen: ', inbx.unseenMessages, 'my id: ', id)
                 return inbx.author?.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
             })
         })
@@ -105,7 +102,6 @@ export default function ChatDm () {
     }, [socket])
 
     useEffectOnUpdate(() => {
-        console.log(messagesList)
         updateInbox(setInboxList, messagesList, Number(id))
         setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [messagesList])

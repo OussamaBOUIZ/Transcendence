@@ -14,7 +14,7 @@ div.sidebar {
     flex-direction: column;
     padding: 1em 0;
 
-    div.sidebar_button {
+    a.sidebar_button {
         @include center-styles;
         background-color: $sdb-color;
         padding: 5px;
@@ -29,10 +29,10 @@ div.sidebar {
             fill: white;
         }
     }
-    div.logout {
+    a.logout {
        margin-top: auto;
     }
-    div.active {
+    a.active {
         background : $sdb-gradient;
     }
 }
