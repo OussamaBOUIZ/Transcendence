@@ -28,6 +28,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     
     useEffect(() => {
         fetchInbox()
+        console.log("inboxList", inboxList)
     },[])
 
     return (

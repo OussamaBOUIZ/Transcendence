@@ -13,19 +13,16 @@ function Achievement ({item} :{item: StatAchievement}) {
     )
 }
 
-export default function ContactDetail ({oview} : {oview: PlayerData}) {
-        
-    if (oview == undefined)
-        return (null)
+export default function ContactDetail ({oview} : {oview?: PlayerData}) {
     const AchievementsElements = oview?.stat?.achievements?.map((item:StatAchievement) => <Achievement key={item.id} item={item} />)
 
     return (
-        <div className="chat_overview">
+        // <div className="chat_overview">
             <div className="contact_details_container">
             <h2>Contact details</h2>
             <figure className="contact">
                 {/* <img src="../src/Assets/cat.jpg" alt="cat" /> */}
-                <img src={oview.image} alt="cat" />
+                <img src={oview?.image} alt="cat" />
                 <figcaption>
                     <h3>{oview?.firstname}</h3>
                     <h3>{oview?.lastname}</h3>
@@ -52,6 +49,6 @@ export default function ContactDetail ({oview} : {oview: PlayerData}) {
                     {AchievementsElements}
                 </div>
         </div>  
-        </div>
+        // </div>
     );
 }

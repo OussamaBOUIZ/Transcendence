@@ -7,7 +7,13 @@ export default function useEffectOnUpdate (effectFunc, deps:any[]) {
             initialRender.current = false
             return ;
         }
-        deps.map(attribute => {if (!attribute) return ;})
-        effectFunc()
+        const val = deps.some(attribute => {
+            if (!attribute) return false;
+            if (typeof attribute === 'object' && !attribute.length)
+                return false;
+            return true;
+        })
+        if (val)
+            effectFunc()
     }, deps)
 }

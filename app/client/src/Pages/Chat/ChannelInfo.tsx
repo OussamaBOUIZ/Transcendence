@@ -36,6 +36,5 @@ export default function ChannelInfo() {
                 <ChannelProperty channel={channel} propertyName="user" isUnderMyGrade={(myGrade !== "user") ? true : false}/>
             </div>
         </div>
-        // <ChatOverview />
     )
 }

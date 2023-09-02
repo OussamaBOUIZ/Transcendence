@@ -152,7 +152,7 @@ export class ChatGatewayService {
                 creaionTime: new Date(message?.CreatedAt)
             }
         })
-        console.log(transformedArray);
+
         
         return transformedArray
     }

@@ -14,6 +14,7 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import { handleReceivedMsg, updateInbox } from '../../Helpers/chatdm.utils';
 import useChatOverview from '../../Hooks/useChatOverview';
 import ChatWindow from "./ChatWindow"
+import ChatOverview from './ChatOverview';
 
 export default function ChatDm () {
     const {user} = useContext(UserContext)
@@ -32,6 +33,7 @@ export default function ChatDm () {
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
+        console.log('submitting')
         if (messageToSendValue !== "") {
             const msgToSend: MessageData = {
                 receiverId: Number(id),
@@ -40,17 +42,18 @@ export default function ChatDm () {
                 creationTime : new Date().toString()
             }
             setMessageToSendValue("")
-            setMessagesList((prevList:MessageData[]) => [...prevList, msgToSend])
+            setMessagesList((prevList:MessageData[]) => {
+                return [...prevList, msgToSend]
+            })
             socket?.emit('SendMessage', msgToSend)
         }
     }
     
+    
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`../api/chat/${id}`)
-            console.log('res data', res.data);
-            setMessagesList(res.data)
-            
+            setMessagesList(res.data[0])
         } catch (error) {
             // console.log(error);
         }
@@ -69,7 +72,8 @@ export default function ChatDm () {
     useEffectOnUpdate(() => {
 
         // setUserOverview(useChatOverview(Number(id))); 
-
+        if (id === undefined)
+            return 
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -77,9 +81,10 @@ export default function ChatDm () {
             }})
         
         setSocket(newSocket)
+        console.log("messagesList", messagesList)
         loadConversation();
+        console.log("messagesList", messagesList)
         loadAvatar(String(id));
-
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
                 return inbx.author?.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
@@ -96,9 +101,10 @@ export default function ChatDm () {
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
-            return handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
+            const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
+            setUpdate((prevUpdate:number) => prevUpdate + 1);
+           return handle;
         })
-        setUpdate((prevUpdate:number) => prevUpdate + 1);
     }, [socket])
 
     useEffectOnUpdate(() => {
@@ -143,7 +149,8 @@ export default function ChatDm () {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <ContactDetail oview={userOverview}/>
+            {/* <ContactDetail oview={userOverview} id={(String(id))}/> */}
+            <ChatOverview oview={userOverview} id={id}/>
     </>
     );
 }
