@@ -151,8 +151,7 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        console.log(payload);
-        
+        if (!payload) return null;
         return await this.userRepo.findOneBy({ email: payload.email });
     }
 
