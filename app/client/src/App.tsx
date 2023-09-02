@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { BrowserRouter, Route,Routes } from 'react-router-dom'
 import ChatLayout from './Pages/Chat/ChatLayout'
 import Home from './Pages/Home/Home'
@@ -16,12 +16,40 @@ import Prompt from './Pages/Prompt/Prompt'
 import Profile from './Pages/Profile/Profile'
 import Friends from './Pages/Friends/Friends'
 import ChatDmInit from './Pages/Chat/ChatDmInit'
-import ChatRooomsInit from './Pages/Chat/ChatRoomsInit'
 import ChatDm from './Pages/Chat/ChatDm'
 import ChatRooms from './Pages/Chat/ChatRooms'
+import {useOnlineStatus} from "./Hooks/useOnlineStatus"
+import axios from 'axios'
+import io from "socket.io-client"
+
+const UpdateStatus = async () => {
+  try {
+    console.log("offline mode .....")
+    axios.put('/api/user/updateStatus', {status: "offline"})
+  }
+  catch (error) {
+    // console.log(error)
+  }
+}
 
 export default function App () {
   const {authenticated} = useContext(UserContext);
+  const userStatus = useOnlineStatus();
+  console.log(userStatus)
+
+  // create socket
+  useEffect(() => {
+    const fd = io("ws://localhost:1212", {
+        withCredentials: true,
+    })
+
+    return  () => {
+      fd.disconnect();
+    }
+  }, [])
+
+  if (!userStatus)
+    void UpdateStatus();
   return (
     <UserProvider>
       <BrowserRouter>

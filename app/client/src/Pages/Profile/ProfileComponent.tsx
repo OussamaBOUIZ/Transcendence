@@ -24,6 +24,25 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     //     void SendRequest();
     // }, [UserData.id])
 
+    async function handleBlock() {
+        try {
+            await axios.post(`api/user/block/${UserData.id}`)
+        }
+        catch (err) {
+            // console.log(err)
+        }
+    }
+
+    async function handleFriend() {
+        try {
+            await axios.post(`api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
+        }
+        catch (err) {
+            console.log("error : adding an existing friend")
+            console.log(err)
+        }
+    }
+
   const {user} = useContext(UserContext)
 
 
@@ -31,7 +50,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     return (
         <div className="profileComponent">
             <div className="item ProfileCard relative">
-                <img className="absolute top-3 right-3" src={block} alt="blockUser" />
+                <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />
                 <div className="flex flex-col items-center">
                     <div className="image">
                         <img src={UserData.image} alt="" />
@@ -49,7 +68,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                 {
                     user.id !== UserData.id &&
                     <div className="footer">
-                        <button className="friend-request">add as friend</button>
+                        <button className="friend-request" onClick={handleFriend}>add as friend</button>
                         <button className="DM">send message</button>
                     </div>
                 }

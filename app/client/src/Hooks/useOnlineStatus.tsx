@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const useOnlineStatus = () => {
@@ -6,8 +7,7 @@ export const useOnlineStatus = () => {
   useEffect(() => {
     // create event handler
     const handleStatusChange = () => {
-        // setOnline(navigator.onLine);
-        // if (!navigator.onLine)
+      setOnline(navigator.onLine);
     };
 
     // listen for online and ofline event

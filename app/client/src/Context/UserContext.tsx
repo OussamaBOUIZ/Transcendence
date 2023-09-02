@@ -3,6 +3,7 @@ import { User } from '../../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 
+
 type typeProps = {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;

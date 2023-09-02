@@ -36,10 +36,11 @@ import { diskStorage } from 'multer'
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
 
-import { userDataDto } from './dto/userDataDto';
+import { statusDto, userDataDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
+import { log } from 'console';
 // import { PlayerData} from "../../../global/Interfaces"
 
 
@@ -96,7 +97,7 @@ const multerConfig = () => ({
 // 		}
 // 	})
 // })
-
+ 
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
@@ -105,14 +106,14 @@ export class UserController {
         , private readonly BlockedTokenService: BlockedTokenlistService) {}
 
     @Put('updateStatus')
-    async updateUserStatus(@Req() req: Request, status: string) {
-        console.log(status);
+    async updateUserStatus(@Req() req: Request, @Body() body: statusDto) {
+        console.log(body.status);
         
         const userEmail = req.user['email']
         const user = await this.userService.findUserByEmail(userEmail)
         if (!user)
             throw new NotFoundException('user not exist')
-        user.status = status
+        user.status = body.status
         await this.userService.saveUser(user)
     }
     
@@ -127,6 +128,7 @@ export class UserController {
             firstname: user.firstname,
             lastname: user.lastname,
             username: user.username,
+            status: user.status,
         };
         return userData;
     }
@@ -212,19 +214,6 @@ export class UserController {
         await this.userService.blockUser(userId, req.user['email'])
         return res.status(HttpStatus.OK).send('the user blocked ')
     }
-
-    @Get()
-    async getUserFromJwt(@Req() req: Request)
-    {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
-        if (!user)
-            throw new UnauthorizedException()
-        return {
-            id: user.id,
-            username: user.username,
-        }
-    }
-
 
     // @Post('/:userId/uploadImage')
     // uploadImage(
@@ -410,7 +399,6 @@ export class UserController {
 		@Query() dto: searchDto,
 	) {
 		const { username } = dto
-		Logger.log(username)
 		return this.userService.searchUser(username)
 	}
 
@@ -421,6 +409,10 @@ export class UserController {
 
     @Get('user/profile/:username')
     async getUserProfile(@Param('username') username: string) {
-        return this.userService.getUserProfile(username)
+        console.log(username);
+        
+        const user = await this.userService.getUserProfile(username)
+        console.log(user);
+        return user
     }
 }

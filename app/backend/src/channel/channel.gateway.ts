@@ -8,6 +8,7 @@ import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
+import { log } from "console";
 
 @WebSocketGateway(1212, {cors: {
 	origin: "http://localhost:5173",
@@ -37,12 +38,28 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
+        user.status = 'Online'
         await this.userService.saveUser(user);
     }
 
 
-    handleDisconnect(client: Socket) {
-        client.disconnect();
+    async handleDisconnect(client: Socket) {
+        console.log('disconeeeee');
+        
+        const AllCookies = client.handshake.headers.cookie;
+        const start = AllCookies.indexOf("access_token=") + 13;
+        let end = AllCookies.indexOf(";", start);
+        end = end !== -1 ? end : AllCookies.length;
+        const accessToken = AllCookies.substring(start, end);
+        const user = await this.userService.getUserFromJwt(accessToken);
+        if(!user) 
+        {
+            client.disconnect();
+            throw new WsException('user is not authenticated');
+        }
+        user.socketId = client.id;
+        user.status = 'Offline'
+        await this.userService.saveUser(user);
     }
 
     async unmuteUser(userId: number, channelservice: ChannelService, server: Server)

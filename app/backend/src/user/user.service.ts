@@ -151,7 +151,9 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        return await this.userRepo.findOneBy({ id: payload.id });
+        console.log(payload);
+        
+        return await this.userRepo.findOneBy({ email: payload.email });
     }
 
     decodeJwtCode(userToken: string) {
@@ -248,7 +250,8 @@ export class UserService {
                 id: true,
                 username: true,
                 firstname: true,
-                lastname: true
+                lastname: true,
+                status: true,
             }
         })
     }
@@ -447,6 +450,7 @@ export class UserService {
                 firstname: true,
                 lastname: true,
                 username: true,
+                status: true,
                 stat: {
                    achievements: {
                         id: true,

@@ -4,6 +4,7 @@ export interface User {
     image?: string,
     lastname: string,
     username?: string,
+    status: string,
 }
 
 interface FriendUser {
@@ -127,6 +128,7 @@ export interface SStat {
     username?: string;
     image?: string;
     stat?: SStat;
+    status: string;
 }
 
 
