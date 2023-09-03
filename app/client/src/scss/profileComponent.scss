@@ -4,7 +4,7 @@
 .profileComponent {
     display: grid;
     width: 95%;
-    grid-template: 1fr 0.9fr/0.75fr 1fr;
+    grid-template: 1fr 0.9fr / 0.75fr 1fr;
     grid-template-areas:
         "profile history"
         "friends achievements";
@@ -33,6 +33,7 @@
             font-size: 1.125em;
             font-weight: 700;
             text-transform: uppercase;
+            text-align: center;
         }
         h2, p {
             text-transform: lowercase;
@@ -45,7 +46,7 @@
         }
         .level_bar {
             margin-top: 3px;
-            width: 30%;
+            width: 9.5em;
             height: .625em;
             position: relative;
             background-color: $bar-background;
@@ -64,6 +65,7 @@
             width: 100%;
             display: flex;
             button {
+                width: 50%;
                 background: white;
                 color: black;
                 flex-grow: 1;
@@ -233,6 +235,56 @@
     .profileComponent {
         .ProfileCard {
             margin: 0;
+        }
+    }
+}
+@media (max-width: 1190px) {
+    .profileComponent > .ProfileCard > .footer {
+        button {
+            padding: 1em 1em;
+        }
+    }
+}
+
+@media (max-width: 1150px) {
+    .profileComponent {
+        background: red;
+        grid-template: 1fr 1fr / 1fr 1fr;
+        grid-template-areas:
+            "profile friends"
+            "history"
+            "achievements";
+    .stats {
+        display: none;
+    }
+    }
+}
+
+@media (max-width: 920px) {
+    .profileComponent {
+        grid-template: 1fr / 1fr;
+        grid-template-areas:
+            "profile"
+            "friends"
+            "history"
+            "achievements";
+    // .stats {
+    //     display: none;
+    // }
+        .ProfileCard {
+            @include center-styles;
+            flex-direction: row;
+            padding: 0;
+            .image > img {
+                width: 7em;
+                height: 7em;
+            }
+            .level_bar {
+                width: 12em;
+            }
+        }
+        .footer {
+            flex-direction: column;
         }
     }
 }

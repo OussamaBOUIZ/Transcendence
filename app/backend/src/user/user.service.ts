@@ -255,7 +255,15 @@ export class UserService {
         })
     }
 
-
+    async getStat(id: number) {
+        const user = await this.userRepo.findOne({
+            where: { id: id },
+            relations: {
+                stat: true,
+            }
+        });
+        return user.stat;
+    }
 
     async getAchievement(id: number) {
         const user = await this.userRepo.findOne({
@@ -321,10 +329,15 @@ export class UserService {
             }
         });
         const friend = await this.userRepo.findOne({
+            relations: {
+                friends: true
+            },
             where: { id: friendId },
         });
         user.friends.push(friend);
+        friend.friends.push(user)
         await this.userRepo.save(user);
+        await this.userRepo.save(friend)
     }
     async generate2fa(user: User) {
         const secret = authenticator.generateSecret();
@@ -416,6 +429,9 @@ export class UserService {
 
     async getUserProfile(username: string) {
         return await this.userRepo.findOne({
+            relations: {
+                stat: true,
+            },
             where: {
                 username: username
             },
@@ -425,6 +441,10 @@ export class UserService {
                 lastname: true,
                 username: true,
                 status: true,
+                stat: {
+                    ladder_level: true,
+                    levelPercentage: true,
+                }
             }
         })
     }
@@ -457,6 +477,7 @@ export class UserService {
                         description: true,
                    },
                    ladder_level: true,
+                   levelPercentage: true,
                    losses: true,
                    wins: true, 
                 }

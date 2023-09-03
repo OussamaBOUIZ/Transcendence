@@ -3,13 +3,13 @@ import GameHistory from "../../Components/gameHistory";
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
-import {User} from "../../../../global/Interfaces"
+import React, { useContext, useState } from "react";
+import {PlayerData} from "../../../../global/Interfaces"
 import UserContext from "../../Context/UserContext";
 import block from "../../Assets/Icons/block.svg"
 
 
-export default function ProfileComponent({UserData}: {UserData: User}) {
+export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
 
     // useEffect(() => {
     //     const SendRequest = async () => {
@@ -44,38 +44,56 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
         }
     }
 
-  const {user} = useContext(UserContext)
+    let statusIcon: string;
 
+    switch (UserData.status) {
+        case "Online":
+            statusIcon = "bg-green-500";
+            break;
+        case "Offline":
+            statusIcon = "bg-slate-600";
+            break;
+        default:
+            statusIcon = "bg-pink-500";
+            break;
+    }
 
-    const level = 70
+    const {user} = useContext(UserContext)
+    const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
+
     return (
-        <div className="profileComponent">
+        <div className="profileComponent bg- bg-green ">
             <div className="item ProfileCard relative">
                 {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
-                <div className="flex flex-col items-center">
-                    <div className="image">
-                        <img src={UserData.image} alt="" />
-                    </div>
-                    <h1>{UserData.firstname + " " + UserData.lastname}</h1>
-                    <h2>{UserData.username}</h2>
+                <div className="image">
+                    <img src={UserData.image} alt="" />
                 </div>
-                <h2>{UserData.status}</h2>
-                <div className="flex flex-col w-full items-center">
-                    <p>level 14</p>
-                    <div className="level_bar">
-                        <div className="level-bar-fill" style={{ width: `${level}%` }}></div>
+                <div className="flex flex-col items-center gap-2" >
+                    <div className="flex flex-col items-center">
+                        <h1>{UserData.firstname + " " + UserData.lastname}</h1>
+                        <h2>{UserData.username}</h2>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${statusIcon}`}></div>
+                        <h2>{UserData.status}</h2>
+                    </div>
+                    <div className="flex flex-col w-full items-center">
+                        <p>level {UserData.stat.ladder_level}</p>
+                        <div className="level_bar">
+                            <div className="level-bar-fill" style={{ width: `${String(UserData.stat.levelPercentage)}%` }}></div>
+                        </div>
                     </div>
                 </div>
                 {
                     user.id !== UserData.id &&
                     <div className="footer">
-                        <button className="friend-request" onClick={handleFriend}>add as friend</button>
+                        <button className="friend-request" onClick={handleFriend}>{isMyFriend ? 'Friend' : 'add as friend'}</button>
                         <button className="DM">send message</button>
                     </div>
                 }
             </div>
             <GameHistory UserData={UserData} />
-            <FriendsCard user={UserData} />
+            <FriendsCard userData={UserData} setIsMyFriend={setIsMyFriend} />
             <AchievementCard user={UserData} />
         </div>
     )

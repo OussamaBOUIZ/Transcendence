@@ -409,10 +409,7 @@ export class UserController {
 
     @Get('user/profile/:username')
     async getUserProfile(@Param('username') username: string) {
-        console.log(username);
-        
         const user = await this.userService.getUserProfile(username)
-        console.log(user);
         return user
     }
 }

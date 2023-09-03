@@ -16,9 +16,5 @@ export class userWinDto {
 
     @IsNotEmpty()
     @IsNumber()
-    userLevel: number
-
-    @IsNotEmpty()
-    @IsNumber()
     opponentLevel: number
 }
