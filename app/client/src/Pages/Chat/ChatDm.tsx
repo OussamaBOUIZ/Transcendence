@@ -11,7 +11,7 @@ import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-import { handleReceivedMsg, updateInbox } from '../../Helpers/chatdm.utils';
+import { handleReceivedMsg, updateInbox ,updateInboxBySending ,updateInboxByReceiving} from '../../Helpers/chatdm.utils';
 import useChatOverview, { fetchChatOverview } from '../../Hooks/useChatOverview';
 import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
@@ -34,9 +34,8 @@ export default function ChatDm () {
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
-        console.log('submitting')
         if (messageToSendValue.trim() !== "") {
-            const msgToSend: MessageData = {
+            const sendMsg: MessageData = {
                 receiverId: viewId,
                 authorId: user.id,
                 message: messageToSendValue,
@@ -44,9 +43,10 @@ export default function ChatDm () {
             }
             setMessageToSendValue("")
             setMessagesList((prevList:MessageData[]) => {
-                return [...prevList, msgToSend]
+                return [...prevList, sendMsg]
             })
-            socket?.emit('SendMessage', msgToSend)
+            socket?.emit('SendMessage', sendMsg)
+            updateInboxBySending(sendMsg, setInboxList);
         }
     }
     
@@ -56,18 +56,9 @@ export default function ChatDm () {
             const res = await axios.get(`../api/chat/${id}`)
             setMessagesList(res.data)
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     }
-
-   const loadAvatar = async (id:string) => {
-        try {
-            const res = await getUserImage(viewId);
-            setAvatar(res);
-        } catch (error) {
-            console.error(error);
-        }
-   }
 
     /**EFFECTS     */
     useEffectOnUpdate(() => {
@@ -82,12 +73,11 @@ export default function ChatDm () {
           return ;
         fetchChatOverview(viewId, setUserOverview)
         loadConversation();
-        loadAvatar(String(id));
-        setInboxList((prevInbox:InboxItem[]) => {
-            return prevInbox.map((inbx) => {
-                return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
-            })
-        })
+        // setInboxList((prevInbox:InboxItem[]) => {
+        //     return prevInbox.map((inbx) => {
+        //         return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
+        //     })
+        // })
 
         //cleanup function
         return  () => {
@@ -102,19 +92,18 @@ export default function ChatDm () {
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
             console.log("recMsg", recMsg);
-            const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, viewId)
-            setUpdate((prevUpdate) => prevUpdate + 1);
-           return handle;
+            if (recMsg.authorId === viewId)
+                setMessagesList((prevMsgs) => [...prevMsgs, recMsg])
+            updateInboxByReceiving(recMsg, setInboxList, recMsg.authorId === viewId);
         })
     }, [socket])
 
     useEffectOnUpdate(() => {
-        updateInbox(setInboxList, messagesList[messagesList.length - 1], viewId, userOverview.image, userOverview.username)
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
-        setUpdate((prevUpdate) => prevUpdate + 1);
     }, [messagesList])
 
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
+
     const messagesElements = messagesList.map((msg:MessageData) => {
         if (msg.message !== "") {
             return (

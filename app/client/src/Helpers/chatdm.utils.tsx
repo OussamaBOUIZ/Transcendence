@@ -2,6 +2,9 @@ import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
+        console.log('updateinbox called');
+        
+        console.log("Viewid", id)
         setter((prevInbox) => {
                     if ( prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
                     return prevInbox.map((item) => {
@@ -37,7 +40,7 @@ const handleReceivedMsg = (recMsg: MessageData,
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {
         setInL((prevInbox:InboxItem[]) => {
-            if (prevInbox.find((inbx) => inbx.author.id === recMsg?.authorId) === undefined) {
+            if (prevInbox.find((inbx) => inbx.author.id === id) === undefined) {
                 return [...prevInbox, 
                         {author: {id: recMsg.authorId, username: recMsg.username}, 
                             lastMessage: recMsg.message,
@@ -60,4 +63,44 @@ const handleReceivedMsg = (recMsg: MessageData,
     }
 }
 
-export {updateInbox, handleReceivedMsg};
+
+const updateInboxBySending  = (sendMsg: MessageData, setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>) => {
+    setInboxList((prevList) => {
+        if (prevList.find((inbx) => inbx.author.id === sendMsg.receiverId)) {
+            return prevList.map((inbx) => {
+                return inbx.author.id === sendMsg.receiverId 
+                ? {...inbx, lastMessage: sendMsg.message, CreatedAt: sendMsg.creationTime}
+                : inbx
+            })
+        } else return [...prevList, 
+            {author: {id: sendMsg.receiverId, username: sendMsg.username}, 
+                lastMessage: sendMsg.message,
+                CreatedAt: sendMsg.creationTime
+            } as InboxItem
+        ]
+    })    
+}
+
+const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, inView:boolean) => {
+    setInboxList((prevList) => {
+        if (prevList.find((inbx) => inbx.author.id === recMsg.authorId)) {
+            return prevList.map((inbx) => {
+                return inbx.author.id === recMsg.authorId 
+                ? {...inbx, 
+                    lastMessage: recMsg.message, 
+                    CreatedAt: recMsg.creationTime,
+                    unseenMessages: inView ? 0 : (inbx.unseenMessages && inbx.unseenMessages + 1)
+                }
+                : inbx
+            })
+        } else return [...prevList,
+            {author: {id: recMsg.receiverId, username: recMsg.username}, 
+                lastMessage: recMsg.message,
+                CreatedAt: recMsg.creationTime,
+                unseenMessages: inView ? 0 : 1
+            } as InboxItem
+        ]
+    })
+}
+
+export {updateInbox, handleReceivedMsg, updateInboxByReceiving, updateInboxBySending};
