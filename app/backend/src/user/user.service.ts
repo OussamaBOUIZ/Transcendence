@@ -151,10 +151,7 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        if (!payload)
-            return null
-        console.log(payload);
-        
+        if (!payload) return null;
         return await this.userRepo.findOneBy({ email: payload.email });
     }
 
@@ -270,6 +267,16 @@ export class UserService {
             }
         });
         return user.stat.achievements;
+    }
+
+    async getStat(id: number) {
+        const user = await this.userRepo.findOne({
+            where: { id: id },
+            relations: {
+                stat: true,
+            }
+        });
+        return user.stat;
     }
 
     async getLastThreeAchievements(id: number) {
@@ -467,7 +474,6 @@ export class UserService {
         })
         if (!user)
             throw new NotFoundException('user not found')
-        
         return user
     }
 }

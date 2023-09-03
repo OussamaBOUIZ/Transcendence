@@ -14,7 +14,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     // useEffect(() => {
     //     const SendRequest = async () => {
     //         try {
-    //             await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
+    //             await axios.post(`/api/user/addfriend/${UserData.id}?friendId=3`, null)
     //         }
     //         catch (err) {
     //             console.log("error : adding an existing friend")
@@ -26,7 +26,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
 
     async function handleBlock() {
         try {
-            await axios.post(`api/user/block/${UserData.id}`)
+            await axios.post(`/api/user/block/${UserData.id}`)
         }
         catch (err) {
             // console.log(err)
@@ -34,8 +34,9 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     }
 
     async function handleFriend() {
+        console.log("friend")
         try {
-            await axios.post(`api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
+            await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
         }
         catch (err) {
             console.log("error : adding an existing friend")
@@ -50,7 +51,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     return (
         <div className="profileComponent">
             <div className="item ProfileCard relative">
-                <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />
+                {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
                 <div className="flex flex-col items-center">
                     <div className="image">
                         <img src={UserData.image} alt="" />

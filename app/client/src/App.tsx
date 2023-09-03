@@ -35,7 +35,6 @@ const UpdateStatus = async () => {
 export default function App () {
   const {authenticated} = useContext(UserContext);
   const userStatus = useOnlineStatus();
-  console.log(userStatus)
 
   // create socket
   useEffect(() => {
