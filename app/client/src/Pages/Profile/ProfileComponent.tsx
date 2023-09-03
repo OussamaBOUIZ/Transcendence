@@ -11,18 +11,8 @@ import block from "../../Assets/Icons/block.svg"
 
 export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
 
-    // useEffect(() => {
-    //     const SendRequest = async () => {
-    //         try {
-    //             await axios.post(`/api/user/addfriend/${UserData.id}?friendId=3`, null)
-    //         }
-    //         catch (err) {
-    //             console.log("error : adding an existing friend")
-    //             console.log(err)
-    //         }
-    //     }
-    //     void SendRequest();
-    // }, [UserData.id])
+    const {user} = useContext(UserContext)
+    const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
 
     async function handleBlock() {
         try {
@@ -37,6 +27,7 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
         console.log("friend")
         try {
             await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
+            setIsMyFriend(true)
         }
         catch (err) {
             console.log("error : adding an existing friend")
@@ -58,17 +49,14 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
             break;
     }
 
-    const {user} = useContext(UserContext)
-    const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
-
     return (
         <div className="profileComponent bg- bg-green ">
-            <div className="item ProfileCard relative">
+            <div className="item ProfileCard relative pt-4">
                 {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
                 <div className="image">
                     <img src={UserData.image} alt="" />
                 </div>
-                <div className="flex flex-col items-center gap-2" >
+                <div className="flex flex-col items-center gap-4 pb-4" >
                     <div className="flex flex-col items-center">
                         <h1>{UserData.firstname + " " + UserData.lastname}</h1>
                         <h2>{UserData.username}</h2>
@@ -87,7 +75,7 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
                 {
                     user.id !== UserData.id &&
                     <div className="footer">
-                        <button className="friend-request" onClick={handleFriend}>{isMyFriend ? 'Friend' : 'add as friend'}</button>
+                        <button className="friend-request" onClick={handleFriend}>{isMyFriend ? 'Friend' : 'Add as Friend'}</button>
                         <button className="DM">send message</button>
                     </div>
                 }

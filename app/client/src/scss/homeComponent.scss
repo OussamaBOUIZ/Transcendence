@@ -25,6 +25,7 @@
     display: grid;
     height: 100%;
     width: 75%;
+    margin-left: 1em;
     grid-gap: 0.6rem;
     grid-template: 0.9fr 0.8fr 1fr/repeat(6, 1fr);
     grid-template-areas:
@@ -212,6 +213,7 @@
             grid-gap: 5px;
             justify-items: center;
             padding-bottom: 5px;
+            overflow: hidden;
         }
     }
 }

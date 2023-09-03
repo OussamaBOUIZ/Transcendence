@@ -1,6 +1,6 @@
 import "../../scss/home.scss";
 import ProfileComponent from "./ProfileComponent";
-import React, { useState , useEffect, useContext} from "react";
+import React, { useState , useContext} from "react";
 import { useParams } from "react-router";
 import {PlayerData} from "../../../../global/Interfaces"
 import {getUserData} from "../../Hooks/getUserData"

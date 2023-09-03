@@ -19,7 +19,6 @@
         @include center-columns;
         color: white;
         gap: .5em;
-        padding-top: 1.75em;
         .image {
             img {
                 width: 9.5em;
@@ -81,6 +80,18 @@
             }
         }
     }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 90%;
+        margin-bottom: .4em;
+        p {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 1rem;
+        }
+    }
     .GameHistory {
         background-image: url("../Assets/GameHistory.png");
         background-size: cover;
@@ -88,11 +99,17 @@
         grid-area: history;
         display: flex;
         flex-direction: column;
-        p {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: white;
-            margin: 1rem;
+        align-items: center;
+        header > .NbGames {
+            display: flex;
+            align-items: center;
+            span {
+                font-size: 0.875rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: .75em;
+            }
         }
         .games {
             display: grid;
@@ -103,30 +120,20 @@
             grid-gap: 5px;
             justify-items: center;
             padding-bottom: 5px;
+            overflow: hidden;
         }
     }
     .friendsCard {
         grid-area: friends;
         overflow: hidden;
         @include center-columns;
-        header {
+
+        header > .NbFriends {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 90%;
-            margin-bottom: .4em;
-            p {
-                font-size: 1.625rem;
-                font-weight: 700;
-                margin-top: .7em;
-                margin-bottom: 0;
-            }
-            .NbFriends {
-                display: flex;
-                align-items: center;
-                span {
-                    margin-left: .5em;
-                }
+            align-items: center;
+            span {
+                margin-left: .5em;
+                font-weight: 500;
             }
         }
         .all-friends-list {
@@ -151,24 +158,12 @@
         grid-area: achievements;
         overflow: hidden;
         @include center-columns;
-        header {
+        header > .NbAchived {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 90%;
-            margin-bottom: .4em;
-            p {
-                font-size: 1.625rem;
-                font-weight: 700;
-                margin-top: .7em;
-                margin-bottom: 0;
-            }
-            .NbAchived {
-                display: flex;
-                align-items: center;
-                span {
-                    margin-left: .5em;
-                }
+            align-items: center;
+            span {
+                margin-left: .5em;
+                font-weight: 500;
             }
         }
         .all-awards-list {
@@ -180,6 +175,7 @@
             flex-wrap: wrap;
             row-gap: 8px;
             margin-right: 1em;
+            padding-left: 1em;
             &::-webkit-scrollbar {
                 width: .4em;
                 border-radius: 6em;
@@ -189,9 +185,8 @@
                 border-radius: 6em;
             }
             .award-item {
-                margin-left: 1.4em;
                 margin-right: 1em;
-                width: 45%;
+                width: 40%;
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
@@ -231,7 +226,7 @@
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1450px) {
     .profileComponent {
         .ProfileCard {
             margin: 0;
@@ -248,33 +243,61 @@
 
 @media (max-width: 1150px) {
     .profileComponent {
-        background: red;
         grid-template: 1fr 1fr / 1fr 1fr;
         grid-template-areas:
             "profile friends"
-            "history"
-            "achievements";
-    .stats {
-        display: none;
-    }
+            "history history"
+            "achievements achievements";
+        grid-gap: 1.5em;
+        .ProfileCard {
+            .image > img {
+                width: 7em;
+                height: 7em;
+            }
+        }
+        header > p {
+            font-size: 1.2em;
+            margin: .5rem;
+        }
+        .achievementCard > .all-awards-list > .award-item {
+            padding: .2em .75em;
+        }
     }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 960px) {
+    .profileComponent {                                                                                                                          
+        .stats {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 768px) {
     .profileComponent {
+        .item {
+            min-height: 16rem;
+        }
         grid-template: 1fr / 1fr;
         grid-template-areas:
             "profile"
             "friends"
             "history"
             "achievements";
-    // .stats {
-    //     display: none;
-    // }
+        grid-gap: 1em;
+        header > p {
+            font-size: 1em;
+            // margin: 0;
+        }
+        span {
+            font-size: .75em;
+        }
+        .stats {
+            display:flex;
+        }
         .ProfileCard {
             @include center-styles;
             flex-direction: row;
-            padding: 0;
             .image > img {
                 width: 7em;
                 height: 7em;
@@ -285,6 +308,9 @@
         }
         .footer {
             flex-direction: column;
+        }
+        .achievementCard > .all-awards-list > .award-item {
+            width: 100%;
         }
     }
 }

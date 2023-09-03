@@ -32,7 +32,7 @@ interface Stat {
     levelPercentage: number,
     losses: number,
     wins: number,
-    achievements?: Achievement[],
+    achievements: Achievement[],
 }
 
 interface Leaders {

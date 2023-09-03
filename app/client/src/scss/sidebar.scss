@@ -36,3 +36,9 @@ div.sidebar {
         background : $sdb-gradient;
     }
 }
+
+@media (max-width: 640px) {
+    div.sidebar {
+        display: none;
+    }
+}

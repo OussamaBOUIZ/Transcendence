@@ -14,17 +14,17 @@ export default function FriendsCard({ userData, setIsMyFriend }: {userData: User
         if (friend.id === user.id) setIsMyFriend(true)
         return (
             <UserInfoCard
-                image={friend.image}
-                status={friend.status}
-                firstname={friend.firstname}
-                lastname={friend.lastname}
-                username={friend.username}
-                wins={friend.stat.wins}
-                losses={friend.stat.losses}
-                flex="row"
-                id={friend.id}
-                isUnderMyGrade={false}
-            />
+            image={friend.image}
+            status={friend.status}
+            firstname={friend.firstname}
+            lastname={friend.lastname}
+            username={friend.username}
+            wins={friend.stat.wins}
+            losses={friend.stat.losses}
+            flex="row"
+            id={friend.id}
+            isUnderMyGrade={false}
+        />
         );
     });
 

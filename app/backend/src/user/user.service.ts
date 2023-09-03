@@ -255,16 +255,6 @@ export class UserService {
         })
     }
 
-    async getStat(id: number) {
-        const user = await this.userRepo.findOne({
-            where: { id: id },
-            relations: {
-                stat: true,
-            }
-        });
-        return user.stat;
-    }
-
     async getAchievement(id: number) {
         const user = await this.userRepo.findOne({
             where: { id: id },
@@ -440,7 +430,9 @@ export class UserService {
     async getUserProfile(username: string) {
         return await this.userRepo.findOne({
             relations: {
-                stat: true,
+                stat: {
+                    achievements: true,
+                }
             },
             where: {
                 username: username
@@ -452,9 +444,12 @@ export class UserService {
                 username: true,
                 status: true,
                 stat: {
+                    achievements: true,
                     ladder_level: true,
                     levelPercentage: true,
-                }
+                    losses: true,
+                    wins: true, 
+                 }
             }
         })
     }

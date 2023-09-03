@@ -15,9 +15,11 @@ export default function Home() {
       return null;
 
   return (
-    <div className="Home">
-      <HomeComponent UserData={user} Leaders={leaders} />
+    <>
+      <div className="flex h-full w-full">
+        <HomeComponent UserData={user} Leaders={leaders} />
+      </div>
       <UserOverview UserData={user} />
-    </div>
+    </>
   );
 }

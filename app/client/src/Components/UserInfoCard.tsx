@@ -39,7 +39,7 @@ export default function UserInfoCard(props: userInfoCard) {
     }
 
     return (
-        <div className={`element-${isHovered ? "hovered" : ""} friend-item relative overflow-hidden`}
+        <div className={`element-${isHovered ? "hovered" : ""} friend-item relative`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             key={props.username}>
@@ -56,7 +56,7 @@ export default function UserInfoCard(props: userInfoCard) {
                     {props.username && <span>{props.username}</span>}
                 </div>
             </div>
-            <div className={`stats flex ${props.flex === "row" ? 'items-center justify-end gap-4' : 'flex-col items-end justify-center'}`}>
+            <div className={`stats flex ${props.flex === "row" ? 'sm:flex-row sm:items-center sm:justify-end sm:gap-4' : 'sm:flex-col sm:items-end sm:justify-center'} ${props.flex === "col" ? 'items-center justify-end gap-4' : 'flex-col items-end justify-center'} `}>
                 <span><img className='w-3' src={wins} alt="" /> {props.wins.toString() + " wins"}</span>
                 <span><img className='w-3' src={losses} alt="" /> {props.losses.toString() + " losses"}</span>
             </div>
