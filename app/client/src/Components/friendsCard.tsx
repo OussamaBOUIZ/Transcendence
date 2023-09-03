@@ -1,13 +1,12 @@
 import { useFetchAllFriends } from "../Hooks/useFetchAllFriends"
 import friendsIcon from "../Assets/Icons/group.svg"
-import {User} from "../../../global/Interfaces"
 import UserInfoCard from "./UserInfoCard"
 import React, { useContext } from "react";
 import UserContext from "../Context/UserContext";
 
-export default function FriendsCard({ userData, setIsMyFriend }: {userData: User, setIsMyFriend: React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function FriendsCard({ id, isMyFriend, setIsMyFriend }: {id: number, isMyFriend: boolean, setIsMyFriend: React.Dispatch<React.SetStateAction<boolean>>}) {
 
-    const allFriends = useFetchAllFriends(userData?.id);
+    const allFriends = useFetchAllFriends(id, isMyFriend);
     const {user} = useContext(UserContext)
 
     const FriendsToggle = allFriends.map((friend) => {

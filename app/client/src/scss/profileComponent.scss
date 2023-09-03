@@ -17,6 +17,7 @@
         grid-area: profile;
         margin: 0 3em;
         @include center-columns;
+        justify-content: center;
         color: white;
         gap: .5em;
         .image {
@@ -296,8 +297,9 @@
             display:flex;
         }
         .ProfileCard {
-            @include center-styles;
-            flex-direction: row;
+            .head {
+                flex-direction: row;
+            }
             .image > img {
                 width: 7em;
                 height: 7em;
@@ -305,9 +307,6 @@
             .level_bar {
                 width: 12em;
             }
-        }
-        .footer {
-            flex-direction: column;
         }
         .achievementCard > .all-awards-list > .award-item {
             width: 100%;

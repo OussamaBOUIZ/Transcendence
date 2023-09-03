@@ -24,7 +24,6 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
     }
 
     async function handleFriend() {
-        console.log("friend")
         try {
             await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
             setIsMyFriend(true)
@@ -53,22 +52,24 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
         <div className="profileComponent bg- bg-green ">
             <div className="item ProfileCard relative pt-4">
                 {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
-                <div className="image">
-                    <img src={UserData.image} alt="" />
-                </div>
-                <div className="flex flex-col items-center gap-4 pb-4" >
-                    <div className="flex flex-col items-center">
-                        <h1>{UserData.firstname + " " + UserData.lastname}</h1>
-                        <h2>{UserData.username}</h2>
+                <div className="head flex flex-col items-center">
+                    <div className="image">
+                        <img src={UserData.image} alt="" />
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${statusIcon}`}></div>
-                        <h2>{UserData.status}</h2>
-                    </div>
-                    <div className="flex flex-col w-full items-center">
-                        <p>level {UserData.stat.ladder_level}</p>
-                        <div className="level_bar">
-                            <div className="level-bar-fill" style={{ width: `${String(UserData.stat.levelPercentage)}%` }}></div>
+                    <div className="flex flex-col items-center gap-4 pb-4" >
+                        <div className="flex flex-col items-center">
+                            <h1>{UserData.firstname + " " + UserData.lastname}</h1>
+                            <h2>{UserData.username}</h2>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${statusIcon}`}></div>
+                            <h2>{UserData.status}</h2>
+                        </div>
+                        <div className="flex flex-col w-full items-center">
+                            <p>level {UserData.stat.ladder_level}</p>
+                            <div className="level_bar">
+                                <div className="level-bar-fill" style={{ width: `${String(UserData.stat.levelPercentage)}%` }}></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,8 +82,8 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
                 }
             </div>
             <GameHistory UserData={UserData} />
-            <FriendsCard userData={UserData} setIsMyFriend={setIsMyFriend} />
-            <AchievementCard user={UserData} />
+            <FriendsCard id={UserData.id} isMyFriend={isMyFriend} setIsMyFriend={setIsMyFriend} />
+            <AchievementCard achievements={UserData.stat.achievements} />
         </div>
     )
 }
