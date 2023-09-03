@@ -26,8 +26,10 @@ interface Achievement {
     is_achieved?: boolean,
     user_id?: number,
 }
+
 interface Stat {
     ladder_level: number,
+    levelPercentage: number,
     losses: number,
     wins: number,
     achievements?: Achievement[],
@@ -107,19 +109,6 @@ interface Message {
     isBlocked: boolean,
 }
 
-export interface StatAchievement {
-    id: number;
-    badge_name: string;
-    description: string;
-    image?: string;
-  }
-  
-export interface SStat {
-    achievements: StatAchievement[];
-    ladder_level: number;
-    losses: number;
-    wins: number;
-  }
   
   export interface PlayerData {
     id: number;
@@ -127,7 +116,7 @@ export interface SStat {
     lastname: string;
     username?: string;
     image?: string;
-    stat?: SStat;
+    stat: Stat;
     status: string;
 }
 

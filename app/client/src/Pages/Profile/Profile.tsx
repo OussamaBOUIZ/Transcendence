@@ -2,7 +2,7 @@ import "../../scss/home.scss";
 import ProfileComponent from "./ProfileComponent";
 import React, { useState , useEffect, useContext} from "react";
 import { useParams } from "react-router";
-import {User} from "../../../../global/Interfaces"
+import {PlayerData} from "../../../../global/Interfaces"
 import {getUserData} from "../../Hooks/getUserData"
 import useEffectOnUpdate from "../../Hooks/useEffectOnUpdate";
 import UserContext from "../../Context/UserContext";
@@ -11,7 +11,7 @@ export default function Profile() {
 
   const {username} = useParams();
   const {user} = useContext(UserContext)
-  const [userData, setUser] = useState<User>({} as User)
+  const [userData, setUser] = useState<PlayerData>({} as PlayerData)
 
   useEffectOnUpdate(() => {
     const getData = async () => {
