@@ -3,7 +3,7 @@ import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
         setter((prevInbox) => {
-                    if (prevInbox.find((inbx) => inbx.author?.id === lastMsg.authorId) !== undefined) {
+                    if ( prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
                     return prevInbox.map((item) => {
                         return (
                             item.author.id ===  id ?
@@ -32,6 +32,7 @@ const handleReceivedMsg = (recMsg: MessageData,
                         setInL:React.Dispatch<SetStateAction<InboxItem[]>>,
                         id:number) => {
     console.log("recMsg.authorId", recMsg.authorId)
+    console.log("id : ", id)
     if (recMsg?.authorId === id)
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {

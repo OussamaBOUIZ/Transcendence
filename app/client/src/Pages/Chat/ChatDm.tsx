@@ -21,6 +21,7 @@ import ChatInput from './chatInput';
 export default function ChatDm () {
     const {user} = useContext(UserContext)
     const {id} = useParams()
+    let viewId = Number(id);
     const {inboxList, setInboxList, setUpdate} = useContext(InboxContext)
     
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
@@ -36,7 +37,7 @@ export default function ChatDm () {
         console.log('submitting')
         if (messageToSendValue.trim() !== "") {
             const msgToSend: MessageData = {
-                receiverId: Number(id),
+                receiverId: viewId,
                 authorId: user.id,
                 message: messageToSendValue,
                 creationTime : new Date().toString()
@@ -61,7 +62,7 @@ export default function ChatDm () {
 
    const loadAvatar = async (id:string) => {
         try {
-            const res = await getUserImage(Number(id));
+            const res = await getUserImage(viewId);
             setAvatar(res);
         } catch (error) {
             console.error(error);
@@ -71,22 +72,20 @@ export default function ChatDm () {
     /**EFFECTS     */
     useEffectOnUpdate(() => {
 
-     
-        if (id === undefined)
-          return 
-        // setUserOverview(useChatOverview(Number(id))); 
-        fetchChatOverview(Number(id), setUserOverview)
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
               token: value
             }})
         setSocket(newSocket)
+        if (id === undefined)
+          return ;
+        fetchChatOverview(viewId, setUserOverview)
         loadConversation();
         loadAvatar(String(id));
         setInboxList((prevInbox:InboxItem[]) => {
             return prevInbox.map((inbx) => {
-                return inbx.author?.id === Number(id) ? {...inbx, unseenMessages: 0}: inbx
+                return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
             })
         })
 
@@ -94,24 +93,25 @@ export default function ChatDm () {
         return  () => {
             if (socket)
                 socket.disconnect()
+            viewId = 0
         }
     } 
-    , [id])
+    , [viewId])
 
 
     useEffect(() => {
         socket?.on('message', (recMsg: MessageData) => {
             console.log("recMsg", recMsg);
-            const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, Number(id))
-            setUpdate((prevUpdate:number) => prevUpdate + 1);
+            const handle =  handleReceivedMsg(recMsg, setMessagesList, setInboxList, viewId)
+            setUpdate((prevUpdate) => prevUpdate + 1);
            return handle;
         })
     }, [socket])
 
     useEffectOnUpdate(() => {
-        updateInbox(setInboxList, messagesList[messagesList.length - 1], Number(id), userOverview.image, userOverview.username)
+        updateInbox(setInboxList, messagesList[messagesList.length - 1], viewId, userOverview.image, userOverview.username)
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
-        setUpdate((prevUpdate:number) => prevUpdate + 1);
+        setUpdate((prevUpdate) => prevUpdate + 1);
     }, [messagesList])
 
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
