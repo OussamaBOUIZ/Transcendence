@@ -1,3 +1,4 @@
+import { spawn } from "child_process";
 import { SketchProps, P5CanvasInstance } from "react-p5-wrapper";
 
 interface MySketchProps extends SketchProps {
@@ -7,6 +8,7 @@ interface MySketchProps extends SketchProps {
     isHost: boolean;
     setIsHost: any;
     gameKey: string;
+    isMatching: boolean;
 }
 
 interface Velocity {
@@ -19,7 +21,7 @@ const PW: number = 10;
 const GAP: number = 10;
 const PSPEED: number = 10;
 const RADIUS: number = 10;
-const SPEED: number = 3;
+const SPEED: number = 6;
 
 const vel: Velocity = {
     x: 0,
@@ -111,13 +113,15 @@ class Pad {
         }
 
         if (isHost && collision(this, ball)) {
-            const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
-            const angle: number = (p5.PI / 8) * diff;
+            const rad: number = p5.radians(45);
+            const diff: number = ball.y - this.y;
+            const angle: number = p5.map(diff, 0, this.h, -rad, rad);
+            vel.y = SPEED * p5.sin(angle);
 
-            let dir: number = ball.x > p5.width / 2 ? -1 : 1;
-
-            vel.x = SPEED * dir * p5.cos(angle);
-            vel.y = SPEED * dir * p5.sin(angle);
+            if(this.x < p5.width / 2)
+                vel.x = SPEED * p5.cos(angle);
+            else
+                vel.x = (SPEED * p5.cos(angle)) * -1;
         }
     }
 }
@@ -139,6 +143,24 @@ function reset(p5: any, isHost: boolean): void {
         ball = new Ball(p5.width / 2, p5.height / 2, RADIUS);
 }
 
+var time: number = 0;
+
+function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
+    let img = p5.createImage(p5.width, p5.height);
+    img.loadPixels();
+  
+    for (let i = 0, n = img.pixels.length; i < n; i += 4) {
+      let c = 7 + p5.sin(i/50000 + time/7); // A sine wave of the form sin(ax + bt)
+      img.pixels[i] = img.pixels[i+1] = img.pixels[i+2] = 40 * p5.random() * c; // Set a random gray
+      img.pixels[i+3] = 150; // 100% opaque
+    }
+  
+    img.updatePixels();
+    p5.image(img, 0, 0);
+  
+    time = (time + 1) % p5.height;
+}
+
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
         rotation: 0,
@@ -147,6 +169,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isHost: true,
         setIsHost: () => {},
         gameKey: "",
+        isMatching: true,
     }
 
     p5.updateWithProps = (p: any) => {
@@ -156,6 +179,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     p5.setup = (): void => {
         p5.createCanvas(500, 300);
         reset(p5, props.isHost);
+        // p5.frameRate(30)
     }
 
 
@@ -167,36 +191,43 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme === "grey")
             p5.background(200);
 
-        if (props.isHost)
-            props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
-        else 
-            props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
+        if (!props.isMatching) {
+            if (props.isHost)
+                props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
+            else 
+                props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
 
-        props.socket?.on("movePad", (data: any) => {
-            if (props.isHost)    
-                leftPad.y = data.padX;
-            else
-                rightPad.y = data.padX;
+            props.socket?.on("movePad", (data: any) => {
+                // if (props.isHost)
+                    // console.log(data);
 
-            if (!props.isHost) {
-                ball.x = data.ballX;
-                ball.y = data.ballY;
+                if (props.isHost)    
+                    leftPad.y = data.padX;
+                else
+                    rightPad.y = data.padX;
+
+                if (!props.isHost) {
+                    ball.x = data.ballX;
+                    ball.y = data.ballY;
+                }
+            })
+
+            props.socket?.on("notHost", () => {
+                props.isHost = false;
+                console.log(props.isHost);
+            })
+
+    
+            if (props.isHost) {
+                leftPad.updatePad(p5, ball, false, props.isHost);
+                rightPad.updatePad(p5, ball, true, props.isHost);
+            } else {
+                leftPad.updatePad(p5, ball, true, props.isHost);
+                rightPad.updatePad(p5, ball, false, props.isHost);
             }
-        })
-
-        props.socket?.on("notHost", () => {
-            props.isHost = false;
-            console.log(props.isHost);
-        })
-
-        if (props.isHost) {
-            leftPad.updatePad(p5, ball, false, props.isHost);
-            rightPad.updatePad(p5, ball, true, props.isHost);
-        } else {
-            leftPad.updatePad(p5, ball, true, props.isHost);
-            rightPad.updatePad(p5, ball, false, props.isHost);
-        }
-        ball?.updateBall(p5, props.isHost);
+            ball?.updateBall(p5, props.isHost);
+        } else 
+            makeNoise(p5);
     }
 }
 

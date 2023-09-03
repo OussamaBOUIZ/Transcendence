@@ -13,6 +13,7 @@ export default function Game () {
     const [isHost, setIsHost] = useState<boolean>(true);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
+    const [isMatching, setIsMatching] = useState<boolean>(false);
     
     // const { user } = useContext(UserContext);
     const {key}: {key: string} = useParams();
@@ -25,12 +26,15 @@ export default function Game () {
             setGameKey(key);
             newSocket.emit("joinGame", key);
         } else {
+            setIsMatching(true);
             newSocket.emit("gameMatching")
 
             newSocket.on("matched", (roomKey: string) => {
                 console.log("matched room key: ", roomKey);
                 setGameKey(roomKey);
                 newSocket.emit("joinGame", roomKey);
+
+                setIsMatching(false);
             })
         }
 
@@ -50,6 +54,7 @@ export default function Game () {
             isHost={isHost}
             setIsHost={setIsHost}
             gameKey={gameKey}
+            isMatching={isMatching}
         />
     );
 }

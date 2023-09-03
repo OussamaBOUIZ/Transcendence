@@ -47,7 +47,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
 
 		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-			socket.emit("notHost")
+			// socket.emit("notHost")
+
+			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
+			const myArray: Array<string> = Array.from(socketsSet);
+
+			const sock: Socket = this.server.sockets.sockets.get(myArray[0]);
+			
+			sock.emit("notHost");
 		}
 	}
 
@@ -62,21 +69,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onGameMatching(@ConnectedSocket() socket: Socket) {
 
 		if (waitingSockets.length >= 1) {
-			socket.emit("matched", socket.id);
-			console.log("socket id: ", socket.id);
-
 			const oppSocket: Socket = waitingSockets[0];
 			waitingSockets.unshift();
-			oppSocket.emit("matched", socket.id);
+			socket.emit("matched", socket.id + oppSocket.id);
+			oppSocket.emit("matched", socket.id + oppSocket.id);
 			waitingSockets = [];
+
+			console.log("socket id: ", socket.id + oppSocket.id);
 		} else {
 			waitingSockets.push(socket);
-			socket.join(socket.id)
 		}
 	}
 
     @SubscribeMessage('game')
-	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {		
 		socket.to(body.gameKey).emit("movePad", body);
 	}
 }
