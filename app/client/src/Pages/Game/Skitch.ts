@@ -1,32 +1,19 @@
-import { spawn } from "child_process";
-import { SketchProps, P5CanvasInstance } from "react-p5-wrapper";
-
-interface MySketchProps extends SketchProps {
-    rotation: number;
-    theme: string;
-    socket: any;
-    isHost: boolean;
-    setIsHost: any;
-    gameKey: string;
-    isMatching: boolean;
-}
-
-interface Velocity {
-    x: number;
-    y: number;
-}
+import {  P5CanvasInstance } from "react-p5-wrapper";
+import { MySketchProps, Velocity, Pos, Color } from "./Interfaces";
 
 const PH: number = 80;
 const PW: number = 10;
 const GAP: number = 10;
 const PSPEED: number = 10;
-const RADIUS: number = 10;
+const RADIUS: number = 8;
 const SPEED: number = 6;
 
 const vel: Velocity = {
     x: 0,
     y: 0,
 };
+
+const prevPos: Array<Ball> = [];
 
 function collision(pad: Pad, ball: Ball): boolean {
     const distX: number = Math.abs(ball.x - pad.x - pad.w / 2);
@@ -55,14 +42,24 @@ class Ball {
     x: number;
     y: number;
     r: number;
+    color: Color;
 
-    constructor(x: number, y:number, r:number) {
+    constructor(x: number, y: number, r: number, color: Color) {
         this.x = x;
         this.y = y;
         this.r = r;
+        this.color = color;
+    }
+
+    
+    fadeEffect () {
+        this.color.a -= 10;
+        this.r -= 0.5;
     }
     
     drawBall(p5: any) {
+        p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
+        p5.noStroke();
         p5.ellipse(this.x, this.y, this.r * 2);
     }
     
@@ -82,6 +79,13 @@ class Ball {
             }
         }
     }
+
+    clone(): Ball {
+        const b: Ball = new Ball(this.x, this.y, this.r, structuredClone(this.color));
+        b.color.r -= 100;
+        b.color.a -= 100;
+        return b;
+    }
 }
 
 class Pad {
@@ -90,14 +94,15 @@ class Pad {
     w: number;
     h: number;
 
-    constructor(x: number, y:number, w: number, h: number) {
+    constructor(x: number, y: number, w: number, h: number) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
     }
-    
+
     drawPad(p5: any) {
+        p5.fill(255)
         p5.rect(this.x, this.y, this.w, this.h);
     }
     
@@ -140,7 +145,7 @@ function reset(p5: any, isHost: boolean): void {
     leftPad = new Pad(GAP, (p5.height / 2) - PH / 2, PW, PH);
     rightPad = new Pad(p5.width - PW - GAP, (p5.height / 2) - PH / 2, PW, PH);
     if (isHost)
-        ball = new Ball(p5.width / 2, p5.height / 2, RADIUS);
+        ball = new Ball(p5.width / 2, p5.height / 2, RADIUS, {r: 255, g: 13, b: 140, a: 255});
 }
 
 var time: number = 0;
@@ -150,9 +155,9 @@ function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
     img.loadPixels();
   
     for (let i = 0, n = img.pixels.length; i < n; i += 4) {
-      let c = 7 + p5.sin(i/50000 + time/7); // A sine wave of the form sin(ax + bt)
-      img.pixels[i] = img.pixels[i+1] = img.pixels[i+2] = 40 * p5.random() * c; // Set a random gray
-      img.pixels[i+3] = 150; // 100% opaque
+      let c = 7 + p5.sin(i / 50000 + time / 7);
+      img.pixels[i] = img.pixels[i + 1] = img.pixels[i + 2] = 40 * p5.random() * c;
+      img.pixels[i + 3] = 130;
     }
   
     img.updatePixels();
@@ -191,15 +196,28 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme === "grey")
             p5.background(200);
 
+        props.socket?.on("notHost", () => {
+            props.setIsHost(false);
+            console.log(props.isHost);
+        })
+
         if (!props.isMatching) {
             if (props.isHost)
                 props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
             else 
                 props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
-
+                prevPos.push(ball.clone());
+                prevPos.forEach( (b: Ball, idx: number) =>  {
+                    b.fadeEffect();
+                    b.drawBall(p5);
+    
+                    // console.log("test")
+    
+                    if (b.r <= 2) {
+                        prevPos.splice(idx, 1);
+                    }255
+                })
             props.socket?.on("movePad", (data: any) => {
-                // if (props.isHost)
-                    // console.log(data);
 
                 if (props.isHost)    
                     leftPad.y = data.padX;
@@ -210,13 +228,20 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     ball.x = data.ballX;
                     ball.y = data.ballY;
                 }
+
             })
 
-            props.socket?.on("notHost", () => {
-                props.isHost = false;
-                console.log(props.isHost);
-            })
+            prevPos.forEach( (b: Ball, idx: number) =>  {
+                b.fadeEffect();
+                b.drawBall(p5);
 
+                // console.log("test")
+
+                if (b.r <= 0) {
+                    prevPos.splice(idx, 1);
+                }
+            })
+            prevPos.push(ball.clone());
     
             if (props.isHost) {
                 leftPad.updatePad(p5, ball, false, props.isHost);
@@ -226,6 +251,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 rightPad.updatePad(p5, ball, false, props.isHost);
             }
             ball?.updateBall(p5, props.isHost);
+
+
         } else 
             makeNoise(p5);
     }

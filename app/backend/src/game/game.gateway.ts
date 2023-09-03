@@ -82,7 +82,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
     @SubscribeMessage('game')
-	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {		
+	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
 	}
+	
 }

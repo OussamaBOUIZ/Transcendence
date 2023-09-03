@@ -57,4 +57,5 @@ export default function Game () {
             isMatching={isMatching}
         />
     );
-}
+}const RADIUS: number = 10;
+const SPEED: number = 3;
