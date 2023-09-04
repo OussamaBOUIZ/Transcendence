@@ -229,7 +229,7 @@ export class UserService {
             order: {
                 ladder_level: 'DESC'
             },
-            take: 3,
+            take: 12,
             select: {
                 user: {
                     id: true,

@@ -25,41 +25,44 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
         )
     }
 
-    const top3 = [
+    const topThree = [
         {id: nanoid(), rank: 2, userData: Leaders[1], size: "medium"},
         {id: nanoid(), rank: 1, userData: Leaders[0], size: "medium"},
         {id: nanoid(), rank: 3, userData: Leaders[2], size: "medium"}
     ]
 
-    const ThreeUsers = top3.map(user => {
-        console.log(user)
+
+    const RestOfThem = Leaders.slice(3);
+
+    const ThreeUsers = topThree.map((user) => {
         return (
             <div className={`rank rank${user.rank}`} >
                 <RankContent
                 key={user.id}
                 userData={user.userData}
-                size={user.size}
+                size="medium"
                 Rank={user.rank} />
             </div>
         )
     })
-    const topEleven = top3.map(user => {
+
+    const TopTwelve = RestOfThem.map((user, index) => {
         return (
             <>
                 <div className={`topRank`} >
-                    <StarRank RankNumber={4} color="#A0A0A0" />
-                    <p>{user.userData.user.username}</p>
-                    <span><p>{`level 0`}</p></span>
+                    <StarRank RankNumber={index + 4} color="#A0A0A0" />
+                    <p>{user.username}</p>
+                    <span><p>{`level ${user.ladder_level}`}</p></span>
                 </div>
                     <div className={`topRank`} >
-                        <StarRank RankNumber={4} color="#A0A0A0" />
-                        <p>{user.userData.user.username}</p>
-                        <span><p>{`level 0`}</p></span>
+                        <StarRank RankNumber={index + 4} color="#A0A0A0" />
+                        <p>{user.username}</p>
+                        <span><p>{`level ${user.ladder_level}`}</p></span>
                     </div>
                     <div className={`topRank`} >
-                        <StarRank RankNumber={4} color="#A0A0A0" />
-                        <p>{user.userData.user.username}</p>
-                        <span><p>{`level 0`}</p></span>
+                        <StarRank RankNumber={index + 4} color="#A0A0A0" />
+                        <p>{user.username}</p>
+                        <span><p>{`level ${user.ladder_level}`}</p></span>
                     </div>
             </>
         )
@@ -80,8 +83,8 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                 <div className="board">
                     {ThreeUsers}
                 </div>
-                <div className="topEleven">
-                    {top3.length < 12 && topEleven}
+                <div className="TopTwelve">
+                    {Leaders.length <= 12 && TopTwelve}
                 </div>
             </section>
         </div>
