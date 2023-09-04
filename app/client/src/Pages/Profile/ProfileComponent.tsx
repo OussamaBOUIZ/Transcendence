@@ -66,9 +66,9 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
                             <h2>{UserData.status}</h2>
                         </div>
                         <div className="flex flex-col w-full items-center">
-                            <p>level {UserData.stat.ladder_level}</p>
+                            <p>level {UserData.stat?.ladder_level}</p>
                             <div className="level_bar">
-                                <div className="level-bar-fill" style={{ width: `${String(UserData.stat.levelPercentage)}%` }}></div>
+                                <div className="level-bar-fill" style={{ width: `${String(UserData.stat?.levelPercentage)}%` }}></div>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@ export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
             </div>
             <GameHistory UserData={UserData} />
             <FriendsCard id={UserData.id} isMyFriend={isMyFriend} setIsMyFriend={setIsMyFriend} />
-            <AchievementCard achievements={UserData.stat.achievements} />
+            <AchievementCard achievements={UserData.stat?.achievements} />
         </div>
     )
 }

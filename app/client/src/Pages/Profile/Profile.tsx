@@ -1,4 +1,3 @@
-import "../../scss/home.scss";
 import ProfileComponent from "./ProfileComponent";
 import React, { useState , useContext} from "react";
 import { useParams } from "react-router";
@@ -29,13 +28,13 @@ export default function Profile() {
 
   if (!userData.firstname) {
     return (
-      <div className="Home">
+      <div className="flex w-full h-full ml-4">
       </div>
     );
   }
 
   return (
-    <div className="Home">
+    <div className="flex w-full h-full ml-4">
       <ProfileComponent UserData={userData} />
     </div>
   );

@@ -315,6 +315,7 @@ export class UserService {
                     stat: {
                         wins: true,
                         losses: true,
+                        ladder_level: true,
                     }
                 },
             }

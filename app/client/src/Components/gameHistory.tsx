@@ -16,8 +16,8 @@ export default function GameHistory({UserData}: {UserData: PlayerData}) {
             <p>Game History</p>
             <div className="NbGames">
                 <div className="flex items-center justify-end gap-4">
-                    <span><img className='w-3' src={wins} alt="" /> {UserData.stat.wins.toString() + " wins"}</span>
-                    <span><img className='w-3' src={losses} alt="" /> {UserData.stat.losses.toString() + " losses"}</span>
+                    <span><img className='w-3' src={wins} alt="" /> {UserData.stat?.wins.toString() + " wins"}</span>
+                    <span><img className='w-3' src={losses} alt="" /> {UserData.stat?.losses.toString() + " losses"}</span>
                 </div>
             </div>
         </header>

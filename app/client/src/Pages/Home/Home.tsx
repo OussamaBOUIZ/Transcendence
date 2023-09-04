@@ -1,5 +1,4 @@
 import React, {useContext} from "react";
-import "../../scss/home.scss";
 import HomeComponent from "./homeComponent";
 import UserOverview from "../../Components/userOverview";
 import { useFetchLeaders } from "../../Hooks/useFetchLeaders"

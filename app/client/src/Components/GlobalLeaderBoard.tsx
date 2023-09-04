@@ -6,8 +6,6 @@ import { Leaders } from "../../../global/Interfaces";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 
-    console.log(Leaders)
-
     if (Leaders.length < 3) {
         return (
             <div className="globalLeaderboard">
@@ -27,13 +25,13 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
         )
     }
 
-    const users = [
+    const top3 = [
         {id: nanoid(), rank: 2, userData: Leaders[1], size: "medium"},
         {id: nanoid(), rank: 1, userData: Leaders[0], size: "medium"},
         {id: nanoid(), rank: 3, userData: Leaders[2], size: "medium"}
     ]
 
-    const ThreeUsers = users.map(user => {
+    const ThreeUsers = top3.map(user => {
         console.log(user)
         return (
             <div className={`rank rank${user.rank}`} >
@@ -45,7 +43,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
             </div>
         )
     })
-    const topEleven = users.map(user => {
+    const topEleven = top3.map(user => {
         return (
             <>
                 <div className={`topRank`} >
@@ -83,7 +81,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                     {ThreeUsers}
                 </div>
                 <div className="topEleven">
-                    {users.length < 12 && topEleven}
+                    {top3.length < 12 && topEleven}
                 </div>
             </section>
         </div>

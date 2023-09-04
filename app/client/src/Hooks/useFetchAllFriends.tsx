@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import { getUserImage } from "./getUserImage";
 import {FriendUser} from "../../../global/Interfaces"
 
-export const useFetchAllFriends = (id: number, isMyFriend: boolean): FriendUser[] | [] => {
+export const useFetchAllFriends = (id: number, isMyFriend?: boolean): FriendUser[] | [] => {
 
   const [allFriends, setAllFriends] = useState<FriendUser[]>([]);
 

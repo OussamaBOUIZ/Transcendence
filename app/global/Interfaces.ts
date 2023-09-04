@@ -116,7 +116,7 @@ interface Message {
     lastname: string;
     username?: string;
     image?: string;
-    stat: Stat;
+    stat?: Stat;
     status: string;
 }
 
