@@ -46,7 +46,7 @@ export default function ChatDm () {
                 return [...prevList, sendMsg]
             })
             dmSocket?.emit('SendMessage', sendMsg)
-            updateInboxBySending(sendMsg, setInboxList);
+            updateInboxBySending(sendMsg, setInboxList, userOverview.image, userOverview.username);
         }
     }
     
@@ -75,14 +75,14 @@ export default function ChatDm () {
 
     console.log("id: ", id);
 
-    useEffect(() => {
+    useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
             const inView:boolean =  recMsg.authorId ===  Number(id);
             updateInboxByReceiving(recMsg, setInboxList, inView);
         })
     }, [dmSocket, id])
 
-    useEffect(() => {
+    useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
             if (recMsg.authorId === viewId)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg])

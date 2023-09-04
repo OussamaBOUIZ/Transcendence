@@ -2,9 +2,6 @@ import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
-        console.log('updateinbox called');
-        
-        console.log("Viewid", id)
         setter((prevInbox) => {
                     if ( prevInbox.find((inbx) => inbx.author?.id === id) !== undefined) {
                     return prevInbox.map((item) => {
@@ -64,7 +61,10 @@ const handleReceivedMsg = (recMsg: MessageData,
 }
 
 
-const updateInboxBySending  = (sendMsg: MessageData, setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>) => {
+const updateInboxBySending  = (sendMsg: MessageData, 
+    setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>,
+    avatar:string, username:string 
+    ) => {
     setInboxList((prevList) => {
         if (prevList.find((inbx) => inbx.author.id === sendMsg.receiverId)) {
             return prevList.map((inbx) => {
@@ -73,7 +73,8 @@ const updateInboxBySending  = (sendMsg: MessageData, setInboxList:React.Dispatch
                 : inbx
             })
         } else return [...prevList, 
-            {author: {id: sendMsg.receiverId, username: sendMsg.username}, 
+            {author: {id: sendMsg.receiverId, username: username}, 
+                image: avatar,
                 lastMessage: sendMsg.message,
                 CreatedAt: sendMsg.creationTime
             } as InboxItem
@@ -81,7 +82,10 @@ const updateInboxBySending  = (sendMsg: MessageData, setInboxList:React.Dispatch
     })    
 }
 
-const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, inView:boolean) => {
+const updateInboxByReceiving = (recMsg: MessageData, 
+    setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>
+    , inView:boolean
+    ) => {
     console.log('updateInboxByReceiving');
     console.log("inView : ", inView)
     setInboxList((prevList) => {
