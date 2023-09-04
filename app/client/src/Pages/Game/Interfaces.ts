@@ -26,3 +26,13 @@ export interface Color {
     b: number;
     a: number;
 }
+
+export interface Vars {
+    PH: number;
+    PW: number;
+    GAP: number;
+    PSPEED: number;
+    RADIUS: number;
+    SPEED: number;
+    vel: Velocity;
+}

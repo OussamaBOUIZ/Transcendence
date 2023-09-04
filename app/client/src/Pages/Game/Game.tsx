@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react'
-import {io, Socket} from "socket.io-client";
+import React, {useState} from 'react'
+import {io} from "socket.io-client";
 import { useParams } from "react-router-dom"
 
 import { ReactP5Wrapper } from "react-p5-wrapper"
 
 import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-import UserContext from '../../Context/UserContext';
 
 
 export default function Game () {
@@ -16,7 +15,7 @@ export default function Game () {
     const [isMatching, setIsMatching] = useState<boolean>(false);
     
     // const { user } = useContext(UserContext);
-    const {key}: {key: string} = useParams();
+    const {key} = useParams();
 
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
@@ -57,5 +56,4 @@ export default function Game () {
             isMatching={isMatching}
         />
     );
-}const RADIUS: number = 10;
-const SPEED: number = 3;
+}
