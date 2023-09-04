@@ -13,6 +13,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
 
     const {user} = useContext(UserContext)
     const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
+    const [update, setUpdate] = useState<number>(0)
 
     async function handleBlock() {
         try {
@@ -26,7 +27,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
     async function handleFriend() {
         try {
             await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
-            setIsMyFriend(true)
+            setUpdate(prev => prev + 1)
         }
         catch (err) {
             console.log("error : adding an existing friend")
@@ -82,7 +83,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                 }
             </div>
             <GameHistory UserData={UserData} />
-            <FriendsCard id={UserData.id} isMyFriend={isMyFriend} setIsMyFriend={setIsMyFriend} />
+            <FriendsCard id={UserData.id} update={update} setIsMyFriend={setIsMyFriend} />
             <AchievementCard achievements={UserData.stat?.achievements} />
         </div>
     )

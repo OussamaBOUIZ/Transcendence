@@ -6,7 +6,7 @@ import unlocked from "../Assets/Icons/lock-open-solid.svg"
 import {Achievement} from "../../../global/Interfaces"
 import React from "react";
 
-export default function AchievementCard({ achievements }: {achievements: Achievement[]}) {
+export default function AchievementCard({ achievements }: {achievements?: Achievement[]}) {
 
     const allAchievements = useAllAchievements(achievements);
 

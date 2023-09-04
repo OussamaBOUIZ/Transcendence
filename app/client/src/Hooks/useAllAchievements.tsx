@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import {Achievement} from "../../../global/Interfaces"
 import {getAchievementImage} from "./getAchievementImage"
 
-export const useAllAchievements = (achievements: Achievement[]): Achievement[] | [] => {
+export const useAllAchievements = (achievements?: Achievement[]): Achievement[] | [] => {
   const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
 
+  if (!achievements)
+    return [];
 
   useEffect(() => {
     const fetchAchievements = async () => {
