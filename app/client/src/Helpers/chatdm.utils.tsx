@@ -103,4 +103,25 @@ const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch
     })
 }
 
-export {updateInbox, handleReceivedMsg, updateInboxByReceiving, updateInboxBySending};
+const resetUnseenMsgs = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, viewId:number) => {
+    setInboxList((prevInbox:InboxItem[]) => {
+    return prevInbox.map((inbx) => {
+        return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
+        })
+    })
+}
+
+const updateInboxAtStart = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg: MessageData, viewId: number) => {
+    setInboxList((prevList) => {
+        return prevList.map((inbx) => {
+            return inbx.author.id === viewId 
+            ? {...inbx, 
+                lastMessage: lastMsg?.message, 
+                CreatedAt: lastMsg?.creationTime
+            }
+            : inbx;
+        }
+        )})
+}
+
+export {updateInbox, handleReceivedMsg, updateInboxByReceiving, updateInboxBySending, resetUnseenMsgs, updateInboxAtStart};

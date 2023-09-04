@@ -11,7 +11,7 @@ import ContactDetail from './ContactDetail';
 import { getUserImage } from '../../Hooks/getUserImage';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-import { handleReceivedMsg, updateInbox ,updateInboxBySending ,updateInboxByReceiving} from '../../Helpers/chatdm.utils';
+import { handleReceivedMsg, updateInbox ,updateInboxBySending ,updateInboxByReceiving, resetUnseenMsgs, updateInboxAtStart} from '../../Helpers/chatdm.utils';
 import useChatOverview, { fetchChatOverview } from '../../Hooks/useChatOverview';
 import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
@@ -73,12 +73,9 @@ export default function ChatDm () {
           return ;
         fetchChatOverview(viewId, setUserOverview)
         loadConversation();
-        // setInboxList((prevInbox:InboxItem[]) => {
-        //     return prevInbox.map((inbx) => {
-        //         return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
-        //     })
-        // })
-
+        // resetUnseenMsgs(setInboxList, viewId);
+        updateInboxAtStart(setInboxList, messagesList[messagesList.length - 1], viewId)
+        
         //cleanup function
         return  () => {
             if (socket)
