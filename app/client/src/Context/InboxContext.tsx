@@ -25,7 +25,6 @@ interface InboxContextType {
 const InboxContext = createContext<InboxContextType>({} as InboxContextType);
 
 export function InboxProvider ({children}: {children:React.ReactNode}) {
-    console.log('inbox provider rendered');
     
     const [dmSocket, setDmSocket] = useState<Socket | null>(null);
 
@@ -61,7 +60,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     
     useEffectOnUpdate(() => {
         fetchInbox()
-        console.log('socket initizlia');
         
         //init socket
         const value = document.cookie.split('=')[1]

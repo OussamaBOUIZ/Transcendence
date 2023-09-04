@@ -135,7 +135,7 @@ export interface InboxItem {
     author: {id:number, username:string};
     lastMessage: string;
     userName?: string;
-    unseenMessages?: number;
+    unseenMessages: number;
     CreatedAt: string;
     online: boolean;
     image?: string;

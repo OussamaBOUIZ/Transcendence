@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useContext, useState} from 'react'
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import UserContext from '../../Context/UserContext';
 import { InboxItem, MessageData, PlayerData, User } from '../../../../global/Interfaces';
@@ -18,6 +18,8 @@ import {scrollLogic} from "./scrollLogic"
 import ChatInput from './chatInput';
 
 export default function ChatDm () {
+    
+    const {pathname} = useLocation()
     const {user} = useContext(UserContext)
     const {id} = useParams()
     let viewId = Number(id);
@@ -61,27 +63,25 @@ export default function ChatDm () {
     /**EFFECTS     */
     useEffectOnUpdate(() => {
 
-        if (id === undefined)
-          return ;
+        if (id === undefined) {
+            return ;
+        }
         fetchChatOverview(viewId, setUserOverview)
         loadConversation();
-        // resetUnseenMsgs(setInboxList, viewId);
-        updateInboxAtStart(setInboxList, messagesList[messagesList.length - 1], viewId)
-        
-        //cleanup function
-        return  () => {
-            viewId = 0
-        }
-    } 
+        resetUnseenMsgs(setInboxList, viewId);
+        // updateInboxAtStart(setInboxList, messagesList[messagesList.length - 1], viewId)
+    }
     , [viewId])
-
 
     useEffect(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
+            console.log("recMsg.authorId : ", recMsg.authorId)
+            console.log("viewId : ", viewId)
             console.log("recMsg", recMsg);
             if (recMsg.authorId === viewId)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg])
             updateInboxByReceiving(recMsg, setInboxList, recMsg.authorId === viewId);
+            console.log("inboxList : ", inboxList)
         })
     }, [dmSocket])
 

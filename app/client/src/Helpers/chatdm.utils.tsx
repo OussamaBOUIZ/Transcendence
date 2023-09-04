@@ -82,6 +82,8 @@ const updateInboxBySending  = (sendMsg: MessageData, setInboxList:React.Dispatch
 }
 
 const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, inView:boolean) => {
+    console.log('updateInboxByReceiving');
+    console.log("inView : ", inView)
     setInboxList((prevList) => {
         if (prevList.find((inbx) => inbx.author.id === recMsg.authorId)) {
             return prevList.map((inbx) => {
@@ -89,7 +91,7 @@ const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch
                 ? {...inbx, 
                     lastMessage: recMsg.message, 
                     CreatedAt: recMsg.creationTime,
-                    unseenMessages: inView ? 0 : (inbx.unseenMessages && inbx.unseenMessages + 1)
+                    unseenMessages: inView ? 0 : (inbx.unseenMessages + 1)
                 }
                 : inbx
             })

@@ -27,8 +27,6 @@ function Navi () {
 }
 
 export default function ChatLayout () {
-    console.log('ChatLayout render');
-    
     return (
         <InboxProvider>
             <div className="chat_container">
