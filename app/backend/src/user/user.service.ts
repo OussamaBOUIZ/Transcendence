@@ -304,12 +304,18 @@ export class UserService {
 
     }
     async AllFriends(id: number) {
+        console.log('idnumner', id);
+        
         const user = await this.userRepo.findOne({
-            where: { id: id },
             relations: {
                 friends: {
                     stat: true,
+                    match_history: true
                 }
+            },
+            where: {
+                id: id,
+                
             },
             select: {
                 id: true,
@@ -323,10 +329,17 @@ export class UserService {
                         wins: true,
                         losses: true,
                         ladder_level: true,
+                    },
+                    match_history: {
+                        opponent: true,
+                        user_score: true,
+                        opponent_score: true
                     }
                 },
+                
             }
         });
+        console.log(user)
         return user;
     }
     async addFriend(userId: number, friendId: number) {

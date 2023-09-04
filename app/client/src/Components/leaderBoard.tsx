@@ -38,7 +38,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
     return (
         <div className="item Leaderboard">
             <img src={bg} alt="" />
-            <div className="w-full h-full">
+            <div className="w-full h-full flex flex-col justify-between">
                 <p>Leaderboard</p>
                 <div className="board">
                     {ThreeUsers}

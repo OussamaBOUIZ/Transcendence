@@ -30,7 +30,7 @@ export default function Header () {
             <HiMenu className="menu sm:hidden w-6 h-6 cursor-pointer" onClick={() => setOn(prev => !prev)}/>
             {
                 On &&
-                <nav className='nav fixed top-0 right-0 bg-primary-pink w-full h-full p-12 z-50 rounded-bl-full'>
+                <nav className='nav fixed top-0 right-0 bg-primary-pink w-11/12 h-full p-12 z-50 rounded-bl-full'>
                     {<HiOutlineX className="absolute top-9 right-4 w-6 h-6 cursor-pointer" onClick={() => setOn(prev => !prev)}/>}
                     <ul className='nav_list flex flex-col items-center justify-center gap-8'>
                         {navLinksToggle}

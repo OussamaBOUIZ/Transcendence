@@ -8,8 +8,8 @@ import Sidebar from '../Components/Sidebar'
 
 export default function MainLayout () {
     return (
-        <div className='h-full'>
-            <div className="fixed z-50 w-full top-0 bg-primary-color sm:bg-transparent">
+        <div className='w-screen h-full'>
+            <div className="fixed z-50 w-screen top-0 bg-primary-color sm:bg-transparent">
                 <Header />
             </div>
             <main>

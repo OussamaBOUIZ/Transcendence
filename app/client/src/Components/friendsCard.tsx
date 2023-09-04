@@ -9,10 +9,13 @@ export default function FriendsCard({ id, isMyFriend, setIsMyFriend }: {id: numb
     const allFriends = useFetchAllFriends(id, isMyFriend);
     const {user} = useContext(UserContext)
 
+    if (allFriends.some(friend => friend.id === user.id))
+        setIsMyFriend(true);
+
     const FriendsToggle = allFriends.map((friend) => {
-        if (friend.id === user.id) setIsMyFriend(true)
         return (
             <UserInfoCard
+            key={friend.id}
             image={friend.image}
             status={friend.status}
             firstname={friend.firstname}

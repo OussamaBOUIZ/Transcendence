@@ -10,7 +10,8 @@ export const useFetchAllFriends = (id: number, isMyFriend?: boolean): FriendUser
     const getData = async (id: number): Promise<FriendUser[] | []> => {
         try {
           if (id) {
-            const res = await axios.get<{id: number, friends: FriendUser[]}>(`/api/user/allfriends/${id}`);
+            const res = await axios.get(`/api/user/allfriends/${id}`);
+            console.log(res.data)
             return res.data.friends;
           }
         } catch (err) {

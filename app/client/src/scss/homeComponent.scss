@@ -42,8 +42,6 @@
     .item:has(> span) {
         display: flex;
         align-items: flex-end;
-        color: white;
-        font-size: clamp(1rem, 2vw, 2.25rem);
         font-style: italic;
         font-weight: 900;
         padding: 1rem 2rem;
@@ -54,7 +52,6 @@
         justify-content: space-between;
         position: relative;
         background-image: url("../Assets/testbg.jpg");
-        background-position: 100%;
         background-size: cover;
         grid-area: battleRoyal;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
@@ -67,23 +64,15 @@
         }
         .BattleRoyalCover {
             height: 100%;
-            margin-left: 6em;
             display: flex;
             flex-direction: column;
+            padding-left: 5%;
+            padding-top: 1em;
             justify-content: center;
             z-index: 1;
             span {
-                color: white;
-                font-size: clamp(1.6rem, 3vw, 3.75rem);
                 font-style: italic;
                 font-weight: 900;
-            } 
-            p {
-                margin-top: 0;
-                color: #EEE;
-                font-size: 1.25rem;
-                font-size: clamp(.5rem, 1vw, 1.25rem);
-                font-weight: 300;
             }
             .PlayButton {
                 font-family: "Poppins";
@@ -94,8 +83,6 @@
                 border: none;
                 box-shadow: 0px 0px 20px 0px #E72FD0;
                 width: 0;
-                padding: .7em 5em;
-                color: white;
                 @include center-styles;
                 span {
                     font-size: 1.375rem;
@@ -114,7 +101,6 @@
     .SpiderGround {
         grid-area: SpiderGround;
         background-image: url("../Assets/SpiderGround.jpeg"),;
-        background-position: 0 -33px ;
         background-size: cover;
         background-repeat: no-repeat;
     }
@@ -216,6 +202,9 @@
 }
 
 @media (max-width: 768px) {
+    .leaderboardShadow, .backgroundHomeShadow {
+        display: none;
+    }
     .homeComponent {
         grid-gap: 0.6rem;
         grid-template: repeat(6, 280px) / 1fr;
@@ -226,17 +215,8 @@
             "BrightGround"
             "Leaderboard"
             "GameHistory";
-            .item {
-                span {
-                    font-size: 2em;
-                    font-weight: 700;
-                    color: white;
-                    margin: 1rem;
-                }
-            }
-        // .item {
-        //     background-size: cover;
-        //     background-position: 100%;
-        // }
+        .Leaderboard > div > .board {
+            height: 65%;
+        }
     }
 }
