@@ -48,7 +48,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     p5.draw = (): void => {
         if (props.theme === "black")
-            p5.background(0);
+            p5.background("#114");
         else if (props.theme == "white")
             p5.background(255);
         else if (props.theme === "grey")

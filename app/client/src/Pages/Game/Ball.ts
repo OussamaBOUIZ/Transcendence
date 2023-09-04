@@ -16,7 +16,7 @@ export default class Ball {
     }
     
     fadeEffect () {
-        this.color.a -= 10;
+        this.color.a -= 12;
         this.r -= 0.5;
     }
     
@@ -45,8 +45,10 @@ export default class Ball {
 
     clone(): Ball {
         const b: Ball = new Ball(this.x, this.y, this.r, structuredClone(this.color));
-        b.color.r -= 100;
-        b.color.a -= 100;
+        b.color.r = 255;
+        b.color.g = 140;
+        b.color.b = 0;
+        b.color.a = 255;
         return b;
     }
 }

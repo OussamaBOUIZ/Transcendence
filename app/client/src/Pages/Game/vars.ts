@@ -4,7 +4,7 @@ const vars: Vars = {
     PH: 80,
     PW: 10,
     GAP: 10,
-    PSPEED: 10,
+    PSPEED: 15,
     RADIUS: 8,
     SPEED: 6,
     vel: {
