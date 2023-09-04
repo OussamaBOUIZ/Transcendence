@@ -39,7 +39,7 @@ export default function UserInfoCard(props: userInfoCard) {
     }
 
     return (
-        <div className={`element-${isHovered ? "hovered" : ""} friend-item relative`}
+        <div className={`overflow-hidden element-${isHovered ? "hovered" : ""} friend-item relative`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             key={props.username}>

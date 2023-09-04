@@ -21,6 +21,7 @@ import ChatRooms from './Pages/Chat/ChatRooms'
 import {useOnlineStatus} from "./Hooks/useOnlineStatus"
 import axios from 'axios'
 import io from "socket.io-client"
+import Auth from './Pages/Auth/Auth'
 
 const UpdateStatus = async () => {
   try {
@@ -61,6 +62,7 @@ export default function App () {
                 <Route path="/sign" element={<Sign />} />
 
                 <Route path="/info" element={<Prompt />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
 {/*                     
