@@ -24,7 +24,6 @@ export default function App () {
 
   return (
     <UserProvider>
-      <InboxProvider>
         <BrowserRouter>
             <Routes>
               <Route element={<AuthRequired/>}>
@@ -48,7 +47,6 @@ export default function App () {
               </Route>
             </Routes>
           </BrowserRouter>
-        </InboxProvider>
       </UserProvider>
   );
 }

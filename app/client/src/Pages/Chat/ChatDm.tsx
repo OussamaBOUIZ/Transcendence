@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useContext, useState} from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
-import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
 import { InboxItem, MessageData, PlayerData, User } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
@@ -22,10 +21,9 @@ export default function ChatDm () {
     const {user} = useContext(UserContext)
     const {id} = useParams()
     let viewId = Number(id);
-    const {inboxList, setInboxList, setUpdate} = useContext(InboxContext)
+    const {inboxList, setInboxList, setUpdate, dmSocket} = useContext(InboxContext)
     
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
-    const [socket, setSocket] = useState<Socket | null>(null)
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState<string>();
@@ -45,7 +43,7 @@ export default function ChatDm () {
             setMessagesList((prevList:MessageData[]) => {
                 return [...prevList, sendMsg]
             })
-            socket?.emit('SendMessage', sendMsg)
+            dmSocket?.emit('SendMessage', sendMsg)
             updateInboxBySending(sendMsg, setInboxList);
         }
     }
@@ -63,12 +61,6 @@ export default function ChatDm () {
     /**EFFECTS     */
     useEffectOnUpdate(() => {
 
-        const value = document.cookie.split('=')[1]
-        const newSocket = io('ws://localhost:4000', {
-            auth: {
-              token: value
-            }})
-        setSocket(newSocket)
         if (id === undefined)
           return ;
         fetchChatOverview(viewId, setUserOverview)
@@ -78,8 +70,6 @@ export default function ChatDm () {
         
         //cleanup function
         return  () => {
-            if (socket)
-                socket.disconnect()
             viewId = 0
         }
     } 
@@ -87,13 +77,13 @@ export default function ChatDm () {
 
 
     useEffect(() => {
-        socket?.on('message', (recMsg: MessageData) => {
+        dmSocket?.on('message', (recMsg: MessageData) => {
             console.log("recMsg", recMsg);
             if (recMsg.authorId === viewId)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg])
             updateInboxByReceiving(recMsg, setInboxList, recMsg.authorId === viewId);
         })
-    }, [socket])
+    }, [dmSocket])
 
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
@@ -129,6 +119,7 @@ export default function ChatDm () {
                 <ChatWindow id={id}>
                     {messagesElements}
                 </ChatWindow>
+
                 <ChatInput 
                 message={messageToSendValue} 
                 setMessage={setMessageToSendValue} 

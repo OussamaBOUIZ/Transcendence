@@ -1,8 +1,12 @@
-import React, {createContext, useEffect, useState, useRef} from 'react'
-import { InboxItem } from '../../../global/Interfaces';
+import React, {createContext, useEffect, useState, useRef, useContext} from 'react'
+import { InboxItem, MessageData } from '../../../global/Interfaces';
 import axios, {AxiosResponse} from 'axios'
 import data from "../api/inbox.json"
 import { getUserImage } from '../Hooks/getUserImage';
+import io, {Socket} from 'socket.io-client'
+import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
+import UserContext from './UserContext';
+
 
 interface InboxContextType {
     inboxList: InboxItem[];
@@ -14,10 +18,16 @@ interface InboxContextType {
     outerDiv: React.RefObject<HTMLDivElement>;
     innerDiv: React.RefObject<HTMLDivElement>;
     prevInnerDivHeight: React.MutableRefObject<number>;
+    dmSocket: Socket | null;
+    setDmSocket: React.Dispatch<React.SetStateAction<Socket | null>>
 }
 
 const InboxContext = createContext<InboxContextType>({} as InboxContextType);
+
 export function InboxProvider ({children}: {children:React.ReactNode}) {
+    console.log('inbox provider rendered');
+    
+    const [dmSocket, setDmSocket] = useState<Socket | null>(null);
 
     const [inboxList, setInboxList] = useState<InboxItem[]>([]);
     const [update, setUpdate] = useState<number>(0);
@@ -26,6 +36,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
 
+    const {user} = useContext(UserContext)
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
         return {...item, image}
@@ -48,8 +59,21 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
         }
     }
     
-    useEffect(() => {
+    useEffectOnUpdate(() => {
         fetchInbox()
+        console.log('socket initizlia');
+        
+        //init socket
+        const value = document.cookie.split('=')[1]
+        const newSocket = io('ws://localhost:4000', {
+            auth: {
+                token: value
+            }})
+            setDmSocket(newSocket)
+            return () => {
+                if (dmSocket)
+                dmSocket.disconnect()
+        }
     },[])
 
     return (
@@ -58,7 +82,8 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             isBanned, setBanned,
             prevInnerDivHeight,
             inboxList,setInboxList,
-            update, setUpdate
+            update, setUpdate,
+            dmSocket, setDmSocket
         }}>
         {children}
         </InboxContext.Provider>

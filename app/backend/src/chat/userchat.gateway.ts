@@ -73,6 +73,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				creationTime: new Date(messageDto?.creationTime),
 			}
 			this.server.to(data.socketId).emit("message", message)
+			console.log(data.socketId);
+			
 		}
 		catch (e) {
 			console.log(e)

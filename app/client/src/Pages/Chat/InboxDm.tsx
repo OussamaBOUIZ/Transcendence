@@ -21,10 +21,10 @@ export default function InboxDm () {
 
     return (
         <div className="chat_inbox">
-            {inboxList?.map((item:InboxItem) => {
+            {inboxList?.map((item:InboxItem, idx:number) => {
                 return (
                 <MessageOverview 
-                    key={item.id}
+                    key={idx}
                     id={item?.author?.id}
                     lastMsg={item?.lastMessage}
                     unsMsg={item.unseenMessages ? item.unseenMessages: 0}
