@@ -152,7 +152,14 @@ export class UserService {
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
         if (!payload) return null;
-        return await this.userRepo.findOneBy({ email: payload.email });
+        return await this.userRepo.findOne({
+            relations: {
+                stat: true,
+            },
+            where: {
+                email: payload.email
+            }
+        });
     }
 
     decodeJwtCode(userToken: string) {

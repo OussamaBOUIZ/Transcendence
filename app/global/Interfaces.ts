@@ -1,11 +1,3 @@
-export interface User {
-    id: number,
-    firstname: string,
-    image?: string,
-    lastname: string,
-    username?: string,
-    status: string,
-}
 
 interface FriendUser {
     firstname: string,
@@ -110,7 +102,7 @@ interface Message {
 }
 
   
-  export interface PlayerData {
+  export interface User {
     id: number;
     firstname: string;
     lastname: string;

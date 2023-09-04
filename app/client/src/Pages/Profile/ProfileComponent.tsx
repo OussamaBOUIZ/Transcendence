@@ -4,12 +4,12 @@ import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import {PlayerData} from "../../../../global/Interfaces"
+import {User} from "../../../../global/Interfaces"
 import UserContext from "../../Context/UserContext";
 import block from "../../Assets/Icons/block.svg"
 
 
-export default function ProfileComponent({UserData}: {UserData: PlayerData}) {
+export default function ProfileComponent({UserData}: {UserData: User}) {
 
     const {user} = useContext(UserContext)
     const [isMyFriend, setIsMyFriend] = useState<boolean>(false)

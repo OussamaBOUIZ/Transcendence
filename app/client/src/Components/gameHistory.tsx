@@ -1,11 +1,11 @@
 import History from "./history";
 import React from "react"
-import {PlayerData} from "../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import { useLocation } from "react-router";
 
-export default function GameHistory({UserData}: {UserData: PlayerData}) {
+export default function GameHistory({UserData}: {UserData: User}) {
 
     const {pathname} = useLocation();
     let header: React.JSX.Element | undefined

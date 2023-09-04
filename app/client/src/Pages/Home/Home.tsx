@@ -14,11 +14,9 @@ export default function Home() {
       return null;
 
   return (
-    <>
       <div className="flex h-full w-full">
         <HomeComponent UserData={user} Leaders={leaders} />
+        <UserOverview UserData={user} />
       </div>
-      <UserOverview UserData={user} />
-    </>
   );
 }

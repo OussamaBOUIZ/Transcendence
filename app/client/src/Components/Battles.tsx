@@ -1,11 +1,12 @@
 import Character from "../Assets/character.png"
+import React from 'react'
 
 export default function Battles() {
     return (
         <>
             <div className="item battleRoyal">
-                <div className="cover"></div>
-                <img src={Character} alt="" />
+                {/* <div className="cover"></div> */}
+                {/* <img src={Character} alt="" /> */}
                 <div className="BattleRoyalCover" >
                     <span>Battle Royal</span>
                     <p>Play the game and get extra coins in our Battle Royal</p>

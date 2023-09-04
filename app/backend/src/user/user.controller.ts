@@ -41,7 +41,7 @@ import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import { log } from 'console';
-// import { PlayerData} from "../../../global/Interfaces"
+// import { User} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
@@ -123,15 +123,10 @@ export class UserController {
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        const userData = {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            username: user.username,
-            status: user.status,
-        };
-        return userData;
-    }
+        if (!user)
+            throw new NotFoundException('User not Found')
+        return await this.getUserDetails(user.id)
+    }   
 
     @Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))

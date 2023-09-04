@@ -4,7 +4,7 @@ import ChatHeader from './ChatHeader';
 import ChatOverview from './ChatOverview';
 import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { PlayerData, MessageData } from '../../../../global/Interfaces';
+import { User, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios, {AxiosResponse} from 'axios'
 import InboxDm from './InboxDm';
