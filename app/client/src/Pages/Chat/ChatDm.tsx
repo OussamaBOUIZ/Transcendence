@@ -18,18 +18,18 @@ import {scrollLogic} from "./scrollLogic"
 import ChatInput from './chatInput';
 
 export default function ChatDm () {
+
     
     const {pathname} = useLocation()
     const {user} = useContext(UserContext)
     const {id} = useParams()
     let viewId = Number(id);
+
     const {inboxList, setInboxList, setUpdate, dmSocket} = useContext(InboxContext)
-    
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const [avatar, setAvatar] = useState<string>();
-
     const {outerDiv, innerDiv, prevInnerDivHeight} = useContext(InboxContext)
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
@@ -73,17 +73,27 @@ export default function ChatDm () {
     }
     , [viewId])
 
+    console.log("id: ", id);
+
     useEffect(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
-            console.log("recMsg.authorId : ", recMsg.authorId)
-            console.log("viewId : ", viewId)
-            console.log("recMsg", recMsg);
+            const inView:boolean =  recMsg.authorId ===  Number(id);
+            updateInboxByReceiving(recMsg, setInboxList, inView);
+        })
+    }, [dmSocket, id])
+
+    useEffect(() => {
+        dmSocket?.on('message', (recMsg: MessageData) => {
             if (recMsg.authorId === viewId)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg])
-            updateInboxByReceiving(recMsg, setInboxList, recMsg.authorId === viewId);
-            console.log("inboxList : ", inboxList)
+            // console.log("Number(id)", Number(id))
+            // console.log("recMsg.authorId", recMsg.authorId)
+            // const inView:boolean =  recMsg.authorId ===  Number(id);
+            // console.log("inView", inView)
+            // updateInboxByReceiving(recMsg, setInboxList, inView);
+            // console.log("inboxList : ", inboxList)
         })
-    }, [dmSocket])
+    }, [ dmSocket])
 
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);

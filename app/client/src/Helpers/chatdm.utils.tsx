@@ -87,6 +87,7 @@ const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch
     setInboxList((prevList) => {
         if (prevList.find((inbx) => inbx.author.id === recMsg.authorId)) {
             return prevList.map((inbx) => {
+                console.log("inbx.unseenMessages", inbx.unseenMessages)
                 return inbx.author.id === recMsg.authorId 
                 ? {...inbx, 
                     lastMessage: recMsg.message, 
@@ -106,6 +107,8 @@ const updateInboxByReceiving = (recMsg: MessageData, setInboxList:React.Dispatch
 }
 
 const resetUnseenMsgs = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, viewId:number) => {
+    console.log('resetMessages is called!!!');
+    
     setInboxList((prevInbox:InboxItem[]) => {
     return prevInbox.map((inbx) => {
         return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
