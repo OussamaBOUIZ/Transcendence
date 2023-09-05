@@ -66,13 +66,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		var data: sentMsg
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
-			const message: MessageData = {
-				authorId: data.authorId,
-				username: data.username,
-				message: messageDto.message,
-				creationTime: new Date(messageDto?.creationTime),
-			}
-			this.server.to(data.socketId).emit("message", message)
+			// const message: MessageData = {
+			// 	authorId: data.authorId,
+			// 	username: data.username,
+			// 	message: messageDto.message,
+			// 	creationTime: new Date(messageDto?.creationTime),
+			// }
+			this.server.to(data.socketId).emit("message", messageDto)
 			console.log(data.socketId);
 			
 		}

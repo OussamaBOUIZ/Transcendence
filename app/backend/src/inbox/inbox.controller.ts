@@ -16,6 +16,7 @@ type InboxItem = {
     lastMessage: string,
     unseenMessages?: number,
     CreatedAt: Date
+    
 }
 
 @Controller('inbox')

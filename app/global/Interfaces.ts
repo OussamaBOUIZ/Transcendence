@@ -3,7 +3,7 @@ export interface User {
     firstname: string,
     image?: string,
     lastname: string,
-    username?: string,
+    username: string,
 }
 
 interface FriendUser {
@@ -44,9 +44,9 @@ interface Leaders {
 }
 
 export interface MessageData {
-    receiverId?: number,
-    authorId?:number,
-    username?:string,
+    receiverId: number,
+    authorId:number,
+    username:string,
     message: string,
     creationTime: string,
 }
@@ -91,6 +91,7 @@ interface rooms {
 }
 
 interface roomData {
+    channelId: number;
     channelName: string,
     userId: number,
     minutes?: number
@@ -137,7 +138,6 @@ export interface InboxItem {
     userName?: string;
     unseenMessages: number;
     CreatedAt: string;
-    online: boolean;
     image?: string;
 }
 

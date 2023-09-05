@@ -1,11 +1,9 @@
 import React, {createContext, useEffect, useState, useRef, useContext} from 'react'
 import { InboxItem, MessageData } from '../../../global/Interfaces';
 import axios, {AxiosResponse} from 'axios'
-import data from "../api/inbox.json"
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
-import UserContext from './UserContext';
 
 
 interface InboxContextType {
@@ -18,15 +16,15 @@ interface InboxContextType {
     outerDiv: React.RefObject<HTMLDivElement>;
     innerDiv: React.RefObject<HTMLDivElement>;
     prevInnerDivHeight: React.MutableRefObject<number>;
-    dmSocket: Socket | null;
-    setDmSocket: React.Dispatch<React.SetStateAction<Socket | null>>
+    dmSocket: Socket | undefined;
+    setDmSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>
 }
 
 const InboxContext = createContext<InboxContextType>({} as InboxContextType);
 
 export function InboxProvider ({children}: {children:React.ReactNode}) {
     
-    const [dmSocket, setDmSocket] = useState<Socket | null>(null);
+    const [dmSocket, setDmSocket] = useState<Socket>();
 
     const [inboxList, setInboxList] = useState<InboxItem[]>([]);
     const [update, setUpdate] = useState<number>(0);
@@ -35,7 +33,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
 
-    const {user} = useContext(UserContext)
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
         return {...item, image}
@@ -48,7 +45,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
     const fetchInbox = async () => {
         try {
-            const res: AxiosResponse<InboxItem[]> = await axios.get('../api/inbox/all');
+            const res: AxiosResponse<InboxItem[]> = await axios.get('/api/inbox/all');
             if (res.data.length !== 0) {
                 const newData = await fetchInboxAvatars(res.data)
                 setInboxList(newData)
@@ -69,8 +66,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             }})
             setDmSocket(newSocket)
             return () => {
-                if (dmSocket)
-                dmSocket.disconnect()
+                newSocket.disconnect()
         }
     },[])
 

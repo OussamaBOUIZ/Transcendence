@@ -3,6 +3,7 @@ import MessageOverview from './MessageOverview';
 import { InboxItem } from '../../../../global/Interfaces';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import {getUserImage} from "../../Hooks/getUserImage"
 
 
 export default function InboxDm () {
@@ -17,6 +18,15 @@ export default function InboxDm () {
             });
         })
 }, [update])
+
+
+    useEffect(() => {
+        inboxList?.map(async (item) => {
+            const img = await getUserImage(item.author.id)
+            item.image = img;
+            return item;
+        })
+    }, [inboxList])
         
 
     return (

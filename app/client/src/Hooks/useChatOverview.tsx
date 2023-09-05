@@ -20,8 +20,8 @@ const fetchAchievementsImages = async (achs: StatAchievement[]): Promise<StatAch
 export const fetchChatOverview  = async (id:number, 
   setUserOverview: (P:PlayerData) => void ) => {
   try {
-    const res = await axios.get(`../api/user/user/details/${id}`)
-    const data:PlayerData = res.data;
+    const res = await axios.get<PlayerData>(`../api/user/user/details/${id}`)
+    const data = res.data;
     const imgRes = await getUserImage(id)
     data.stat.achievements = await fetchAchievementsImages(data.stat.achievements)
     setUserOverview({...data, image: imgRes})

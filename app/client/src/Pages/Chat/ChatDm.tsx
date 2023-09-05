@@ -16,15 +16,16 @@ import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
 import {scrollLogic} from "./scrollLogic"
 import ChatInput from './chatInput';
+import { listener } from './listener';
+import {observer} from "./observer"
 
 export default function ChatDm () {
 
-    
     const {pathname} = useLocation()
     const {user} = useContext(UserContext)
     const {id} = useParams()
+    console.log(id)
     let viewId = Number(id);
-
     const {inboxList, setInboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
@@ -32,17 +33,32 @@ export default function ChatDm () {
     const [avatar, setAvatar] = useState<string>();
     const {outerDiv, innerDiv, prevInnerDivHeight} = useContext(InboxContext)
 
+    const messagesElements = messagesList.map((msg) => {
+        if (msg.message !== "") {
+            return (
+                <MessageBox
+                // key={msg.creationTime?.getTime()}
+                id={msg.authorId !== user?.id}
+                >
+                {msg.message}
+            </MessageBox>
+           )
+        } 
+        return null
+    })
+
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
         if (messageToSendValue.trim() !== "") {
             const sendMsg: MessageData = {
                 receiverId: viewId,
                 authorId: user.id,
+                username: user.username,
                 message: messageToSendValue,
                 creationTime : new Date().toString()
             }
             setMessageToSendValue("")
-            setMessagesList((prevList:MessageData[]) => {
+            setMessagesList((prevList) => {
                 return [...prevList, sendMsg]
             })
             dmSocket?.emit('SendMessage', sendMsg)
@@ -53,7 +69,7 @@ export default function ChatDm () {
     
     const loadConversation = async ()  => {
         try {
-            const res = await axios.get(`../api/chat/${id}`)
+            const res = await axios.get(`/api/chat/${id}`)
             setMessagesList(res.data)
         } catch (error) {
             console.log(error);
@@ -68,52 +84,38 @@ export default function ChatDm () {
         }
         fetchChatOverview(viewId, setUserOverview)
         loadConversation();
-        resetUnseenMsgs(setInboxList, viewId);
+        resetUnseenMsgs(setInboxList, setUpdate, viewId);
         // updateInboxAtStart(setInboxList, messagesList[messagesList.length - 1], viewId)
     }
     , [viewId])
 
-    console.log("id: ", id);
-
     useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
-            const inView:boolean =  recMsg.authorId ===  Number(id);
-            updateInboxByReceiving(recMsg, setInboxList, inView);
-        })
-    }, [dmSocket, id])
-
-    useEffectOnUpdate(() => {
-        dmSocket?.on('message', (recMsg: MessageData) => {
+            console.log(inboxList);
+            const inView: boolean = recMsg.authorId === viewId;
+            console.log(inView)
             if (recMsg.authorId === viewId)
-                setMessagesList((prevMsgs) => [...prevMsgs, recMsg])
-            // console.log("Number(id)", Number(id))
-            // console.log("recMsg.authorId", recMsg.authorId)
-            // const inView:boolean =  recMsg.authorId ===  Number(id);
-            // console.log("inView", inView)
-            // updateInboxByReceiving(recMsg, setInboxList, inView);
-            // console.log("inboxList : ", inboxList)
-        })
-    }, [ dmSocket])
+                setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
+            // let newInboxList: InboxItem[]
+            const fetch =async () => {
+                try {
+                    // newInboxList = updateInboxByReceiving(recMsg, inboxList, inView);
+                    setInboxList(prev => updateInboxByReceiving(recMsg, prev, inView));
+                }
+                catch (error) {
+                    // console.log(error);
+                }
+            }
+            void fetch();
+        });
+    }, [dmSocket]);
 
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
     }, [messagesList])
 
-    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
 
-    const messagesElements = messagesList.map((msg:MessageData) => {
-        if (msg.message !== "") {
-            return (
-                <MessageBox
-                // key={msg.creationTime?.getTime()}
-                id={msg.authorId !== user?.id}
-                >
-                {msg.message}
-            </MessageBox>
-           )
-        } 
-        return null
-    })
+    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
     
     return (
         <>

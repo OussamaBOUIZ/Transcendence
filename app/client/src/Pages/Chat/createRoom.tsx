@@ -7,7 +7,7 @@ import UserContext from "../../Context/UserContext"
 import { SocketContext } from "./ChatRooms";
 
 interface newRoom {
-    prevChannelName: string,
+    channelId: number,
     channelName: string,
     channelType: "public" | "private" | "protected",
     channelPassword: string,
@@ -19,7 +19,7 @@ export default function CreateRoom({action}: {action: string}) {
     const {user} = useContext(UserContext)
     const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ prevChannelName: "",channelName: "", channelPassword: "", channelType: "public"} as newRoom)
+    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public"} as newRoom)
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -37,9 +37,7 @@ export default function CreateRoom({action}: {action: string}) {
     };
 
     const handleSubmit = () => {
-        newRoom.prevChannelName = "";
-        if (roomData?.channelName) newRoom.prevChannelName = roomData?.channelName
-        console.log(newRoom)
+        newRoom.channelId = roomData?.channelId
         try {
             void axios.post(`/api/channel/${action}`, newRoom)
             setIsClick(prev => !prev)

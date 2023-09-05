@@ -70,6 +70,7 @@ export default function ChatRooms () {
             try {
                 const res = await axios.get<string>(`/api/channel/channelName/${String(id)}`);
                 setRoomData({
+                    channelId: Number(id),
                     channelName: res.data,
                     userId: user?.id,
                 })

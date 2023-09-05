@@ -1,5 +1,7 @@
 import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
+import {getUserImage} from "../Hooks/getUserImage"
+import Inbox from "../Pages/Chat/Inbox";
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
         setter((prevInbox) => {
@@ -63,7 +65,7 @@ const handleReceivedMsg = (recMsg: MessageData,
 
 const updateInboxBySending  = (sendMsg: MessageData, 
     setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>,
-    avatar:string, username:string 
+    avatar:string | undefined, username:string | undefined
     ) => {
     setInboxList((prevList) => {
         if (prevList.find((inbx) => inbx.author.id === sendMsg.receiverId)) {
@@ -82,40 +84,49 @@ const updateInboxBySending  = (sendMsg: MessageData,
     })    
 }
 
-const updateInboxByReceiving = (recMsg: MessageData, 
-    setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>
-    , inView:boolean
-    ) => {
-    console.log('updateInboxByReceiving');
-    console.log("inView : ", inView)
-    setInboxList((prevList) => {
-        if (prevList.find((inbx) => inbx.author.id === recMsg.authorId)) {
-            return prevList.map((inbx) => {
-                console.log("inbx.unseenMessages", inbx.unseenMessages)
+const updateInboxByReceiving = (
+    recMsg: MessageData,
+    prevInboxList: InboxItem[],
+    inView: boolean
+  ): InboxItem[] => {
+        if (prevInboxList.find((inbx) => inbx.author.id === recMsg.authorId)) {
+            return prevInboxList.map((inbx) => {
+                console.log(inbx.author.id, ": ", recMsg.authorId)
                 return inbx.author.id === recMsg.authorId 
-                ? {...inbx, 
+                ? {...inbx,
                     lastMessage: recMsg.message, 
                     CreatedAt: recMsg.creationTime,
                     unseenMessages: inView ? 0 : (inbx.unseenMessages + 1)
                 }
                 : inbx
             })
-        } else return [...prevList,
-            {author: {id: recMsg.receiverId, username: recMsg.username}, 
-                lastMessage: recMsg.message,
-                CreatedAt: recMsg.creationTime,
-                unseenMessages: inView ? 0 : 1
-            } as InboxItem
-        ]
-    })
+        } else {
+            const getNewInboxElement = (): InboxItem[] => {
+                // const img = await getUserImage(recMsg.authorId)
+                const NewConversation: InboxItem = {
+                    author: {id: recMsg.authorId, username: recMsg.username},
+                    lastMessage: recMsg.message,
+                    CreatedAt: recMsg.creationTime,
+                    unseenMessages: inView ? 0 : 1,
+                    // image: img
+                }
+                return [...prevInboxList, NewConversation];
+            }
+            return getNewInboxElement()
+    }
 }
 
-const resetUnseenMsgs = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, viewId:number) => {
+
+const resetUnseenMsgs = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, setUpdate: React.Dispatch<SetStateAction<number>>, viewId:number) => {
     console.log('resetMessages is called!!!');
     
     setInboxList((prevInbox:InboxItem[]) => {
     return prevInbox.map((inbx) => {
-        return inbx.author?.id === viewId ? {...inbx, unseenMessages: 0}: inbx
+        if (inbx.author?.id === viewId) {
+            setUpdate(prev => prev + 1)
+            return {...inbx, unseenMessages: 0}
+        }
+        return inbx
         })
     })
 }
