@@ -1,5 +1,5 @@
 .settings_container {
-    width: 100%;
+    width: 90%;
     height: 100%;
     display: grid;
     grid-template: repeat(2, 1fr) 4em repeat(2, 1fr) / repeat(12, 1fr);

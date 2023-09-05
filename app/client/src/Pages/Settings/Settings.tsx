@@ -29,23 +29,25 @@ export default function Settings () {
                         <div className="">
                             <div className="username flex my-4">
                                 <h2 className='text-xl font-semibold w-1/2'>Username</h2>
-                                <input type="text" name="" id="" value={user.username} 
-                                className=' bg-red-200 w-1/2 rounded-md p-2'
+                                <input type="text" name="" id="" value="oouazize" 
+                                className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2'
                                 />
                             </div>
-                            <div className="fullname flex my-4  bg-yellow-300">
+                            <div className="fullname flex my-4">
                                 <h2 className='text-xl font-semibold w-1/2'>Full Name</h2>
                                 <div className="inputs w-1/2 flex gap-4">
-                                    <input type="text" name="firstname" id="" value={user.firstname} className=' w-1/2 bg-red-200 rounded-md p-2'/>
-                                    <input type="text" name="lastname" id="" value={user.lastname} className=' w-1/2 bg-red-200 rounded-md p-2'/>
+                                    <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
+                                    <input type="text" name="lastname" id="" value="ouaziz" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
                                 </div>
                             </div>
                         </div>
-                        <button className='bg-pink-500 ml-10 px-6 py-8 self-center'>Update</button>
+                        <button className='bg-pink-500 ml-10 px-6 py-8 self-center rounded-md'>Update</button>
                     </form>
                 </article>
             </div>
-            <h2 className=' heading bg-blue-400'>Two Factor Authentication</h2>
+            <div className="heading bg-blue-400 px-10 py-5">
+                <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
+            </div>
             <div className="twof-poster bg-purple-500">
                 <article>
                     <h2>Enable</h2>
@@ -57,19 +59,36 @@ export default function Settings () {
                     <img src="" alt="" />
                 </figure>
             </div>
-            <div className="step_cards flex">
-            <StepCard n={1}>
-                <h2>Download Google Authenticator</h2>
-                <p>Google Authenticator is available in the following app stores</p>
-            </StepCard>
-            <StepCard n={2}>
+            <div className="step_cards flex px-14 py-2 gap-10">
+            <StepCard n={1} heading="Download Google Authenticator" text="Google Authenticator is available in the following app stores">
+            <div className="bg-orange-400 mt-6">
+                <img src="" alt="step card image" 
+                    className=' h-auto'
+                    />
+            </div>
+                </StepCard>
+            <StepCard n={1} heading="Scan the QR code" text="Hold your camera at QR code">
+            <div className="bg-orange-400 mt-6">
+                <img src="" alt="step card image" 
+                    className=' h-auto'
+                    />
+            </div>
+                </StepCard>
+            <StepCard n={1} heading="Enter your 2FA code" text="Please enter two factor token from Google Authenticator">
+            <div className="bg-orange-400 mt-6">
+                <img src="" alt="step card image" 
+                    className=' h-auto'
+                    />
+            </div>
+                </StepCard>
+            {/* <StepCard n={2}>
                 <h2>Scan the QR code</h2>
-                <p>Hold your camera at QR code</p>
+                <p></p>
             </StepCard>
             <StepCard n={3}>
                 <h2>Enter your 2FA code</h2>
                 <p>Please enter two factor token from Google Authenticator</p>
-            </StepCard>
+            </StepCard> */}
             </div>
         </section>
     );
