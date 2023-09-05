@@ -4,13 +4,13 @@ import { User } from "./user.entity"
 
 @Entity('Match_history')
 export class Match_history extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @ManyToOne(() => User, (user) => user.match_history, {nullable: true})
     user: User
 
-    @Column()
+    @Column({default: 0})
     opponent: number
     
     @Column({default: 0})
@@ -19,4 +19,4 @@ export class Match_history extends BaseEntity {
     @Column({default: 0})
     opponent_score: number
     
-}
+ }

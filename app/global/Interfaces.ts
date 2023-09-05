@@ -1,3 +1,9 @@
+export interface lastGame {
+    id: number;
+    opponent: number;
+    opponent_score: number;
+    user_score: number;
+}
 
 interface FriendUser {
     firstname: string,
@@ -7,6 +13,7 @@ interface FriendUser {
     stat: Stat,
     status: string,
     username: string,
+    lastGame: lastGame | string;
 }
 
 

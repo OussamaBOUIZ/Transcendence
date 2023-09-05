@@ -73,10 +73,10 @@
                         font-size: 1.25rem;
                         font-weight: 700;
                     }
-                    span {
-                        font-size: 1rem;
-                        color: $primary-pink;
-                        font-weight: 600;
+                    div {
+                        span {
+                            font-size: 1em;
+                        }
                     }
                 }
                 .level-item {

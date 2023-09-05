@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {useState, useContext} from "react";
 import { getUserImage } from "./getUserImage";
-import {FriendUser} from "../../../global/Interfaces"
+import {FriendUser, lastGame} from "../../../global/Interfaces"
 import UserContext from '../Context/UserContext';
 import useEffectOnUpdate from './useEffectOnUpdate';
 
@@ -27,11 +27,16 @@ export const useFetchAllFriends = (id: number, update?: number, setIsMyFriend?: 
         const fetchFriends = async () => {
           const friends = await getData(id);
           const friendswithImage = await Promise.all(
-            friends.map(async (friend) => {
+            friends.map(async (friend) => { 
+              let lastGame: lastGame | string = {} as lastGame
               if (setIsMyFriend && friend.id === user.id)
                 setIsMyFriend(true)
+              else {
+                const res = await axios.get<lastGame | string>(`/api/user/friendLastGame/${friend.id}?userId=${user.id}`)
+                lastGame = res.data;
+              }
               const image = await getUserImage(friend.id);
-              return { ...friend, image };
+              return { ...friend, lastGame, image };
             })
           );
     

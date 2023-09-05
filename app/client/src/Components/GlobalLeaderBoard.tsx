@@ -36,7 +36,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 
     const ThreeUsers = topThree.map((user) => {
         return (
-            <div className={`rank rank${user.rank}`} >
+            <div key={user.id} className={`rank rank${user.rank}`} >
                 <RankContent
                 key={user.id}
                 userData={user.userData}
@@ -48,23 +48,11 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 
     const TopTwelve = RestOfThem.map((user, index) => {
         return (
-            <>
-                <div className={`topRank`} >
-                    <StarRank RankNumber={index + 4} color="#A0A0A0" />
-                    <p>{user.username}</p>
-                    <span><p>{`level ${user.ladder_level}`}</p></span>
-                </div>
-                    <div className={`topRank`} >
-                        <StarRank RankNumber={index + 4} color="#A0A0A0" />
-                        <p>{user.username}</p>
-                        <span><p>{`level ${user.ladder_level}`}</p></span>
-                    </div>
-                    <div className={`topRank`} >
-                        <StarRank RankNumber={index + 4} color="#A0A0A0" />
-                        <p>{user.username}</p>
-                        <span><p>{`level ${user.ladder_level}`}</p></span>
-                    </div>
-            </>
+            <div key={user.id} className={`topRank`} >
+                <StarRank RankNumber={index + 4} color="#A0A0A0" />
+                <p>{user.username}</p>
+                <span><p>{`level ${user.ladder_level}`}</p></span>
+            </div>
         )
     })
 

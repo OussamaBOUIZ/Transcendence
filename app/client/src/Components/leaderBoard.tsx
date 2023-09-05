@@ -25,7 +25,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
 
     const ThreeUsers = users.map(user => {
         return (
-            <div className={`rank rank${user.rank}`} >
+            <div key={user.id} className={`rank rank${user.rank}`} >
                 <RankContent
                 key={user.id}
                 userData={user.userData}

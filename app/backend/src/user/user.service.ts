@@ -180,30 +180,24 @@ export class UserService {
     }
     async getFriendLastGame(friendId: number, userId: number)
     {
-        // const match = await this.matchHistoryRepo
-        // .createQueryBuilder('match_history')
-        // .where('match_history.userId = :userId', { userId })
-        // .andWhere('match_history.opponent = :friendId', { friendId })
-        // .orderBy('match_history.id', 'DESC')
-        // .getOne(); 
-        const match = await this.matchHistoryRepo.findOne({
-            relations: {
-                user: true
-            },
-            where: {
-                user: {
-                    id: userId
-                },
-                opponent: friendId, 
-            },
-            order: {
-                id: 'DESC',
-            },
-            select: {
-                user_score: true,
-                opponent_score: true,
-            }
-        });
+        console.log('frid:', friendId, 'userid', userId);
+        
+        let match = await this.matchHistoryRepo
+        .createQueryBuilder('match_history')
+        .where('match_history.userId = :userId', { userId })
+        .andWhere('match_history.opponent = :friendId', { friendId })
+        .orderBy('match_history.id', 'DESC')
+        .getOne();
+        if(!match)
+        {
+            match = await this.matchHistoryRepo
+            .createQueryBuilder('match_history')
+            .where('match_history.userId = :friendId', { friendId })
+            .andWhere('match_history.opponent = :userId', { userId })
+            .orderBy('match_history.id', 'DESC')
+            .getOne();
+        }
+
         return match;
     }
 
