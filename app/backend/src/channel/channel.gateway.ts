@@ -25,8 +25,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
 
     async handleConnection(client: Socket) {
-        console.log('Connection established')
         const AllCookies = client.handshake.headers.cookie;
+        if (AllCookies == null)
+            return ;
         const start = AllCookies.indexOf("access_token=") + 13;
         let end = AllCookies.indexOf(";", start);
         end = end !== -1 ? end : AllCookies.length;
@@ -34,8 +35,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         const user = await this.userService.getUserFromJwt(accessToken);
         if(!user) 
         {
+            client.emit('exception', 'user not authenticated');
             client.disconnect();
-            throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
         user.status = 'Online'
@@ -44,9 +45,10 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 
     async handleDisconnect(client: Socket) {
-        console.log('disconeeeee');
         
         const AllCookies = client.handshake.headers.cookie;
+        if (AllCookies == undefined)
+            return ;
         const start = AllCookies.indexOf("access_token=") + 13;
         let end = AllCookies.indexOf(";", start);
         end = end !== -1 ? end : AllCookies.length;
@@ -54,8 +56,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         const user = await this.userService.getUserFromJwt(accessToken);
         if(!user) 
         {
+
+            client.emit('exception', 'user not authenticated');
             client.disconnect();
-            throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
         user.status = 'Offline'

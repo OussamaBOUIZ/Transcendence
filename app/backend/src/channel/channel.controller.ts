@@ -13,18 +13,22 @@ export class ChannelController {
     @Post('create')
     async CreateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
-        await this.channelservice.channelCreate(channelData);
+        const ret = await this.channelservice.channelCreate(channelData);
+        if(typeof ret === 'string')
+            return res.status(HttpStatus.BAD_REQUEST).send(ret);
         return res.status(HttpStatus.CREATED).send('channel was created');
     }
 
     @Post('update')
     async updateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
-        await this.channelservice.channelUpdate(channelData);
+        const ret = await this.channelservice.channelUpdate(channelData);
+        if(typeof ret === 'string')
+            return res.status(HttpStatus.BAD_REQUEST).send(ret);
         return res.status(HttpStatus.CREATED).send('channel was updated');
     }
 
-    @Post('promoteuser/:id')
+    @Post('promoteuser/:id') 
     async promoteUserFromChannel(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number
     , @Res() res: Response)
     {

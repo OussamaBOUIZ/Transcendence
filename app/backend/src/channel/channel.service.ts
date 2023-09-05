@@ -56,25 +56,37 @@ export class ChannelService {
         if(!channelFound)
         {
             const newChannel = new Channel();
+            if(channelData.channelName.length === 0)
+                return 'channel name must be set';
             newChannel.channel_name = channelData.channelName;
+            if(channelData.channelType.length === 0)
+                return 'channel type must be set';
             newChannel.channel_type = channelData.channelType;
+            if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
+                return 'protected channels lacks password';
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channelOwners = [userFound];
             await this.channelRepo.save(newChannel);
         }
+        else
+            return 'channel already created';
     }
     async channelUpdate(channelData: channelDto)
     {
         const channelFound = await this.channelRepo.findOne({
-            where: {channel_name: channelData.prevChannelName},
+            where: {id: channelData.channelId},
             relations: {
                 channelOwners: true,
             }
         });
-        channelFound.channel_name = channelData.channelName;
-        channelFound.channel_type = channelData.channelType;
+        if(channelData.channelName.length === 0)
+            channelFound.channel_name = channelData.channelName;
+        if(channelData.channelType.length === 0)
+            channelFound.channel_type = channelData.channelType;
+        if(channelFound.channel_type === 'protected' && channelData.channelPassword.length === 0)
+            return 'protected channel must have password';
         if(channelFound.channel_type === 'protected')
             channelFound.channel_password = await argon.hash(channelData.channelPassword);
         await this.channelRepo.save(channelFound);

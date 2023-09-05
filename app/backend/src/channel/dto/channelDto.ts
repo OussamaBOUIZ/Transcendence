@@ -1,22 +1,23 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString, Length} from 'class-validator';
 
 export class channelDto {
     
-    @IsString()
-    public prevChannelName: string
-
     @IsNotEmpty()
     @IsString()
+    public channelId: number
+
+    @IsString()
+    @Length(0, 12)
     public channelName: string
 
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     public channelType: string
 
     @IsString()
+    @Length(0, 12)
     public channelPassword: string
 
     @IsNumber()
-    @IsNotEmpty()
     public channelOwner: number
 }
