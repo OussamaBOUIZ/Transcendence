@@ -286,6 +286,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -295,6 +296,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -304,6 +306,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,

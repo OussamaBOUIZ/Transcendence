@@ -53,7 +53,7 @@ export default function UserInfoCard(props: userInfoCard) {
                         <p>{props.firstname}</p>
                         <p>{props.lastname}</p>
                     </div>
-                    {props.username && <span>{props.username}</span>}
+                    {props.flex === "row" && props.username && <span>{props.username}</span>}
                 </div>
             </div>
             <div className={`stats flex ${props.flex === "row" ? 'sm:flex-row sm:items-center sm:justify-end sm:gap-4' : 'sm:flex-col sm:items-end sm:justify-center'} ${props.flex === "col" ? 'items-center justify-end gap-4' : 'flex-col items-end justify-center'} `}>

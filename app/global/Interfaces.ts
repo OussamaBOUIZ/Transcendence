@@ -80,9 +80,9 @@ interface userInfoCard {
 
 interface channelData {
     id: number,
-    channelOwners: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
-    channelAdmins: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
-    channelUsers: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[]
+    channelOwners: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelAdmins: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelUsers: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[]
 }
 
 interface rooms {

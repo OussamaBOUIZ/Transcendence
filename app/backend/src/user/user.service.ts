@@ -312,7 +312,7 @@ export class UserService {
                 
             },
             select: {
-                id: true,
+                id: true, 
                 friends: {
                     id: true,
                     firstname: true,
