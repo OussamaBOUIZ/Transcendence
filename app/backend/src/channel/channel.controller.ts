@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { ChannelService } from './channel.service';
 import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import { protectedChannelDto } from './dto/protectedChannelDto';
+import { Console } from 'console';
 
 @Controller('channel')
 export class ChannelController {
@@ -32,8 +33,13 @@ export class ChannelController {
     async promoteUserFromChannel(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number
     , @Res() res: Response)
     {
-        await this.channelservice.promoteMember(userId, channelId);
-        res.status(HttpStatus.CREATED).send('user was promoted succesfully');
+        const ret = await this.channelservice.promoteMember(userId, channelId);
+        if(typeof ret === 'string')
+        {
+            console.log('HERE BANNNED');
+            return res.status(HttpStatus.BAD_REQUEST).send('user is banned');
+        }
+        return res.status(HttpStatus.CREATED).send('user was promoted succesfully');
     }
     @Get('userGrade/:id')
     async getUserGrade(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number)
@@ -78,6 +84,9 @@ export class ChannelController {
     @Get('addToChannel/:id')
     async addToChannel(@Param('id', ParseIntPipe) id: number, @Query('channelName') channelName: string)
     {
+        if(channelName == 'undefined')
+            throw new BadRequestException('channel was not specified');
+        console.log('HERE')
         const ret = await this.channelservice.addUserToChannel(id, channelName);
         return ret;
     }

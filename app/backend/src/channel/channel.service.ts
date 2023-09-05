@@ -92,35 +92,6 @@ export class ChannelService {
         await this.channelRepo.save(channelFound);
     }
 
-    async addToChannel(newUser: newUserDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
-        if(channelFound.channel_type === 'public')
-        {
-            const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
-            [...channelFound.channelUsers, user] : [user];
-        }
-        if(channelFound.channel_type === 'protected')
-        {
-            if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
-                return 'provided password is incorrect'
-            const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
-            [...channelFound.channelUsers, user] : [user];
-        }
-        await this.channelRepo.save(channelFound);
-        return await this.channelRepo.find({
-            relations: {
-                messages: true
-            },
-            where: {
-                channel_name: newUser.channelName
-            },
-            take: 30
-        });
-    }
-
     async getLatestMessages(channelId: number, userId: number)
     {
         console.log(userId)
@@ -159,6 +130,9 @@ export class ChannelService {
     {
         const channelFound = await this.findChannelBannedMembers(banUser.channelName);
         const user = await this.userService.findUserById(banUser.userId);
+        if(channelFound.BannedUsers !== null && channelFound.BannedUsers.some(user => user.id === user.id))
+            return ;
+        console.log('BANNNNED')
         channelFound.BannedUsers = channelFound.BannedUsers !== null ? [...channelFound.BannedUsers, user] : [user];
         await this.channelRepo.save(channelFound);
     }
@@ -171,15 +145,18 @@ export class ChannelService {
                 channelAdmins: true,
                 channelOwners: true,
                 channelUsers: true,
+                BannedUsers: true
             },
         });
-        if(channel.channelUsers && channel.channelUsers.some(user => user.id === userId))
+        if(channel.BannedUsers !== null && channel.BannedUsers.some(user => user.id === userId))
+            return 'user is banned';
+        if(channel.channelUsers !== null && channel.channelUsers.some(user => user.id === userId))
         {
             channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser.id !== user.id);
             channel.channelAdmins = channel.channelAdmins !== null && channel.channelAdmins !== undefined ?
                                     [...channel.channelAdmins, user] : [user]; 
         }
-        else if(channel.channelAdmins && channel.channelAdmins.some(user => user.id === userId))
+        else if(channel.channelAdmins !== null && channel.channelAdmins.some(user => user.id === userId))
         {
             channel.channelAdmins = channel.channelAdmins.filter((currentUser) => currentUser.id !== user.id);
             channel.channelOwners = channel.channelOwners !== null && channel.channelOwners !== undefined ?

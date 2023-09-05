@@ -9,7 +9,10 @@ import { muteUserDto } from "./dto/muteUserDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 import { log } from "console";
+import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
+import { WsExceptionFilter } from "src/Filter/ws.filter";
 
+@UseFilters(WsExceptionFilter)
 @WebSocketGateway(1212, {cors: {
 	origin: "http://localhost:5173",
     credentials: true
@@ -78,7 +81,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         const muted = await this.channelservice.muteUserFromChannel(user, channel);
         if(typeof muted === 'string')
         {
-            this.server.emit('exception', 'user already muted');
             return ;
         }
         setTimeout(this.unmuteUser, user.minutes * 60000, user.userId, this.channelservice, this.server);
@@ -94,7 +96,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(channel !== null && channel.BannedUsers !== null && 
             channel.BannedUsers.some(user => user.id === channelData.userId))
         {
-            client.emit('userIsBanned');
+            client.emit('userIsBanned', channelData.channelName);
+
         }
         else
         {
@@ -118,7 +121,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('banuser')
     async banuser(@MessageBody() banData: UserOperationDto, @ConnectedSocket() client: Socket)
     {
-        console.log("here")
         const user = await this.userService.findUserById(banData.userId);
         client.to(user.socketId).emit('socketDisconnect', banData.channelName);
         await this.channelservice.banUserFromChannel(banData);
@@ -132,19 +134,22 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         await this.channelservice.kickUserFromChannel(kickData);
     }
 
-    @SubscribeMessage('joinchannel')
-    async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
-    {
-        client.join(newUser.channelName);
-        let channelFound = await this.channelservice.addToChannel(newUser);
-        if(typeof channelFound === 'string')
-        {
-            this.server.emit('exception', {error: channelFound});
-            return ;
-        }
-        this.server.emit('userJoined', channelFound[0].messages);
-    }
+    // @SubscribeMessage('joinchannel')
+    // async joinchannel(@MessageBody() newUser: newUserDto, @ConnectedSocket() client: Socket)
+    // {
+    //     client.join(newUser.channelName);
+    //     let channelFound = await this.channelservice.addToChannel(newUser);
+    //     if(typeof channelFound === 'string')
+    //     {
+    //         this.server.emit('exception', {error: channelFound});
+    //         return ;
+    //     }
+    //     this.server.emit('userJoined', channelFound[0].messages);
+    // }
 
+    @UsePipes(new ValidationPipe({ 
+		transform: true,
+	}))
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto, @ConnectedSocket() client: Socket)
     { 
