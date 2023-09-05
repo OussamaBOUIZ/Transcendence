@@ -19,28 +19,30 @@ export default class Pad {
 
     drawPad(p5: any) {
         p5.fill(255)
+        p5.rotate(0)
         p5.rect(this.x, this.y, this.w, this.h);
+    }
+
+    updateAttr(x: number, y: number, w: number, h: number) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
     
     updatePad(p5: P5CanvasInstance<MySketchProps>, ball: Ball, myPad: boolean, isHost: boolean) {
         this.drawPad(p5);
         
         if (myPad) {
-            if (p5.keyIsDown(p5.UP_ARROW) && this.y > vars.GAP)
-                this.y -= vars.PSPEED;
 
-            
             if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)
                 this.y += vars.PSPEED;
 
             if (p5.pmouseY >= vars.GAP && p5.pmouseY + this.h  <= p5.height- vars.GAP)
                 this.y = p5.pmouseY
 
-                // console.log('mouse moved: ', p5.mouseY);
-            
-            // p5.mouseMove = (): void => {
-            //     console.log('mouse moved: ', p5.mouseY);
-            // }
+            if (p5.keyIsDown(p5.UP_ARROW) && this.y > vars.GAP)
+                this.y -= vars.PSPEED;
         }
 
         if (isHost && collision(this, ball)) {

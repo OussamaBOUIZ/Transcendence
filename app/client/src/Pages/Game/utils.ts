@@ -1,5 +1,6 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
 import { MySketchProps } from "./Interfaces";
+import vars from "./vars";
 import Ball from "./Ball";
 import Pad from "./Pad";
 
@@ -41,4 +42,21 @@ export function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
     p5.image(img, 0, 0);
   
     time = (time + 1) % p5.height;
+}
+
+export function clipCanvas(width: number) {
+  if (width < 300 )
+      return 300;
+  else if (width > 900)
+      return 800;
+  return width
+}
+
+export function resizeGameAssets(width: number) {
+  vars.PH = width / 12;
+  vars.PW = width / 80;
+  vars.GAP = width / 80;
+  vars.PSPEED = width / 80;
+  vars.RADIUS = width / 100;
+  vars.SPEED = width / 80;
 }

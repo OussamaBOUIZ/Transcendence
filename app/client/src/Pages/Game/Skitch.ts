@@ -1,6 +1,6 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
 import { MySketchProps} from "./Interfaces";
-import { makeNoise } from "./utils"
+import { makeNoise, clipCanvas, resizeGameAssets } from "./utils"
 import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
@@ -16,13 +16,14 @@ export function reset(p5: any, isHost: boolean): void {
     vars.vel.x = vars.SPEED * p5.cos(angle);
     vars.vel.y = vars.SPEED * p5.sin(angle);
 
-    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;        
+    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
     leftPad = new Pad(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     if (isHost)
         ball = new Ball(p5.width / 2, p5.height / 2, vars.RADIUS, {r: 255, g: 13, b: 140, a: 255});
 }
+
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -35,14 +36,33 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isMatching: true,
     }
 
+    let img: any;
+
+    p5.preload = (): void => {
+        img = p5.loadImage("./src/Pages/Game/fire-game.jpg");
+    }
+
+    p5.windowResized = (): void => {
+        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
+        resizeGameAssets(p5.width);
+        ball.updateAttr(p5.width / 2, p5.height / 2, vars.RADIUS);
+        leftPad.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+        rightPad.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+    }
+
     p5.updateWithProps = (p: any) => {
         props = Object.assign(props, p)
     };
 
     p5.setup = (): void => {
-        p5.createCanvas(500, 300);
+        let canvasWidth = clipCanvas(p5.windowWidth / 1.5); 
+        p5.createCanvas(canvasWidth , canvasWidth / 1.77);
         reset(p5, props.isHost);
-        // p5.frameRate(30)
+        resizeGameAssets(p5.width);
+        p5.frameRate(60)
+
+        console.log(img);
     }
 
 
@@ -52,29 +72,22 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme == "white")
             p5.background(255);
         else if (props.theme === "grey")
-            p5.background(200);
+            p5.background(200 );
 
         props.socket?.on("notHost", () => {
             props.setIsHost(false);
             console.log(props.isHost);
         })
 
+        if (img)
+            p5.image(img, 0, 0, p5.width, p5.height);
+
         if (!props.isMatching) {
             if (props.isHost)
                 props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
             else 
                 props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
-                prevPos.push(ball.clone());
-                prevPos.forEach( (b: Ball, idx: number) =>  {
-                    b.fadeEffect();
-                    b.drawBall(p5);
-    
-                    // console.log("test")
-    
-                    if (b.r <= 2) {
-                        prevPos.splice(idx, 1);
-                    }255
-                })
+
             props.socket?.on("movePad", (data: any) => {
 
                 if (props.isHost)    
@@ -93,8 +106,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 b.fadeEffect();
                 b.drawBall(p5);
 
-                // console.log("test")
-
                 if (b.r <= 0) {
                     prevPos.splice(idx, 1);
                 }
@@ -108,9 +119,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 leftPad.updatePad(p5, ball, true, props.isHost);
                 rightPad.updatePad(p5, ball, false, props.isHost);
             }
+
             ball?.updateBall(p5, props.isHost);
-
-
         } else 
             makeNoise(p5);
     }

@@ -21,9 +21,18 @@ export default class Ball {
     }
     
     drawBall(p5: any) {
+        p5.push();
         p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
         p5.noStroke();
-        p5.ellipse(this.x, this.y, this.r * 2);
+        // p5.rotate(p5.millis() / 100000);
+        p5.ellipse(this.x, this.y, this.r * 2 );
+        p5.pop();
+    }
+
+    updateAttr(x: number, y: number, r: number) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
     }
     
     updateBall(p5: any, isHost: boolean) {
