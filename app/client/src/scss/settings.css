@@ -1,0 +1,28 @@
+.settings_container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template: repeat(2, 1fr) 4em repeat(2, 1fr) / repeat(12, 1fr);
+    grid-template-areas: 
+    "e e e e e e e e e p p p"
+    "e e e e e e e e e p p p"
+    "h h h h h h h h h p p p"
+    "s s s s s s s s s p p p"
+    "s s s s s s s s s p p p"
+    ;
+}
+
+.step_cards {
+    grid-area: s;
+}
+.twof-poster {
+    grid-area: p;
+}
+.heading {
+    grid-area: h;
+}
+.info_edit {
+    grid-area: e;
+}
+
+
