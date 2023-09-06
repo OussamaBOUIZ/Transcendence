@@ -1,11 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {User} from "../databases/user.entity";
 import {MoreThan, Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {MessageDto} from "../interfaces/interfaces";
-import {Status} from "../interfaces/enums";
-import { log } from 'console';
 
 @Injectable()
 export class InboxService {
@@ -40,9 +38,7 @@ export class InboxService {
             inbox.CreatedAt = msgDto.creationTime
         }
         // I assume that the receiver is on chat page
-        if (receiver.isActive === true)
-            inbox.unseenMessages = 0
-        else
+        if (receiver.isActive !== true)
             inbox.unseenMessages += 1
         console.log(inbox);
         
@@ -50,7 +46,7 @@ export class InboxService {
     }
 
     async getInboxBySenderId(author: User, receiver: User): Promise<Inbox_user> {
-        const tmp = await this.inboxRepository.findOne({
+        return await this.inboxRepository.findOne({
             relations: {
                 user: true,
                 author: true
@@ -63,9 +59,7 @@ export class InboxService {
                     id: receiver.id
                 }
             }
-        })
-
-        return tmp;
+        });
     }
 
     async getAllInboxOfUser(authorId: number) {
