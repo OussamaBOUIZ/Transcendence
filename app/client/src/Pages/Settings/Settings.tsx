@@ -52,15 +52,15 @@ export default function Settings () {
             <div className="heading  px-10 py-5">
                 <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
             </div>
-            <div className="twof-poster flex flex-col gap-14 text-center bg-purple-500 py-32 rounded-2xl w-72 mx-auto">
+            <div className="twof-poster flex flex-col gap-14 xl:gap-0 text-center bg-purple-500 py-32 xl:py-24 rounded-2xl w-72 mx-auto">
                 <article className='flex flex-col items-center'>
-                    <h2 className='text-2xl font-bold'>Enable </h2>
-                    <h2 className='text-2xl font-bold'>Two-Factor Authentication</h2>
+                    <h2 className='text-2xl xl:text-xl font-bold'>Enable </h2>
+                    <h2 className='text-2xl xl:text-xl xl: w-1/2 font-bold'>Two-Factor Authentication</h2>
                     <p className='mt-10 w-1/2 mx-18'>Authenticate your account</p>
                 </article>
                 <figure className='flex justify-center items-center'>
                     <img src="../../../src/Assets/phone3d.png" alt="" 
-                    className=' w-56'/>
+                    className=' w-56 xl:w-24'/>
                 </figure>
             </div>
             <div className="step_cards flex px-14 xxl:pr-10 py-2 gap-10 xxl:gap-8">

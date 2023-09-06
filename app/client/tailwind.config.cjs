@@ -24,9 +24,9 @@ export default {
       },
       screens: {
         xxl: { max: "1752px" },
-        desk: {max: "1631px"},
-        des: {max: "1600px"}, 
-        de: {max: "1540px"},
+        desk:{max: "1631px"},
+        des:{ max: "1600px"}, 
+        de: { max: "1540px"},
         xl: { max: "1279px" },
         lg: { max: "1023px" },
         md: { max: "767px" },
