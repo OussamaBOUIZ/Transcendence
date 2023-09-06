@@ -16,7 +16,7 @@ export default function StepCard({children, n, heading, text} :PropType) {
                 </h2>
             </div>
             <div className="flex justify-center mt-5">
-                <h2 className='text-center w-2/3 font-bold'>{heading}</h2>
+                <h2 className='text-center des:text-sm w-2/3 font-bold de:text-xs'>{heading}</h2>
             </div>
             <div className="flex justify-center my-4">
                 <p className='text-center w-3/4 text-xs'>{text}</p>

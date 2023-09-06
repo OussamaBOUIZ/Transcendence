@@ -14,13 +14,13 @@ export default function Settings () {
                 <figure className='flex items-center gap-16'>
                     <figcaption className=' px-6 py-8'>
                         <h2 className='text-xl font-bold'>Your Avatar</h2>
-                        <p>This will be displayed on your profile</p>
+                        <p className=' xl:text-sm'>This will be displayed on your profile</p>
                     </figcaption>
-                    <div id='avatar-editor' className='relative mx-5'>
+                    <div id='avatar-editor' className='relative mx-5 '>
                         <img src="../../../src/Assets/default.jpg" alt="default image" 
-                            className='block w-32 h-32 fit-cover rounded-full '
+                            className='block w-32 h-32 xl:w-auto fit-cover rounded-full xl:rounded-lg'
                         />
-                        <button className=' rounded-full bg-white p-1 absolute bottom-0 right-1'>
+                        <button className=' rounded-full bg-white p-1 absolute bottom-0 right-1 xl:-right-2'>
                         <img width="23" height="23" src="https://img.icons8.com/ios-glyphs/30/ball-point-pen.png" alt="ball-point-pen"/>
                         </button>
                     </div>
@@ -63,7 +63,7 @@ export default function Settings () {
                     className=' w-56'/>
                 </figure>
             </div>
-            <div className="step_cards flex px-14 py-2 gap-10">
+            <div className="step_cards flex px-14 xxl:pr-10 py-2 gap-10 xxl:gap-8">
             <StepCard n={1} heading="Download Google Authenticator" text="Google Authenticator is available in the following app stores">
                 <DownloadCard image='../../../src/Assets/appstore.png' store='App Store' link=''/>
                 <DownloadCard image='../../../src/Assets/playstore.png' store='Google Play' link=''/>
