@@ -20,7 +20,9 @@ interface InboxContextType {
     innerDiv: React.RefObject<HTMLDivElement>;
     prevInnerDivHeight: React.MutableRefObject<number>;
     dmSocket: Socket | undefined;
-    setDmSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>
+    setDmSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>;
+    socket: Socket | undefined;
+    setSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>
 }
 
 const InboxContext = createContext<InboxContextType>({} as InboxContextType);
@@ -28,6 +30,7 @@ const InboxContext = createContext<InboxContextType>({} as InboxContextType);
 export function InboxProvider ({children}: {children:React.ReactNode}) {
     
     const [dmSocket, setDmSocket] = useState<Socket>();
+    const [socket, setSocket] = useState<Socket>()
     const viewIdRef = useRef<number>(0);
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const inboxList = useRef<InboxItem[]>([]);
@@ -68,6 +71,18 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
         
         fetchInbox()
     }, [isLoaded])
+
+        // create socket
+    useEffect(() => {
+        const fd = io("ws://localhost:1212", {
+            withCredentials: true,
+        })
+        setSocket(fd)
+
+        return  () => {
+                fd.disconnect();
+            }
+    }, [])
 
     useEffectOnUpdate(() => {
         //init socket
@@ -118,7 +133,8 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             inboxList, viewIdRef,
             messagesList, setMessagesList,
             update, setUpdate,
-            dmSocket, setDmSocket
+            dmSocket, setDmSocket,
+            socket, setSocket
         }}>
         {children}
         </InboxContext.Provider>

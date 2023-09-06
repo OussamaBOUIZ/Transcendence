@@ -43,7 +43,6 @@ export const SocketContext = createContext<typeProps>({} as typeProps);
 
 export default function ChatRooms () {
 
-    const [socket, setSocket] = useState<Socket>()
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
@@ -62,7 +61,7 @@ export default function ChatRooms () {
 
 
     const {id} = useParams()
-    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
+    const {socket, outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -123,20 +122,6 @@ export default function ChatRooms () {
             });
         }
     }
-
-    // create socket
-    // useEffect(() => {
-    //     const fd = io("ws://localhost:1212", {
-    //         withCredentials: true,
-    //     })
-    //     setSocket(fd)
-
-    //     return  () => {
-    //         if (socket) {
-    //             socket.disconnect();
-    //         }
-    //     }
-    // }, [])
 
     const messagesElements = messageList.map((mess) => {
         if (binarySearch(blockedUsers, mess.fromUser)) {
