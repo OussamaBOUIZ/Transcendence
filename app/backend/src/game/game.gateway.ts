@@ -53,7 +53,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const myArray: Array<string> = Array.from(socketsSet);
 
 			const sock: Socket = this.server.sockets.sockets.get(myArray[1]);
-			
 			sock.emit("notHost");
 		}
 	}

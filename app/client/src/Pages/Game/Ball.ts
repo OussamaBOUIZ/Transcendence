@@ -7,12 +7,14 @@ export default class Ball {
     y: number;
     r: number;
     color: Color;
+    angle: number;
 
     constructor(x: number, y: number, r: number, color: Color) {
         this.x = x;
         this.y = y;
         this.r = r;
         this.color = color;
+        this.angle = 0;
     }
     
     fadeEffect () {
@@ -20,12 +22,22 @@ export default class Ball {
         this.r -= 0.5;
     }
     
-    drawBall(p5: any) {
+    drawBall(p5: any, ballImg: string | null) {
         p5.push();
-        p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
-        p5.noStroke();
-        // p5.rotate(p5.millis() / 100000);
-        p5.ellipse(this.x, this.y, this.r * 2 );
+        if (ballImg) {
+            // p5.translate(this.x - this.r, this.y - this.r);
+            
+            // p5.rotate(p5.radians(this.angle));
+
+            p5.imageMode(p5.CENTER);
+            p5.image(ballImg, this.x , this.y , this.r * 2, this.r * 2);
+
+            this.angle += 0.01;
+        } else {
+            p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
+            p5.noStroke();
+            p5.ellipse(this.x, this.y, this.r * 2);
+        }
         p5.pop();
     }
 
@@ -33,8 +45,8 @@ export default class Ball {
         this.r = r;
     }
     
-    updateBall(p5: any, isHost: boolean) {
-        this.drawBall(p5);
+    updateBall(p5: any, isHost: boolean, ballImg: string) {
+        this.drawBall(p5, ballImg);
 
         if (isHost) {
             this.x += vars.vel.x;

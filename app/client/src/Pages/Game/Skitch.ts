@@ -43,10 +43,12 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isMatching: true,
     }
 
-    let img: any;
+    let backImg: string;
+    let ballImg: string;
 
     p5.preload = (): void => {
-        img = p5.loadImage("/src/Pages/Game/fire-game.jpg");
+        backImg = p5.loadImage("/src/Pages/Game/fire-game.jpg");
+        ballImg = p5.loadImage("/src/Pages/Game/fireBall.png");
     }
 
     p5.windowResized = (): void => {
@@ -64,6 +66,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
         reset(p5, props.isHost);
+
+        props.socket?.on("notHost", () => {
+            props.setIsHost(false);
+            console.log(props.isHost);
+        })
     }
 
 
@@ -75,13 +82,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         else if (props.theme === "grey")
             p5.background(200 );
 
-        props.socket?.on("notHost", () => {
-            props.setIsHost(false);
-            console.log(props.isHost);
-        })
 
-        if (img)
-            p5.image(img, 0, 0, p5.width, p5.height);
+
+        if (backImg)
+            p5.image(backImg, 0, 0, p5.width, p5.height);
 
         if (!props.isMatching) {
             if (props.isHost) {
@@ -119,7 +123,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
             prevPos.forEach( (b: Ball, idx: number) =>  {
                 b.fadeEffect();
-                b.drawBall(p5);
+                b.drawBall(p5, null);
 
                 if (b.r <= 0) {
                     prevPos.splice(idx, 1);
@@ -135,7 +139,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 rightPad.updatePad(p5, ball, false, props.isHost);
             }
 
-            ball?.updateBall(p5, props.isHost);
+            ball?.updateBall(p5, props.isHost, ballImg);
         } else 
             makeNoise(p5);
     }
