@@ -1,17 +1,15 @@
-import React, {useEffect, useRef, useMemo, useContext, useState} from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import React, {useContext, useState} from 'react'
+import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import UserContext from '../../Context/UserContext';
-import { InboxItem, MessageData, PlayerData, User } from '../../../../global/Interfaces';
+import { MessageData, PlayerData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
-import ContactDetail from './ContactDetail';
-import { getUserImage } from '../../Hooks/getUserImage';
 import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-import { handleReceivedMsg, updateInbox ,updateInboxBySending ,updateInboxByReceiving, resetUnseenMsgs, updateInboxAtStart} from '../../Helpers/chatdm.utils';
-import useChatOverview, { fetchChatOverview } from '../../Hooks/useChatOverview';
+import { updateInboxBySending, resetUnseenMsgs} from '../../Helpers/chatdm.utils';
+import { fetchChatOverview } from '../../Hooks/useChatOverview';
 import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
 import {scrollLogic} from "./scrollLogic"
@@ -19,23 +17,17 @@ import ChatInput from './chatInput';
 
 export default function ChatDm () {
 
-    const {pathname} = useLocation()
     const {user} = useContext(UserContext)
     const { id } = useParams();
-
-    // const viewIdRef = useRef<number>(0);
-    
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
-    // const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
 
     const messagesElements = messagesList.map((msg) => {
         if (msg.message !== "") {
             return (
                 <MessageBox
-                // key={msg.creationTime?.getTime()}
                 id={msg.authorId !== user?.id}
                 >
                 {msg.message}
@@ -59,6 +51,7 @@ export default function ChatDm () {
             setMessagesList((prevList) => {
                 return [...prevList, sendMsg]
             })
+            setUpdate(prev => prev + 1)
             dmSocket?.emit('SendMessage', sendMsg)
             updateInboxBySending(sendMsg, inboxList, userOverview.image, userOverview.username);
         }
@@ -74,40 +67,15 @@ export default function ChatDm () {
         }
     }
 
-    /**EFFECTS     */
     useEffectOnUpdate(() => {
         viewIdRef.current = Number(id)
         if (id !== undefined) {
             fetchChatOverview(Number(id), setUserOverview)
             loadConversation();
             resetUnseenMsgs(dmSocket, inboxList, setUpdate, Number(id));
-            // updateInboxAtStart(setInboxList, messagesList[messagesList.length - 1], viewId)
         }
     }
     , [id])
-
-    // useEffectOnUpdate(() => {
-    //     dmSocket?.on('message', (recMsg: MessageData) => {
-    //         console.log(viewIdRef.current);
-    //         const inView: boolean = recMsg.authorId === viewIdRef.current;
-    //         console.log(inView)
-    //         if (inView)
-    //             setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
-    //         // let newInboxList: InboxItem[]
-    //         const fetch =async () => {
-    //             try {
-    //                 const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
-    //                 console.log(inboxList.current);
-    //                 inboxList.current = newInboxList;
-    //                 setUpdate(prev => prev + 1)
-    //             }
-    //             catch (error) {
-    //                 // console.log(error);
-    //             }
-    //         }
-    //         void fetch();
-    //     });
-    // }, [dmSocket]);
 
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);

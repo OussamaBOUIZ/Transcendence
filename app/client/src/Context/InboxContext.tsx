@@ -55,7 +55,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             if (res.data.length !== 0) 
             {
                 const newData = await fetchInboxAvatars(res.data)
-                
                 inboxList.current = newData;
                 setIsLoaded(true);
             }
@@ -92,8 +91,9 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             const inView: boolean = recMsg.authorId === viewIdRef.current;
             
             console.log(inView)
-            if (inView)
+            if (inView) {
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
+            }
             // let newInboxList: InboxItem[]
             const fetch =async () => {
                 try {
