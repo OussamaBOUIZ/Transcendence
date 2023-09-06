@@ -29,9 +29,7 @@ export default class Ball {
         p5.pop();
     }
 
-    updateAttr(x: number, y: number, r: number) {
-        this.x = x;
-        this.y = y;
+    updateAttr(r: number) {
         this.r = r;
     }
     

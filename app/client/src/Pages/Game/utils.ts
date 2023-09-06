@@ -52,7 +52,7 @@ export function clipCanvas(width: number) {
   return width
 }
 
-export function resizeGameAssets(width: number) {
+export function resizeGameVars(width: number) {
   vars.PH = width / 12;
   vars.PW = width / 80;
   vars.GAP = width / 80;

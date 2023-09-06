@@ -1,6 +1,6 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
 import { MySketchProps} from "./Interfaces";
-import { makeNoise, clipCanvas, resizeGameAssets } from "./utils"
+import { makeNoise, clipCanvas, resizeGameVars } from "./utils"
 import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
@@ -24,6 +24,13 @@ export function reset(p5: any, isHost: boolean): void {
         ball = new Ball(p5.width / 2, p5.height / 2, vars.RADIUS, {r: 255, g: 13, b: 140, a: 255});
 }
 
+export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
+    resizeGameVars(p5.width);
+    ball?.updateAttr(vars.RADIUS);
+    leftPad?.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+    rightPad?.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+}
+
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -39,16 +46,13 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let img: any;
 
     p5.preload = (): void => {
-        img = p5.loadImage("./src/Pages/Game/fire-game.jpg");
+        img = p5.loadImage("/src/Pages/Game/fire-game.jpg");
     }
 
     p5.windowResized = (): void => {
         let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
-        resizeGameAssets(p5.width);
-        ball.updateAttr(p5.width / 2, p5.height / 2, vars.RADIUS);
-        leftPad.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
-        rightPad.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+        adjustGame(p5);
     }
 
     p5.updateWithProps = (p: any) => {
@@ -56,13 +60,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
 
     p5.setup = (): void => {
-        let canvasWidth = clipCanvas(p5.windowWidth / 1.5); 
-        p5.createCanvas(canvasWidth , canvasWidth / 1.77);
+        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        p5.createCanvas(canvasWidth, canvasWidth / 1.77);
+        adjustGame(p5);
         reset(p5, props.isHost);
-        resizeGameAssets(p5.width);
-        p5.frameRate(60)
-
-        console.log(img);
     }
 
 
@@ -83,21 +84,35 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             p5.image(img, 0, 0, p5.width, p5.height);
 
         if (!props.isMatching) {
-            if (props.isHost)
-                props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
-            else 
-                props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
+            if (props.isHost) {
+                props.socket?.emit("game", {
+                    gameKey: props.gameKey,
+                    padX: rightPad.y,
+                    ballX: ball?.x,
+                    ballY: ball?.y,
+                    canvasSize: p5.width,
+                });
+            }
+            else {
+                props.socket?.emit("game", {
+                    gameKey: props.gameKey, 
+                    padX: leftPad.y,
+                    canvasSize: p5.width,
+                });
+            }
 
             props.socket?.on("movePad", (data: any) => {
 
+                let per = p5.width / data.canvasSize;
+
                 if (props.isHost)    
-                    leftPad.y = data.padX;
+                    leftPad.y = data.padX * per;
                 else
-                    rightPad.y = data.padX;
+                    rightPad.y = data.padX * per;
 
                 if (!props.isHost) {
-                    ball.x = data.ballX;
-                    ball.y = data.ballY;
+                    ball.x = data.ballX * per;
+                    ball.y = data.ballY * per;
                 }
 
             })
