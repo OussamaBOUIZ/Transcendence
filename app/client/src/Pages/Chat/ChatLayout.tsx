@@ -8,7 +8,7 @@ import InboxContext, { InboxProvider } from '../../Context/InboxContext';
 
 function Navi () {
     const {inboxList} = useContext(InboxContext);
-    const counter = inboxList.reduce((accum, current) => accum += current.unseenMessages ? current.unseenMessages : 0, 0)
+    const counter = inboxList.current.reduce((accum, current) => accum += current.unseenMessages ? current.unseenMessages : 0, 0)
     return (
         <nav className='flex justify-between'>
             <NavLink  

@@ -2,13 +2,13 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 interface PropType {
-    profileId: number,
+    username: string,
     imgSource: string
 }
 
-export default function Avatar ({profileId, imgSource}: PropType) {
+export default function Avatar ({username, imgSource}: PropType) {
     return (
-        <Link to={`/profile/${profileId}`} className=''>
+        <Link to={`/profile/${username}`} className=''>
             <div className="relative mx-0.5">
                 <img
                 src={imgSource} 

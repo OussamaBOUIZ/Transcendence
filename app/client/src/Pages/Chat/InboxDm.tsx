@@ -8,39 +8,27 @@ import {getUserImage} from "../../Hooks/getUserImage"
 
 export default function InboxDm () {
 
-    const {inboxList, setInboxList, update} = useContext(InboxContext);
+    const {inboxList, update} = useContext(InboxContext);
     useEffect(() => {
-        setInboxList((prevInbox:InboxItem[]) => {
-            return prevInbox.sort((a:InboxItem, b:InboxItem) => {
+        inboxList.current = inboxList.current.sort((a:InboxItem, b:InboxItem) => {
                 const dateA:Date = new Date(a.CreatedAt);
                 const dateB:Date = new Date(b.CreatedAt);
                 return dateB.getTime() - dateA.getTime();
             });
-        })
-}, [update])
-
-
-    useEffect(() => {
-        inboxList?.map(async (item) => {
-            const img = await getUserImage(item.author.id)
-            item.image = img;
-            return item;
-        })
-    }, [inboxList])
-        
+    }, [update])
 
     return (
         <div className="chat_inbox">
-            {inboxList?.map((item:InboxItem, idx:number) => {
+            {inboxList.current.map((item, idx) => {
                 return (
-                <MessageOverview 
-                    key={idx}
-                    id={item?.author?.id}
-                    lastMsg={item?.lastMessage}
-                    unsMsg={item.unseenMessages ? item.unseenMessages: 0}
-                    time=""
-                    username={item?.author?.username}
-                    img={item.image}
+                    <MessageOverview 
+                        key={idx}
+                        id={item?.author?.id}
+                        lastMsg={item?.lastMessage}
+                        unsMsg={item.unseenMessages ? item.unseenMessages: 0}
+                        time=""
+                        username={item?.author?.username}
+                        img={item.image}
                     />
                 )
             })}

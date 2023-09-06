@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from "../databases/achievement/achievement.entity";
@@ -9,6 +9,8 @@ import { Match_history } from "../databases/match_history.entity";
 import { authenticator } from 'otplib';
 import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
+import { log } from 'console';
+import { errorMonitor } from 'events';
 
 type tokenPayload = {
     id: number,
@@ -62,6 +64,22 @@ export class UserService {
 
         user.blocked_users = [...user.blocked_users, blockedUser]
         await this.userRepo.save(user)
+    }
+
+    async onlineUsers(userid: number) {
+        const user =  await this.userRepo.find({
+            where : {
+                id: Not(userid),
+                status: 'Online'
+            },
+            select: {
+                id: true,
+                status: true,
+                username: true,
+            }
+        })
+        console.log('online user are :', user)  
+        return user
     }
 
     async saveUser(user: User) {

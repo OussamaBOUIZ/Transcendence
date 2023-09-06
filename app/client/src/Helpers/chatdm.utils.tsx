@@ -2,6 +2,7 @@ import { InboxItem, MessageData } from "../../../global/Interfaces";
 import { SetStateAction } from 'react'
 import {getUserImage} from "../Hooks/getUserImage"
 import Inbox from "../Pages/Chat/Inbox";
+import {Socket} from "socket.io-client"
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
         setter((prevInbox) => {
@@ -64,34 +65,32 @@ const handleReceivedMsg = (recMsg: MessageData,
 
 
 const updateInboxBySending  = (sendMsg: MessageData, 
-    setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>,
+    inboxList: React.MutableRefObject<InboxItem[]>,
     avatar:string | undefined, username:string | undefined
     ) => {
-    setInboxList((prevList) => {
-        if (prevList.find((inbx) => inbx.author.id === sendMsg.receiverId)) {
-            return prevList.map((inbx) => {
+        if (inboxList.current.find((inbx) => inbx.author.id === sendMsg.receiverId)) {
+            inboxList.current = inboxList.current.map((inbx) => {
                 return inbx.author.id === sendMsg.receiverId 
                 ? {...inbx, lastMessage: sendMsg.message, CreatedAt: sendMsg.creationTime}
                 : inbx
             })
-        } else return [...prevList, 
+        } else inboxList.current = [...inboxList.current, 
             {author: {id: sendMsg.receiverId, username: username}, 
                 image: avatar,
                 lastMessage: sendMsg.message,
                 CreatedAt: sendMsg.creationTime
             } as InboxItem
         ]
-    })    
 }
 
-const updateInboxByReceiving = (
+const updateInboxByReceiving = async (
     recMsg: MessageData,
-    prevInboxList: InboxItem[],
+    inboxList: React.MutableRefObject<InboxItem[]>,
     inView: boolean
-  ): InboxItem[] => {
-        if (prevInboxList.find((inbx) => inbx.author.id === recMsg.authorId)) {
-            return prevInboxList.map((inbx) => {
-                console.log(inbx.author.id, ": ", recMsg.authorId)
+  ): Promise<InboxItem[]> => {
+        if (inboxList.current.find((inbx) => inbx.author.id === recMsg.authorId)) {
+            return inboxList.current.map((inbx) => {
+                console.log(inbx.author.id, ": ", recMsg.authorId, "IN VIEW: ", inView)
                 return inbx.author.id === recMsg.authorId 
                 ? {...inbx,
                     lastMessage: recMsg.message, 
@@ -101,39 +100,37 @@ const updateInboxByReceiving = (
                 : inbx
             })
         } else {
-            const getNewInboxElement = (): InboxItem[] => {
-                // const img = await getUserImage(recMsg.authorId)
+            const getNewInboxElement = async (): Promise<InboxItem[]> => {
+                const img = await getUserImage(recMsg.authorId)
                 const NewConversation: InboxItem = {
                     author: {id: recMsg.authorId, username: recMsg.username},
                     lastMessage: recMsg.message,
                     CreatedAt: recMsg.creationTime,
                     unseenMessages: inView ? 0 : 1,
-                    // image: img
+                    image: img
                 }
-                return [...prevInboxList, NewConversation];
+                return [...inboxList.current, NewConversation];
             }
-            return getNewInboxElement()
+            return await getNewInboxElement()
     }
 }
 
 
-const resetUnseenMsgs = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, setUpdate: React.Dispatch<SetStateAction<number>>, viewId:number) => {
+const resetUnseenMsgs = (socket: Socket | undefined, inboxList: React.MutableRefObject<InboxItem[]>, setUpdate: React.Dispatch<SetStateAction<number>>, viewId:number) => {
     console.log('resetMessages is called!!!');
     
-    setInboxList((prevInbox:InboxItem[]) => {
-    return prevInbox.map((inbx) => {
+    inboxList.current = inboxList.current.map((inbx) => {
         if (inbx.author?.id === viewId) {
+            socket?.emit('messageSeen', inbx.author.id)
             setUpdate(prev => prev + 1)
             return {...inbx, unseenMessages: 0}
         }
         return inbx
         })
-    })
 }
 
-const updateInboxAtStart = (setInboxList:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg: MessageData, viewId: number) => {
-    setInboxList((prevList) => {
-        return prevList.map((inbx) => {
+const updateInboxAtStart = (inboxList: React.MutableRefObject<InboxItem[]>, lastMsg: MessageData, viewId: number) => {
+    inboxList.current = inboxList.current.map((inbx) => {
             return inbx.author.id === viewId 
             ? {...inbx, 
                 lastMessage: lastMsg?.message, 
@@ -141,7 +138,7 @@ const updateInboxAtStart = (setInboxList:React.Dispatch<SetStateAction<InboxItem
             }
             : inbx;
         }
-        )})
+        )
 }
 
 export {updateInbox, handleReceivedMsg, updateInboxByReceiving, updateInboxBySending, resetUnseenMsgs, updateInboxAtStart};

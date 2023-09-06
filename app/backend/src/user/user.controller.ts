@@ -118,6 +118,15 @@ export class UserController {
         return userData;
     }
 
+    @Get('online/users')
+    async getOnlineUsers(@Req() req: Request) {
+
+        const user = await this.userService.findUserByEmail(req.user['email'])
+        if (!user)
+            throw new NotFoundException('user not found')
+        return await this.userService.onlineUsers(user.id)
+    }
+
     @Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	@HttpCode(HttpStatus.CREATED)
