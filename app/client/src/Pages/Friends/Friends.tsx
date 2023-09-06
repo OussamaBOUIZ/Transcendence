@@ -1,4 +1,3 @@
-import "../../scss/home.scss";
 import FriendsComponent from "./FriendsComponent";
 import GlobalLeaderBoard from "../../Components/GlobalLeaderBoard";
 import { useFetchLeaders } from "../../Hooks/useFetchLeaders";
@@ -13,21 +12,21 @@ export default function Friends() {
 
   if (!user) {
     return (
-        <div className="Home">
+        <div className="flex w-full h-full ml-4">
           
       </div>
     )
   }
   if (!leaders) {
     return (
-      <div className="Home">
+      <div className="flex w-full h-full ml-4">
         <FriendsComponent />
       </div>
     )
   }
 
   return (
-    <div className="Home">
+    <div className="flex w-full h-full ml-4">
       <FriendsComponent />
       <GlobalLeaderBoard Leaders={leaders}/>
     </div>

@@ -6,7 +6,7 @@ div.user_overview {
     background: $overview-gradient;
     grid-area: o;
     margin-left: auto;
-    width: 22.45%;
+    width: 320px;
     height: 97%;
     border-radius:  0 0 0 1rem;
     position: absolute;
@@ -96,7 +96,6 @@ div.user_overview {
         }
         div.achievement-container {
             figure.achievement {
-                background-color: red;
                 margin: 8px auto;
                 display: flex;
                 padding: 3px 8px;
@@ -114,5 +113,11 @@ div.user_overview {
                 }
             }
         }
+    }
+}
+
+@media (max-width: 1280px) {
+    div.user_overview {
+        display: none;
     }
 }

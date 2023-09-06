@@ -9,7 +9,7 @@ export class ReceiverDto {
 	userId: number;
 }
 
-function trim(value: string): string {
+export function trim(value: string): string {
     return value.trim();
 }
 

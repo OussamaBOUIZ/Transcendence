@@ -41,6 +41,7 @@ export default function ChannelProperty({ channel, propertyName, isUnderMyGrade 
                 image={element.image}
                 firstname={element.firstname}
                 lastname={element.lastname}
+                username={element.username}
                 wins={element.stat.wins}
                 losses={element.stat.losses}
                 flex="col"

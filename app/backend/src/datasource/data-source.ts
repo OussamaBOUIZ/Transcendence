@@ -26,6 +26,7 @@ export const dataSourceOptions: DataSourceOptions = {
        , User_chat, Message
        , BlockedTokenList
     ],
-    synchronize: true
+    synchronize: true,
+
 }
 new DataSource(dataSourceOptions);

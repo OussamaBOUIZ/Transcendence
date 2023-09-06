@@ -80,7 +80,7 @@ export class User extends BaseEntity {
     @JoinColumn()
     stat: Stats
 
-    @OneToMany(() => Match_history, (Match_history) => Match_history.user, {nullable: true})
+    @OneToMany(() => Match_history, (match_history) => match_history.user, {nullable: true})
     match_history: Match_history[]
 
     @OneToMany(() => User_chat, (user_char) => user_char.author)

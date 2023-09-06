@@ -16,369 +16,59 @@ export default function FriendsComponent() {
     </div>
 
     const FriendsToggle = allFriends.map((friend) => {
+        let result: React.JSX.Element;
+        if (typeof friend.lastGame === 'string') {
+            result = (
+                <main>
+                    <p>No game yet</p>
+                </main>
+            );
+        } else {
+            const isUserLastGame = friend.lastGame.id === user.id;
+            const userScore = isUserLastGame ? friend.lastGame.user_score : friend.lastGame.opponent_score;
+            const friendScore = isUserLastGame ? friend.lastGame.opponent_score : friend.lastGame.user_score;
+
+            result = (
+                <main>
+                    <p>Last Game</p>
+                    <p>{userScore} - {friendScore}</p>
+                </main>
+            );
+        }
+
+        let statusIcon: string;
+
+        switch (friend.status) {
+            case "Online":
+                statusIcon = "bg-green-500";
+                break;
+            case "Offline":
+                statusIcon = "bg-slate-600";
+                break;
+            default:
+                statusIcon = "bg-pink-500";
+                break;
+        }
+
         return (
-            <>
             <div className="friend-item" key={friend.id}>
                 <header>
                     <ProfileImage image={friend.image} name={friend.username} size="big" />
                     <div className="text-item">
                         <h2>{friend.firstname}</h2>
                         <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
+                        <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${statusIcon}`}></div>
+                            <span>{friend.status}</span>
+                        </div>
                     </div>
                     <div className="level-item">
                         <p>level</p>
                         <p>{friend.stat.ladder_level}</p>
                     </div>
                 </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
+                {result}
             </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            <div className="friend-item" key={friend.id}>
-                <header>
-                    <ProfileImage image={friend.image} name={friend.username} size="big" />
-                    <div className="text-item">
-                        <h2>{friend.firstname}</h2>
-                        <h2>{friend.lastname}</h2>
-                        <span>{friend.status}</span>
-                    </div>
-                    <div className="level-item">
-                        <p>level</p>
-                        <p>{friend.stat.ladder_level}</p>
-                    </div>
-                </header>
-                <main>
-                    <p>lastGame:</p>
-                    <p>3 - 0</p>
-                </main>
-            </div>
-            </>
         )
     })
 

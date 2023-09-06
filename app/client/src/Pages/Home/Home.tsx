@@ -1,5 +1,4 @@
 import React, {useContext} from "react";
-import "../../scss/home.scss";
 import HomeComponent from "./homeComponent";
 import UserOverview from "../../Components/userOverview";
 import { useFetchLeaders } from "../../Hooks/useFetchLeaders"
@@ -15,9 +14,9 @@ export default function Home() {
       return null;
 
   return (
-    <div className="Home">
-      <HomeComponent UserData={user} Leaders={leaders} />
-      <UserOverview UserData={user} />
-    </div>
+      <div className="flex h-full w-full">
+        <HomeComponent UserData={user} Leaders={leaders} />
+        <UserOverview UserData={user} />
+      </div>
   );
 }

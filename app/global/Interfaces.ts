@@ -1,9 +1,18 @@
+export interface lastGame {
+    id: number;
+    opponent: number;
+    opponent_score: number;
+    user_score: number;
+}
+
 export interface User {
-    id: number,
-    firstname: string,
-    image?: string,
-    lastname: string,
-    username: string,
+    id: number;
+    firstname: string;
+    lastname: string;
+    username: string;
+    image?: string;
+    stat?: Stat;
+    status: string;
 }
 
 interface FriendUser {
@@ -14,6 +23,7 @@ interface FriendUser {
     stat: Stat,
     status: string,
     username: string,
+    lastGame: lastGame | string;
 }
 
 
@@ -25,11 +35,13 @@ interface Achievement {
     is_achieved?: boolean,
     user_id?: number,
 }
+
 interface Stat {
     ladder_level: number,
+    levelPercentage: number,
     losses: number,
     wins: number,
-    achievements?: Achievement[],
+    achievements: Achievement[],
 }
 
 interface Leaders {
@@ -56,12 +68,6 @@ interface Data {
     lastname: string,
     username: string,
 }
-// interface DmUserOverview {
-//     id: number,
-//     firstname: string,
-//     lastname: string,
-//     stat: Stat,
-// }
 
 interface userInfoCard {
     id: number,
@@ -79,9 +85,9 @@ interface userInfoCard {
 
 interface channelData {
     id: number,
-    channelOwners: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
-    channelAdmins: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[],
-    channelUsers: {id: number, firstname: string, lastname: string, image?: string, stat: {wins: number, losses: number}}[]
+    channelOwners: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelAdmins: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[],
+    channelUsers: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[]
 }
 
 interface rooms {
@@ -106,29 +112,6 @@ interface Message {
     image?: string,
     username?: string,
     isBlocked: boolean,
-}
-
-export interface StatAchievement {
-    id: number;
-    badge_name: string;
-    description: string;
-    image?: string;
-  }
-  
-export interface SStat {
-    achievements: StatAchievement[];
-    ladder_level: number;
-    losses: number;
-    wins: number;
-  }
-  
-  export interface PlayerData {
-    id: number;
-    firstname: string;
-    lastname: string;
-    username?:string;
-    image?:string;
-    stat: SStat;
 }
 
 export interface InboxItem {

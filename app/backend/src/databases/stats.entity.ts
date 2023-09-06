@@ -29,6 +29,6 @@ export class Stats extends BaseEntity {
     @Column({default: 0})
     ladder_level: number
 
-    @Column({default: 0, type: 'decimal', precision: 10, scale: 2})
+    @Column({default: 0})
     levelPercentage: number
 }

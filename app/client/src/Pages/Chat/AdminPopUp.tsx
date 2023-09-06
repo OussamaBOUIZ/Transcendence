@@ -25,13 +25,13 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
     function kickMember() {
         const data ={userId: Userid, channelName: roomData.channelName}
         socket?.emit('kickuser', data);
-        setUpdate(prev => prev + 1)
+        setTimeout(() => setUpdate(prev => prev + 1), 300)
     }
 
     function banMember() {
         const data ={userId: Userid, channelName: roomData.channelName}
         console.log(data)
-        socket.emit('banuser', data)
+        socket?.emit('banuser', data)
     }
 
     async function handleClick(name: string) {

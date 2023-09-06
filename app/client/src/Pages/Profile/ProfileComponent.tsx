@@ -3,47 +3,88 @@ import GameHistory from "../../Components/gameHistory";
 import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useContext, useState } from "react";
 import {User} from "../../../../global/Interfaces"
+import UserContext from "../../Context/UserContext";
+import block from "../../Assets/Icons/block.svg"
 
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
 
-    // useEffect(() => {
-    //     const SendRequest = async () => {
-    //         try {
-    //             await axios.post(`api/user/addfriend/${UserData.id}?friendId=3`, null)
-    //         }
-    //         catch (err) {
-    //             console.log("error : adding an existing friend")
-    //             console.log(err)
-    //         }
-    //     }
-    //     void SendRequest();
-    // }, [UserData.id])
+    const {user} = useContext(UserContext)
+    const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
+    const [update, setUpdate] = useState<number>(0)
 
-    const level = 70
+    async function handleBlock() {
+        try {
+            await axios.post(`/api/user/block/${UserData.id}`)
+        }
+        catch (err) {
+            // console.log(err)
+        }
+    }
+
+    async function handleFriend() {
+        try {
+            await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
+            setUpdate(prev => prev + 1)
+        }
+        catch (err) {
+            console.log("error : adding an existing friend")
+            console.log(err)
+        }
+    }
+
+    let statusIcon: string;
+
+    switch (UserData.status) {
+        case "Online":
+            statusIcon = "bg-green-500";
+            break;
+        case "Offline":
+            statusIcon = "bg-slate-600";
+            break;
+        default:
+            statusIcon = "bg-pink-500";
+            break;
+    }
+
     return (
-        <div className="profileComponent">
-            <div className="item ProfileCard">
-                <div className="image">
-                    <img src={UserData.image} alt="" />
+        <div className="profileComponent bg- bg-green ">
+            <div className="item ProfileCard relative pt-4">
+                {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
+                <div className="head flex flex-col items-center">
+                    <div className="image">
+                        <img src={UserData.image} alt="" />
+                    </div>
+                    <div className="flex flex-col items-center gap-4 pb-4" >
+                        <div className="flex flex-col items-center">
+                            <h1>{UserData.firstname + " " + UserData.lastname}</h1>
+                            <h2>{UserData.username}</h2>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${statusIcon}`}></div>
+                            <h2>{UserData.status}</h2>
+                        </div>
+                        <div className="flex flex-col w-full items-center">
+                            <p>level {UserData.stat?.ladder_level}</p>
+                            <div className="level_bar">
+                                <div className="level-bar-fill" style={{ width: `${String(UserData.stat?.levelPercentage)}%` }}></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h2>{UserData.firstname + " " + UserData.lastname}</h2>
-                <p>{UserData.username}</p>
-                <p>online</p>
-                <p>level 14</p>
-                <div className="level_bar">
-                    <div className="level-bar-fill" style={{ width: `${level}%` }}></div>
-                </div>
-                <div className="footer">
-                    <button className="friend-request">add as friend</button>
-                    <button className="DM">send message</button>
-                </div>
+                {
+                    user.id !== UserData.id &&
+                    <div className="footer">
+                        <button className="friend-request" onClick={handleFriend}>{isMyFriend ? 'Friend' : 'Add as Friend'}</button>
+                        <button className="DM">send message</button>
+                    </div>
+                }
             </div>
             <GameHistory UserData={UserData} />
-            <FriendsCard user={UserData} />
-            <AchievementCard user={UserData} />
+            <FriendsCard id={UserData.id} update={update} setIsMyFriend={setIsMyFriend} />
+            <AchievementCard achievements={UserData.stat?.achievements} />
         </div>
     )
 }

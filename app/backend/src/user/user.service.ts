@@ -168,7 +168,15 @@ export class UserService {
         if (!userToken)
             return null;
         const payload = this.jwtService.decode(userToken) as tokenPayload;
-        return await this.userRepo.findOneBy({ id: payload.id });
+        if (!payload) return null;
+        return await this.userRepo.findOne({
+            relations: {
+                stat: true,
+            },
+            where: {
+                email: payload.email
+            }
+        });
     }
 
     decodeJwtCode(userToken: string) {
@@ -189,30 +197,24 @@ export class UserService {
     }
     async getFriendLastGame(friendId: number, userId: number)
     {
-        // const match = await this.matchHistoryRepo
-        // .createQueryBuilder('match_history')
-        // .where('match_history.userId = :userId', { userId })
-        // .andWhere('match_history.opponent = :friendId', { friendId })
-        // .orderBy('match_history.id', 'DESC')
-        // .getOne(); 
-        const match = await this.matchHistoryRepo.findOne({
-            relations: {
-                user: true
-            },
-            where: {
-                user: {
-                    id: userId
-                },
-                opponent: friendId, 
-            },
-            order: {
-                id: 'DESC',
-            },
-            select: {
-                user_score: true,
-                opponent_score: true,
-            }
-        });
+        console.log('frid:', friendId, 'userid', userId);
+        
+        let match = await this.matchHistoryRepo
+        .createQueryBuilder('match_history')
+        .where('match_history.userId = :userId', { userId })
+        .andWhere('match_history.opponent = :friendId', { friendId })
+        .orderBy('match_history.id', 'DESC')
+        .getOne();
+        if(!match)
+        {
+            match = await this.matchHistoryRepo
+            .createQueryBuilder('match_history')
+            .where('match_history.userId = :friendId', { friendId })
+            .andWhere('match_history.opponent = :userId', { userId })
+            .orderBy('match_history.id', 'DESC')
+            .getOne();
+        }
+
         return match;
     }
 
@@ -245,7 +247,7 @@ export class UserService {
             order: {
                 ladder_level: 'DESC'
             },
-            take: 3,
+            take: 12,
             select: {
                 user: {
                     id: true,
@@ -265,12 +267,11 @@ export class UserService {
                 id: true,
                 username: true,
                 firstname: true,
-                lastname: true
+                lastname: true,
+                status: true,
             }
         })
     }
-
-
 
     async getAchievement(id: number) {
         const user = await this.userRepo.findOne({
@@ -282,6 +283,16 @@ export class UserService {
             }
         });
         return user.stat.achievements;
+    }
+
+    async getStat(id: number) {
+        const user = await this.userRepo.findOne({
+            where: { id: id },
+            relations: {
+                stat: true,
+            }
+        });
+        return user.stat;
     }
 
     async getLastThreeAchievements(id: number) {
@@ -304,15 +315,21 @@ export class UserService {
 
     }
     async AllFriends(id: number) {
+        console.log('idnumner', id);
+        
         const user = await this.userRepo.findOne({
-            where: { id: id },
             relations: {
                 friends: {
                     stat: true,
+                    match_history: true
                 }
             },
+            where: {
+                id: id,
+                
+            },
             select: {
-                id: true,
+                id: true, 
                 friends: {
                     id: true,
                     firstname: true,
@@ -322,10 +339,18 @@ export class UserService {
                     stat: {
                         wins: true,
                         losses: true,
+                        ladder_level: true,
+                    },
+                    match_history: {
+                        opponent: true,
+                        user_score: true,
+                        opponent_score: true
                     }
                 },
+                
             }
         });
+        console.log(user)
         return user;
     }
     async addFriend(userId: number, friendId: number) {
@@ -336,10 +361,15 @@ export class UserService {
             }
         });
         const friend = await this.userRepo.findOne({
+            relations: {
+                friends: true
+            },
             where: { id: friendId },
         });
         user.friends.push(friend);
+        friend.friends.push(user)
         await this.userRepo.save(user);
+        await this.userRepo.save(friend)
     }
     async generate2fa(user: User) {
         const secret = authenticator.generateSecret();
@@ -431,6 +461,11 @@ export class UserService {
 
     async getUserProfile(username: string) {
         return await this.userRepo.findOne({
+            relations: {
+                stat: {
+                    achievements: true,
+                }
+            },
             where: {
                 username: username
             },
@@ -439,6 +474,14 @@ export class UserService {
                 firstname: true,
                 lastname: true,
                 username: true,
+                status: true,
+                stat: {
+                    achievements: true,
+                    ladder_level: true,
+                    levelPercentage: true,
+                    losses: true,
+                    wins: true, 
+                 }
             }
         })
     }
@@ -463,6 +506,7 @@ export class UserService {
                 firstname: true,
                 lastname: true,
                 username: true,
+                status: true,
                 stat: {
                    achievements: {
                         id: true,
@@ -470,6 +514,7 @@ export class UserService {
                         description: true,
                    },
                    ladder_level: true,
+                   levelPercentage: true,
                    losses: true,
                    wins: true, 
                 }
@@ -477,7 +522,6 @@ export class UserService {
         })
         if (!user)
             throw new NotFoundException('user not found')
-        
         return user
     }
 }

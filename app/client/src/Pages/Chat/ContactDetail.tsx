@@ -1,7 +1,7 @@
 import React from 'react'
-import { PlayerData, StatAchievement } from '../../../../global/Interfaces';
+import { User, Achievement } from '../../../../global/Interfaces';
 
-function Achievement ({item} :{item: StatAchievement}) {
+function AllAchievement ({item} :{item: Achievement}) {
     return (
         <figure className="achievement">
             <img src={item.image} alt="" className="achievement-icon" />
@@ -13,9 +13,9 @@ function Achievement ({item} :{item: StatAchievement}) {
     )
 }
 
-export default function ContactDetail ({oview} : {oview?: PlayerData}) {
+export default function ContactDetail ({oview} : {oview: User}) {
     
-    const AchievementsElements = oview?.stat?.achievements?.map((item:StatAchievement) => <Achievement key={item.id} item={item} />)
+    const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)
 
     return (
         // <div className="chat_overview">

@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import UserContext from '../../Context/UserContext';
-import { MessageData, PlayerData } from '../../../../global/Interfaces';
+import { User, MessageData } from '../../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
@@ -20,7 +20,7 @@ export default function ChatDm () {
     const {user} = useContext(UserContext)
     const { id } = useParams();
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
-    const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
+    const [userOverview, setUserOverview] = React.useState<User>({} as User);
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
 

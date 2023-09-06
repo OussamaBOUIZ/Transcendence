@@ -4,7 +4,7 @@
 .profileComponent {
     display: grid;
     width: 95%;
-    grid-template: 1fr 0.9fr/0.75fr 1fr;
+    grid-template: 1fr 0.9fr / 0.75fr 1fr;
     grid-template-areas:
         "profile history"
         "friends achievements";
@@ -19,7 +19,7 @@
         @include center-columns;
         justify-content: center;
         color: white;
-        padding-top: 1.75em;
+        gap: .5em;
         .image {
             img {
                 width: 9.5em;
@@ -28,18 +28,26 @@
                 border: 1px solid white;
             }
         }
-        h2 {
-            margin: 0;
+        h1 {
+            margin-top: 3px;
+            font-size: 1.125em;
+            font-weight: 700;
             text-transform: uppercase;
+            text-align: center;
         }
-        p {
+        h2, p {
+            text-transform: lowercase;
+            font-size: 1em;
             margin-top: 0;
-            font-size: 0.75rem;
             font-weight: 500;
         }
+        p {
+            font-size: 0.75rem;
+        }
         .level_bar {
-            width: 40%;
-            height: 0.4rem;
+            margin-top: 3px;
+            width: 9.5em;
+            height: .625em;
             position: relative;
             background-color: $bar-background;
             border-radius: 1em;
@@ -57,10 +65,11 @@
             width: 100%;
             display: flex;
             button {
+                width: 50%;
                 background: white;
                 color: black;
                 flex-grow: 1;
-                padding: 1.5em 3em;
+                padding: 1em 3em;
                 border-radius: 0 0 0 1em;
                 border: none;
                 font-weight: 500;
@@ -72,6 +81,18 @@
             }
         }
     }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 90%;
+        margin-bottom: .4em;
+        p {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 1rem;
+        }
+    }
     .GameHistory {
         background-image: url("../Assets/GameHistory.png");
         background-size: cover;
@@ -79,11 +100,17 @@
         grid-area: history;
         display: flex;
         flex-direction: column;
-        p {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: white;
-            margin: 1rem;
+        align-items: center;
+        header > .NbGames {
+            display: flex;
+            align-items: center;
+            span {
+                font-size: 0.875rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: .75em;
+            }
         }
         .games {
             display: grid;
@@ -94,30 +121,20 @@
             grid-gap: 5px;
             justify-items: center;
             padding-bottom: 5px;
+            overflow: hidden;
         }
     }
     .friendsCard {
         grid-area: friends;
         overflow: hidden;
         @include center-columns;
-        header {
+
+        header > .NbFriends {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 90%;
-            margin-bottom: .4em;
-            p {
-                font-size: 1.625rem;
-                font-weight: 700;
-                margin-top: .7em;
-                margin-bottom: 0;
-            }
-            .NbFriends {
-                display: flex;
-                align-items: center;
-                span {
-                    margin-left: .5em;
-                }
+            align-items: center;
+            span {
+                margin-left: .5em;
+                font-weight: 500;
             }
         }
         .all-friends-list {
@@ -142,24 +159,12 @@
         grid-area: achievements;
         overflow: hidden;
         @include center-columns;
-        header {
+        header > .NbAchived {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 90%;
-            margin-bottom: .4em;
-            p {
-                font-size: 1.625rem;
-                font-weight: 700;
-                margin-top: .7em;
-                margin-bottom: 0;
-            }
-            .NbAchived {
-                display: flex;
-                align-items: center;
-                span {
-                    margin-left: .5em;
-                }
+            align-items: center;
+            span {
+                margin-left: .5em;
+                font-weight: 500;
             }
         }
         .all-awards-list {
@@ -171,6 +176,7 @@
             flex-wrap: wrap;
             row-gap: 8px;
             margin-right: 1em;
+            padding-left: 1em;
             &::-webkit-scrollbar {
                 width: .4em;
                 border-radius: 6em;
@@ -180,9 +186,8 @@
                 border-radius: 6em;
             }
             .award-item {
-                margin-left: 1.4em;
                 margin-right: 1em;
-                width: 45%;
+                width: 40%;
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
@@ -222,10 +227,89 @@
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1450px) {
     .profileComponent {
         .ProfileCard {
             margin: 0;
+        }
+    }
+}
+@media (max-width: 1190px) {
+    .profileComponent > .ProfileCard > .footer {
+        button {
+            padding: 1em 1em;
+        }
+    }
+}
+
+@media (max-width: 1150px) {
+    .profileComponent {
+        grid-template: 1fr 1fr / 1fr 1fr;
+        grid-template-areas:
+            "profile friends"
+            "history history"
+            "achievements achievements";
+        grid-gap: 1.5em;
+        .ProfileCard {
+            .image > img {
+                width: 7em;
+                height: 7em;
+            }
+        }
+        header > p {
+            font-size: 1.2em;
+            margin: .5rem;
+        }
+        .achievementCard > .all-awards-list > .award-item {
+            padding: .2em .75em;
+        }
+    }
+}
+
+@media (max-width: 960px) {
+    .profileComponent {                                                                                                                          
+        .stats {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .profileComponent {
+        .item {
+            min-height: 16rem;
+        }
+        grid-template: 1fr / 1fr;
+        grid-template-areas:
+            "profile"
+            "friends"
+            "history"
+            "achievements";
+        grid-gap: 1em;
+        header > p {
+            font-size: 1em;
+            // margin: 0;
+        }
+        span {
+            font-size: .75em;
+        }
+        .stats {
+            display:flex;
+        }
+        .ProfileCard {
+            .head {
+                flex-direction: row;
+            }
+            .image > img {
+                width: 7em;
+                height: 7em;
+            }
+            .level_bar {
+                width: 12em;
+            }
+        }
+        .achievementCard > .all-awards-list > .award-item {
+            width: 100%;
         }
     }
 }

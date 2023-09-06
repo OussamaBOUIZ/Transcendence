@@ -2,7 +2,7 @@
 @import "../scss/mixins.scss";
 
 .friendsComponent {
-    width: 72%;
+    width: 100%;
     display: flex;
     overflow: hidden;
     flex-direction: column;
@@ -13,18 +13,19 @@
     }
     .friends-list {
         display: flex;
-        width: 100%;
+        width: calc(100% - 496px);
         height: 100%;
-        gap: 5em;
+        gap: 3em;
         flex-wrap: wrap;
         overflow-y: auto;
         overflow-x: hidden;
+        padding-right: 1em;
         &::-webkit-scrollbar {
             width: .4em;
             border-radius: 6em;
         }
         &::-webkit-scrollbar-thumb {
-            background-color: transparent;
+            background-color: rgb(210, 210, 210);
             border-radius: 6em;
         }
         .friend-empty {
@@ -52,8 +53,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            width: 22.4375rem;
-            height: 14.0625rem;
+            width: 19em;
+            height: 14em;
             border-radius: 1rem;
             padding: 1em;
             background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
@@ -72,10 +73,10 @@
                         font-size: 1.25rem;
                         font-weight: 700;
                     }
-                    span {
-                        font-size: 1rem;
-                        color: $primary-pink;
-                        font-weight: 600;
+                    div {
+                        span {
+                            font-size: 1em;
+                        }
                     }
                 }
                 .level-item {
@@ -92,8 +93,10 @@
                 border-radius: 1rem;
                 background: rgba(0, 0, 0, 0.30);
                 @include center-columns;
+                justify-content: center;
+                gap: .5em;
                 p {
-                    font-size: .875rem;
+                    font-size: 1em;
                     margin: 0;
                 }
                 padding: 0.625rem 1.25rem;
@@ -113,7 +116,7 @@
     border: .5px solid rgba(0, 0, 0, 0.05);
     background: radial-gradient(58.23% 57.63% at 47.72% 47.11%, #622C98 0%, #341057 99.99%);
     box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
-    width: 25%;
+    width: 480px;
     height: 97%;
     overflow: hidden;
     // position: relative;
@@ -131,7 +134,7 @@
         .board {
             z-index: 1;
             width: 100%;
-            height: 20%;
+            height: 30%;
             display: flex;
             align-items: flex-end;
             .rank {
@@ -160,7 +163,7 @@
                 height: 70%;
             }
         }
-        .topEleven {
+        .TopTwelve {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -189,5 +192,35 @@
                 }
             }
         }
+    }
+}
+
+@media (max-width: 1255px) {
+    .friendsComponent {
+        .friends-list {
+            width: calc(100% - 16px);
+            justify-content: center;
+            .friend-item {
+                flex-grow: 1;
+            }
+        }
+    }
+    .globalLeaderboard {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .friendsComponent {
+        .friends-list {
+            gap: 1em;
+            justify-content: center;
+            .friend-item {
+                flex-grow: 1;
+            }
+        }
+    }
+    .globalLeaderboard {
+        display: none;
     }
 }

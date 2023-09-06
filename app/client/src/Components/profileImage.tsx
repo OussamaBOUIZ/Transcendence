@@ -4,7 +4,8 @@ import React from "react"
 export default function ProfileImage({image, name, size}: {image: string |undefined, name?: string, size: string}) {
 
     function handleClick() {
-        window.location.replace(`/profile/${name}`)
+        if (name)
+            window.location.replace(`/profile/${name}`)
     }
 
     return (
