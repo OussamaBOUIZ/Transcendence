@@ -4,6 +4,7 @@ import axios, {AxiosResponse} from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
+import {updateInboxByReceiving} from "../Helpers/chatdm.utils"
 
 
 interface InboxContextType {
@@ -12,6 +13,9 @@ interface InboxContextType {
     setUpdate: React.Dispatch<React.SetStateAction<number>>;
     isBanned: boolean;
     setBanned: React.Dispatch<React.SetStateAction<boolean>>;
+    viewIdRef: React.MutableRefObject<number>,
+    messagesList: MessageData[],
+    setMessagesList: React.Dispatch<React.SetStateAction<MessageData[]>>
     outerDiv: React.RefObject<HTMLDivElement>;
     innerDiv: React.RefObject<HTMLDivElement>;
     prevInnerDivHeight: React.MutableRefObject<number>;
@@ -24,7 +28,8 @@ const InboxContext = createContext<InboxContextType>({} as InboxContextType);
 export function InboxProvider ({children}: {children:React.ReactNode}) {
     
     const [dmSocket, setDmSocket] = useState<Socket>();
-
+    const viewIdRef = useRef<number>(0);
+    const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const inboxList = useRef<InboxItem[]>([]);
     const [update, setUpdate] = useState<number>(0);
     const outerDiv = useRef<HTMLDivElement>(null);
@@ -75,17 +80,43 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
                 token: value
             }})
             setDmSocket(newSocket)
-            return () => {
-                newSocket.disconnect()
+        return () => {
+            console.log("disconnect");
+            newSocket.disconnect()
         }
     }, [])
+
+    useEffectOnUpdate(() => {
+        dmSocket?.on('message', (recMsg: MessageData) => {
+            console.log(viewIdRef.current);
+            const inView: boolean = recMsg.authorId === viewIdRef.current;
+            
+            console.log(inView)
+            if (inView)
+                setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
+            // let newInboxList: InboxItem[]
+            const fetch =async () => {
+                try {
+                    const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
+                    console.log(inboxList.current);
+                    inboxList.current = newInboxList;
+                    setUpdate(prev => prev + 1)
+                }
+                catch (error) {
+                    // console.log(error);
+                }
+            }
+            void fetch();
+        });
+    }, [dmSocket]);
 
     return (
         <InboxContext.Provider value={{
             outerDiv, innerDiv,
             isBanned, setBanned,
             prevInnerDivHeight,
-            inboxList,
+            inboxList, viewIdRef,
+            messagesList, setMessagesList,
             update, setUpdate,
             dmSocket, setDmSocket
         }}>

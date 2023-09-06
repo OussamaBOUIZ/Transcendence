@@ -62,7 +62,7 @@ export default function ChatRooms () {
 
 
     const {id} = useParams()
-    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned} = useContext(InboxContext)
+    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -93,6 +93,7 @@ export default function ChatRooms () {
                 // console.log(error)
             }
         }
+        viewIdRef.current = NaN;
         if (user && id)
             void getInfo()
     }, [id, user])
@@ -124,18 +125,18 @@ export default function ChatRooms () {
     }
 
     // create socket
-    useEffect(() => {
-        const fd = io("ws://localhost:1212", {
-            withCredentials: true,
-        })
-        setSocket(fd)
+    // useEffect(() => {
+    //     const fd = io("ws://localhost:1212", {
+    //         withCredentials: true,
+    //     })
+    //     setSocket(fd)
 
-        return  () => {
-            if (socket) {
-                socket.disconnect();
-            }
-        }
-    }, [])
+    //     return  () => {
+    //         if (socket) {
+    //             socket.disconnect();
+    //         }
+    //     }
+    // }, [])
 
     const messagesElements = messageList.map((mess) => {
         if (binarySearch(blockedUsers, mess.fromUser)) {

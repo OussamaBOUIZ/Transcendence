@@ -16,8 +16,6 @@ import ChatWindow from "./ChatWindow"
 import ChatOverview from './ChatOverview';
 import {scrollLogic} from "./scrollLogic"
 import ChatInput from './chatInput';
-import { listener } from './listener';
-import {observer} from "./observer"
 
 export default function ChatDm () {
 
@@ -25,13 +23,13 @@ export default function ChatDm () {
     const {user} = useContext(UserContext)
     const { id } = useParams();
 
-    const viewIdRef = useRef<number>(0);
+    // const viewIdRef = useRef<number>(0);
     
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<PlayerData>({} as PlayerData);
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
-    const [messagesList, setMessagesList] = useState<MessageData[]>([]);
-    const {outerDiv, innerDiv, prevInnerDivHeight} = useContext(InboxContext)
+    // const [messagesList, setMessagesList] = useState<MessageData[]>([]);
+    const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
 
     const messagesElements = messagesList.map((msg) => {
         if (msg.message !== "") {
@@ -88,28 +86,28 @@ export default function ChatDm () {
     }
     , [id])
 
-    useEffectOnUpdate(() => {
-        dmSocket?.on('message', (recMsg: MessageData) => {
-            console.log(viewIdRef.current);
-            const inView: boolean = recMsg.authorId === viewIdRef.current;
-            console.log(inView)
-            if (inView)
-                setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
-            // let newInboxList: InboxItem[]
-            const fetch =async () => {
-                try {
-                    const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
-                    console.log(inboxList.current);
-                    inboxList.current = newInboxList;
-                    setUpdate(prev => prev + 1)
-                }
-                catch (error) {
-                    // console.log(error);
-                }
-            }
-            void fetch();
-        });
-    }, [dmSocket]);
+    // useEffectOnUpdate(() => {
+    //     dmSocket?.on('message', (recMsg: MessageData) => {
+    //         console.log(viewIdRef.current);
+    //         const inView: boolean = recMsg.authorId === viewIdRef.current;
+    //         console.log(inView)
+    //         if (inView)
+    //             setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
+    //         // let newInboxList: InboxItem[]
+    //         const fetch =async () => {
+    //             try {
+    //                 const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
+    //                 console.log(inboxList.current);
+    //                 inboxList.current = newInboxList;
+    //                 setUpdate(prev => prev + 1)
+    //             }
+    //             catch (error) {
+    //                 // console.log(error);
+    //             }
+    //         }
+    //         void fetch();
+    //     });
+    // }, [dmSocket]);
 
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
