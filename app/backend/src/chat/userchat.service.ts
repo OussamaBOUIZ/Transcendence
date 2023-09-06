@@ -80,15 +80,10 @@ export class ChatGatewayService {
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {
-        console.log('id:', messageDto.receiverId)  
-        console.log('message:', messageDto)
 
         const receiver = await this.getUserById(messageDto.receiverId)
         
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
-        this.logger.log({receiver})
-        this.logger.log(socket.data.user.email)
-        this.logger.log({author})
  
         if (!author || !receiver) { 
             throw {
@@ -142,7 +137,6 @@ export class ChatGatewayService {
 
     async loadMessage(user: User, receiver: number) {
         const message = await this.getAllMessages(user.id, receiver)
-        console.log('messages', message);
         
         const transformedArray = message.map(item => {
             const message = item.messages[0]
@@ -154,9 +148,7 @@ export class ChatGatewayService {
                 creaionTime: new Date(message?.CreatedAt)
             }
         })
-
-        console.log('tronsform', transformedArray);
-        
+         
         return transformedArray
     }
 

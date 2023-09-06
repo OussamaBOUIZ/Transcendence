@@ -48,7 +48,6 @@ export class InboxController {
     async getUserInbox(
         @Req() req: Request
     ) {
-        console.log('in function inbox')
 
         const user = await this.userService.findUserByEmail(req.user['email'])
         if (user === null)
@@ -86,8 +85,6 @@ export class InboxController {
                 arrayOfInbox.push(result);
             } else {
                 // console.log('inbox unseen are: ', inbox.unseenMessages);
-                console.log('inbox user id: ', inbox.user.id)
-                console.log('user id: ', user.id)
 
                 if (inbox.author.id === user.id) {
                     result = {
@@ -108,8 +105,6 @@ export class InboxController {
             }
 
         });
-        console.log('ARRAY IS: ');
-        console.log(arrayOfInbox);
         // let inb = await this.inboxService.getAllInboxOfUser(user.id)
 
         // console.log(inb);

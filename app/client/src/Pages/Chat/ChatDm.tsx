@@ -98,7 +98,7 @@ export default function ChatDm () {
             // let newInboxList: InboxItem[]
             const fetch =async () => {
                 try {
-                    const newInboxList = await updateInboxByReceiving(recMsg, inboxList, inView);
+                    const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
                     console.log(inboxList.current);
                     inboxList.current = newInboxList;
                     setUpdate(prev => prev + 1)

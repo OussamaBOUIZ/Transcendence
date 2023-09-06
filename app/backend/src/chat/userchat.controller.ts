@@ -26,7 +26,6 @@ export class chatController {
         @Param('id', ParseIntPipe) id: number,
     ) 
     {
-        console.log('-------------  ');
         
         const user = await this.userRepository.findUserByEmail(req.user['email'])
         if (user === null)

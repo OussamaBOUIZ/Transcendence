@@ -20,7 +20,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     constructor(private readonly channelservice: ChannelService
         , private readonly userService: UserService) {}
     afterInit() {
-        console.log(`Init gateway`)
     }
 
     async handleConnection(client: Socket) {

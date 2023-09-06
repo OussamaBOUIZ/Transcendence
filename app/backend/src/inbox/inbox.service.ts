@@ -23,9 +23,6 @@ export class InboxService {
     }
     async saveInbox(receiver: User, author: User, msgDto: MessageDto) {
         let inbox: Inbox_user
-
-        console.log('receiver::  ', receiver);
-        console.log('author::  ', author);
         
         inbox = await this.getInboxBySenderId(author, receiver)
 

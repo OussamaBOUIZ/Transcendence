@@ -84,6 +84,7 @@ const updateInboxBySending  = (sendMsg: MessageData,
 }
 
 const updateInboxByReceiving = async (
+    socket: Socket | undefined,
     recMsg: MessageData,
     inboxList: React.MutableRefObject<InboxItem[]>,
     inView: boolean
@@ -91,13 +92,15 @@ const updateInboxByReceiving = async (
         if (inboxList.current.find((inbx) => inbx.author.id === recMsg.authorId)) {
             return inboxList.current.map((inbx) => {
                 console.log(inbx.author.id, ": ", recMsg.authorId, "IN VIEW: ", inView)
-                return inbx.author.id === recMsg.authorId 
-                ? {...inbx,
-                    lastMessage: recMsg.message, 
-                    CreatedAt: recMsg.creationTime,
-                    unseenMessages: inView ? 0 : (inbx.unseenMessages + 1)
+                if (inbx.author.id === recMsg.authorId ) {
+                    socket?.emit('updateUnseenMessage', inbx.author.id)
+                    return {...inbx,
+                        lastMessage: recMsg.message, 
+                        CreatedAt: recMsg.creationTime,
+                        unseenMessages: inView ? 0 : (inbx.unseenMessages + 1)
+                    }
                 }
-                : inbx
+                return inbx;
             })
         } else {
             const getNewInboxElement = async (): Promise<InboxItem[]> => {

@@ -61,8 +61,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}))
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
-		console.log('onSendMessage')
-		console.log(messageDto)
 		var data: sentMsg
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
@@ -73,35 +71,52 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			// 	creationTime: new Date(messageDto?.creationTime),
 			// }
 			this.server.to(data.socketId).emit("message", messageDto)
-			console.log(data.socketId);
 			
 		}
 		catch (e) {
-			console.log(e)
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
 		
 	}
 
-	@SubscribeMessage('messageSeen')
-	async  updateUnseenMessage(socket: Socket, peerDto: number) {
+	@SubscribeMessage('updateUnseenMessage')
+	async updateUnseenMessage(socket: Socket, peerDto) {
 		const userEmail = socket.data.user.email
 
-		console.log('in messageSeen')
 		const user = await this.userService.findUserByEmail(userEmail);
 		const peer = await this.userService.findUserById(peerDto)
 
-		console.log(peer)
 		if (!user || !peer)
 		{
-			console.log('peer not exist')
+			const message = !user ? 'The user not exist' : 'The Peer not exist'
+			throw new WsException(message)
+		}
+
+		const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
+		this.logger.log({inbox})
+		if (!inbox)
+			throw new WsException('there is no prior conversation !')
+		inbox.unseenMessages += 1
+		this.logger.log('here in update', inbox.unseenMessages)
+		
+		await this.inboxService.updateInbox(inbox)
+	}
+
+	@SubscribeMessage('messageSeen')
+	async  resetUnseenMessage(socket: Socket, peerDto: number) {
+		const userEmail = socket.data.user.email
+
+		const user = await this.userService.findUserByEmail(userEmail);
+		const peer = await this.userService.findUserById(peerDto)
+
+		if (!user || !peer)
+		{
 			const message = !user ? 'The user not exist' : 'The Peer not exist'
 			throw new WsException(message)
 		}
 
 		 const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
-		console.log(inbox)
 		if (!inbox)
 			throw new WsException('there is no prior conversation !')
 		inbox.unseenMessages = 0
@@ -124,12 +139,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	async afterInit(client: Socket) {
 		client.use(SocketAuthMiddleware(this.userService) as any)
-		console.log('after init called')
 	}
 
 	async handleConnection(client: Socket) {
-		console.log('On Connection');
-		this.logger.log(client.data.user.email) 
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)
@@ -147,7 +159,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		user.isActive = false
 		await this.userRepository.save(user)
-		this.logger.log('On Disconnect')
 	}
 }
 

@@ -78,7 +78,6 @@ export class UserService {
                 username: true,
             }
         })
-        console.log('online user are :', user)  
         return user
     }
 
