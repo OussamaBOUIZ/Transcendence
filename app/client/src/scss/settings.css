@@ -30,6 +30,9 @@
         "s s s s s s s s"
         ;
     }
+    @media (max-width: 767px) {
+        display: block;
+    }
 }
 
 .step_cards {

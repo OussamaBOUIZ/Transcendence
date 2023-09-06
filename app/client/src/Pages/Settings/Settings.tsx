@@ -5,16 +5,17 @@ import "../../scss/settings.css"
 import DownloadCard from '../../Components/DownloadCard';
 
 export default function Settings () {
+
     const {user} = useContext(UserContext)
 
     return (
         
-        <section className='settings_grid ml-8rounded-lg overflow-hidden mx-auto'>
+        <section className='settings_grid ml-8rounded-lg overflow-hidden md:overflow-scroll mx-auto'>
             <div className="info_edit px-8 py-10">
-                <figure className='flex  items-center gap-16 lg:gap-0'>
+                <figure className='flex  items-center gap-16 lg:gap-0 md:flex-col'>
                     <figcaption className=' px-6 py-8 lg:px-0'>
-                        <h2 className='text-xl font-bold'>Your Avatar</h2>
-                        <p className=' xl:text-sm'>This will be displayed on your profile</p>
+                        <h2 className='text-xl font-bold md:text-3xl md:text-center'>Your Avatar</h2>
+                        <p className=' xl:text-sm md:text-center md:text-2xl'>This will be displayed on your profile</p>
                     </figcaption>
                     <div id='avatar-editor' className='relative mx-5 lg:mx-0'>
                         <img src="../../../src/Assets/default.jpg" alt="default image" 
@@ -29,15 +30,15 @@ export default function Settings () {
                 <article>
                     <form className=' p-10 flex lg:p-0 lg:flex-wrap'>
                         <div className="">
-                            <div className="username flex my-4">
+                            <div className="username flex md:flex-col  my-4">
                                 <h2 className='text-xl font-semibold w-1/2 items-center'>Username</h2>
                                 <input type="text" name="" id="" value="oouazize" 
                                 className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2 xl:w-2/3'
                                 />
                             </div>
-                            <div className="fullname flex my-4 items-center">
+                            <div className="fullname flex my-4 md:flex-col  items-center">
                                 <h2 className='text-xl font-semibold w-1/2'>Full Name</h2>
-                                <div className="inputs w-1/2 xl:w-2/3 flex gap-4 xl:gap-2">
+                                <div className="inputs w-1/2 xl:w-2/3 flex md:flex-col gap-4 xl:gap-2">
                                     <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
                                     <input type="text" name="lastname" id="" value="ouaziz" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
                                 </div>
@@ -51,9 +52,9 @@ export default function Settings () {
                 </article>
             </div>
             <div className="heading  px-10 py-5">
-                <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
+                <h2 className='text-xl font-semibold mx-8 md:text-center'>Two Factor Authentication</h2>
             </div>
-            <div className="twof-poster flex flex-col gap-14 xl:gap-0 text-center bg-purple-600 py-32 xl:py-16 rounded-2xl w-72 mx-auto xl:mx-6 lg:ml-14">
+            <div className="twof-poster flex flex-col md:flex-row md:mx-auto md:w-5/6 gap-14 xl:gap-0 text-center bg-purple-600 py-32 xl:py-16 rounded-2xl w-72 mx-auto xl:mx-6 lg:ml-14">
                 <article className='flex flex-col items-center'>
                     <h2 className='text-2xl xl:text-xl font-bold'>Enable </h2>
                     <h2 className='text-2xl xl:text-xl xl: w-1/2 font-bold'>Two-Factor Authentication</h2>
@@ -64,7 +65,7 @@ export default function Settings () {
                     className=' w-56 xl:w-36'/>
                 </figure>
             </div>
-            <div className="step_cards flex px-14 xxl:pr-10 py-2 gap-10  xl:gap-4">
+            <div className="step_cards flex px-14 xxl:pr-10 py-2 gap-10  md:flex-col xl:gap-4">
             <StepCard n={1} heading="Download Google Authenticator" text="Google Authenticator is available in the following app stores">
                 <DownloadCard image='../../../src/Assets/appstore.png' store='App Store' link=''/>
                 <DownloadCard image='../../../src/Assets/playstore.png' store='Google Play' link=''/>
