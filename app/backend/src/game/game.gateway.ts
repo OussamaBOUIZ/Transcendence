@@ -36,6 +36,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
+
+		waitingSockets = waitingSockets.filter((s: Socket) => s.id !== socket.id );
     }
 
 	@SubscribeMessage('joinGame')
@@ -47,12 +49,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
 
 		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-			// socket.emit("notHost")
-
 			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
 			const myArray: Array<string> = Array.from(socketsSet);
 
-			const sock: Socket = this.server.sockets.sockets.get(myArray[0]);
+			const sock: Socket = this.server.sockets.sockets.get(myArray[1]);
 			
 			sock.emit("notHost");
 		}
@@ -73,7 +73,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			waitingSockets.unshift();
 			socket.emit("matched", socket.id + oppSocket.id);
 			oppSocket.emit("matched", socket.id + oppSocket.id);
-			waitingSockets = [];
+			// waitingSockets = [];
 
 			console.log("socket id: ", socket.id + oppSocket.id);
 		} else {

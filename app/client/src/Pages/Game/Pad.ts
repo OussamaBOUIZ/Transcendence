@@ -34,7 +34,6 @@ export default class Pad {
         this.drawPad(p5);
         
         if (myPad) {
-
             if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)
                 this.y += vars.PSPEED;
 
