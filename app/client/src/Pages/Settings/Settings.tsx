@@ -12,12 +12,12 @@ export default function Settings () {
         
         <section className='settings_grid ml-8rounded-lg overflow-hidden md:overflow-scroll mx-auto'>
             <div className="info_edit px-8 py-10 lg:pr-0">
-                <figure className='flex  items-center gap-16 lg:gap-0  md:flex-col'>
-                    <figcaption className=' px-6 py-8 lg:px-0 lg:ml-8'>
+                <figure className='flex  items-center gap-16 lg:gap-0 md:gap-10  md:flex-col  md:mb-20'>
+                    <figcaption className=' px-6 py-8 lg:px-0 lg:ml-8 md:mb-8'>
                         <h2 className='text-xl font-bold md:text-3xl md:text-center'>Your Avatar</h2>
                         <p className=' xl:text-sm md:text-center md:text-2xl'>This will be displayed on your profile</p>
                     </figcaption>
-                    <div id='avatar-editor' className='relative mx-5 lg:mx-0'>
+                    <div id='avatar-editor' className='relative mx-5 lg:mx-0 md:mb-8'>
                         <img src="../../../src/Assets/default.jpg" alt="default image" 
                             className='block w-32 h-32 xl:w-auto fit-cover rounded-full  '
                         />
@@ -28,19 +28,19 @@ export default function Settings () {
                         <button className=' bg-pink-500 hover:bg-pink-600 py-2 px-8 lg:px-4 lg:ml-4 rounded-md'>update</button>
                 </figure>
                 <article>
-                    <form className=' p-10 flex lg:p-0 lg:flex-wrap'>
+                    <form className=' p-10 flex lg:p-0 lg:flex-wrap md:flex-col'>
                         <div className="">
                             <div className="username flex md:flex-col  my-4 lg:ml-8">
                                 <h2 className='text-xl font-semibold w-1/2 items-center'>Username</h2>
                                 <input type="text" name="" id="" value="oouazize" 
-                                className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2 xl:w-2/3'
+                                className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2 xl:w-2/3 md:w-5/6'
                                 />
                             </div>
                             <div className="fullname flex my-4 md:flex-col  items-center lg:ml-8">
                                 <h2 className='text-xl font-semibold w-1/2'>Full Name</h2>
                                 <div className="inputs w-1/2 xl:w-2/3 flex md:flex-col gap-4 xl:gap-2">
-                                    <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
-                                    <input type="text" name="lastname" id="" value="ouaziz" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
+                                    <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 md:w-5/6'/>
+                                    <input type="text" name="lastname" id="" value="ouaziz" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 md:w-5/6'/>
                                 </div>
                             </div>
                         </div>
