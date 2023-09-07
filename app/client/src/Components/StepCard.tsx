@@ -9,7 +9,7 @@ interface PropType {
 
 export default function StepCard({children, n, heading, text} :PropType) {
     return (
-        <div className=" bg-purple-600 m-2 rounded-xl w-72 px-2 pb-10">
+        <div className=" bg-purple-600 m-2 rounded-xl w-72 px-2 pb-10 md:w-5/6 ">
             <div className="flex justify-center">
                 <h2 className='text-center rounded-bl-md rounded-br-md bg-pink-500 text-xl px-4 font-bold'>
                     STEP {n}
