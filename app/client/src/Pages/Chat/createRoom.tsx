@@ -17,9 +17,9 @@ interface newRoom {
 export default function CreateRoom({action}: {action: string}) {
 
     const {user} = useContext(UserContext)
-    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
+    const {socket, roomData, myGrade, setIsClick, setNotif, setAction, setUpdate} = useContext(SocketContext)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public"} as newRoom)
+    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public", channelOwner: 0})
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -36,10 +36,17 @@ export default function CreateRoom({action}: {action: string}) {
       setInputType(inputType === 'password' ? 'text' : 'password');
     };
 
-    const handleSubmit = () => {
-        newRoom.channelId = roomData?.channelId
+    const handleSubmit = async () => {
+        if (roomData?.channelId)
+            newRoom.channelId = roomData?.channelId
         try {
-            void axios.post(`/api/channel/${action}`, newRoom)
+            console.log(newRoom)
+            const res = await axios.post<string>(`/api/channel/${action}`, newRoom)
+            console.log(res.data);
+            
+            if (res.data.length) {
+                setNotif(res.data)
+            }
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }

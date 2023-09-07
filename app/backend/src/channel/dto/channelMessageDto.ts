@@ -11,8 +11,10 @@ export class channelMessageDto {
 	@Transform(({value}) => trim(value))
     message: string
 
-    @IsNotEmpty()
     @IsString()
+	@IsNotEmpty()
+	@Type(() => String)
+	@Transform(({value}) => trim(value))
     public channelName: string
 
     @IsNotEmpty()

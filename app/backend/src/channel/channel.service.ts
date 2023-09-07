@@ -63,7 +63,7 @@ export class ChannelService {
                 return 'channel type must be set';
             newChannel.channel_type = channelData.channelType;
             if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
-                return 'protected channels lacks password';
+                return 'password must be set';
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);

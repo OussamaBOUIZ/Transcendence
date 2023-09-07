@@ -24,7 +24,6 @@ import Auth from './Pages/Auth/Auth'
 
 const UpdateStatus = async () => {
   try {
-    console.log("offline mode .....")
     axios.put('/api/user/updateStatus', {status: "offline"})
   }
   catch (error) {

@@ -4,6 +4,7 @@ export const scrollLogic = (outerDiv: React.RefObject<HTMLDivElement>, innerDiv:
         const innerDivHeight = innerDiv?.current?.clientHeight !== undefined
         ? innerDiv.current.clientHeight + 24 : 24;
         const outerDivScrollTop = outerDiv?.current?.scrollTop;
+        
         if (
             !prevInnerDivHeight.current || Number(prevInnerDivHeight.current) === 24 ||
             outerDivScrollTop === Number(prevInnerDivHeight.current) - outerDivHeight

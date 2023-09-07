@@ -14,10 +14,11 @@ export class ChannelController {
     @Post('create')
     async CreateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
+        console.log('JJJJ');
         const ret = await this.channelservice.channelCreate(channelData);
         if(typeof ret === 'string')
-            return res.status(HttpStatus.BAD_REQUEST).send(ret);
-        return res.status(HttpStatus.CREATED).send('channel was created');
+            return res.status(HttpStatus.OK).send(ret);
+        return res.status(HttpStatus.CREATED).send('');
     }
 
     @Post('update')

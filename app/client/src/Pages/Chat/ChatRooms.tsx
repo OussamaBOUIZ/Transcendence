@@ -25,14 +25,12 @@ type typeProps = {
     socket: Socket | undefined;
     id: string | undefined;
     myGrade: string;
-    // isBanned: boolean;
     isClick: boolean;
+    setNotif: React.Dispatch<React.SetStateAction<string>>;
     update: number;
     setUpdate: React.Dispatch<SetStateAction<number>>;
     setIsClick: React.Dispatch<SetStateAction<boolean>>;
     setAction: React.Dispatch<SetStateAction<"create" | "update">>;
-    // outerDiv: React.RefObject<HTMLDivElement>;
-    // innerDiv: React.RefObject<HTMLDivElement>;
     roomData: roomData;
     showSearch: boolean;
     setShowSearch: React.Dispatch<SetStateAction<boolean>>;
@@ -47,11 +45,7 @@ export default function ChatRooms () {
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     const {user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
-    // const outerDiv = useRef<HTMLDivElement>(null);
-    // const innerDiv = useRef<HTMLDivElement>(null);
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
-    // const [isBanned, setBanned] = useState<boolean>(false)
-    // const prevInnerDivHeight = useRef<number>(0);
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
@@ -147,11 +141,14 @@ export default function ChatRooms () {
 
     useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
 
-    if (!socket && !roomData)
+    if (!socket)
         return null;
 
+    console.log(notif);
+    
+
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, id, myGrade, isClick, setNotif, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
