@@ -10,7 +10,6 @@ export class channelDto {
     @IsString()
 	@Type(() => String)
 	@Transform(({value}) => trim(value))
-    @Length(0, 12)
     public channelName: string
 
     @IsString()
@@ -18,7 +17,6 @@ export class channelDto {
     public channelType: string
 
     @IsString()
-    @Length(0, 12)
     public channelPassword: string
 
     @IsNumber()

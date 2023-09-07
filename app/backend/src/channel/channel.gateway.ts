@@ -96,7 +96,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             channel.BannedUsers.some(user => user.id === channelData.userId))
         {
             client.emit('userIsBanned', channelData.channelName);
-
         }
         else
         {
@@ -152,6 +151,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     @SubscribeMessage('channelMessage')
     async messageSend(@MessageBody() newMessage: channelMessageDto, @ConnectedSocket() client: Socket)
     { 
+        console.log("here bro2");
+
         if(await this.channelservice.userIsMuted(newMessage.fromUser) === true)
         {
             return;
@@ -167,6 +168,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     || channel.channelOwners !== null && channel.channelOwners.some(user => user.id === newMessage.fromUser))
         {
             await this.channelservice.storeChannelMessage(newMessage, channel);
+            console.log("here bro");
             
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }

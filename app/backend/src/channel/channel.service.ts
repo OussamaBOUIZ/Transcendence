@@ -58,12 +58,16 @@ export class ChannelService {
             const newChannel = new Channel();
             if(channelData.channelName.length === 0)
                 return 'channel name must be set';
+            if(channelData.channelName.length > 12)
+                return 'channel name is too large';
             newChannel.channel_name = channelData.channelName;
             if(channelData.channelType.length === 0)
                 return 'channel type must be set';
             newChannel.channel_type = channelData.channelType;
             if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
                 return 'password must be set';
+            if(channelData.channelType === 'protected' && channelData.channelPassword.length > 16)
+                return 'channel password is too large';
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
@@ -94,7 +98,6 @@ export class ChannelService {
 
     async getLatestMessages(channelId: number, userId: number)
     {
-        console.log(userId)
         const user = await this.userService.findUserWithBanned(userId);
         if(user.userBannedChannels.some(channel => channel.id === channelId))
             return [];
@@ -132,7 +135,6 @@ export class ChannelService {
         const user = await this.userService.findUserById(banUser.userId);
         if(channelFound.BannedUsers !== null && channelFound.BannedUsers.some(user => user.id === user.id))
             return ;
-        console.log('BANNNNED')
         channelFound.BannedUsers = channelFound.BannedUsers !== null ? [...channelFound.BannedUsers, user] : [user];
         await this.channelRepo.save(channelFound);
     }
@@ -365,7 +367,6 @@ export class ChannelService {
             where: {channel_name: channelData.channelName},
         });
         const checkPassword = await argon.verify(channel.channel_password, channelData.channelPassword);
-        console.log(checkPassword);
         if(!checkPassword)
             return false;
         return true;

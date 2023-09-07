@@ -74,6 +74,8 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
         // create socket
     useEffect(() => {
+        console.log("socket room is called");
+        
         const fd = io("ws://localhost:1212", {
             withCredentials: true,
         })
@@ -95,7 +97,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             }})
             setDmSocket(newSocket)
         return () => {
-            console.log("disconnect");
             newSocket.disconnect()
         }
     }, [])
@@ -104,12 +105,8 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
         dmSocket?.on('message', (recMsg: MessageData) => {
             console.log(viewIdRef.current);
             const inView: boolean = recMsg.authorId === viewIdRef.current;
-            
-            console.log(inView)
-            if (inView) {
+            if (inView)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
-            }
-            // let newInboxList: InboxItem[]
             const fetch =async () => {
                 try {
                     const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);

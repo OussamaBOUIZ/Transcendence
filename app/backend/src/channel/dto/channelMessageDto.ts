@@ -24,8 +24,4 @@ export class channelMessageDto {
     @IsNotEmpty()
     @IsString()
     public username: string
-
-    @IsNotEmpty()
-    @IsString()
-    public image: string
 }

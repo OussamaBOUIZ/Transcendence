@@ -102,7 +102,8 @@ export default function ChatRooms () {
                 username: user?.username,
                 isBlocked: false,
             }
-
+            console.log(messageData);
+            
             socket?.emit("channelMessage", messageData);
             setMessage("");
             const outerDivHeight = outerDiv?.current?.clientHeight ?? 0;
@@ -134,18 +135,15 @@ export default function ChatRooms () {
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user, setMessageList, blockedUsers), [roomData, blockedUsers])
+    useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user.id, setMessageList, blockedUsers), [roomData, blockedUsers])
 
     // listener
-    useEffectOnUpdate(listener(socket, user, setMessageList, setBanned), [socket]);
+    useEffectOnUpdate(listener(socket, user.id, setMessageList, setBanned), [socket]);
 
     useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
 
-    if (!socket)
+    if (!socket && !roomData)
         return null;
-
-    console.log(notif);
-    
 
     return (
         <SocketContext.Provider value={{socket, id, myGrade, isClick, setNotif, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>

@@ -5,7 +5,7 @@ import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import { protectedChannelDto } from './dto/protectedChannelDto';
-import { Console } from 'console';
+import { Console, log } from 'console';
 
 @Controller('channel')
 export class ChannelController {
@@ -14,7 +14,6 @@ export class ChannelController {
     @Post('create')
     async CreateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
-        console.log('JJJJ');
         const ret = await this.channelservice.channelCreate(channelData);
         if(typeof ret === 'string')
             return res.status(HttpStatus.OK).send(ret);
@@ -38,9 +37,9 @@ export class ChannelController {
         if(typeof ret === 'string')
         {
             console.log('HERE BANNNED');
-            return res.status(HttpStatus.BAD_REQUEST).send('user is banned');
+            return res.status(HttpStatus.OK).send('user is banned');
         }
-        return res.status(HttpStatus.CREATED).send('user was promoted succesfully');
+        return res.status(HttpStatus.CREATED).send('');
     }
     @Get('userGrade/:id')
     async getUserGrade(@Param('id', ParseIntPipe) userId: number, @Query('channelId') channelId: number)

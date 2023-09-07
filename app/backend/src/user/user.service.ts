@@ -393,7 +393,6 @@ export class UserService {
     }
 
     isUserAuthValid(access_token: string, user: User) {
-        console.log(access_token, user.two_factor_secret);
         return authenticator.verify({
             token: access_token,
             secret: user.two_factor_secret

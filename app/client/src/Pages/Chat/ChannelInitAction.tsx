@@ -43,13 +43,15 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
     }, [])
 
     async function handleSubmit() {
+        if (!selectedChannel.channel_name)
+            return;
         if (selectedChannel.channel_type === 'protected') {
             try {
                 const res: AxiosResponse<boolean | string> = await axios.post(`/api/channel/checkProtected/${user?.id}`, {channelName: selectedChannel.channel_name, channelPassword: channelPassword})
                 if (typeof res.data === 'string')
                     setNotif(res.data)
                 else
-                    res.data ? setUpdate(prev => !prev) : setNotif("Wrong password")
+                    res.data ? setUpdate(prev => prev + 1) : setNotif("Wrong password")
             }
             catch (err) {
                 // console.log(err)
@@ -57,7 +59,7 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
         } else {
             try {
                 const res: AxiosResponse<string> = await axios.get(`/api/channel/addToChannel/${user?.id}?channelName=${selectedChannel.channel_name}`)
-                res.data ? setNotif(res.data) : setUpdate(prev => !prev) 
+                res.data ? setNotif(res.data) : setUpdate(prev => prev + 1) 
             }
             catch (err) {
                 // console.log(err)
