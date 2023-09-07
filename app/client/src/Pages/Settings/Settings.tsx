@@ -10,15 +10,15 @@ export default function Settings () {
     return (
         
         <section className='settings_grid ml-8rounded-lg overflow-hidden mx-auto'>
-            <div className="info_edit px-8 py-10">
+            <div className="info_edit px-8 py-10 lg:pr-0">
                 <figure className='flex  items-center gap-16 lg:gap-0'>
-                    <figcaption className=' px-6 py-8 lg:px-0'>
+                    <figcaption className=' px-6 py-8 lg:px-0 lg:ml-8'>
                         <h2 className='text-xl font-bold'>Your Avatar</h2>
                         <p className=' xl:text-sm'>This will be displayed on your profile</p>
                     </figcaption>
                     <div id='avatar-editor' className='relative mx-5 lg:mx-0'>
                         <img src="../../../src/Assets/default.jpg" alt="default image" 
-                            className='block w-32 h-32 xl:w-auto fit-cover rounded-full'
+                            className='block w-32 h-32 xl:w-auto fit-cover rounded-full  '
                         />
                         <button className=' rounded-full bg-white p-1 absolute bottom-0 right-1 xl:-right-2'>
                         <img width="23" height="23" src="https://img.icons8.com/ios-glyphs/30/ball-point-pen.png" alt="ball-point-pen"/>
@@ -29,13 +29,13 @@ export default function Settings () {
                 <article>
                     <form className=' p-10 flex lg:p-0 lg:flex-wrap'>
                         <div className="">
-                            <div className="username flex my-4">
+                            <div className="username flex my-4 lg:ml-8">
                                 <h2 className='text-xl font-semibold w-1/2 items-center'>Username</h2>
                                 <input type="text" name="" id="" value="oouazize" 
                                 className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2 xl:w-2/3'
                                 />
                             </div>
-                            <div className="fullname flex my-4 items-center">
+                            <div className="fullname flex my-4 items-center lg:ml-8">
                                 <h2 className='text-xl font-semibold w-1/2'>Full Name</h2>
                                 <div className="inputs w-1/2 xl:w-2/3 flex gap-4 xl:gap-2">
                                     <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2'/>
@@ -43,7 +43,7 @@ export default function Settings () {
                                 </div>
                             </div>
                         </div>
-                        <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 lg:py-4 lg:items-center rounded-md lg:basis-2/3 lg:ml-44'>
+                        <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 lg:py-4 lg:items-center rounded-md lg:basis-72 lg:ml-auto '>
                             <img width="50" height="50" src="https://img.icons8.com/fluency/48/save.png" alt="save" className='lg:hidden'/>
                             <span className='hidden lg:inline'>Update</span>
                         </button>
@@ -53,7 +53,9 @@ export default function Settings () {
             <div className="heading  px-10 py-5">
                 <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
             </div>
-            <div className="twof-poster flex flex-col gap-14 xl:gap-0 text-center bg-purple-600 py-32 xl:py-16 rounded-2xl w-72 mx-auto xl:mx-6 lg:ml-14">
+            <div className="twof-poster flex flex-col gap-14 xl:gap-0 text-center bg-purple-600 py-32 xl:py-16 rounded-2xl w-72 mx-auto xl:mx-6 lg:ml-14
+                lg:w-52 lg:mr-8
+            ">
                 <article className='flex flex-col items-center'>
                     <h2 className='text-2xl xl:text-xl font-bold'>Enable </h2>
                     <h2 className='text-2xl xl:text-xl xl: w-1/2 font-bold'>Two-Factor Authentication</h2>

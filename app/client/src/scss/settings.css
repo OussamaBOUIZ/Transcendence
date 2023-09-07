@@ -30,6 +30,15 @@
         "s s s s s s s s"
         ;
     }
+    @media (max-width: 1024px) {
+        grid-template-areas: 
+        "e e e e e e p p"
+        "e e e e e e p p"
+        "h h h h h h p p"
+        "s s s s s s s s"
+        "s s s s s s s s"
+        ;
+    }
 }
 
 .step_cards {
@@ -43,6 +52,9 @@
 }
 .info_edit {
     grid-area: e;
+    @media (max-width: 1024px) {
+        padding: 1.5rem;
+    }
 }
 
 
