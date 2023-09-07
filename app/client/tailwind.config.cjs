@@ -29,7 +29,7 @@ export default {
         de: { min:  "1280px",max: "1540px"},
         xl: { min:  "1024px",max: "1279px" },
         lg: { min:  "768px" ,max: "1023px" },
-        md: { min:  "640px" ,max: "767px" },
+        md: { max: "767px" },
         sm: { max: "639px" }
       }
     },
