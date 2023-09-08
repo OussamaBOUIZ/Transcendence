@@ -1,3 +1,6 @@
+@import "./var.scss";
+@import "./mixins.scss";
+
 .settings_grid {
     width: 80%;
     height: 100%;
@@ -61,3 +64,34 @@
 }
 
 
+.avatar-edit {
+    position: absolute;
+    right: 12px;
+    z-index: 1;
+    bottom: 0;
+    input {
+        display: none;
+    }
+    label {
+        @include center-styles;
+        width: 34px;
+        height: 34px;
+        margin-bottom: 0;
+        border-radius: 100%;
+        background: #FFFFFF;
+        border: 1px solid transparent;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        font-weight: normal;
+        transition: all .2s ease-in-out;
+        .icon {
+            color: #292727;
+            width: 60%;
+            height: 60%;
+        }
+        &:hover {
+            background: #f1f1f1;
+            border-color: #d6d6d6;
+        }
+    }
+}
