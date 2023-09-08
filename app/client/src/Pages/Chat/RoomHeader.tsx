@@ -3,10 +3,12 @@ import { SocketContext } from './ChatRooms';
 import cube from "../../Assets/Icons/cube.svg"
 import settings from "../../Assets/Icons/gear-solid.svg"
 import addUser from "../../Assets/Icons/addUser.svg"
+import InboxContext from '../../Context/InboxContext';
 
 
 export default function RoomHeader () {
     const {id, roomData, setShowSearch, myGrade, setAction, setIsClick} = useContext(SocketContext)
+    const {isBanned} = useContext(InboxContext)
 
     function handleChange() {
         setAction("update")
@@ -25,7 +27,7 @@ export default function RoomHeader () {
                 </figcaption>
             </div>
             <div className="flex ml-auto w-2/12 justify-around">
-                {myGrade !== "user" && <img className="w-8 cursor-pointer" onClick={() => {setShowSearch(prev => !prev)}} src={addUser} alt="addUser" />}
+                {myGrade !== "user" && !isBanned && <img className="w-8 cursor-pointer" onClick={() => {setShowSearch(prev => !prev)}} src={addUser} alt="addUser" />}
                 <img className="w-8 cursor-pointer" onClick={handleChange} src={settings} alt="settings" />
             </div>
         </header>

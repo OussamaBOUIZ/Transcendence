@@ -25,8 +25,8 @@ export class ChannelController {
     {
         const ret = await this.channelservice.channelUpdate(channelData);
         if(typeof ret === 'string')
-            return res.status(HttpStatus.BAD_REQUEST).send(ret);
-        return res.status(HttpStatus.CREATED).send('channel was updated');
+            return res.status(HttpStatus.OK).send(ret);
+        return res.status(HttpStatus.CREATED).send('');
     }
 
     @Post('promoteuser/:id') 

@@ -65,7 +65,7 @@ export default function AddUser() {
             {searchedUser.id
             && 
             <UserCard 
-                user={searchedUser}
+                userData={searchedUser}
                 add={true}
             />
             }

@@ -59,7 +59,7 @@ export default function ChatSearchBox () {
             {searchedUser
             && 
             <UserCard 
-                user={searchedUser}
+                userData={searchedUser}
                 message={true}
                 friend={true}
             />

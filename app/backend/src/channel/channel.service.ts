@@ -79,6 +79,7 @@ export class ChannelService {
     }
     async channelUpdate(channelData: channelDto)
     {
+        console.log('channel data: ', channelData);
         const channelFound = await this.channelRepo.findOne({
             where: {id: channelData.channelId},
             relations: {
@@ -86,11 +87,17 @@ export class ChannelService {
             }
         });
         if(channelData.channelName.length === 0)
-            channelFound.channel_name = channelData.channelName;
+            return 'channel name must be set';
+        if(channelData.channelName.length > 12)
+            return 'channel name is too large';
+        channelFound.channel_name = channelData.channelName;
         if(channelData.channelType.length === 0)
-            channelFound.channel_type = channelData.channelType;
-        if(channelFound.channel_type === 'protected' && channelData.channelPassword.length === 0)
-            return 'protected channel must have password';
+            return 'channel type must be set';
+        channelFound.channel_type = channelData.channelType;
+        if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
+            return 'password must be set';
+        if(channelData.channelType === 'protected' && channelData.channelPassword.length > 16)
+            return 'channel password is too large';
         if(channelFound.channel_type === 'protected')
             channelFound.channel_password = await argon.hash(channelData.channelPassword);
         await this.channelRepo.save(channelFound);

@@ -5,6 +5,7 @@ import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import axios from "axios"
 import UserContext from "../../Context/UserContext"
 import { SocketContext } from "./ChatRooms";
+import InboxContext from "../../Context/InboxContext";
 
 interface newRoom {
     channelId: number,
@@ -17,6 +18,7 @@ interface newRoom {
 export default function CreateRoom({action}: {action: string}) {
 
     const {user} = useContext(UserContext)
+    const {isBanned} = useContext(InboxContext)
     const {socket, roomData, myGrade, setIsClick, setNotif, setAction, setUpdate} = useContext(SocketContext)
 
     const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public", channelOwner: 0})
@@ -61,7 +63,7 @@ export default function CreateRoom({action}: {action: string}) {
         window.location.replace('/chat/rooms')
     }
 
-    const style = ((myGrade === "user" && action === 'update') ? 'pointer-events-none' : '')
+    const style = (((myGrade === "user" || isBanned) && action === 'update') ? 'pointer-events-none' : '')
 
     const passwordCard = <div className="setPassword flex flex-col">
                             <label>set a password</label>
