@@ -1,12 +1,27 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import UserContext from '../../Context/UserContext';
 import StepCard from '../../Components/StepCard';
-import "../../scss/settings.css"
+import "../../scss/settings.scss"
 import DownloadCard from '../../Components/DownloadCard';
+import { BsFillPenFill } from 'react-icons/bs';
+
 
 export default function Settings () {
 
     const {user} = useContext(UserContext)
+    const [image, setImage] = useState<string | null>(null)
+
+    const handleFileChange = (event: { target: { files: any[]; }; }) => {
+        console.log("event : ", event)
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
     return (
         
@@ -18,12 +33,19 @@ export default function Settings () {
                         <p className=' xlg:text-sm med:text-center med:text-2xl'>This will be displayed on your profile</p>
                     </figcaption>
                     <div id='avatar-editor' className='relative mx-5 lrg:mx-0 med:mb-8'>
-                        <img src="../../../src/Assets/default.jpg" alt="default image" 
+                        
+                        <img src={ image || user.image} alt="default image" 
                             className='block w-32 h-32 xlg:w-auto fit-cover rounded-full  '
                         />
-                        <button className=' rounded-full bg-white p-1 absolute bottom-0 right-1 xlg:-right-2'>
-                        <img width="23" height="23" src="https://img.icons8.com/ios-glyphs/30/ball-point-pen.png" alt="ball-point-pen"/>
-                        </button>
+                         <div className="avatar-edit">
+                            <input
+                            type='file'
+                            id="imageUpload"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            />
+                            <label htmlFor="imageUpload"><BsFillPenFill className="icon" /></label>
+                    </div>
                     </div>
                         <button className=' bg-pink-500 hover:bg-pink-600 py-2 px-8 lrg:px-4 lrg:ml-4 rounded-md'>update</button>
                 </figure>

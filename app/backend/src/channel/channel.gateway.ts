@@ -35,7 +35,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(!user) 
         {
             client.disconnect();
-            throw new WsException('user is not authenticated');
+            return ;
+            // throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
         user.status = 'Online'
@@ -55,7 +56,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         if(!user) 
         {
             client.disconnect();
-            throw new WsException('user is not authenticated');
+            return ;
+            // throw new WsException('user is not authenticated');
         }
         user.socketId = client.id;
         user.status = 'Offline'
