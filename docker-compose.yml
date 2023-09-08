@@ -15,7 +15,14 @@ services:
     restart: always
 
   backend:
-    build: ./app/backend/
+    build:
+      context: ./app/backend/
+      dockerfile: Dockerfile
+      target: development
+    image: backend
+
+    ports:
+      - "80:3000"
     depends_on:
       - postgres
     restart: always
@@ -29,21 +36,19 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: PingPong
-    networks:
-      - freecodecamp
+#    networks:
+#      - freecodecamp
     restart: always
 
   # ? need volume  also for envs of course for testing
   # ! put envs in .env file and should be ignord by git
-  pg-admin:
-    image: dpage/pgadmin4
-    ports:
-      - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: name@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    networks:
-      - freecodecamp
+#  pg-admin:
+#    image: dpage/pgadmin4
+#    ports:
+#      - "5050:80"
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: name@example.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
 
-networks:
-  freecodecamp:
+#networks:
+#  freecodecamp:
