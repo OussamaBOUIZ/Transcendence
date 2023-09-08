@@ -11,6 +11,20 @@ export class userDataDto {
     public username: string
 }
 
+export class userNamesDto {
+    @IsNotEmpty()
+    @IsString()
+    public firstname: string
+
+    @IsNotEmpty()
+    @IsString()
+    public lastname: string
+
+    @IsNotEmpty()
+    @IsString()
+    public username: string
+}
+
 
 export class statusDto {
     @IsString()

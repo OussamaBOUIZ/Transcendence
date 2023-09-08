@@ -4,16 +4,32 @@ import StepCard from '../../Components/StepCard';
 import "../../scss/settings.scss"
 import DownloadCard from '../../Components/DownloadCard';
 import { BsFillPenFill } from 'react-icons/bs';
+import { Data } from '../../../../global/Interfaces';
+import axios, { AxiosRequestConfig } from 'axios';
+import { setFullName } from '../../Hooks/setFullName';
+import Notification from '../../Components/Notification';
 
 
 export default function Settings () {
 
     const {user} = useContext(UserContext)
+    const [notif, setNotif] = useState("")
+    const [imgPrev, setimgPrev] = useState<string>("");
     const [image, setImage] = useState<string | null>(null)
+    const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
 
-    const handleFileChange = (event: { target: { files: any[]; }; }) => {
-        console.log("event : ", event)
+    const updateUserNames = setFullName(setData);
+    
+    function checkInput(): boolean {
+        if (data.firstname === '' || data.lastname === '' || data.username === '')
+            return true;
+        return false;
+    }
+
+    const handleImageChange = (event: { target: { files: any[]; }; }) => {
+    console.log("event : ", event)
       const file = event.target.files[0];
+      setimgPrev(file)
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -22,6 +38,54 @@ export default function Settings () {
         reader.readAsDataURL(file);
       }
     };
+
+    const handleNamesEdit = (event) => {
+        event.preventDefault()
+        console.log("data : ", data)
+        if (checkInput()) {
+            console.log("one info is empty")
+            return ;
+        }
+        const sendNames = async (path: string, userAllNames: Data | null , headers: AxiosRequestConfig<Data>) => {
+            try {
+                if (userAllNames) {
+                    const res = await axios.put(path, userAllNames, headers);
+                    console.log("res : ", res)
+                    if (res.data.length)
+                        console.log(res.data)
+                }
+            } catch (error: any) {
+                console.log(error);
+            }
+        }
+        let headers = {};
+        headers = {
+            'Content-Type': 'multipart/form-data',
+        };
+        sendNames(`/api/user/setUserNames/${user.id}`, data, headers);
+    }
+
+
+    const handleImageUpload = () => {
+        
+        const sendImage = async (path: string, imageFile: FormData | null , headers: AxiosRequestConfig<FormData>) => {
+            try {
+                if (imageFile) {
+                    await axios.put(path, imageFile, headers)
+                }
+            }
+            catch (error: any) {
+                console.log(error)
+            }
+        }
+        let headers = {};
+        headers = {
+            'Content-Type': 'multipart/form-data',
+        };
+        let imgFormData: FormData | null  = new FormData();
+        imgPrev ? imgFormData.append('image', imgPrev) : imgFormData = null
+        sendImage(`/api/user/${user.id}/upload`, imgFormData, headers)
+    }
 
     return (
         
@@ -42,31 +106,40 @@ export default function Settings () {
                             type='file'
                             id="imageUpload"
                             accept="image/*"
-                            onChange={handleFileChange}
+                            onChange={handleImageChange}
                             />
                             <label htmlFor="imageUpload"><BsFillPenFill className="icon" /></label>
                     </div>
                     </div>
-                        <button className=' bg-pink-500 hover:bg-pink-600 py-2 px-8 lrg:px-4 lrg:ml-4 rounded-md'>update</button>
+                        <button className=' bg-pink-500 hover:bg-pink-600 py-2 px-8 lrg:px-4 lrg:ml-4 rounded-md'
+                            onClick={handleImageUpload}
+                        >update</button>
                 </figure>
                 <article className='med:mx-8'>
                     <form className=' p-10 flex lrg:p-0 lrg:flex-wrap med:flex-col'>
                         <div className="">
                             <div className="username flex med:flex-col  my-4 lrg:ml-8 med:mb-10">
                                 <h2 className='text-xl font-semibold w-1/2 items-center med:mb-6'>Username</h2>
-                                <input type="text" name="" id="" value="oouazize" 
+                                <input type="text" name="username" id="" value={data.username} placeholder={user.username}
                                 className=' bg-transparent text-white w-1/2 rounded-md p-2 border-gray-500 border-2 xlg:w-2/3 med:w-full med:py-4'
+                                onChange={updateUserNames}
                                 />
                             </div>
                             <div className="fullname flex my-4 med:flex-col  items-center lrg:ml-8 ">
                                 <h2 className='text-xl font-semibold w-1/2 med:w-full med:mb-6'>Full Name</h2>
                                 <div className="inputs w-1/2 xlg:w-2/3 flex med:flex-col gap-4 xlg:gap-2 med:w-full">
-                                    <input type="text" name="firstname" id="" value="oussama" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 med:w-full med:py-4'/>
-                                    <input type="text" name="lastname" id="" value="ouaziz" className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 med:w-full med:py-4'/>
+                                    <input type="text" name="firstname" id="" value={data.firstname} placeholder={user.firstname} className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 med:w-full med:py-4'
+                                    onChange={updateUserNames}
+                                    />
+                                    <input type="text" name="lastname" id="" value={data.lastname} placeholder={user.lastname} className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 med:w-full med:py-4'
+                                    onChange={updateUserNames}
+                                    />
                                 </div>
                             </div>
                         </div>
-                        <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 med:py-4 lrg:py-4 lrg:items-center rounded-md lrg:basis-72 lrg:ml-auto med:mx-auto med:!basis-auto'>
+                        <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 med:py-4 lrg:py-4 lrg:items-center rounded-md lrg:basis-72 lrg:ml-auto med:mx-auto med:!basis-auto'
+                            onClick={handleNamesEdit}
+                        >
                             <img width="50" height="50" src="https://img.icons8.com/fluency/48/save.png" alt="save" className='lrg:hidden med:hidden'/>
                             <span className='hidden lrg:inline med:inline'>Update</span>
                         </button>

@@ -36,7 +36,7 @@ import { diskStorage } from 'multer'
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
 
-import { statusDto, userDataDto } from './dto/userDataDto';
+import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
@@ -74,29 +74,29 @@ const multerConfig = () => ({
 	})
 })
 
-// const updateMuliterConfig = () => ({
-// 	storage: diskStorage({
-// 		destination: DirUpload,
-// 		filename: async (req: any, file: any, cb: any) => {
-//             console.log('111');
+const updateMuliterConfig = () => ({
+	storage: diskStorage({
+        
+		destination: DirUpload,
+		filename: async (req: any, file: any, cb: any) => {
             
-// 			const supportedExt = ['.png', '.jpeg', '.jpg']
-// 			if (isNaN(parseInt(req.params['userId'], 10)))
-// 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+            console.log('111000000');
+			const supportedExt = ['.png', '.jpeg', '.jpg']
+			if (isNaN(parseInt(req.params['userId'], 10)))
+				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
-// 			if (!supportedExt.includes(extname(file.originalname)))
-// 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
-// 			const extention = path.parse(file.originalname).ext
-// 			const filename = req.params['userId'] + extention
-// 			// try {
-// 				cb(null, filename)
-// 			// }
-// 			// catch (e) {
-// 				// cb(null, filename)
-// 			// }
-// 		}
-// 	})
-// })
+			if (!supportedExt.includes(extname(file.originalname)))
+				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+			const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+			cb(null, filename)
+			// }
+			// catch (e) {
+				// cb(null, filename)
+			// }
+		}
+	})
+})
  
 @Controller('user')
 @UseGuards(JwtGuard)
@@ -142,22 +142,23 @@ export class UserController {
         return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
-    // @Put('/:userId/avatar/')
-	// @UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
-	// async updateAvatar(
-	// 	@Param('userId', ParseIntPipe) id: number,
-	// 	@UploadedFile(new ParseFilePipe({
-	// 		fileIsRequired: true
-	// 	})) image: Express.Multer.File,
-	// 	@Res() res: Response
-	// ) {
-	// 	const user = await this.userService.saveUserAvatarPath(id, image.path)
-	// 	if (!user) {
-	// 		await unlink(image.path)
-	// 		throw new NotFoundException('The User Not Found')
-	// 	}
-	// 	return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
-	// }
+    @Put('/:userId/upload')
+	@UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
+	async updateAvatar(
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: false
+		})) image: Express.Multer.File,
+		@Res() res: Response
+	) {
+        console.log(image);
+		const user = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user) {
+			await unlink(image.path)
+			throw new NotFoundException('The User Not Found')
+		}
+		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	}
 
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
@@ -323,6 +324,26 @@ export class UserController {
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
     }
+
+    @Put('setUserNames/:id')
+    @UseGuards(JwtGuard)
+    async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
+    {
+        console.log('data is: ', userData);
+            const user = await this.userService.findUserById(id);
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch {
+                return res.status(200).send('nickname already exists');
+            }
+            return res.status(200).send('');
+    }
+
 
     @Post('setUserData/:id')
     @UseGuards(JwtGuard)
