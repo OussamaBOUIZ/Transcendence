@@ -1,5 +1,26 @@
 version: '3.8'
+
 services:
+  frontend:
+    container_name: frontend
+    build: ./app/client/
+    image: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    build: ./app/backend/
+    depends_on:
+      - postgres
+    restart: always
+
+
   postgres:
     image: postgres:13
     ports:
@@ -10,8 +31,10 @@ services:
       POSTGRES_DB: PingPong
     networks:
       - freecodecamp
-# ? need volume  also for envs of course for testing 
-# ! put envs in .env file and should be ignord by git 
+    restart: always
+
+  # ? need volume  also for envs of course for testing
+  # ! put envs in .env file and should be ignord by git
   pg-admin:
     image: dpage/pgadmin4
     ports:
@@ -21,5 +44,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     networks:
       - freecodecamp
+
 networks:
   freecodecamp:

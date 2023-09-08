@@ -139,7 +139,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	async afterInit(client: Socket) {
 		client.use(SocketAuthMiddleware(this.userService) as any)
-	}
+	}  
 
 	async handleConnection(client: Socket) {
 		let user: User
