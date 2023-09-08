@@ -8,6 +8,7 @@ export interface MySketchProps extends SketchProps {
     setIsHost: any;
     gameKey: string;
     isMatching: boolean;
+    gameMode: GameMode | null;
 }
 
 export interface Velocity {
@@ -36,3 +37,10 @@ export interface Vars {
     SPEED: number;
     vel: Velocity;
 }
+
+export interface GameMode {
+    ball: String | null;
+    color: Color | null;
+    background: String | null;
+    xp: number;
+};

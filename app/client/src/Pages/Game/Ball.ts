@@ -64,9 +64,9 @@ export default class Ball {
 
     clone(): Ball {
         const b: Ball = new Ball(this.x, this.y, this.r, structuredClone(this.color));
-        b.color.r = 255;
-        b.color.g = 140;
-        b.color.b = 0;
+        b.color.r = 135;
+        b.color.g = 206;
+        b.color.b = 235;
         b.color.a = 255;
         return b;
     }

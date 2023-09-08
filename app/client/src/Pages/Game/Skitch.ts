@@ -41,14 +41,15 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setIsHost: () => {},
         gameKey: "",
         isMatching: true,
+        gameMode: null
     }
 
     let backImg: string;
     let ballImg: string;
 
     p5.preload = (): void => {
-        backImg = p5.loadImage("/src/Pages/Game/fire-game.jpg");
-        ballImg = p5.loadImage("/src/Pages/Game/fireBall.png");
+        backImg = p5.loadImage("/src/Pages/Game/iceLand.jpg");
+        ballImg = p5.loadImage("/src/Pages/Game/iceBall.png");
     }
 
     p5.windowResized = (): void => {
@@ -140,7 +141,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             }
 
             ball?.updateBall(p5, props.isHost, ballImg);
-        } else 
+        } else
             makeNoise(p5);
     }
 }
