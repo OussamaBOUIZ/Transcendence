@@ -45,7 +45,7 @@ export default function Auth() {
                         token: collectedCode,
                     }
                     await axios.post("/api/user/2fa/login", collected);
-                    window.location.replace('/home');
+                    window.location.replace('/');
                 } catch (error) {
                     console.log(error);
                 }

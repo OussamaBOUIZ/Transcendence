@@ -87,6 +87,18 @@ export default function Settings () {
         sendImage(`/api/user/${user.id}/upload`, imgFormData, headers)
     }
 
+
+    const handleEnable2FA = () => {
+        const sendEnable =async (path: string) => {
+            try {
+                await axios.get(path);
+            } catch (error) {
+                console.log(error);
+                
+            }
+        }
+        sendEnable(`/api/user/2fa/turn-on/${user.id}`);
+    }
     return (
         
         <section className='settings_grid ml-8rounded-lg overflow-hidden med:overflow-scroll mx-auto'>
@@ -152,7 +164,9 @@ export default function Settings () {
             <div className="twof-poster flex flex-col med:flex-row med:mx-auto  gap-14 xlg:gap-0 text-center bg-purple-600 py-32 xlg:py-16 rounded-2xl w-72 mx-auto xlg:mx-6 lrg:ml-14
                 lrg:w-52 lrg:mr-8 med:w-4/5 med:h-auto mxl:py-8 med:justify-center med:items-center
                 hover:bg-purple-500 cursor-pointer
-            ">
+            "
+            onClick={handleEnable2FA}
+            >
                 <article className='flex flex-col items-center'>
                     <h2 className='text-2xl mxl:text-xl font-bold sml:text-lg'>Enable </h2>
                     <h2 className='text-2xl mxl:text-xl  font-bold med:text-lg'>Two-Factor Authentication</h2>
