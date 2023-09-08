@@ -23,14 +23,15 @@ export default {
         'primary-pink': '#E72FD0',
       },
       screens: {
-        xxl: { min:"1631px", max: "1752px" },
-        desk:{min:  "1601px",max: "1631px"},
+        big: { min:"1631px", max: "1752px" },
+        desk:{max: "1631px"},
         des:{ min:  "1541px",max: "1600px"}, 
         de: { min:  "1280px",max: "1540px"},
-        xl: { min:  "1024px",max: "1279px" },
-        lg: { min:  "768px" ,max: "1023px" },
-        md: { max: "767px" },
-        sm: { max: "639px" }
+        xlg: { min:  "1024px",max: "1279px" },
+        lrg: { min:  "768px" ,max: "1023px" },
+        med: { max: "767px" },
+        sml: { max: "639px" },
+        mxl: {max: "1024px"}
       }
     },
   },
