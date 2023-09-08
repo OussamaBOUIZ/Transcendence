@@ -1,6 +1,6 @@
 import React, {createContext, useEffect, useState, useRef, useContext} from 'react'
 import { InboxItem, MessageData } from '../../../global/Interfaces';
-import axios, {AxiosResponse} from 'axios'
+import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
@@ -21,8 +21,6 @@ interface InboxContextType {
     prevInnerDivHeight: React.MutableRefObject<number>;
     dmSocket: Socket | undefined;
     setDmSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>;
-    socket: Socket | undefined;
-    setSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>
 }
 
 const InboxContext = createContext<InboxContextType>({} as InboxContextType);
@@ -30,7 +28,6 @@ const InboxContext = createContext<InboxContextType>({} as InboxContextType);
 export function InboxProvider ({children}: {children:React.ReactNode}) {
     
     const [dmSocket, setDmSocket] = useState<Socket>();
-    const [socket, setSocket] = useState<Socket>()
     const viewIdRef = useRef<number>(0);
     const [messagesList, setMessagesList] = useState<MessageData[]>([]);
     const inboxList = useRef<InboxItem[]>([]);
@@ -66,30 +63,10 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
         }
     }
     
-    useEffectOnUpdate(() => {
-        console.log("hello captain");
-        
-        fetchInbox()
-    }, [isLoaded])
-
-        // create socket
-    useEffect(() => {
-        console.log("socket room is called");
-        
-        const fd = io("ws://localhost:1212", {
-            withCredentials: true,
-        })
-        setSocket(fd)
-
-        return  () => {
-                fd.disconnect();
-            }
-    }, [])
+    useEffectOnUpdate(() => {fetchInbox()}, [isLoaded])
 
     useEffectOnUpdate(() => {
         //init socket
-        console.log('init socket');
-        
         const value = document.cookie.split('=')[1]
         const newSocket = io('ws://localhost:4000', {
             auth: {
@@ -103,14 +80,12 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
     useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
-            console.log(viewIdRef.current);
             const inView: boolean = recMsg.authorId === viewIdRef.current;
             if (inView)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
             const fetch =async () => {
                 try {
                     const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
-                    console.log(inboxList.current);
                     inboxList.current = newInboxList;
                     setUpdate(prev => prev + 1)
                 }
@@ -131,7 +106,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             messagesList, setMessagesList,
             update, setUpdate,
             dmSocket, setDmSocket,
-            socket, setSocket
         }}>
         {children}
         </InboxContext.Provider>

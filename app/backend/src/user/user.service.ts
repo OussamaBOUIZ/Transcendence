@@ -51,11 +51,9 @@ export class UserService {
             where: { id: userId }
         })
         
-        if (!blockedUser)
-            throw new HttpException('user not found', HttpStatus.NOT_FOUND)
-        if (user.id == userId) {
-            throw new HttpException('You can not block yourself', HttpStatus.BAD_REQUEST)
-        }
+        if(user.blocked_users.some((user) => user.id === blockedUser.id))
+            return 'user is already blocked';
+
         console.log('b user', user.blocked_users);
         console.log('b user', user);
         

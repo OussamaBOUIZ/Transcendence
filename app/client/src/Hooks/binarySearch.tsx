@@ -1,5 +1,5 @@
 
-export const binarySearch = (arr, val): number => {
+export const binarySearch = (arr: unknown[], val: unknown): number => {
     let start = 0, end = arr?.length - 1
 
     while (start <= end) {

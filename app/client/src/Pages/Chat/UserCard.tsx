@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {User} from "../../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
+import AddUser from "../../Assets/Icons/addUser.svg"
 
 interface PropType {
     user: User,
@@ -41,7 +42,8 @@ export default function UserCard ({user, message, friend, add}: PropType ) {
                 <div>
                     {message && <Link to={`/chat/${user.id}`}>DM</Link>}
                     {friend && <button className='bg-primary-pink py-2 px-4 rounded-2xl'>Add</button>}
-                    {add && <button className='bg-primary-pink py-2 px-4 rounded-2xl' onClick={handleAddUser} >Add</button>}
+                    {add && <img className="cursor-pointer" onClick={handleAddUser} src={AddUser} alt="" />}
+                    {/* {add && <button className='bg-primary-pink py-2 px-4 rounded-2xl' onClick={handleAddUser} >Add</button>} */}
                 </div>
             </figure>
     )

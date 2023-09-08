@@ -44,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
+    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -55,7 +55,7 @@ export default function ChatRooms () {
 
 
     const {id} = useParams()
-    const {socket, outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
+    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -90,6 +90,20 @@ export default function ChatRooms () {
         if (user && id)
             void getInfo()
     }, [id, user])
+
+    // create socket
+    useEffect(() => {
+        console.log("socket room is called");
+        
+        const fd = io("ws://localhost:1212", {
+            withCredentials: true,
+        })
+        setSocket(fd)
+
+        return  () => {
+                fd.disconnect();
+            }
+    }, [])
 
     const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();

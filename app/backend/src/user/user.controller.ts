@@ -212,10 +212,11 @@ export class UserController {
         @Req() req: Request,
         @Res() res: Response
     ) {
-        console.log('aaa');
         
-        await this.userService.blockUser(userId, req.user['email'])
-        return res.status(HttpStatus.OK).send('the user blocked ')
+        const ret = await this.userService.blockUser(userId, req.user['email'])
+        if(typeof ret === 'string')
+            return res.status(HttpStatus.OK).send(ret); 
+        return res.status(HttpStatus.OK).send('');
     }
 
     // @Post('/:userId/uploadImage')

@@ -7,17 +7,23 @@ import React, { useContext, useState } from "react";
 import {User} from "../../../../global/Interfaces"
 import UserContext from "../../Context/UserContext";
 import block from "../../Assets/Icons/block.svg"
-
+import Friend from "../../Assets/Icons/friend1.svg"
+import AddFriend from "../../Assets/Icons/addUser1.svg"
+import {NavLink} from "react-router-dom"
+import Notification from "../../Components/Notification";
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
 
     const {user} = useContext(UserContext)
+    const [notif, setNotif] = useState<string>("")
     const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
     const [update, setUpdate] = useState<number>(0)
 
     async function handleBlock() {
         try {
-            await axios.post(`/api/user/block/${UserData.id}`)
+            const res = await axios.post(`/api/user/block/${UserData.id}`)
+            if (res.data.length)
+                setNotif(res.data)
         }
         catch (err) {
             // console.log(err)
@@ -49,8 +55,12 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
             break;
     }
 
+    const IconFriend = (isMyFriend) ? Friend : AddFriend
+    const TextFriend = (isMyFriend) ? 'Friend' : 'Add as Friend';
+
     return (
         <div className="profileComponent bg- bg-green ">
+            {notif && <Notification message={notif} />}
             <div className="item ProfileCard relative pt-4">
                 {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
                 <div className="head flex flex-col items-center">
@@ -77,8 +87,13 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                 {
                     user.id !== UserData.id &&
                     <div className="footer">
-                        <button className="friend-request" onClick={handleFriend}>{isMyFriend ? 'Friend' : 'Add as Friend'}</button>
-                        <button className="DM">send message</button>
+                        <button className="friend-request" onClick={handleFriend}>
+                            <div className="flex justify-center items-center gap-2">
+                                <img src={IconFriend} />
+                                {TextFriend}
+                            </div>
+                        </button>
+                        <button className="DM"><NavLink to={`/chat/${UserData.id}`}>send message</NavLink></button>
                     </div>
                 }
             </div>

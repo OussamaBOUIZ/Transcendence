@@ -145,7 +145,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)
-		throw new WsException("the user not found")
+			throw new WsException("the user not found")
 		user.socketId = client.id
 		user.isActive = true
 		await this.userRepository.save(user)

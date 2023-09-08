@@ -35,7 +35,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         end = end !== -1 ? end : AllCookies.length;
         const accessToken = AllCookies.substring(start, end);
         const user = await this.userService.getUserFromJwt(accessToken);
-        if(!user) 
+        if(!user)
         {
             client.emit('exception', 'user not authenticated');
             client.disconnect();
