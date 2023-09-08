@@ -91,11 +91,11 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
                     Create
                 </button>
             </div>
-            <div className='border-2 rounded-2xl border-white flex flex-col w-1/2 overflow-hidden max-h-56'>
+            {list.length >0 && <div className='border-2 rounded-2xl border-white flex flex-col w-1/2 overflow-hidden max-h-56'>
                 <div className='channels_list overflow-x-hidden overflow-y-auto'>
                     {list}
                 </div>
-            </div>
+            </div>}
         </section>
     );
 }
