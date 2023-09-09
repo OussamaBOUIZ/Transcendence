@@ -24,6 +24,7 @@ import io from "socket.io-client"
 import Auth from './Pages/Auth/Auth'
 import InputAuth from './Pages/InputAuth'
 import DisableTFA from './Pages/DisableTFA'
+import Logout from './Pages/Logout'
 
 const UpdateStatus = async () => {
   try {
@@ -88,6 +89,7 @@ export default function App () {
                     <Route path="/game" element={<Game />} />
                     <Route path="/friends" element={<Friends />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/logout" element={<Logout />} />
                     <Route path="/profile" element={<Profile />} >
                       <Route path='/profile:username' element={<Profile />} />
                     </Route>

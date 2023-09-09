@@ -12,8 +12,7 @@ export class BlockedTokenlistService {
   ) {}
 
   async blacklistToken(token: string, expiresInMilliseconds: number): Promise<void> {
-    const now = new Date();
-    const expirationDate = new Date(now.getTime() + (expiresInMilliseconds));
+    const expirationDate = new Date(expiresInMilliseconds);
 
     const tokenEntry = this.BlockedListRepo.create({
         token: token,
