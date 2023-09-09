@@ -10,24 +10,28 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
+        modeName: "BattleRoyal",
         ball: "fireBall.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         background: "fire-game.jpg",
         xp: 6000
     }],
     ["TheBeat", {
+        modeName: "TheBeat",
         ball: "fireBall.png",
         color: {r: 135, g: 206, b: 235, a: 1},
         background: "fire-game.jpg",
         xp: 5000,
     }],
     ["IceLand", {
+        modeName: "IceLand",
         ball: "iceBall.png",
         color: {r: 135, g: 206, b: 235, a: 1},
         background: "iceLand.jpg",
         xp: 4000,
     }],
     ["BrighGround", {
+        modeName: "BrighGround",
         ball: "fireBall.png",
         color: {r: 135, g: 206, b: 235, a: 1},
         background: "fire-game.jpg",
@@ -51,12 +55,15 @@ export default function Game () {
         setSocket(newSocket);
         setMode(gameModes.get(gameMode))
 
-        if (key) {
+        if (key && gameMode) {
             setGameKey(key);
             newSocket.emit("joinGame", key);
-        } else {
+        } else if (gameMode) {
             setIsMatching(true);
-            newSocket.emit("gameMatching")
+            newSocket.emit("gameMatching", {
+                modeName: gameModes.get(gameMode)?.modeName,
+                xp: gameModes.get(gameMode)?.xp
+            })
 
             newSocket.on("matched", (roomKey: string) => {
                 console.log("matched room key: ", roomKey);

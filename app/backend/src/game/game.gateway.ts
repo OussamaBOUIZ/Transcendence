@@ -17,7 +17,14 @@ import { brotliDecompressSync } from "zlib";
 import { log } from "console";
 import { subscribe } from "diagnostics_channel";
 
-let waitingSockets: Socket[] = [];
+const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
+
+const waitingSockets = new Map<String, Socket[]>([
+    ["BattleRoyal", []],
+    ["IceLand", []],
+    ["TheBeat", []],
+    ["BrighGround", []]
+]);
 
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
@@ -37,7 +44,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
 
-		waitingSockets = waitingSockets.filter((s: Socket) => s.id !== socket.id );
+		gameModes.forEach((mode: string) => {
+			waitingSockets.set(mode, 
+				waitingSockets.get(mode).filter(
+					(s: Socket) => s.id !== socket.id)
+				);
+		})
+
     }
 
 	@SubscribeMessage('joinGame')
@@ -67,18 +80,21 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("gameMatching")
-	onGameMatching(@ConnectedSocket() socket: Socket) {
+	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 
-		if (waitingSockets.length >= 1) {
-			const oppSocket: Socket = waitingSockets[0];
-			waitingSockets.unshift();
+		const sockets: Socket[] = waitingSockets.get(body.modeName);
+
+		console.log(sockets);
+
+		if (sockets.length >= 1) {
+			const oppSocket: Socket = sockets[0];
+			sockets.unshift();
 			socket.emit("matched", socket.id + oppSocket.id);
 			oppSocket.emit("matched", socket.id + oppSocket.id);
-			// waitingSockets = [];
 
 			console.log("socket id: ", socket.id + oppSocket.id);
 		} else {
-			waitingSockets.push(socket);
+			sockets.push(socket);
 		}
 	}
 
@@ -86,5 +102,4 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
 	}
-	
 }

@@ -39,6 +39,7 @@ export interface Vars {
 }
 
 export interface GameMode {
+    modeName: string;
     ball: String | null;
     color: Color | null;
     background: String | null;

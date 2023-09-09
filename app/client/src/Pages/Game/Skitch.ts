@@ -93,7 +93,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (backImg)
             p5.image(backImg, 0, 0, p5.width, p5.height);
 
-        if (!props.isMatching) {
+        if (!props.isMatching && props.gameMode) {
             if (props.isHost) {
                 props.socket?.emit("game", {
                     gameKey: props.gameKey,
@@ -134,7 +134,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 }
             })
             
-            prevPos.push(ball.clone(props.gameMode?.color));
+            prevPos.push(ball.clone(props.gameMode.color));
     
             if (props.isHost) {
                 leftPad.updatePad(p5, ball, false, props.isHost);
