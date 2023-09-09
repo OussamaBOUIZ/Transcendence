@@ -5,10 +5,7 @@ import {GoHomeFill} from 'react-icons/go'
 import {FaUserFriends, FaGamepad, FaSignOutAlt} from 'react-icons/fa'
 import {IoMdSettings} from 'react-icons/io'
 import {nanoid} from 'nanoid'
-
-
 import '../scss/sidebar.scss'
-import { isHtmlElement } from '../../../../node_modules/react-router-dom/dist/dom'
 
 export default function Sidebar () {
     const allIcons = [

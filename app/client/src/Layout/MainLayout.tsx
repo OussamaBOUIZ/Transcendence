@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react'
-import {Outlet} from 'react-router-dom'
+import {Outlet, useLocation} from 'react-router-dom'
 import Header from '../Components/Header'
 import Sidebar from '../Components/Sidebar'
 import {useOnlineStatus} from "../Hooks/useOnlineStatus"
@@ -9,7 +9,7 @@ import UserContext from '../Context/UserContext'
 
 const UpdateStatus = async () => {
   try {
-    axios.put('/api/user/updateStatus', {status: "offline"})
+    void axios.put('/api/user/updateStatus', {status: "offline"})
   }
   catch (error) {
     // console.log(error)
@@ -34,16 +34,19 @@ export default function MainLayout () {
         fd.disconnect();
       }
     }, [])
+
+    const {pathname} = useLocation()
+    const re = new RegExp('/game(/.*)?')
   
     if (!userStatus)
       void UpdateStatus();
     return (
         <div className='w-screen h-full'>
             <div className="fixed z-50 w-screen top-0 bg-primary-color sm:bg-transparent">
-                <Header />
+                {!re.test(pathname) && <Header />}
             </div>
             <main>
-                <Sidebar />
+                {!re.test(pathname) && <Sidebar />}
                 <Outlet />
             </main>
         </div>

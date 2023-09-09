@@ -31,6 +31,7 @@ export default function App () {
                 <Route path="/sign" element={<Sign />} />
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/game" element={<Game />} />
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<Home />}/>
                   <Route path="chat" element={<ChatLayout />}>
@@ -39,7 +40,6 @@ export default function App () {
                     <Route path="rooms" element={<ChatRooms />} />
                     <Route path="rooms/:id" element={<ChatRooms />} />
                   </Route>
-                  <Route path="/game" element={<Game />} />
                   <Route path="/friends" element={<Friends />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/profile" element={<Profile />} >

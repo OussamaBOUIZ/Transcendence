@@ -10,7 +10,7 @@ export default function ProfileImage({image, name, size}: {image: string |undefi
 
     return (
         <div onClick={handleClick} className={`profileImage ${size}`}>
-            <div className="userImage" style={{backgroundImage: `url(${image})`}}></div>
+            <div className="userImage" style={{backgroundImage: `url(${String(image)})`}}></div>
         </div>
     )
 }

@@ -1,0 +1,104 @@
+section {
+    .usersBG {
+        .users {
+            overflow: hidden;
+            width: 50%;
+            height: 100%;
+            z-index: 1;
+            opacity: .6;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .rightUser {
+            border-radius: 0 0 0 100%;
+        }
+        .leftUser {
+            border-radius: 0 0 100% 0;
+        }
+    }
+    .bg {
+        background-image: url('../Assets/GameArea/20230830160952_[fpdl.in]_abstract-background-lands-eternal-snow-illustration-banner-design-transporting-viewers-world-endless-snow-icy-landscapes-against-captivating-backdrop-generative-ai_198565-7371_normal.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: .15;
+    }
+    a.logout {
+        top: 5%;
+        right: 5%;
+        * {
+            width: 2em;
+            height: 2em;
+        }
+    }
+    .main-container {
+        width: calc(100vw / 1.5);
+        max-width: 800px;
+        min-width: 300px;
+        height: 100%;
+        z-index: 1;
+        .user {
+            top: 6%;
+        }
+        #username {
+            left: 21%;
+        }
+        #username2 {
+            right: 21%;
+        }
+        svg, rect {
+            width: 100%;
+            height: 100%;
+        }
+        .table {
+            background-image: url('../Assets/GameArea/20230830160952_[fpdl.in]_abstract-background-lands-eternal-snow-illustration-banner-design-transporting-viewers-world-endless-snow-icy-landscapes-against-captivating-backdrop-generative-ai_198565-7371_normal.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 56%;
+            box-shadow: 1px 1px 18px 5px rgba(0,0,0,0.66);
+            -webkit-box-shadow: 1px 1px 18px 5px rgba(0,0,0,0.66);
+            -moz-box-shadow: 1px 1px 18px 5px rgba(0,0,0,0.66);
+        }
+    }
+}
+
+@media (max-width: 740px) {
+    #username, #username2 {
+        top: 12%;
+    }
+}
+
+@media (max-width: 640px) {
+    section {
+        .usersBG {
+            flex-direction: column;
+            .users {
+                width: 100%;
+                height: 50%;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    transform: rotate(90deg);
+                }
+            }
+            .leftUser {
+                border-radius: 0 0 0 100%;
+            }
+            .rightUser {
+                border-radius: 100% 0 0 0;
+            }
+        }
+        a.logout {
+            transform: rotate(90deg);
+        }
+        .main-container {
+            transform: rotate(90deg);
+            height: 100vw;
+            max-height: 800px;
+            min-height: 300px;
+            width: 100%;
+        }
+    }
+}
