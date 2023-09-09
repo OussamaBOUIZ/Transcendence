@@ -36,6 +36,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
+
+		waitingSockets = waitingSockets.filter((s: Socket) => s.id !== socket.id );
     }
 
 	@SubscribeMessage('joinGame')
@@ -68,16 +70,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onGameMatching(@ConnectedSocket() socket: Socket) {
 
 		if (waitingSockets.length >= 1) {
-			socket.emit("matched", socket.id);
-			console.log("socket id: ", socket.id);
-
 			const oppSocket: Socket = waitingSockets[0];
 			waitingSockets.unshift();
-			oppSocket.emit("matched", socket.id);
-			waitingSockets = [];
+			socket.emit("matched", socket.id + oppSocket.id);
+			oppSocket.emit("matched", socket.id + oppSocket.id);
+			// waitingSockets = [];
+
+			console.log("socket id: ", socket.id + oppSocket.id);
 		} else {
 			waitingSockets.push(socket);
-			socket.join(socket.id)
 		}
 	}
 
@@ -85,4 +86,5 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
 	}
+	
 }

@@ -1,143 +1,36 @@
-import { SketchProps, P5CanvasInstance } from "react-p5-wrapper";
+import { P5CanvasInstance } from "react-p5-wrapper";
+import { MySketchProps} from "./Interfaces";
+import { makeNoise, clipCanvas, resizeGameVars } from "./utils"
+import vars from "./vars"
+import Ball from "./Ball"
+import Pad from "./Pad";
 
-interface MySketchProps extends SketchProps {
-    rotation: number;
-    theme: string;
-    socket: any;
-    isHost: boolean;
-    setIsHost: any;
-    gameKey: string;
-}
-
-interface Velocity {
-    x: number;
-    y: number;
-}
-
-const PH: number = 80;
-const PW: number = 10;
-const GAP: number = 10;
-const PSPEED: number = 10;
-const RADIUS: number = 10;
-const SPEED: number = 3;
-
-const vel: Velocity = {
-    x: 0,
-    y: 0,
-};
-
-function collision(pad: Pad, ball: Ball): boolean {
-    const distX: number = Math.abs(ball.x - pad.x - pad.w / 2);
-    const distY: number = Math.abs(ball.y - pad.y - pad.h / 2);
-  
-    if (distX > pad.w / 2 + ball.r)
-      return false;
-  
-    if (distY > pad.h / 2 + ball.r)
-      return false;
-  
-  
-    if (distX <= pad.w / 2)
-      return true;
-  
-    if (distY <= pad.h / 2)
-      return true;
-  
-    
-    const dx: number = distX - pad.w / 2;
-    const dy: number = distY - pad.h / 2;
-    return dx * dx + dy * dy <= ball.r * ball.r;
-}
-
-class Ball {
-    x: number;
-    y: number;
-    r: number;
-
-    constructor(x: number, y:number, r:number) {
-        this.x = x;
-        this.y = y;
-        this.r = r;
-    }
-    
-    drawBall(p5: any) {
-        p5.ellipse(this.x, this.y, this.r * 2);
-    }
-    
-    updateBall(p5: any, isHost: boolean) {
-        this.drawBall(p5);
-
-        if (isHost) {
-            this.x += vel.x;
-            this.y += vel.y;
-            
-            if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
-                vel.y *= -1;
-
-            if (this.x < 0 || this.x > p5.width) {
-                if (isHost)
-                    reset(p5, isHost);
-            }
-        }
-    }
-}
-
-class Pad {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-
-    constructor(x: number, y:number, w: number, h: number) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-    }
-    
-    drawPad(p5: any) {
-        p5.rect(this.x, this.y, this.w, this.h);
-    }
-    
-    updatePad(p5: any, ball: Ball, myPad: boolean, isHost: boolean) {
-        this.drawPad(p5);
-        
-        if (myPad) {
-            if (p5.keyIsDown(p5.UP_ARROW) && this.y > GAP)
-                this.y -= PSPEED;
-            
-            if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - GAP)
-                this.y += PSPEED;
-        }
-
-        if (isHost && collision(this, ball)) {
-            const diff: number = (ball.y - (this.y - this.h / 2)) / (this.h / 2);
-            const angle: number = (p5.PI / 8) * diff;
-
-            let dir: number = ball.x > p5.width / 2 ? -1 : 1;
-
-            vel.x = SPEED * dir * p5.cos(angle);
-            vel.y = SPEED * dir * p5.sin(angle);
-        }
-    }
-}
+const prevPos: Array<Ball> = [];
 
 let leftPad: Pad;
 let rightPad: Pad;
 let ball: Ball;
 
-function reset(p5: any, isHost: boolean): void {
+export function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
-    vel.x = SPEED * p5.cos(angle);
-    vel.y = SPEED * p5.sin(angle);
+    vars.vel.x = vars.SPEED * p5.cos(angle);
+    vars.vel.y = vars.SPEED * p5.sin(angle);
 
-    vel.x *= p5.random(1) < 0.5 ? -1 : 1;        
+    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
-    leftPad = new Pad(GAP, (p5.height / 2) - PH / 2, PW, PH);
-    rightPad = new Pad(p5.width - PW - GAP, (p5.height / 2) - PH / 2, PW, PH);
+    leftPad = new Pad(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+    rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     if (isHost)
-        ball = new Ball(p5.width / 2, p5.height / 2, RADIUS);
+        ball = new Ball(p5.width / 2, p5.height / 2, vars.RADIUS, {r: 255, g: 13, b: 140, a: 255});
 }
+
+export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
+    resizeGameVars(p5.width);
+    ball?.updateAttr(vars.RADIUS);
+    leftPad?.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+    rightPad?.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
+}
+
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -147,6 +40,22 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isHost: true,
         setIsHost: () => {},
         gameKey: "",
+        isMatching: true,
+        gameMode: null
+    }
+
+    let backImg: string;
+    let ballImg: string;
+
+    p5.preload = (): void => {
+        backImg = p5.loadImage("/src/Pages/Game/iceLand.jpg");
+        ballImg = p5.loadImage("/src/Pages/Game/iceBall.png");
+    }
+
+    p5.windowResized = (): void => {
+        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
+        adjustGame(p5);
     }
 
     p5.updateWithProps = (p: any) => {
@@ -154,49 +63,90 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
 
     p5.setup = (): void => {
-        p5.createCanvas(500, 300);
+        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        p5.createCanvas(canvasWidth, canvasWidth / 1.77);
+        adjustGame(p5);
         reset(p5, props.isHost);
-    }
 
+        console.log(props.gameMode);
+
+        if (props.gameMode) {
+            backImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.background}`);
+            ballImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.ball}`);
+        }
+    }
 
     p5.draw = (): void => {
         if (props.theme === "black")
-            p5.background(0);
+            p5.background("#114");
         else if (props.theme == "white")
             p5.background(255);
         else if (props.theme === "grey")
             p5.background(200);
 
-        if (props.isHost)
-            props.socket?.emit("game", {gameKey: props.gameKey, padX: rightPad.y, ballX: ball?.x, ballY: ball?.y});
-        else 
-            props.socket?.emit("game", {gameKey: props.gameKey, padX: leftPad.y});
-
-        props.socket?.on("movePad", (data: any) => {
-            if (props.isHost)    
-                leftPad.y = data.padX;
-            else
-                rightPad.y = data.padX;
-
-            if (!props.isHost) {
-                ball.x = data.ballX;
-                ball.y = data.ballY;
-            }
-        })
 
         props.socket?.on("notHost", () => {
-            props.isHost = false;
+            props.setIsHost(false);
             console.log(props.isHost);
         })
 
-        if (props.isHost) {
-            leftPad.updatePad(p5, ball, false, props.isHost);
-            rightPad.updatePad(p5, ball, true, props.isHost);
-        } else {
-            leftPad.updatePad(p5, ball, true, props.isHost);
-            rightPad.updatePad(p5, ball, false, props.isHost);
-        }
-        ball?.updateBall(p5, props.isHost);
+        if (backImg)
+            p5.image(backImg, 0, 0, p5.width, p5.height);
+
+        if (!props.isMatching) {
+            if (props.isHost) {
+                props.socket?.emit("game", {
+                    gameKey: props.gameKey,
+                    padX: rightPad.y,
+                    ballX: ball?.x,
+                    ballY: ball?.y,
+                    canvasSize: p5.width,
+                });
+            }
+            else {
+                props.socket?.emit("game", {
+                    gameKey: props.gameKey, 
+                    padX: leftPad.y,
+                    canvasSize: p5.width,
+                });
+            }
+
+            props.socket?.on("movePad", (data: any) => {
+                let per = p5.width / data.canvasSize;
+
+                if (props.isHost)    
+                    leftPad.y = data.padX * per;
+                else
+                    rightPad.y = data.padX * per;
+
+                if (!props.isHost) {
+                    ball.x = data.ballX * per;
+                    ball.y = data.ballY * per;
+                }
+            })
+
+            prevPos.forEach( (b: Ball, idx: number) =>  {
+                b.fadeEffect();
+                b.drawBall(p5, null);
+
+                if (b.r <= 0) {
+                    prevPos.splice(idx, 1);
+                }
+            })
+            
+            prevPos.push(ball.clone(props.gameMode?.color));
+    
+            if (props.isHost) {
+                leftPad.updatePad(p5, ball, false, props.isHost);
+                rightPad.updatePad(p5, ball, true, props.isHost);
+            } else {
+                leftPad.updatePad(p5, ball, true, props.isHost);
+                rightPad.updatePad(p5, ball, false, props.isHost);
+            }
+
+            ball?.updateBall(p5, props.isHost, ballImg);
+        } else
+            makeNoise(p5);
     }
 }
 
