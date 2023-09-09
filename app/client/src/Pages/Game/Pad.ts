@@ -17,10 +17,14 @@ export default class Pad {
         this.h = h;
     }
 
-    drawPad(p5: any) {
-        p5.fill(255)
-        p5.rotate(0)
-        p5.rect(this.x, this.y, this.w, this.h);
+    drawPad(p5: any, paddleImg: string | null) {
+        if (paddleImg) {
+            p5.image(paddleImg, this.x , this.y , this.w, this.h);
+        } else {
+            p5.fill(255)
+            p5.rotate(0)
+            p5.rect(this.x, this.y, this.w, this.h);
+        }
     }
 
     updateAttr(x: number, y: number, w: number, h: number) {
@@ -30,8 +34,8 @@ export default class Pad {
         this.h = h;
     }
     
-    updatePad(p5: P5CanvasInstance<MySketchProps>, ball: Ball, myPad: boolean, isHost: boolean) {
-        this.drawPad(p5);
+    updatePad(p5: P5CanvasInstance<MySketchProps>, ball: Ball, myPad: boolean, isHost: boolean, paddleImg: string) {
+        this.drawPad(p5, paddleImg);
         
         if (myPad) {
             if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)

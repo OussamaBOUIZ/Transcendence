@@ -41,7 +41,8 @@ export interface Vars {
 export interface GameMode {
     modeName: string;
     ball: String | null;
-    color: Color | null;
+    paddle: string | null;
     background: String | null;
+    color: Color | null;
     xp: number;
 };

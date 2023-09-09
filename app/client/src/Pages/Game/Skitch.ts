@@ -46,6 +46,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     let backImg: string;
     let ballImg: string;
+    let paddleImg: string;
 
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Pages/Game/iceLand.jpg");
@@ -73,6 +74,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (props.gameMode) {
             backImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.background}`);
             ballImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.ball}`);
+            paddleImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.paddle}`)
         }
     }
 
@@ -137,11 +139,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             prevPos.push(ball.clone(props.gameMode.color));
     
             if (props.isHost) {
-                leftPad.updatePad(p5, ball, false, props.isHost);
-                rightPad.updatePad(p5, ball, true, props.isHost);
+                leftPad.updatePad(p5, ball, false, props.isHost, paddleImg);
+                rightPad.updatePad(p5, ball, true, props.isHost, paddleImg);
             } else {
-                leftPad.updatePad(p5, ball, true, props.isHost);
-                rightPad.updatePad(p5, ball, false, props.isHost);
+                leftPad.updatePad(p5, ball, true, props.isHost, paddleImg);
+                rightPad.updatePad(p5, ball, false, props.isHost, paddleImg);
             }
 
             ball?.updateBall(p5, props.isHost, ballImg);

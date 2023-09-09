@@ -7,14 +7,12 @@ export default class Ball {
     y: number;
     r: number;
     color: Color;
-    angle: number;
 
     constructor(x: number, y: number, r: number, color: Color) {
         this.x = x;
         this.y = y;
         this.r = r;
         this.color = color;
-        this.angle = 0;
     }
     
     fadeEffect () {
@@ -32,7 +30,6 @@ export default class Ball {
             p5.imageMode(p5.CENTER);
             p5.image(ballImg, this.x , this.y , this.r * 2, this.r * 2);
 
-            this.angle += 0.01;
         } else {
             p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
             p5.noStroke();

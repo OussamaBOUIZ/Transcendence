@@ -12,29 +12,33 @@ let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
-        color: {r: 255, g: 154, b: 0, a: 1},
         background: "fire-game.jpg",
+        paddle: "paddle.png",
+        color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000
     }],
     ["TheBeat", {
         modeName: "TheBeat",
         ball: "fireBall.png",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        paddle: "paddle.png",
         background: "fire-game.jpg",
+        color: {r: 135, g: 206, b: 235, a: 1},
         xp: 5000,
     }],
     ["IceLand", {
         modeName: "IceLand",
         ball: "iceBall.png",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        paddle: "paddle.png",
         background: "iceLand.jpg",
+        color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
     }],
     ["BrighGround", {
         modeName: "BrighGround",
         ball: "fireBall.png",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        paddle: "paddle.png",
         background: "fire-game.jpg",
+        color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
     }],
 ]);

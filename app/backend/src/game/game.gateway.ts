@@ -81,10 +81,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("gameMatching")
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-
 		const sockets: Socket[] = waitingSockets.get(body.modeName);
-
-		console.log(sockets);
 
 		if (sockets.length >= 1) {
 			const oppSocket: Socket = sockets[0];
