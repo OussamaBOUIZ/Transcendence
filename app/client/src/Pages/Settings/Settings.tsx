@@ -91,7 +91,9 @@ export default function Settings () {
 
 
     const handleEnable2FA = () => {
-        const sendEnable =async (path: string) => {
+        if (tfaStatus)
+            window.location.replace('/inputauth')
+        const sendEnable = async (path: string) => {
             try {
                 const res = await axios.get(path);
                 if(res.data.length !== 0)

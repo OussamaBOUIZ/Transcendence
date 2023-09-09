@@ -23,6 +23,7 @@ import axios from 'axios'
 import io from "socket.io-client"
 import Auth from './Pages/Auth/Auth'
 import InputAuth from './Pages/InputAuth'
+import DisableTFA from './Pages/DisableTFA'
 
 const UpdateStatus = async () => {
   try {
@@ -63,7 +64,7 @@ export default function App () {
                 <Route path="/sign" element={<Sign />} />
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/inputauth" element={<InputAuth />} />
+                <Route path="/disabletfa" element={<DisableTFA />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
 {/*                     

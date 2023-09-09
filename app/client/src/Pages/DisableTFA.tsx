@@ -1,7 +1,8 @@
 import "../scss/auth.scss";
 import axios from "axios"
-import React, {useState} from "react"
+import React, {useContext, useState} from "react"
 import UserContext from "../Context/UserContext";
+import Notification from "../Components/Notification";
 
 interface Inputs {
     [id: number]: string;
@@ -30,8 +31,13 @@ export default function DisableTFA() {
                     const collected = {
                         token: collectedCode,
                     }
-                    await axios.post("/api/user/2fa/login", collected);
-                    window.location.replace('/');
+                    console.log(collected);
+                    const res  = await axios.post(`/api/user/2fa/turn-off/${user.id}`, collected);
+                    if (res.data.length === 0)
+                        window.location.replace('/');
+                    else
+                        setNotif(res.data);
+                    console.log("disableing")
                 } catch (error) {
                     console.log(error);
                 }
@@ -87,7 +93,7 @@ export default function DisableTFA() {
                 <button
                     className="action"
                     onClick={handleSubmit}>
-                    verify account
+                    Disable TFA
                 </button>
             </div>
         </div>
