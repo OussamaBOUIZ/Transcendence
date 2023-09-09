@@ -286,7 +286,7 @@ export class UserController {
         return await this.userService.getMatchHistory(userId)
     }
 
-    @Get('2fa/turn-on/:id')
+    @Get('2fa/turn-on/:id') 
     @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
@@ -310,10 +310,21 @@ export class UserController {
         return res.status(200).send('two factor was turned off')
     }
 
+    @Get('2fa/isTurnedOn/:id')
+    @UseGuards(JwtGuard)
+    async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        if(await this.userService.userHasAuth(user) === true)
+            return res.status(200).send(true);
+        else
+            return res.status(200).send(false);
+    }
     @Post('2fa/login/')
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
     {
+    console.log('data is: ', req);
         const user = await this.userService.getUserFromJwt(req.cookies['access_token'])
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,

@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import {Navigate} from 'react-router-dom'
 import UserContext from '../../Context/UserContext';
 import StepCard from '../../Components/StepCard';
 import "../../scss/settings.scss"
@@ -7,7 +8,7 @@ import { BsFillPenFill } from 'react-icons/bs';
 import { Data } from '../../../../global/Interfaces';
 import axios, { AxiosRequestConfig } from 'axios';
 import { setFullName } from '../../Hooks/setFullName';
-import Notification from '../../Components/Notification';
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 
 export default function Settings () {
@@ -17,6 +18,7 @@ export default function Settings () {
     const [imgPrev, setimgPrev] = useState<string>("");
     const [image, setImage] = useState<string | null>(null)
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
+    const [tfaStatus, setTfaStatus] = useState<boolean>(false);
 
     const updateUserNames = setFullName(setData);
     
@@ -91,7 +93,9 @@ export default function Settings () {
     const handleEnable2FA = () => {
         const sendEnable =async (path: string) => {
             try {
-                await axios.get(path);
+                const res = await axios.get(path);
+                if(res.data.length !== 0)
+                    window.location.replace('/auth')
             } catch (error) {
                 console.log(error);
                 
@@ -99,6 +103,27 @@ export default function Settings () {
         }
         sendEnable(`/api/user/2fa/turn-on/${user.id}`);
     }
+    
+    const get2FAStatus =async () => {
+        try {
+            console.log("user", user)
+            const res = await axios.get(`/api/user/2fa/isTurnedOn/${user.id}`)
+            console.log("res.data", res.data)
+            setTfaStatus(res.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffectOnUpdate(() => {
+        console.log("getting status")
+        
+        get2FAStatus();
+    } , [user])
+    
+    if (user === undefined)
+        return (null)
+
     return (
         
         <section className='settings_grid ml-8rounded-lg overflow-hidden med:overflow-scroll mx-auto'>
@@ -168,9 +193,9 @@ export default function Settings () {
             onClick={handleEnable2FA}
             >
                 <article className='flex flex-col items-center'>
-                    <h2 className='text-2xl mxl:text-xl font-bold sml:text-lg'>Enable </h2>
+                    <h2 className='text-2xl mxl:text-xl font-bold sml:text-lg'>{tfaStatus ? "Disable" : "Enable"} </h2>
                     <h2 className='text-2xl mxl:text-xl  font-bold med:text-lg'>Two-Factor Authentication</h2>
-                    <p className='mt-10 mxl:mt-6 mxl:text-xs mx-18 med:mt-2'>Authenticate your account</p>
+                    <p className='mt-10 mxl:mt-6 mxl:text-xs mx-18 med:mt-2'>{tfaStatus ? "Remove Authentication" : "Authenticate your account"}</p>
                 </article>
                 <figure className='flex justify-center items-center'>
                     <img src="../../../src/Assets/phone3d.png" alt="" 

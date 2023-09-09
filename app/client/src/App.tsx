@@ -22,6 +22,7 @@ import {useOnlineStatus} from "./Hooks/useOnlineStatus"
 import axios from 'axios'
 import io from "socket.io-client"
 import Auth from './Pages/Auth/Auth'
+import InputAuth from './Pages/InputAuth'
 
 const UpdateStatus = async () => {
   try {
@@ -38,15 +39,15 @@ export default function App () {
   const userStatus = useOnlineStatus();
 
   // create socket
-  useEffect(() => {
-    const fd = io("ws://localhost:1212", {
-        withCredentials: true,
-    })
+  // useEffect(() => {
+  //   const fd = io("ws://localhost:1212", {
+  //       withCredentials: true,
+  //   })
 
-    return  () => {
-      fd.disconnect();
-    }
-  }, [])
+  //   return  () => {
+  //     fd.disconnect();
+  //   }
+  // }, [])
 
   if (!userStatus)
     void UpdateStatus();
@@ -62,6 +63,7 @@ export default function App () {
                 <Route path="/sign" element={<Sign />} />
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/inputauth" element={<InputAuth />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
 {/*                     

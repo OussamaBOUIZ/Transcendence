@@ -27,12 +27,13 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
           setUser({...response.data, image});
           
         } catch (error) {
-          // console.log(error);
+          console.log(error);
         }
       };
 
     useEffect(() => {
         void fetchUserData();
+        console.log("user from context", user )
       }, [])
 
     return (
