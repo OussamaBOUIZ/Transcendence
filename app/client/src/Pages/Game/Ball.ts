@@ -66,10 +66,9 @@ export default class Ball {
         const newBall: Ball = new Ball(this.x, this.y, this.r, structuredClone(this.color));
 
         if (color) {
-            newBall.color.r = 100;
-            newBall.color.g = 142;
-            newBall.color.b = 23;
-            newBall.color.a = 1;
+            newBall.color.b = color.b;
+            newBall.color.r = color.r;
+            newBall.color.g = color.g;
         }
 
         return newBall;

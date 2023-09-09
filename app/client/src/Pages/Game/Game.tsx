@@ -11,11 +11,10 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         ball: "fireBall.png",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        color: {r: 255, g: 154, b: 0, a: 1},
         background: "fire-game.jpg",
         xp: 6000
     }],
-
     ["TheBeat", {
         ball: "fireBall.png",
         color: {r: 135, g: 206, b: 235, a: 1},
@@ -23,9 +22,9 @@ let gameModes = new Map<String, GameMode>([
         xp: 5000,
     }],
     ["IceLand", {
-        ball: "iceLand.png",
+        ball: "iceBall.png",
         color: {r: 135, g: 206, b: 235, a: 1},
-        background: "iceBall.jpg",
+        background: "iceLand.jpg",
         xp: 4000,
     }],
     ["BrighGround", {
