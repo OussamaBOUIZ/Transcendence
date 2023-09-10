@@ -1,4 +1,4 @@
-import { Color, Score } from "./Interfaces"
+import { Color, MySketchProps, Score } from "./Interfaces"
 import vars from "./vars"
 import { reset } from "./Skitch"
 
@@ -37,28 +37,30 @@ export default class Ball {
         this.r = r;
     }
     
-    updateBall(p5: any, isHost: boolean, ballImg: string, setScore: any) {
+    updateBall(p5: any, ballImg: string, props: MySketchProps) {
         this.drawBall(p5, ballImg);
 
-        if (isHost) {
+        if (this.x < 0 || this.x > p5.width) {        
+            if (props.isHost) {
+                reset(p5, props.isHost);
+
+                props.socket?.emit("gameScore", {roomKey: props.key, props.score});
+
+
+                if (this.x < 0)
+                    props.setScore((prevState: Score) => {return {...prevState, myScore: prevState.myScore++ }});
+
+                if (this.x > p5.width)
+                    props.setScore((prevState: Score) => {return {...prevState, oppScore: prevState.oppScore++ }});
+            }
+        }
+
+        if (props.isHost) {
             this.x += vars.vel.x;
             this.y += vars.vel.y;
             
             if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
                 vars.vel.y *= -1;
-        }
-
-        if (this.x < 0 || this.x > p5.width) {
-            if (isHost) {
-                reset(p5, isHost);
-            }
-
-            if (this.x < 0)
-                setScore((prevState: Score) => {return {...prevState, myScore: prevState.myScore++ }});
-
-            if (this.x > p5.width)
-                setScore((prevState: Score) => {return {...prevState, oppScore: prevState.oppScore++ }});
-            
         }
     }
 

@@ -61,15 +61,10 @@ export default function Game () {
     // const { user } = useContext(UserContext);
     const {key, gameMode} = useParams();
 
-    useEffect(() => {
-        console.log(score);
-    }, [score])
-
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(gameMode))
-
 
         if (key && gameMode) {
             setGameKey(key);
@@ -79,6 +74,12 @@ export default function Game () {
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: gameModes.get(gameMode)?.xp
+            })
+
+            socket?.on("scoreChanged", (score: Score) => {
+                console.log(score);
+    
+                setScore({...score})
             })
 
             newSocket.on("matched", (roomKey: string) => {
@@ -109,7 +110,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <Board />
+                <Board score={score}/>
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}
