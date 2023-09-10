@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {User} from "../../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
-
+import "../../scss/chat.scss"
 
 export default function UserCard ({user, message, friend, add}: {user: User, message?: boolean, friend?: boolean, add?: boolean}) {
     const {roomData, setShowSearch} = useContext(SocketContext)
@@ -23,26 +23,32 @@ export default function UserCard ({user, message, friend, add}: {user: User, mes
     }
 
      return (
-        <figure className='flex justify-between items-center bg-violet-900 rounded-md m-2 p-2'>
+        <figure className='flex justify-between items-center bg-violet-900 rounded-md m-2 p-2 px-4 searchbox-container'>
                 <figcaption>
                     <div className='flex gap-6'>
                         <ProfileImage image={user.image} name={user.username} size="small"/>
                         <div>
-                            <h5>{user.firstname} {user.lastname}</h5>
+                            <h5 className='text-xl font-semibold'>{user.firstname} {user.lastname}</h5>
                             <p>{user.username}</p>
                         </div>
                     </div>
                 </figcaption>
-                <div>
-                    {message && <Link to={`/chat/${user.id}`}>DM</Link>}
-                    {friend && <button className='bg-primary-pink py-2 px-4 rounded-2xl'>Add</button>}
+                <div className='flex justify-between items-center gap-4'>
+                    {message && 
+                   <Link to={`/chat/${user.id}`} className='dm-button   bg-primary-pink py-2 px-4 rounded-2xl'>
+                        <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/ffffff/filled-chat.png" alt="filled-chat"/>
+                    </Link>
+                    }
+                    {friend && <button className='bg-primary-pink py-2 px-4 rounded-2xl px-8'>
+                        <img width="30" height="30" src="https://img.icons8.com/pastel-glyph/64/ffffff/add-male-user.png" alt="add-male-user"/>    
+                    </button>}
                     {add && <button className='bg-primary-pink py-2 px-4 rounded-2xl' onClick={handleAddUser} >Add</button>}
                 </div>
             </figure>
     )
 }
 
-// figure {
+// figure {     
 //     margin-top: .5em;
 //     button {
 //         background-color: $primary-pink;

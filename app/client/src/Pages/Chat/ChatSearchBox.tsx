@@ -52,7 +52,7 @@ export default function ChatSearchBox () {
                 onChange={handleChange}
                 value={currentSearch}
                 />
-                <input style={submitStyle}type="submit" value="submit" />
+                <input style={submitStyle}type="submit" value="Search" />
             </form>
             {searchedUser
             && 
