@@ -59,10 +59,8 @@ export default function App () {
           <Routes>
 
 
+              <Route path="/sign" element={<Sign />} />
               <Route element={<AuthRequired/>}>
-                {/* {authenticated
-                   */}
-                <Route path="/sign" element={<Sign />} />
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/disabletfa" element={<DisableTFA />} />
