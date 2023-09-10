@@ -14,12 +14,14 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 export default function Settings () {
 
     const {user} = useContext(UserContext)
+
     const [notif, setNotif] = useState("")
     const [imgPrev, setimgPrev] = useState<string>("");
     const [image, setImage] = useState<string | null>(null)
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [tfaStatus, setTfaStatus] = useState<boolean>(false);
 
+        console.log(user)
     const updateUserNames = setFullName(setData);
     
     function checkInput(): boolean {
@@ -64,7 +66,7 @@ export default function Settings () {
         headers = {
             'Content-Type': 'multipart/form-data',
         };
-        sendNames(`/api/user/setUserNames/${user.id}`, data, headers);
+        sendNames(`/api/user/setUserNames/${user?.id}`, data, headers);
     }
 
 
@@ -92,24 +94,25 @@ export default function Settings () {
 
     const handleEnable2FA = () => {
         if (tfaStatus)
-            window.location.replace('/inputauth')
+            window.location.replace('/disableauth')
         const sendEnable = async (path: string) => {
             try {
                 const res = await axios.get(path);
+                console.log(`res: ${res}`)
                 if(res.data.length !== 0)
                     window.location.replace('/auth')
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 
             }
         }
-        sendEnable(`/api/user/2fa/turn-on/${user.id}`);
+        sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
     }
     
     const get2FAStatus =async () => {
         try {
             console.log("user", user)
-            const res = await axios.get(`/api/user/2fa/isTurnedOn/${user.id}`)
+            const res = await axios.get(`/api/user/2fa/isTurnedOn/${user?.id}`)
             console.log("res.data", res.data)
             setTfaStatus(res.data)
         } catch (error) {

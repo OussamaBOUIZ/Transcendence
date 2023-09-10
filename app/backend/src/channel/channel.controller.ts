@@ -7,10 +7,10 @@ import { UserOperationDto } from './dto/operateUserDto';
 import { protectedChannelDto } from './dto/protectedChannelDto';
 
 @Controller('channel')
-export class ChannelController {
+export class ChannelController {    
     constructor(private readonly channelservice: ChannelService) {}
 
-    @Post('create')
+    @Post('create') 
     async CreateChannel(@Body() channelData: channelDto, @Res() res: Response)
     {
         await this.channelservice.channelCreate(channelData);

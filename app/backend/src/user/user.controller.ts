@@ -99,7 +99,7 @@ const updateMuliterConfig = () => ({
 })
  
 @Controller('user')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard) 
 export class UserController {
     constructor(private readonly userService: UserService
         , private readonly jwt: JwtService
@@ -331,11 +331,13 @@ export class UserController {
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
     {
+        console.log('HERE TOKEN: ', req.body.token);
         const user = await this.userService.getUserFromJwt(req.cookies['access_token'])
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
             user
         );
+        console.log(isCodeValid);
         if(!isCodeValid)
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');

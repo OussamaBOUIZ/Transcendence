@@ -12,17 +12,18 @@ export default function AuthRequired () {
         const verifyAuthentication = async () => {
             
             try {
-                const response = await axios.get<boolean>("/api/auth/tokenValidity");
+                const response = await axios.get("/api/auth/tokenValidity");
                 setAuthenticated(response.data)
             }
             catch (error) {
                 console.log(error)
-                setAuthenticated(error.response.data)
+                // setAuthenticated(error.response.data)
             }
 
         }
         void verifyAuthentication();
-    }, [authenticated])
+    }, [])
+    console.log("authenticated : ", authenticated)
 
     
     // if (!authenticated)
