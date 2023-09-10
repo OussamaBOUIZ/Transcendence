@@ -50,7 +50,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let paddleImg: string;
 
     p5.preload = (): void => {
-        backImg = p5.loadImage("/src/Pages/Game/iceLand.jpg");
+        backImg = p5.loadImage("/src/Assets/GameArea/galaxy.jpg");
     }
 
     p5.windowResized = (): void => {
@@ -69,12 +69,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         adjustGame(p5);
         reset(p5, props.isHost);
 
-        console.log(props.gameMode);
-
         if (props.gameMode) {
-            backImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.background}`);
-            ballImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.ball}`);
-            paddleImg = p5.loadImage(`/src/Pages/Game/${props.gameMode.paddle}`)
+            backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
+            ballImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.ball}`);
+            paddleImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.paddle}`)
         }
     }
 

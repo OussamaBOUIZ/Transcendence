@@ -14,7 +14,7 @@ let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
-        background: "fire-game.jpg",
+        background: "galaxy.jpg",
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
@@ -33,7 +33,7 @@ let gameModes = new Map<String, GameMode>([
         modeName: "IceLand",
         ball: "iceBall.png",
         paddle: "paddle.png",
-        background: "iceLand.jpg",
+        background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
         maxScore: 7

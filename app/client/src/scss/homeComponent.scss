@@ -30,7 +30,7 @@
     grid-template: 0.9fr 0.8fr 1fr/repeat(6, 1fr);
     grid-template-areas:
         "battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal battleRoyal"
-        "theBeast theBeast SpiderGround SpiderGround BrightGround BrightGround"
+        "BlazingPong BlazingPong ArcticPong ArcticPong RetroPong RetroPong"
         "Leaderboard Leaderboard Leaderboard GameHistory GameHistory GameHistory";
     z-index: 1;
     .item {
@@ -51,7 +51,9 @@
         display: flex;
         justify-content: space-between;
         position: relative;
-        background-image: url("../Assets/testbg.jpg");
+        background-image: url("../Assets/GameArea/galaxy.jpg");
+        background-position: 100%;
+        background-repeat: no-repeat;
         background-size: cover;
         grid-area: battleRoyal;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
@@ -92,21 +94,21 @@
         }
     }
     
-    .theBeast {
-        grid-area: theBeast;
-        background-image: url("../Assets/TheBeast.jpeg"),;
+    .BlazingPong {
+        grid-area: BlazingPong;
+        background-image: url("../Assets/GameArea/snowy-mountain-landscape-winter-nightfall-with-frost-generated-by-ai.jpg");
         background-size: cover;
         background-repeat: no-repeat;
     }
-    .SpiderGround {
-        grid-area: SpiderGround;
-        background-image: url("../Assets/SpiderGround.jpeg"),;
+    .ArcticPong {
+        grid-area: ArcticPong;
+        background-image: url("../Assets/GameArea/20230830160952_[fpdl.in]_abstract-background-lands-eternal-snow-illustration-banner-design-transporting-viewers-world-endless-snow-icy-landscapes-against-captivating-backdrop-generative-ai_198565-7371_normal.jpg"),;
         background-size: cover;
         background-repeat: no-repeat;
     }
-    .BrightGround {
-        grid-area: BrightGround;
-        background-image: url("../Assets/BrightGround.jpeg"),;
+    .RetroPong {
+        grid-area: RetroPong;
+        background-image: url("../Assets/GameArea/RetroPong.png"),;
         background-size: cover;
         background-repeat: no-repeat;
     }
@@ -210,9 +212,9 @@
         grid-template: repeat(6, 280px) / 1fr;
         grid-template-areas:
             "battleRoyal"
-            "theBeast"
-            "SpiderGround"
-            "BrightGround"
+            "BlazingPong"
+            "ArcticPong"
+            "RetroPong"
             "Leaderboard"
             "GameHistory";
         .Leaderboard > div > .board {
