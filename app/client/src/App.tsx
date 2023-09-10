@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react'
-import { BrowserRouter, Route,Routes, useLocation } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { BrowserRouter, Route,Routes } from 'react-router-dom'
 import ChatLayout from './Pages/Chat/ChatLayout'
 import Home from './Pages/Home/Home'
 import Sign from './Pages/Sign/Sign'
@@ -31,7 +31,8 @@ export default function App () {
                 <Route path="/sign" element={<Sign />} />
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/game" element={<Game />} />
+                <Route path="/game/:gameMode" element={<Game />} />
+                <Route path="/game/:gameMode/:key" element={<Game />} />
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<Home />}/>
                   <Route path="chat" element={<ChatLayout />}>

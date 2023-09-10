@@ -18,7 +18,7 @@ export const useFetchLeaders = (): Leaders[] | [] => {
           );
           setLeaders(leadersWithImages);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       };
   

@@ -33,11 +33,13 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         } catch (error) {
           // console.log(error);
         }
-      };
+    };
+
+    console.log(user);
 
     useEffect(() => {
         void fetchUserData();
-      }, [])
+    }, [])
 
     return (
       <>

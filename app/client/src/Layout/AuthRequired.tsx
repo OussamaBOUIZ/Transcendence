@@ -16,7 +16,7 @@ export default function AuthRequired () {
                 setAuthenticated(response.data)
             }
             catch (error) {
-                console.log(error)
+                // console.log(error)
                 setAuthenticated(error.response.data)
             }
 
