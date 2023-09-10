@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@react-three/fiber": "^8.13.5",
+    "@uidotdev/usehooks": "^2.2.0",
     "framer-motion-3d": "^10.12.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
