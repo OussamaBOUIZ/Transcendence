@@ -398,11 +398,11 @@ export class UserService {
     }
 
 
-    async addUserStat(statDto: StatsDto, userReq: any) {
+    async addUserStat(statDto: StatsDto, userReq: User) {
 
         const user = await this.userRepo.findOne({
             where: {
-                email: userReq['email']
+                id: userReq.id
             },
             relations: {
                 stat: true
