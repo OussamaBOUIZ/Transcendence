@@ -77,3 +77,4 @@ export class AuthController {
         return res.send(true)
     }
 }
+http://localhost:5173/api/auth/tokenValidity
