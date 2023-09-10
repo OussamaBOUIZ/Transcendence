@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import axios from 'axios';
-import {Leaders} from "../../../global/Interfaces"
+import {Leaders} from "../../global/Interfaces"
 import { getUserImage } from "./getUserImage";
 
 export const useFetchLeaders = (): Leaders[] | [] => {

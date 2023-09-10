@@ -1,5 +1,5 @@
 import ProfileImage from "./profileImage";
-import {User} from "../../../global/Interfaces"
+import {User} from "../../global/Interfaces"
 import "../scss/history.scss";
 import React from "react";
 

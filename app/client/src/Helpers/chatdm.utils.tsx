@@ -1,7 +1,6 @@
-import { InboxItem, MessageData } from "../../../global/Interfaces";
+import { InboxItem, MessageData } from "../../global/Interfaces";
 import { SetStateAction } from 'react'
 import {getUserImage} from "../Hooks/getUserImage"
-import Inbox from "../Pages/Chat/Inbox";
 import {Socket} from "socket.io-client"
 
 const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg:MessageData, id:number, image:string, username:string) => {
@@ -25,7 +24,6 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg
                         image: image
                     } as InboxItem];
                 }
-            //reordering the inbox;
             })
     }
 

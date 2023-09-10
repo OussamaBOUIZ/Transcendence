@@ -1,5 +1,5 @@
 import "../scss/userOverview.scss";
-import { User} from "../../../global/Interfaces"
+import { User} from "../../global/Interfaces"
 import React from "react";
 import ContactDetail from "../Pages/Chat/ContactDetail";
 

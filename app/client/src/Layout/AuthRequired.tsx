@@ -15,9 +15,9 @@ export default function AuthRequired () {
                 const response = await axios.get<boolean>("/api/auth/tokenValidity");
                 setAuthenticated(response.data)
             }
-            catch (error) {
+            catch (e: any) {
                 // console.log(error)
-                setAuthenticated(error.response.data)
+                setAuthenticated(e.response.data)
             }
 
         }

@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
 import UserContext from '../../Context/UserContext';
-import { User, MessageData } from '../../../../global/Interfaces';
+import { User, MessageData } from '../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
 import axios from 'axios'
 import InboxDm from './InboxDm';
@@ -17,7 +17,7 @@ import ChatInput from './chatInput';
 
 export default function ChatDm () {
 
-    const {user} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
     const { id } = useParams();
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<User>({} as User);
@@ -94,7 +94,7 @@ export default function ChatDm () {
                 online={true}
                 />
 
-                <ChatWindow id={id}>
+                <ChatWindow setNotif={setNotif} id={id}>
                     {messagesElements}
                 </ChatWindow>
 

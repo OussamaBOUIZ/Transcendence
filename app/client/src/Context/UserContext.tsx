@@ -1,5 +1,5 @@
 import React, {createContext, useState, useEffect} from 'react'
-import { User } from '../../../global/Interfaces';
+import { User } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import { Socket } from 'socket.io-client';
@@ -14,12 +14,15 @@ type typeProps = {
   setIsAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
   socket: Socket | undefined;
   setSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>;
+  notif: string;
+  setNotif: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
 
 export function UserProvider ({children}: {children: React.ReactNode}) {
     const [user, setUser] = useState<User>({} as User);
+    const [notif, setNotif] = useState<string>("");
     const [socket, setSocket] = useState<Socket>();
     const [authenticated, setAuthenticated] = useState<boolean>(false);
     const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false)
@@ -48,6 +51,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             authenticated, setAuthenticated,
             isAnimationFinished, setIsAnimationFinished,
             socket, setSocket,
+            notif, setNotif
         }}>
             {children}
         </UserContext.Provider>

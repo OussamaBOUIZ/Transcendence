@@ -1,21 +1,22 @@
-import {User} from "../../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import React, {useState} from 'react';
 import { BsFillPenFill } from 'react-icons/bs';
 
 export default function ChangeAvatar({ user, setImagePreview }: {user: User, setImagePreview: any}) {
 
 
-  const [image, setImage] = useState<string | null>(null)
+  const [image, setImage] = useState<string | ArrayBuffer | null>(null)
 
-  const handleFileChange = (event: { target: { files: any[]; }; }) => {
-    const file = event.target.files[0];
-    setImagePreview(file)
-    if (file) {
+  const handleFileChange = (event: { target: { files: FileList | null; }; }) => {
+    if (event.target.files)
+      setImagePreview(event.target.files[0]);
+    if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImage(e.target.result);
+        if (e.target)
+          setImage(e.target.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(event.target.files[0]);
     }
   };
 

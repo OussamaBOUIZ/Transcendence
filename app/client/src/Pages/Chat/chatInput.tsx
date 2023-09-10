@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { SocketContext } from './ChatRooms';
 import InboxContext from '../../Context/InboxContext';
 
 
@@ -10,12 +9,8 @@ export default function ChatInput({message, setMessage, sender, id}: {message: s
         if (event.key === 'Enter') sender(event)
     }
 
-    if (!id) {
-        return (
-            // <form className="chat_input bg-purple-800" onSubmit={sender}></form>
-            null
-        )
-    }
+    if (!id)
+        return null
 
     return (
         <form className="chat_input" onSubmit={sender}>

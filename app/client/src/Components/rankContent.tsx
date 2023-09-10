@@ -1,7 +1,7 @@
 import StarRank from './starRank';
 import ProfileImage from './profileImage';
 import React from 'react';
-import {Leaders} from "../../../global/Interfaces"
+import {Leaders} from "../../global/Interfaces"
 
 export default function RankContent({userData, size, Rank}: {userData: Leaders, size: string, Rank: number}) {
 

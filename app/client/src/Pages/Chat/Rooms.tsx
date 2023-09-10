@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {NavLink} from "react-router-dom"
 import cube from "../../Assets/Icons/cube.svg";
-import {rooms} from "../../../../global/Interfaces"
+import {rooms} from "../../../global/Interfaces"
 
 
 function RoomItem({item}: {item: rooms}) {

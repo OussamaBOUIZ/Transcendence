@@ -2,7 +2,7 @@ import React, {useContext} from "react"
 import {nanoid} from 'nanoid';
 import { SocketContext } from "./ChatRooms";
 
-export default function MutePopUp({channelId, id}: {channelId: number, id: number}) {
+export default function MutePopUp({id}: {id: number}) {
 
     const {socket, roomData} = useContext(SocketContext)
 
