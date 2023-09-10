@@ -12,7 +12,7 @@ interface Inputs {
     input4: string,
     input5: string,
     input6: string,
-}
+} 
 
 
 export default function DisableTFA() {
@@ -32,7 +32,7 @@ export default function DisableTFA() {
                         token: collectedCode,
                     }
                     console.log(collected);
-                    const res  = await axios.post(`/api/user/2fa/turn-off/${user.id}`, collected);
+                    const res  = await axios.post(`/api/user/2fa/turn-off/${user?.id}`, collected);
                     if (res.data.length === 0)
                         window.location.replace('/');
                     else

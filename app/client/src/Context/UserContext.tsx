@@ -11,6 +11,8 @@ type typeProps = {
   setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   isAnimationFinished: boolean;
   setIsAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  update: boolean;
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
@@ -19,6 +21,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [user, setUser] = useState<User>({} as User);
     const [authenticated, setAuthenticated] = useState<boolean>(false);
     const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false)
+    const [update, setUpdate] = useState<boolean>(false)
 
     const fetchUserData = async () => {
         try {
@@ -34,7 +37,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     useEffect(() => {
         void fetchUserData();
         console.log("user from context", user )
-      }, [])
+      }, [update])
 
     return (
       <>
@@ -42,6 +45,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             user, setUser,
             authenticated, setAuthenticated,
             isAnimationFinished, setIsAnimationFinished,
+            update, setUpdate
         }}>
             {children}
         </UserContext.Provider>

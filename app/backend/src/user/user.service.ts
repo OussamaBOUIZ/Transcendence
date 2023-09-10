@@ -376,16 +376,11 @@ export class UserService {
     }
 
     isUserAuthValid(access_token: string, user: User) {
-        try {
-            const obj = authenticator.verify({
-                token: access_token,
-                secret: user.two_factor_secret
-            })
-            return obj;   
-        }
-        catch (e) {
-            console.log(e)
-        }
+        const obj = authenticator.verify({
+            token: access_token,
+            secret: user.two_factor_secret
+        })
+        return obj;
     }
 
 

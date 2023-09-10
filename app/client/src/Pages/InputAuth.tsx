@@ -1,6 +1,6 @@
 import "../scss/auth.scss";
 import axios from "axios"
-import React, {useState} from "react"
+import React, {useContext, useState} from "react"
 import UserContext from "../Context/UserContext";
 
 interface Inputs {
@@ -14,7 +14,7 @@ interface Inputs {
 }
 
 
-export default function DisableTFA() {
+export default function InputAuth() {
 
     const {user} = useContext(UserContext);
     const [notif, setNotif] = useState<string>("")

@@ -13,7 +13,7 @@ import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 
 export default function Settings () {
 
-    const {user} = useContext(UserContext)
+    const {user, setUpdate} = useContext(UserContext)
 
     const [notif, setNotif] = useState("")
     const [imgPrev, setimgPrev] = useState<string>("");
@@ -55,6 +55,8 @@ export default function Settings () {
                 if (userAllNames) {
                     const res = await axios.put(path, userAllNames, headers);
                     console.log("res : ", res)
+                    setUpdate(prevVal => !prevVal)
+                    
                     if (res.data.length)
                         console.log(res.data)
                 }
@@ -76,6 +78,7 @@ export default function Settings () {
             try {
                 if (imageFile) {
                     await axios.put(path, imageFile, headers)
+                    setUpdate(prevVal => !prevVal)
                 }
             }
             catch (error: any) {
@@ -93,8 +96,7 @@ export default function Settings () {
 
 
     const handleEnable2FA = () => {
-        if (tfaStatus)
-            window.location.replace('/disableauth')
+        
         const sendEnable = async (path: string) => {
             try {
                 const res = await axios.get(path);
@@ -106,7 +108,10 @@ export default function Settings () {
                 
             }
         }
-        sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
+        if (tfaStatus)
+            window.location.replace('/disabletfa')
+        else
+            sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
     }
     
     const get2FAStatus =async () => {

@@ -66,6 +66,7 @@ export default function App () {
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/disabletfa" element={<DisableTFA />} />
+                <Route path="/inputauth" element={<InputAuth />} />
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />}/>
 {/*                     

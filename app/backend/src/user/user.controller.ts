@@ -292,6 +292,7 @@ export class UserController {
     {
         const user = await this.userService.findUserById(id);
         const data2fa = this.userService.otpsetup(user);
+        console.log('HERE HERE HERE1');
         user.two_factor_secret = data2fa.secret;
         user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
@@ -302,12 +303,12 @@ export class UserController {
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
-        console.log(req.body.token)
         const user = await this.userService.findUserById(id);
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
             user
         );
+        console.log(isCodeValid)
         if(!isCodeValid)
             return res.status(200).send('two factor token is invalid');
         user.two_factor_secret = null;
@@ -331,7 +332,6 @@ export class UserController {
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
     {
-        console.log('HERE TOKEN: ', req.body.token);
         const user = await this.userService.getUserFromJwt(req.cookies['access_token'])
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
@@ -425,9 +425,6 @@ export class UserController {
 		}
 	}
 
-    // @UsePipes(new ValidationPipe({
-	// 	transform: true,
-	// }))
 	@Get('search/user')
 	async searchForUser(
 		@Query() dto: searchDto,

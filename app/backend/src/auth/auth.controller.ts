@@ -55,7 +55,7 @@ export class AuthController {
         const user = await this.userService.findUserByEmail(fortyTworeq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
-            return res.redirect('http://localhost:5173/auth');
+            return res.redirect('http://localhost:5173/inputauth');
         if(user.firstLog === true) 
             return res.redirect('http://localhost:5173/info');    
         return res.redirect('http://localhost:5173/');
