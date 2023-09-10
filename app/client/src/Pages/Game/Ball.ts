@@ -46,18 +46,19 @@ export default class Ball {
             
             if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
                 vars.vel.y *= -1;
+        }
 
-            if (this.x < 0 || this.x > p5.width) {            
-                if (isHost) {
-                    if (this.x < 0)
-                        setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.myScore }});
-
-                    if (this.x > p5.width)
-                        setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.oppScore }});
-
-                    reset(p5, isHost);
-                }
+        if (this.x < 0 || this.x > p5.width) {
+            if (isHost) {
+                reset(p5, isHost);
             }
+
+            if (this.x < 0)
+                setScore((prevState: Score) => {return {...prevState, myScore: prevState.myScore++ }});
+
+            if (this.x > p5.width)
+                setScore((prevState: Score) => {return {...prevState, oppScore: prevState.oppScore++ }});
+            
         }
     }
 
