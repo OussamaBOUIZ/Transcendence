@@ -41,7 +41,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setIsHost: () => {},
         gameKey: "",
         isMatching: true,
-        gameMode: null
+        gameMode: null,
+        setScore: () => {},
     }
 
     let backImg: string;

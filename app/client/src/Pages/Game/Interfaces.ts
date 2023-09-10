@@ -9,6 +9,7 @@ export interface MySketchProps extends SketchProps {
     gameKey: string;
     isMatching: boolean;
     gameMode: GameMode | null;
+    setScore: any; 
 }
 
 export interface Velocity {
@@ -46,3 +47,8 @@ export interface GameMode {
     color: Color | null;
     xp: number;
 };
+
+export interface Score {
+    myScore: number;
+    oppScore: number;
+}
