@@ -1,7 +1,7 @@
 import ProfileComponent from "./ProfileComponent";
 import React, { useState , useContext} from "react";
 import { useParams } from "react-router";
-import {User} from "../../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import {getUserData} from "../../Hooks/getUserData"
 import useEffectOnUpdate from "../../Hooks/useEffectOnUpdate";
 import UserContext from "../../Context/UserContext";

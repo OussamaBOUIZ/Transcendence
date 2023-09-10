@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { BrowserRouter, Route,Routes } from 'react-router-dom'
 import ChatLayout from './Pages/Chat/ChatLayout'
 import Home from './Pages/Home/Home'
@@ -7,7 +7,7 @@ import Game from './Pages/Game/Game'
 import Settings from './Pages/Settings/Settings'
 import MainLayout from './Layout/MainLayout'
 import AuthRequired from './Layout/AuthRequired'
-import UserContext, {UserProvider} from './Context/UserContext'
+import {UserProvider} from './Context/UserContext'
 
 import './scss/main.scss'
 import './scss/utils.scss'
@@ -21,7 +21,6 @@ import Auth from './Pages/Auth/Auth'
 
 
 export default function App () {
-  const {authenticated} = useContext(UserContext);
 
   return (
     <UserProvider>

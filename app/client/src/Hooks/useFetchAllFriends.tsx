@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {useState, useContext} from "react";
 import { getUserImage } from "./getUserImage";
-import {FriendUser, lastGame} from "../../../global/Interfaces"
+import {FriendUser, lastGame} from "../../global/Interfaces"
 import UserContext from '../Context/UserContext';
 import useEffectOnUpdate from './useEffectOnUpdate';
 

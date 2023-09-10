@@ -2,7 +2,7 @@ import "../../scss/homeComponent.scss";
 import GameHistory from '../../Components/gameHistory';
 import LeaderBoard from '../../Components/leaderBoard';
 import Battles from '../../Components/Battles';
-import {Leaders, User} from "../../../../global/Interfaces"
+import {Leaders, User} from "../../../global/Interfaces"
 import React from "react"
 
 export default function HomeComponent({ UserData , Leaders} : {UserData: User, Leaders: Leaders[]}) {

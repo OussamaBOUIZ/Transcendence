@@ -55,7 +55,7 @@ export default function Game () {
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
-    const [mode, setMode]  = useState<GameMode | null>(null);
+    const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     
     // const { user } = useContext(UserContext);
@@ -68,7 +68,7 @@ export default function Game () {
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
-        setMode(gameModes.get(gameMode))
+        setMode(gameModes.get(String(gameMode)))
 
 
         if (key && gameMode) {

@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from "react";
 import axios, {AxiosResponse} from "axios"
-import {channelData} from "../../../../global/Interfaces"
+import {channelData} from "../../../global/Interfaces"
 import ChannelProperty from "./channelProperty";
 import { SocketContext } from "./ChatRooms";
 

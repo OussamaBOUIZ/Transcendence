@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import "../scss/userInfoCard.scss"
-import {userInfoCard} from "../../../global/Interfaces"
+import {userInfoCard} from "../../global/Interfaces"
 import AdminPopUp from "../Pages/Chat/AdminPopUp"
 import MutePopUp from "../Pages/Chat/MutePopUp"
 
@@ -61,7 +61,7 @@ export default function UserInfoCard(props: userInfoCard) {
                 <span><img className='w-3' src={losses} alt="" /> {props.losses.toString() + " losses"}</span>
             </div>
             {props.isUnderMyGrade && isHovered && <AdminPopUp Userid={props.id} setIsClicked={setIsClicked} />}
-            {isHovered && isMuteClicked && <MutePopUp channelId={props.channelId as number} id={props.id} />}
+            {isHovered && isMuteClicked && <MutePopUp id={props.id} />}
         </div>
     )
 }

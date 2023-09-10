@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { channelData } from "../../../../global/Interfaces";
+import { channelData } from "../../../global/Interfaces";
 import { getUserImage } from "../../Hooks/getUserImage";
 import UserInfoCard from "../../Components/UserInfoCard";
 
@@ -14,6 +14,7 @@ interface channelProperty {
     channelId?: number,
     firstname: string;
     lastname: string;
+    username: string;
     image?: string;
     stat: {wins: number, losses: number}
 }

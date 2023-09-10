@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import ProfileImage from '../../Components/profileImage'
 import {Link} from 'react-router-dom'
-import {User} from "../../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
 import AddUser from "../../Assets/Icons/addUser.svg"

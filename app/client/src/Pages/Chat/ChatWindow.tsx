@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import {useLocation} from 'react-router-dom';
-import { SocketContext } from './ChatRooms';
 import ChannelInitAction from "./ChannelInitAction"
 import ChatDmInit from './ChatDmInit';
 import InboxContext from '../../Context/InboxContext';
 
 interface PropType {
     children: (React.JSX.Element | null)[],
-    setNotif?: React.Dispatch<React.SetStateAction<string>>
+    setNotif: React.Dispatch<React.SetStateAction<string>>
     id: string | undefined;
 }
 

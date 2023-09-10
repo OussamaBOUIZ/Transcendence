@@ -1,7 +1,7 @@
 import React from 'react'
 import "../../scss/utils.scss"
 import axios, {AxiosResponse} from "axios"
-import {User} from '../../../../global/Interfaces'
+import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 
@@ -9,7 +9,6 @@ export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState<string>("")
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
-    const [userExist, setUserExist] = React.useState<boolean>(true);
     const initialRender = React.useRef<boolean>(true)
 
     const submitStyle = {
@@ -37,7 +36,7 @@ export default function ChatSearchBox () {
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                setUserExist(false)
+                // console.log(err)
             }
         }
         if (submittedName !== "")

@@ -1,7 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { InboxItem } from '../../../../global/Interfaces';
+import React, { useState } from 'react'
 import Avatar from '../../Components/Avatar';
-import InboxContext from '../../Context/InboxContext';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import axios from 'axios';
 import { getUserImage } from '../../Hooks/getUserImage';

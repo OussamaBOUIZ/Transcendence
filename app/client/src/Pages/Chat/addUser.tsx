@@ -1,6 +1,6 @@
 import React, {useRef, useState, useEffect, useContext} from 'react'
 import axios, {AxiosResponse} from "axios"
-import {User} from '../../../../global/Interfaces'
+import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 import { SocketContext } from './ChatRooms'

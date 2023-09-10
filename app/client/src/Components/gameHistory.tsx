@@ -1,6 +1,6 @@
 import History from "./history";
 import React from "react"
-import {User} from "../../../global/Interfaces"
+import {User} from "../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import { useLocation } from "react-router";

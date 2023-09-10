@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getUserImage } from "./getUserImage";
-import {User} from "../../../global/Interfaces"
+import {User} from "../../global/Interfaces"
 
 export const getUserData = async (user: number | string, type: "username" | "id"): Promise<User> => {
 
