@@ -13,7 +13,7 @@ import { BlockedTokenList } from "src/databases/BlockedTokenList/BlockedTokenLis
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
     host: 'localhost',
-    port: 5434,
+    port: 5432,
     username: 'postgres',
     password: '123',
     database: 'PingPong', //  PingPong
