@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {io} from "socket.io-client";
 import { useParams } from "react-router-dom"
@@ -63,6 +63,7 @@ export default function Game () {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(gameMode))
+
 
         if (key && gameMode) {
             setGameKey(key);

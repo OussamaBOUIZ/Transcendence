@@ -51,7 +51,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Pages/Game/iceLand.jpg");
-        ballImg = p5.loadImage("/src/Pages/Game/iceBall.png");
     }
 
     p5.windowResized = (): void => {

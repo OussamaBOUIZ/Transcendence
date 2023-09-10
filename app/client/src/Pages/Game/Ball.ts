@@ -1,4 +1,4 @@
-import { Color } from "./Interfaces"
+import { Color, Score } from "./Interfaces"
 import vars from "./vars"
 import { reset } from "./Skitch"
 
@@ -42,7 +42,7 @@ export default class Ball {
         this.r = r;
     }
     
-    updateBall(p5: any, isHost: boolean, ballImg: string) {
+    updateBall(p5: any, isHost: boolean, ballImg: string, setScore: any) {
         this.drawBall(p5, ballImg);
 
         if (isHost) {
@@ -53,6 +53,9 @@ export default class Ball {
                 vars.vel.y *= -1;
 
             if (this.x < 0 || this.x > p5.width) {
+                if (this.x < 0)
+                    setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.myScore }});
+                    
                 if (isHost)
                     reset(p5, isHost);
             }

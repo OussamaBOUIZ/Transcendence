@@ -46,6 +46,7 @@ export interface GameMode {
     background: String | null;
     color: Color | null;
     xp: number;
+    maxScore: number;
 };
 
 export interface Score {
