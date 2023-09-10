@@ -2,7 +2,7 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:18-alpine As development
+FROM node:20-alpine As development
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ USER node
 
 ###################
 # BUILD FOR PRODUCTION
-###################
+# ###################
 FROM node:18-alpine As build
 
 WORKDIR /app
@@ -30,10 +30,13 @@ ENV NODE_ENV production
 
 RUN npm i
 
+RUN npm install -g @nestjs/cli
+
 COPY . .
 
+# COPY .env .
 #Use the node user from the image (instead of the root user)
-USER node
+# USER dev
 
 #RUN rm -rf dist
 

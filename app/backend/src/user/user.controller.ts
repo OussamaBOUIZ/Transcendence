@@ -120,8 +120,8 @@ export class UserController {
 
     @Get('online/users')
     async getOnlineUsers(@Req() req: Request) {
-
-        const user = await this.userService.findUserByEmail(req.user['email'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        // const user = await this.userService.findUserByEmail(req?.user['email'])
         if (!user)
             throw new NotFoundException('user not found')
         return await this.userService.onlineUsers(user.id)
@@ -143,8 +143,9 @@ export class UserController {
 
 	@Put('updateStatus')
 	async updateUserStatus(@Req() req: Request, status: string) {
-		const userEmail = req.user['email']
-		const user = await this.userService.findUserByEmail(userEmail)
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+		// const userEmail = req?.user['email']
+		// const user = await this.userService.findUserByEmail(userEmail)
 		if (!user)
 			throw new NotFoundException('user not exist')
 		user.status = status
@@ -195,9 +196,9 @@ export class UserController {
         @Req() req: Request,
         @Res() res: Response
     ) {
-        console.log('aaa');
-        
-        await this.userService.blockUser(userId, req.user['email'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+    
+        await this.userService.blockUser(userId, user.email)
         return res.status(HttpStatus.OK).send('the user blocked ')
     }
 
@@ -377,7 +378,10 @@ export class UserController {
 
     @Patch('stat/add')
 	async addUserStat(@Query() statDto: StatsDto, @Req() req: Request) {
-		await this.userService.addUserStat(statDto, req.user)
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        if (!user)  
+            throw new NotFoundException('user not found')
+		await this.userService.addUserStat(statDto, user)
 	}
 
 	@Post('gameHistory/add')

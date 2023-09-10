@@ -24,10 +24,9 @@ export class chatController {
     async getMessages(
         @Req() req: Request,
         @Param('id', ParseIntPipe) id: number,
-    ) 
-    {
-        
-        const user = await this.userRepository.findUserByEmail(req.user['email'])
+    ) {
+        const user = await this.userRepository.getUserFromJwt(req.cookies['access_token']);
+        // const user = await this.userRepository.findUserByEmail(req.user["email"])
         if (user === null)
             console.log('todo: handle if the receiver not exist')
         return await this.chatService.loadMessage(user, id)

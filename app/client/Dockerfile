@@ -1,13 +1,26 @@
 
-FROM node:alpine
+FROM node:alpine as builder
 
 WORKDIR /app
 
 COPY package.json .
+
 RUN npm install
 
 COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev"]
+RUN npm run build
+# CMD ["npm", "run", "dev"]
+
+FROM nginx:1.23-alpine as pr
+# ENV NODE_ENV production
+# Copy built assets from builder
+COPY --from=builder /app/build /usr/share/nginx/html
+# Add your nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Expose port
+# EXPOSE 80
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

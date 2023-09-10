@@ -29,9 +29,9 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
-        const token = await this.authService.apisignin(googlereq.user);
+        const token = await this.authService.apisignin(googlereq?.user);
         this.authService.setResCookie(res, token);
-        const user = await this.userService.findUserByEmail(googlereq.user.email);
+        const user = await this.userService.findUserByEmail(googlereq?.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
             return res.redirect('http://localhost:5173/auth');
@@ -48,11 +48,11 @@ export class AuthController {
     @UseGuards(FortyTwoGuard)
     async fortyTwoRedirect(@Req() fortyTworeq, @Res() res: Response)
     {
-        const token = await this.authService.apisignin(fortyTworeq.user);
+        const token = await this.authService.apisignin(fortyTworeq?.user);
         if(!token)
             return res.redirect('http://localhost:5173/');
         this.authService.setResCookie(res, token);
-        const user = await this.userService.findUserByEmail(fortyTworeq.user.email);
+        const user = await this.userService.findUserByEmail(fortyTworeq?.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
             return res.redirect('http://localhost:5173/auth');

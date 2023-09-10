@@ -13,16 +13,13 @@ services:
     depends_on:
       - backend
     restart: always
-
-  backend:
+  backend: 
     build:
       context: ./app/backend/
       dockerfile: Dockerfile
-      target: development
     image: backend
-
     ports:
-      - "80:3000"
+      - "8080:3000"
     depends_on:
       - postgres
     restart: always
@@ -31,7 +28,7 @@ services:
   postgres:
     image: postgres:13
     ports:
-      - "5434:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
