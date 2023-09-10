@@ -16,7 +16,7 @@ let gameModes = new Map<String, GameMode>([
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 11
+        maxScore: 9
     }],
     ["TheBeat", {
         modeName: "TheBeat",
@@ -58,6 +58,10 @@ export default function Game () {
     
     // const { user } = useContext(UserContext);
     const {key, gameMode} = useParams();
+
+    useEffect(() => {
+        console.log(score);
+    }, [score])
 
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");

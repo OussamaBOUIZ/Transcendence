@@ -58,5 +58,6 @@ export function resizeGameVars(width: number) {
   vars.GAP = width / 80;
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
-  vars.SPEED = width / 85;
+  // vars.SPEED = width / 85;
+  vars.SPEED = width / 200;
 }

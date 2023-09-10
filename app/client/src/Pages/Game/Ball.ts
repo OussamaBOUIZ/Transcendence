@@ -23,13 +23,8 @@ export default class Ball {
     drawBall(p5: any, ballImg: string | null) {
         p5.push();
         if (ballImg) {
-            // p5.translate(this.x - this.r, this.y - this.r);
-            
-            // p5.rotate(p5.radians(this.angle));
-
             p5.imageMode(p5.CENTER);
             p5.image(ballImg, this.x , this.y , this.r * 2, this.r * 2);
-
         } else {
             p5.fill(this.color.r, this.color.g, this.color.b, this.color.a);
             p5.noStroke();
@@ -52,12 +47,16 @@ export default class Ball {
             if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
                 vars.vel.y *= -1;
 
-            if (this.x < 0 || this.x > p5.width) {
-                if (this.x < 0)
-                    setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.myScore }});
-                    
-                if (isHost)
+            if (this.x < 0 || this.x > p5.width) {            
+                if (isHost) {
+                    if (this.x < 0)
+                        setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.myScore }});
+
+                    if (this.x > p5.width)
+                        setScore((prevState: Score) => {return {...prevState, myScore: ++prevState.oppScore }});
+
                     reset(p5, isHost);
+                }
             }
         }
     }

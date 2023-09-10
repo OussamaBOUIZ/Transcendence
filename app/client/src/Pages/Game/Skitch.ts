@@ -146,7 +146,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 rightPad.updatePad(p5, ball, false, props.isHost, paddleImg);
             }
 
-            ball?.updateBall(p5, props.isHost, ballImg);
+            ball?.updateBall(p5, props.isHost, ballImg, props.setScore);
         } else
             makeNoise(p5);
     }
