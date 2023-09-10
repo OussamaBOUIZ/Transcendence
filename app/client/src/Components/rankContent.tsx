@@ -9,8 +9,8 @@ export default function RankContent({userData, size, Rank}: {userData: Leaders, 
         <div className="rankContent">
             <span><h4>{`level ${userData?.ladder_level}`}</h4></span>
             <StarRank RankNumber={Rank} color="#E72FD0" />
-            <ProfileImage image={userData.image} name={userData.user.username} size={size} />
-            <span>{userData.user.username}</span>
+            <ProfileImage image={userData.image} name={userData.user?.username} size={size} />
+            <span>{userData.user?.username}</span>
         </div>
     )
 }

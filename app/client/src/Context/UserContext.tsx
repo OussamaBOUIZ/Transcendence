@@ -16,6 +16,10 @@ type typeProps = {
   setSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>;
   notif: string;
   setNotif: React.Dispatch<React.SetStateAction<string>>;
+  update: boolean;
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
@@ -25,9 +29,13 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [notif, setNotif] = useState<string>("");
     const [socket, setSocket] = useState<Socket>();
     const [authenticated, setAuthenticated] = useState<boolean>(false);
-    const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false)
+    const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
+    const [update, setUpdate] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
 
     const fetchUserData = async () => {
+        setIsLoading(true);
         try {
           const response = await axios.get<User>("/api/user"); 
           const image = await getUserImage(response.data.id)
@@ -36,26 +44,47 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         } catch (error) {
           // console.log(error);
         }
-    };
+        setIsLoading(false);
+      };
 
-    console.log(user);
 
-    useEffect(() => {
-        void fetchUserData();
+      const verifyAuthentication = async () => {
+        setIsLoading(true);
+          try {
+              const response = await axios.get("/api/auth/tokenValidity");    
+              console.log("response.data : ", response.data);
+              setAuthenticated(response.data)
+              console.log("setting to TRUE");
+          }
+          catch (error) {
+              console.log("setting to FALSE");
+              setAuthenticated(false)
+          }
+          setIsLoading(false)
+      }
+
+    useEffect(() => { 
+        void verifyAuthentication();
     }, [])
 
+    
+    useEffect(() => {
+        if (user)
+          void fetchUserData();
+      }, [])
+
     return (
-      <>
         <UserContext.Provider value={{
             user, setUser,
             authenticated, setAuthenticated,
             isAnimationFinished, setIsAnimationFinished,
             socket, setSocket,
-            notif, setNotif
+            notif, setNotif,
+            update, setUpdate,
+            isLoading, setIsLoading
         }}>
             {children}
         </UserContext.Provider>
-      </>
     );
 } 
 

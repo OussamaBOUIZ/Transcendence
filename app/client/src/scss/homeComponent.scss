@@ -57,6 +57,9 @@
         background-size: cover;
         grid-area: battleRoyal;
         box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
+        .box {
+            background: linear-gradient(90deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0));
+        }
         img {
             width: 21.4375em;
             height: 100%;

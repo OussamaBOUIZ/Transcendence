@@ -394,7 +394,7 @@ export class UserService {
         return authenticator.verify({
             token: access_token,
             secret: user.two_factor_secret
-        })
+        });
     }
 
 

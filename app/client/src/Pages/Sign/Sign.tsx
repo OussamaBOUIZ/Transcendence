@@ -2,12 +2,20 @@ import "../../scss/sign.scss"
 import googleImg from "../../Assets/Icons/google.png"
 import logo42 from "../../Assets/Icons/42Logo.png"
 import logo from "../../Assets/Icons/logo1.png"
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
+import UserContext from "../../Context/UserContext"
+import Home from "../Home/Home"
+import Loading from "../Loading"
 
 
 export default function Sign() {
 
     const [signInImage, setSignInImage] = useState<string>("");
+    const {authenticated, isLoading} = useContext(UserContext);
+
+    console.log("authenticated : ", authenticated);
+    if (authenticated)
+        window.location.replace('/')
 
     useEffect(() => {
         const getImage = async () => {
@@ -46,7 +54,8 @@ export default function Sign() {
                             </button>
                         </div>
 
-
+    if (isLoading)
+        return (<Loading />)
     return (
         <div className="main">
             <img className="bg" src={signInImage} alt="" />
