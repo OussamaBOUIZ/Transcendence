@@ -39,8 +39,8 @@ export default function ChatSearchBox () {
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                console.log(err)
-                setNotif("User not Found")            
+                console.log(err);
+                setNotif("User not Found");
             }
         }
         if (submittedName !== "")
