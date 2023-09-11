@@ -13,7 +13,7 @@ import UserContext from '../../Context/UserContext';
 export default function RoomHeader () {
     const {id, roomData, setShowSearch, myGrade, setAction, setIsClick} = useContext(SocketContext)
     const {isBanned} = useContext(InboxContext)
-    const {setShow} = useContext(UserContext)
+    const {show, setShow} = useContext(UserContext)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
 
     function handleChange() {
@@ -22,10 +22,10 @@ export default function RoomHeader () {
     }
 
     if (!id)
-        return <header className='chat_header bg-room-bar'></header>
+        return <header className={`chat_header bg-room-bar ${show === 'main' ? 'on' : 'off'}`}></header>
 
     return (
-        <header className='chat_header bg-room-bar'>
+        <header className={`chat_header bg-room-bar ${show === 'main' ? 'on' : 'off'}`}>
             <div className='flex gap-7 text-xl items-center'>
                 {isSmallDevice && <img className='w-8 h-8' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
                 <img className="w-10" src={cube} alt="" />
@@ -33,7 +33,7 @@ export default function RoomHeader () {
                     <h4>{roomData.channelName}</h4>
                 </figcaption>
             </div>
-            <div className="flex ml-auto w-2/12 justify-around">
+            <div className="flex ml-auto gap-4 justify-around">
                 {myGrade !== "user" && !isBanned && <img className="w-8 cursor-pointer" onClick={() => {setShowSearch(prev => !prev)}} src={addUser} alt="addUser" />}
                 <img className="w-8 cursor-pointer" onClick={handleChange} src={settings} alt="settings" />
                 {isSmallDevice && <img className='w-8 h-8' src={menu} alt="" onClick={() => setShow('overview')}/>}

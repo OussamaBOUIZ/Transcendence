@@ -175,7 +175,7 @@ export default function ChatRooms () {
             }
             {notif && <Notification message={notif} />}
             <InboxRooms />
-            <div className={`chat_main ${show === 'main' ? 'on' : 'off'}`}>
+            <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />
                 <ChatWindow setNotif={setNotif} id={id} >
                     {messagesElements}

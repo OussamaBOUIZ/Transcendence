@@ -2,7 +2,6 @@
 @import "./mixins.scss";
 
 div.chat_container {
-    background-color: orchid;
     width: 90vw;
     height: 85vh;
     background: $primary-color;
@@ -132,30 +131,30 @@ div.chat_container {
         grid-area: l;
         overflow: scroll;
         .message_oview {
-                    padding: 8px;
-                    display: flex;
-                    img {
-                        height: 50px;
-                        width : 50px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-                    figcaption {
-                        margin-left: 10px;
-                        p {
-                            font-size: 12px;
-                        }
-                        
-                    }
-                    time {
-                        font-size: 10px;
-                        margin-left: 10px;
-                    }
-                    &.active {
-                        background-color: $active-message-bg;
-                        border-left: 3px solid $border-color;
-                    }
+            padding: 8px;
+            display: flex;
+            img {
+                height: 50px;
+                width : 50px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            figcaption {
+                margin-left: 10px;
+                p {
+                    font-size: 12px;
                 }
+                
+            }
+            time {
+                font-size: 10px;
+                margin-left: 10px;
+            }
+            &.active {
+                background-color: $active-message-bg;
+                border-left: 3px solid $border-color;
+            }
+        }
         border-right: 1px solid $border-color;
         &::-webkit-scrollbar {
             width: .2em;
@@ -389,28 +388,18 @@ div.chat_container {
 @media (max-width: 1024px) {
     div.chat_container {
         width: 100vw;
+        .popUp > .createRoom {
+            width: 60%;
+        }
     }
 }
-
-// @media (max-width: 640px) {
-//     div.chat_container {
-//         grid-template-columns: 1fr;
-//         div.chat_main {
-//             width: 100vw;
-//         }
-//         div.chat_inbox,
-//         section.chat_account,
-//         section.online_now,
-//         div.chat_nav,
-//         div.chat_overview {
-//           display: none;
-//         }
-//     }
-// }
 
 @media (max-width: 820px) {
     div.chat_container {
         grid-template-columns: 1fr;
+        .popUp > .createRoom {
+            width: 90%;
+        }
         .on {
             width: 100vw;
         }

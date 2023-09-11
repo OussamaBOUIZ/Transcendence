@@ -24,11 +24,9 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
 
     return (
         // <div className="chat_overview">
-            <div className="contact_details_container">
-            <div className='flex justify-between items-center'>
-                <h2>Contact details</h2>
-                {isSmallDevice && <HiOutlineX className="ml-auto mt-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
-            </div>
+            <div className="contact_details_container relative">
+            <h2>Contact details</h2>
+            {isSmallDevice && <HiOutlineX className="absolute top-4 right-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
             <figure className="contact">
                 {/* <img src="../src/Assets/cat.jpg" alt="cat" /> */}
                 <img src={oview?.image} alt="cat" />

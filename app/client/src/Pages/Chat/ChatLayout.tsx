@@ -33,7 +33,7 @@ export default function ChatLayout () {
 
     return (
         <InboxProvider>
-            <div className="chat_container ml-0 sm:ml-4">
+            <div className="chat_container ml-0 smt:ml-4">
                 <ChatAccount />
                 <div className={`chat_nav ${show === 'inbox' ? 'on' : 'off'}`}>
                     <OnlineNow />

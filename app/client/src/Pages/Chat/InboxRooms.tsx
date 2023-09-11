@@ -19,9 +19,8 @@ export default function InboxRooms() {
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true);
     const [PrivateMode, setPrivateMode] = useState<boolean>(true);
     const [JoinedRooms, setJoinedRooms] = useState<JSX.Element[] | null>(null);
-    const {show} = useContext(UserContext)
+    const {show} = useContext(UserContext);
     const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
-
 
     const array = useMemo<Elements[]>(() => [
         { key: nanoid(), value: "Public Channels", mode: PublicMode, setter: setPublicMode, rooms: publicRooms },

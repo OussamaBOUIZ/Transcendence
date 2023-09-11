@@ -3,7 +3,6 @@ import InboxContext from '../../Context/InboxContext';
 
 
 export default function ChatInput({message, setMessage, sender, id}: {message: string, setMessage: React.Dispatch<React.SetStateAction<string>>, sender: React.FormEventHandler<HTMLElement>, id:string | undefined}) {
-    // const {id} = useContext(SocketContext)
     const {isBanned} = useContext(InboxContext)
     const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.key === 'Enter') sender(event)
