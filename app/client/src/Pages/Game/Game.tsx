@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
@@ -9,6 +9,7 @@ import { GameMode, Score } from './Interfaces';
 import { ReactP5Wrapper } from "react-p5-wrapper"
 import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import UserContext from '../../Context/UserContext';
 
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
@@ -57,9 +58,11 @@ export default function Game () {
     const [isMatching, setIsMatching] = useState<boolean>(false);
     const [mode, setMode]  = useState<GameMode | null>(null);
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
+    const [oppUser, setOppUser] = useState<any | null>(null);
+    const {user} = useContext(UserContext);
     
-    // const { user } = useContext(UserContext);
     const {key, gameMode} = useParams();
+
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
@@ -80,14 +83,16 @@ export default function Game () {
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
+                user: user,
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: gameModes.get(gameMode)?.xp
             })
 
-            newSocket.on("matched", (roomKey: string) => {
-                console.log("matched room key: ", roomKey);
-                setGameKey(roomKey);
-                newSocket.emit("joinGame", roomKey);
+            newSocket.on("matched", (data: any) => {
+                console.log("matched room key: ", data);
+                setGameKey(data.roomKey);
+                newSocket.emit("joinGame", data.roomKey);
+                setOppUser(data.user)
 
                 setIsMatching(false);
             })

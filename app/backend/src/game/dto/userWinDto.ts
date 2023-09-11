@@ -16,12 +16,4 @@ export class userWinDto {
     @IsNotEmpty()
     @IsNumber()
     opponentLevel: number
-
-    @IsNotEmpty()
-    @IsNumber()
-    IsWin: boolean
-
-    @IsNotEmpty()
-    @IsNumber()
-    roomKey: string
 }

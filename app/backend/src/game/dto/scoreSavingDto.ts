@@ -16,8 +16,4 @@ export class scoreStoreDto {
     @IsNotEmpty()
     @IsNumber()
     opponentId: number
-
-    @IsNotEmpty()
-    @IsNumber()
-    roomKey: string
 }

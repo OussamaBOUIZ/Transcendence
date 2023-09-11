@@ -11,18 +11,18 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/databases/game.entity';
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { brotliDecompressSync } from "zlib";
-import { log } from "console";
-import { subscribe } from "diagnostics_channel";
 import { userWinDto } from "./dto/userWinDto";
 import { scoreStoreDto } from "./dto/scoreSavingDto";
 import { gameService } from "./game.service";
 
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
-const waitingSockets = new Map<String, Socket[]>([
+interface User {
+	socket: Socket;
+	user: any;
+}
+
+const waitingSockets = new Map<String, User[]>([
     ["BattleRoyal", []],
     ["IceLand", []],
     ["TheBeat", []],
@@ -76,10 +76,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage('gameEnd')
-	async onGameEnd(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
-		if(gameData.IsWin === true)
-			await this.gameservice.userGameDataUpdate(gameData);
-		socket.leave(gameData.roomKey);
+	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		socket.leave(roomKey);
+	}
+
+	@SubscribeMessage('achievement')
+	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
+		await this.gameservice.userGameDataUpdate(gameData);
 	}
 
 	@SubscribeMessage('saveScore')
@@ -94,17 +97,17 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("gameMatching")
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		const sockets: Socket[] = waitingSockets.get(body.modeName);
+		const users: User[] = waitingSockets.get(body.modeName);
 
-		if (sockets.length >= 1) {
-			const oppSocket: Socket = sockets[0];
-			sockets.unshift();
-			socket.emit("matched", socket.id + oppSocket.id);
-			oppSocket.emit("matched", socket.id + oppSocket.id);
+		if (users.length >= 1) {
+			const oppUser: User = users[0];
+			users.unshift();
+			socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
+			oppUser.socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
 
-			console.log("socket id: ", socket.id + oppSocket.id);
+			console.log("socket id: ", socket.id + oppUser.socket.id);
 		} else {
-			sockets.push(socket);
+			users.push({socket: socket, user: body.user});
 		}
 	}
 
