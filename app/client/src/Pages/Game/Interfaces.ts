@@ -9,6 +9,7 @@ export interface MySketchProps extends SketchProps {
     gameKey: string;
     isMatching: boolean;
     gameMode: GameMode | null;
+    score: Score;
     setScore: any; 
 }
 

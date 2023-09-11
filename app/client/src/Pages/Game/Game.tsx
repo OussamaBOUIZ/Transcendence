@@ -61,6 +61,14 @@ export default function Game () {
     // const { user } = useContext(UserContext);
     const {key, gameMode} = useParams();
 
+    useEffect(() => {
+        socket?.on("scoreChanged", (score: Score) => {
+            console.log(score);
+
+            setScore(score);
+        })
+    }, [socket])
+
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
@@ -74,12 +82,6 @@ export default function Game () {
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: gameModes.get(gameMode)?.xp
-            })
-
-            socket?.on("scoreChanged", (score: Score) => {
-                console.log(score);
-    
-                setScore({...score})
             })
 
             newSocket.on("matched", (roomKey: string) => {
@@ -120,6 +122,7 @@ export default function Game () {
                     gameKey={gameKey}
                     gameMode={mode}
                     isMatching={isMatching}
+                    score={score}
                     setScore={setScore}
                 />
             </div>

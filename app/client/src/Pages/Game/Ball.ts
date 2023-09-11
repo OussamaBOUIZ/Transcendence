@@ -44,14 +44,21 @@ export default class Ball {
             if (props.isHost) {
                 reset(p5, props.isHost);
 
-                props.socket?.emit("gameScore", {roomKey: props.key, props.score});
+                if (this.x < 0) {
+                    props.setScore((prevState: Score) => {
+                        const newScore: Score = {...prevState, myScore: prevState.myScore++}
+                        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
+                        return newScore;
+                    });
+                }
 
-
-                if (this.x < 0)
-                    props.setScore((prevState: Score) => {return {...prevState, myScore: prevState.myScore++ }});
-
-                if (this.x > p5.width)
-                    props.setScore((prevState: Score) => {return {...prevState, oppScore: prevState.oppScore++ }});
+                if (this.x > p5.width) {
+                    props.setScore((prevState: Score) => {
+                        const newScore: Score = {...prevState, oppScore: prevState.oppScore++}
+                        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
+                        return newScore;
+                    });
+                }
             }
         }
 

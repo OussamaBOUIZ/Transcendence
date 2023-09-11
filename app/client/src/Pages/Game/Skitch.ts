@@ -1,5 +1,5 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { MySketchProps} from "./Interfaces";
+import { MySketchProps, Score} from "./Interfaces";
 import { makeNoise, clipCanvas, resizeGameVars } from "./utils"
 import vars from "./vars"
 import Ball from "./Ball"
@@ -42,6 +42,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         gameKey: "",
         isMatching: true,
         gameMode: null,
+        score: {myScore: 0, oppScore: 0},
         setScore: () => {},
     }
 
@@ -146,7 +147,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 rightPad.updatePad(p5, ball, false, props.isHost, paddleImg);
             }
 
-            ball.updateBall(p5, props.isHost, ballImg, props.setScore);
+            ball.updateBall(p5, ballImg, props);
         } else
             makeNoise(p5);
     }
