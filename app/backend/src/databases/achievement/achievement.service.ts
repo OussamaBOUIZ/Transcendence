@@ -55,39 +55,40 @@ export class AchievementService {
             await this.achieveRepo.save(newAchievement);       
         }
     }
-    async unlockAchievement(badge_name: string)
+    async unlockAchievement(badge_name: string, userId: number)
     {
         const achievement = await this.achieveRepo.findOne({
             where: {
                 badge_name: badge_name,
+                user_id: userId
             }
         });
         achievement.is_achieved === true;
         await this.achieveRepo.save(achievement);
     }
-    async setUnderdogAchievement()
+    async setUnderdogAchievement(userId: number)
     {
-        await this.unlockAchievement('underdog');
+        await this.unlockAchievement('underdog', userId);
     }
-    async setLevelAchievement(oldlevel: number, level: number)
+    async setLevelAchievement(oldlevel: number, level: number, userId: number)
     {
         if(oldlevel === level) return ;
         if(level === 5)
-            await this.unlockAchievement('Pong veteran');
+            await this.unlockAchievement('Pong veteran', userId);
         else if(level === 15)
-            await this.unlockAchievement('Pong pro');
+            await this.unlockAchievement('Pong pro', userId);
         else if(level === 25)
-            await this.unlockAchievement('Pong master');
+            await this.unlockAchievement('Pong master', userId);
     }
-    async setGameAchievement(gameType: string)
+    async setGameAchievement(gameType: string, userId: number)
     {
         if(gameType === 'Battle royal')
-            await this.unlockAchievement('Battle royal winner');
+            await this.unlockAchievement('Battle royal winner', userId);
         else if(gameType === 'The beast')
-            await this.unlockAchievement('The beast winner');
+            await this.unlockAchievement('The beast winner', userId);
         else if(gameType === 'bright')
-            await this.unlockAchievement('bright winner');
+            await this.unlockAchievement('bright winner', userId);
         else if(gameType === 'spider')
-            await this.unlockAchievement('spider winner');
+            await this.unlockAchievement('spider winner', userId);
     }
 }

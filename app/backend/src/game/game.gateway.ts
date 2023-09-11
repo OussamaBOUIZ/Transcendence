@@ -16,6 +16,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { brotliDecompressSync } from "zlib";
 import { log } from "console";
 import { subscribe } from "diagnostics_channel";
+import { userWinDto } from "./dto/userWinDto";
+import { scoreStoreDto } from "./dto/scoreSavingDto";
+import { gameService } from "./game.service";
 
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
@@ -32,6 +35,8 @@ const waitingSockets = new Map<String, Socket[]>([
 }})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
+
+	constructor(private readonly gameservice: gameService) {}
 
     afterInit(server: any) {
         console.log('after init');
@@ -71,15 +76,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage('gameEnd')
-	onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log('leave game');
-		
-		socket.leave(roomKey);
+	async onGameEnd(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
+		if(gameData.IsWin === true)
+			await this.gameservice.userGameDataUpdate(gameData);
+		socket.leave(gameData.roomKey);
 	}
 
 	@SubscribeMessage('saveScore')
-	onSaveScore(@MessageBody() score: any, @ConnectedSocket() socket: Socket) {
-		console.log('saving score...');
+	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
+		await this.gameservice.saveScore(score);
 	}
 
 	@SubscribeMessage('gameScore')
