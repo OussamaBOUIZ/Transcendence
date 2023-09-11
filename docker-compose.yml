@@ -3,7 +3,9 @@ version: '3.8'
 services:
   frontend:
     container_name: frontend
-    build: ./app/client/
+    build:
+      context: ./app/client/
+      dockerfile: Dockerfile
     image: frontend
     ports:
       - "5173:8080"
@@ -19,7 +21,7 @@ services:
       dockerfile: Dockerfile
     image: backend
     ports:
-      - "8080:3000"
+      - "3000:3000"
     depends_on:
       - postgres
     restart: always

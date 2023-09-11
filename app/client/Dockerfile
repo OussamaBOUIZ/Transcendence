@@ -14,7 +14,7 @@ EXPOSE 5173
 RUN npm run build
 # CMD ["npm", "run", "dev"]
 
-FROM nginx:1.23-alpine as pr
+FROM nginx:1.23-alpine as prudoction
 # ENV NODE_ENV production
 # Copy built assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
