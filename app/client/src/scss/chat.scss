@@ -4,10 +4,9 @@
 div.chat_container {
     background-color: orchid;
     width: 90vw;
-    height: 84vh;
+    height: 85vh;
     background: $primary-color;
     box-shadow: rgba(255, 255, 255, 0.05) 0px 0px 0px 1px;
-    margin: auto 20px;
     border-radius: 25px;
     overflow: hidden;
     display: grid;
@@ -385,5 +384,11 @@ div.chat_container {
                 }
             }
         }
+    }
+}
+
+@media (max-width: 1024px) {
+    div.chat_container {
+        width: 100vw;
     }
 }

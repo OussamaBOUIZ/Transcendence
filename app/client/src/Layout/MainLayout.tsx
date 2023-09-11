@@ -37,6 +37,7 @@ export default function MainLayout () {
 
     const {pathname} = useLocation()
     const re = new RegExp('/game(/.*)?')
+    const chat = new RegExp('/chat(/.*)?')
   
     if (!userStatus)
       void UpdateStatus();
@@ -45,7 +46,7 @@ export default function MainLayout () {
             <div className="fixed z-50 w-screen top-0 bg-primary-color sm:bg-transparent">
                 {!re.test(pathname) && <Header />}
             </div>
-            <main>
+            <main className={`${chat.test(pathname) ? 'w-screen' : 'w-11/12'}`}>
                 {!re.test(pathname) && <Sidebar />}
                 <Outlet />
             </main>

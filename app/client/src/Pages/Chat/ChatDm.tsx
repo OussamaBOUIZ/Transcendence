@@ -91,7 +91,7 @@ export default function ChatDm () {
                 id={id}
                 avatar={userOverview.image}
                 username={userOverview.username}
-                online={true}
+                status={userOverview.status}
                 />
 
                 <ChatWindow setNotif={setNotif} id={id}>

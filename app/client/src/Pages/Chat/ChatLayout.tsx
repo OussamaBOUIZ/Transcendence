@@ -29,7 +29,7 @@ function Navi () {
 export default function ChatLayout () {
     return (
         <InboxProvider>
-            <div className="chat_container">
+            <div className="chat_container ml-0 sm:ml-4">
                 <ChatAccount />
                 <div className="chat_nav">
                     <OnlineNow />
