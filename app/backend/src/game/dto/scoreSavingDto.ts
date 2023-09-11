@@ -1,25 +1,21 @@
 import {  IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
-export class userWinDto {
+export class scoreStoreDto {
+    @IsNotEmpty()
+    @IsNumber()
+    userScore: number
+
+    @IsNotEmpty()
+    @IsNumber()
+    opponentScore: number
+
     @IsNotEmpty()
     @IsNumber()
     userId: number
 
     @IsNotEmpty()
     @IsNumber()
-    wonXp: number
-
-    @IsNotEmpty()
-    @IsString()
-    gameName: string
-
-    @IsNotEmpty()
-    @IsNumber()
-    opponentLevel: number
-
-    @IsNotEmpty()
-    @IsNumber()
-    IsWin: boolean
+    opponentId: number
 
     @IsNotEmpty()
     @IsNumber()

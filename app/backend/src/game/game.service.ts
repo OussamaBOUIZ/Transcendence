@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { UserService } from "src/user/user.service";
 import { AchievementService } from "src/databases/achievement/achievement.service";
 import { userWinDto } from "./dto/userWinDto";
+import { scoreStoreDto } from "./dto/scoreSavingDto";
 
 @Injectable()
 export class gameService {
@@ -14,21 +15,28 @@ export class gameService {
 
     async userGameDataUpdate(userWinData: userWinDto)
     {
-        await this.achievementService.setGameAchievement(userWinData.gameName);
+        await this.achievementService.setGameAchievement(userWinData.gameName, userWinData.userId);
         const stat = await this.userService.getStat(userWinData.userId);
         if(userWinData.opponentLevel >= stat.ladder_level + 2)
-            await this.achievementService.setUnderdogAchievement();
+            await this.achievementService.setUnderdogAchievement(userWinData.userId);
         const oldLevel = stat.ladder_level;
         stat.xp += userWinData.wonXp;
         const newLevel = 0.02 * Math.sqrt(stat.xp);
         stat.ladder_level = Math.floor(newLevel);
         stat.levelPercentage = (newLevel - stat.ladder_level) * 100;
-        await this.achievementService.setLevelAchievement(oldLevel, stat.ladder_level);
+        await this.achievementService.setLevelAchievement(oldLevel, stat.ladder_level, userWinData.userId);
         await this.userService.saveStat(stat);
     }
 
-    async saveScore(score: any) {
-        
+    async saveScore(scoreData: scoreStoreDto) {
+        const user1 = await this.userService.findUserById(scoreData.userId);
+        const user2 = await this.userService.findUserById(scoreData.opponentId);
+        const game = new Game();
+        game.user1 = user1;
+        game.user2 = user2;
+        game.userShots = scoreData.userScore;
+        game.opponentShots = scoreData.opponentScore;
+        await this.gameRepo.save(game);
     }
 
     
