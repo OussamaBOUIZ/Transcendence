@@ -84,7 +84,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('gameScore')
 	onScore(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		console.log(body);
 		socket.to(body.roomKey).emit("scoreChanged", body.score);
 	}
 

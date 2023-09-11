@@ -40,10 +40,13 @@ export default class Ball {
     updateScore(props: MySketchProps, newScore: Score) {
         props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
 
-        if (newScore.myScore == props.gameMode?.maxScore
+        if ( newScore.myScore == props.gameMode?.maxScore
             || newScore.oppScore == props.gameMode?.maxScore ) {
             props.socket?.emit("saveScore");
-            // props.socket?.emit("gameEnd", props.gameKey);
+
+            if (props.isHost)
+                props.socket?.emit("gameEnd", props.gameKey);
+
         }
     }
     
