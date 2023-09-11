@@ -36,7 +36,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const innerDiv = useRef<HTMLDivElement>(null);
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
-    const [isLoaded, setIsLoaded] = useState<Boolean>(false);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 

@@ -17,7 +17,7 @@ import ChatInput from './chatInput';
 
 export default function ChatDm () {
 
-    const {user, setNotif} = useContext(UserContext)
+    const {user, setNotif, show} = useContext(UserContext)
     const { id } = useParams();
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<User>({} as User);
@@ -86,7 +86,7 @@ export default function ChatDm () {
     return (
         <>
             <InboxDm/>
-            <div className="chat_main">
+            <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <ChatHeader
                 id={id}
                 avatar={userOverview.image}

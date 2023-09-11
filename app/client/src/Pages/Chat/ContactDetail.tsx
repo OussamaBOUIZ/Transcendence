@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { User, Achievement } from '../../../global/Interfaces';
+import { HiOutlineX } from "react-icons/hi";
+import UserContext from '../../Context/UserContext';
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 function AllAchievement ({item} :{item: Achievement}) {
     return (
@@ -15,12 +18,17 @@ function AllAchievement ({item} :{item: Achievement}) {
 
 export default function ContactDetail ({oview} : {oview: User | undefined}) {
     
+    const {setShow} = useContext(UserContext)
     const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)
+    const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
 
     return (
         // <div className="chat_overview">
             <div className="contact_details_container">
-            <h2>Contact details</h2>
+            <div className='flex justify-between items-center'>
+                <h2>Contact details</h2>
+                {isSmallDevice && <HiOutlineX className="ml-auto mt-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
+            </div>
             <figure className="contact">
                 {/* <img src="../src/Assets/cat.jpg" alt="cat" /> */}
                 <img src={oview?.image} alt="cat" />

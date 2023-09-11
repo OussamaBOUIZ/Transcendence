@@ -38,6 +38,7 @@ export default function App () {
                 <Route path="/game/:gameMode/:key" element={<Game />} />
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<Home />}/>
+                  
                   <Route path="chat" element={<ChatLayout />}>
                     <Route index element={<ChatDm />} />
                     <Route path=":id" element={<ChatDm />} />

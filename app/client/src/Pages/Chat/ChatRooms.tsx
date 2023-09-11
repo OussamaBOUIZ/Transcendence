@@ -44,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
+    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -175,8 +175,8 @@ export default function ChatRooms () {
             }
             {notif && <Notification message={notif} />}
             <InboxRooms />
-            <div className="chat_main">
-            <RoomHeader />
+            <div className={`chat_main ${show === 'main' ? 'on' : 'off'}`}>
+                <RoomHeader />
                 <ChatWindow setNotif={setNotif} id={id} >
                     {messagesElements}
                 </ChatWindow>

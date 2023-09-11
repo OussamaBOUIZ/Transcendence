@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {NavLink} from 'react-router-dom'
 import { shortenMessage } from '../../Helpers/utils';
+import UserContext from '../../Context/UserContext';
 interface PropType {
     id:number;
     lastMsg: string;
@@ -12,13 +13,14 @@ interface PropType {
 
 export default function MessageOverview ({id, lastMsg, time, unsMsg, username, img} :PropType) {
 
-    
+    const {setShow} = useContext(UserContext)
 
     return (
-        <NavLink 
+        <NavLink
         to={`/chat/${id}`} 
         className={`message_oview 
                  ${(isActive: boolean) => isActive ? 'active' : ''}`}
+        onClick={() => setShow('main')}
         >
             <img src={img} alt="Cat pic" />
             <figcaption>

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ChannelInfo from './ChannelInfo';
 import { useLocation } from 'react-router';
 import ContactDetail from './ContactDetail';
 import { User } from '../../../global/Interfaces';
+import UserContext from '../../Context/UserContext';
 
 function CustomField ({content}: {content: string}) {
     return (
@@ -15,6 +16,8 @@ function CustomField ({content}: {content: string}) {
 }
 
 export default function ChatOverview({oview, id}: {oview?: User, id: string | undefined}) {
+
+    const {show} = useContext(UserContext)
 
     const roomGuideText = "As channels come alive this box will \
     soon be filled with fellow members. Engage in captivating conversations, share\
@@ -50,7 +53,7 @@ export default function ChatOverview({oview, id}: {oview?: User, id: string | un
 
 
     return (
-        <div className="chat_overview overflow-hidden">
+        <div className={`chat_overview overflow-hidden ${show === 'overview' ? 'on' : 'off'}`}>
             {val}
         </div>
     );

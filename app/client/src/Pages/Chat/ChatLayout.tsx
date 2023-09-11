@@ -5,6 +5,7 @@ import "../../scss/chat.scss"
 import OnlineNow from './OnlineNow';
 import {Outlet, NavLink} from 'react-router-dom'
 import InboxContext, { InboxProvider } from '../../Context/InboxContext';
+import UserContext from '../../Context/UserContext';
 
 function Navi () {
     const {inboxList} = useContext(InboxContext);
@@ -27,11 +28,14 @@ function Navi () {
 }
 
 export default function ChatLayout () {
+
+    const {show} = useContext(UserContext)
+
     return (
         <InboxProvider>
             <div className="chat_container ml-0 sm:ml-4">
                 <ChatAccount />
-                <div className="chat_nav">
+                <div className={`chat_nav ${show === 'inbox' ? 'on' : 'off'}`}>
                     <OnlineNow />
                     <Navi />
                 </div>

@@ -31,7 +31,8 @@ export default {
         lrg: { min:  "768px" ,max: "1023px" },
         med: { max: "767px" },
         sml: { max: "639px" },
-        mxl: {max: "1024px"}
+        mxl: {max: "1024px"},
+        smt: {min: '820px'}
       }
     },
   },

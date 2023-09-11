@@ -3,9 +3,10 @@ import ProfileImage from '../../Components/profileImage';
 import UserContext from '../../Context/UserContext';
 
 export default function ChatAccount () {
-    const {user} = useContext(UserContext)
+    const {user, show} = useContext(UserContext)
+
     return (
-        <section className="chat_account">
+        <section className={`chat_account smt:flex ${show === 'inbox' ? 'on' : 'off'}`}>
             <ProfileImage image={user.image} name={user.username} size="medium" />
             <figcaption>
                 <p className="account_name">{`${user?.firstname} ${user?.lastname}`}</p>

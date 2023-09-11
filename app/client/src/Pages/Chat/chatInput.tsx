@@ -13,7 +13,7 @@ export default function ChatInput({message, setMessage, sender, id}: {message: s
         return null
 
     return (
-        <form className="chat_input" onSubmit={sender}>
+        <form className="chat_input px-4" onSubmit={sender}>
             <textarea
                 autoFocus
                 placeholder={`${isBanned ? 'You have been banned from this channel' : 'Type something'}`}

@@ -1,9 +1,11 @@
 import React, { useContext, useMemo } from 'react'
 import MessageOverview from './MessageOverview';
 import InboxContext from '../../Context/InboxContext';
+import UserContext from '../../Context/UserContext';
 
 export default function InboxDm() {
     const { inboxList, update } = useContext(InboxContext);
+    const {show} = useContext(UserContext)
 
     // Memoize the sorted inboxList
     const sortedInboxList = useMemo(() => {
@@ -15,7 +17,7 @@ export default function InboxDm() {
     }, [inboxList.current, update]);
 
     return (
-        <div className="chat_inbox">
+        <div className={`chat_inbox ${show === 'inbox' ? 'on' : 'off'}`}>
             {sortedInboxList.map((item, idx) => {
                 return (
                     <MessageOverview

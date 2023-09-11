@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Avatar from '../../Components/Avatar';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import axios from 'axios';
 import { getUserImage } from '../../Hooks/getUserImage';
+import UserContext from '../../Context/UserContext';
 
 
 interface OnlineUsers {
@@ -16,6 +17,7 @@ interface OnlineUsers {
 export default function OnlineNow () {
 
     const [users, setUsers] = useState<OnlineUsers[]>([])
+    const {show} = useContext(UserContext)
 
     useEffectOnUpdate(() => {
         const fetchOnlineUsers =async () => {
@@ -44,7 +46,7 @@ export default function OnlineNow () {
     })
 
     return (
-        <section className="online_now">
+        <section className={`online_now ${show === 'inbox' ? 'on' : 'off'}`}>
             <h3>Online now</h3>
             <div className="flex p-4 overflow-hidden">
                 {

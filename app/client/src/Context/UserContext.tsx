@@ -20,6 +20,8 @@ type typeProps = {
   setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  show: "inbox" | "main" | "overview";
+  setShow: React.Dispatch<React.SetStateAction<"inbox" | "main" | "overview">>;
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
@@ -32,6 +34,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
     const [update, setUpdate] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
 
 
     const fetchUserData = async () => {
@@ -81,7 +84,8 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             socket, setSocket,
             notif, setNotif,
             update, setUpdate,
-            isLoading, setIsLoading
+            isLoading, setIsLoading,
+            show, setShow
         }}>
             {children}
         </UserContext.Provider>
