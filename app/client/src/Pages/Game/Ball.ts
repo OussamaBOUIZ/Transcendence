@@ -36,6 +36,16 @@ export default class Ball {
     updateAttr(r: number) {
         this.r = r;
     }
+
+    updateScore(props: MySketchProps, newScore: Score) {
+        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
+
+        if (newScore.myScore == props.gameMode?.maxScore
+            || newScore.oppScore == props.gameMode?.maxScore ) {
+            props.socket?.emit("saveScore");
+            // props.socket?.emit("gameEnd", props.gameKey);
+        }
+    }
     
     updateBall(p5: any, ballImg: string, props: MySketchProps) {
         this.drawBall(p5, ballImg);
@@ -47,7 +57,7 @@ export default class Ball {
                 if (this.x < 0) {
                     props.setScore((prevState: Score) => {
                         const newScore: Score = {...prevState, myScore: prevState.myScore++}
-                        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
+                        this.updateScore(props, newScore);
                         return newScore;
                     });
                 }
@@ -55,10 +65,11 @@ export default class Ball {
                 if (this.x > p5.width) {
                     props.setScore((prevState: Score) => {
                         const newScore: Score = {...prevState, oppScore: prevState.oppScore++}
-                        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
+                        this.updateScore(props, newScore);
                         return newScore;
                     });
                 }
+
             }
         }
 

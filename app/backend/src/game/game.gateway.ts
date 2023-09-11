@@ -62,8 +62,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
 
 		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-			// socket.emit("notHost");
-
 			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
 			const socketsArr: Array<string> = Array.from(socketsSet);
 			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
@@ -80,10 +78,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage('saveScore')
-	onSaveScore(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log('leave game');
-		
-		socket.leave(roomKey);
+	onSaveScore(@MessageBody() score: any, @ConnectedSocket() socket: Socket) {
+		console.log('saving score...');
 	}
 
 	@SubscribeMessage('gameScore')
