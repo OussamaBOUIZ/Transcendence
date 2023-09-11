@@ -4,12 +4,15 @@ import axios, {AxiosResponse} from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
+import { useContext } from 'react'
+import UserContext from '../../Context/UserContext'
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState<string>("")
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
     const initialRender = React.useRef<boolean>(true)
+    const {notif, setNotif} = useContext(UserContext)
 
     const submitStyle = {
         marginTop: "1em",
@@ -36,13 +39,13 @@ export default function ChatSearchBox () {
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                // console.log(err)
+                console.log(err)
+                setNotif("User not Found")            
             }
         }
         if (submittedName !== "")
             void getUserCard()
     }, [submittedName])
-
     return (
         <section className="search_box">
             <form onSubmit={handleSubmit}>
@@ -60,7 +63,7 @@ export default function ChatSearchBox () {
             <UserCard 
                 userData={searchedUser}
                 message={true}
-                friend={true}
+                friend={false}
             />
             }
         </section>
