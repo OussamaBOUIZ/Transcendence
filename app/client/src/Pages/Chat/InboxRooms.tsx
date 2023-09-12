@@ -3,7 +3,6 @@ import TopicRoom from './TopicRoom';
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import Rooms from './Rooms';
 import {rooms} from "../../../global/Interfaces"
-import {nanoid} from "nanoid"
 import UserContext from '../../Context/UserContext';
 
 interface Elements {
@@ -23,15 +22,15 @@ export default function InboxRooms() {
     const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
 
     const array = useMemo<Elements[]>(() => [
-        { key: nanoid(), value: "Public Channels", mode: PublicMode, setter: setPublicMode, rooms: publicRooms },
-        { key: nanoid(), value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, rooms: protectedRooms },
-        { key: nanoid(), value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, rooms: privateRooms }
+        { key: "public", value: "Public Channels", mode: PublicMode, setter: setPublicMode, rooms: publicRooms },
+        { key: "protected", value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, rooms: protectedRooms },
+        { key: "private", value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, rooms: privateRooms }
     ], [PublicMode, publicRooms, ProtectedMode, protectedRooms, PrivateMode, privateRooms])
 
     useMemo(() => {
         const updatedRooms = array.map((element) => (
             <div key={element.key}>
-                <TopicRoom roomType={element.value} mode={element.mode} setter={element.setter} />
+                <TopicRoom roomType={element.value} mode={element.mode} value={element.key} setter={element.setter} />
                 {element.mode && <Rooms roomsToRender={element.rooms} />}
             </div>
         ));

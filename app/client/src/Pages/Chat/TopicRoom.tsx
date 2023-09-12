@@ -4,10 +4,16 @@ import {IoChevronDown} from "react-icons/io5";
 import {IoChevronForward} from "react-icons/io5";
 import { SocketContext } from "./ChatRooms";
 
-export default function TopicRoom({roomType, mode, setter} : {roomType: string, mode: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>}) {
+interface propsType {
+    roomType: string;
+    mode: boolean;
+    value: string;
+    setter: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-    const {setIsClick} = useContext(SocketContext)
+export default function TopicRoom({roomType, mode, value, setter} : propsType) {
 
+    const {setIsClick, setDefaultRoomType} = useContext(SocketContext)
 
     let icon;
     (mode) ?
@@ -20,7 +26,7 @@ export default function TopicRoom({roomType, mode, setter} : {roomType: string, 
                     {icon}
                     {roomType}
                 </div>
-                <FaPlus className="cursor-pointer" onClick={() => {setIsClick(prev => !prev)}} />
+                <FaPlus className="cursor-pointer" onClick={() => {setDefaultRoomType(value); setIsClick(prev => !prev)}} />
             </div>
         </>
     )

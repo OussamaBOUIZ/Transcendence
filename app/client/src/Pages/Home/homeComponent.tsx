@@ -2,10 +2,13 @@ import "../../scss/homeComponent.scss";
 import GameHistory from '../../Components/gameHistory';
 import LeaderBoard from '../../Components/leaderBoard';
 import Battles from '../../Components/Battles';
-import {Leaders, User} from "../../../global/Interfaces"
-import React from "react"
+import {Leaders} from "../../../global/Interfaces"
+import React, { useContext } from "react"
+import UserContext from "../../Context/UserContext";
 
-export default function HomeComponent({ UserData , Leaders} : {UserData: User, Leaders: Leaders[]}) {
+export default function HomeComponent({Leaders} : {Leaders: Leaders[]}) {
+
+    const {user} = useContext(UserContext)
 
     return (
         <>
@@ -14,7 +17,7 @@ export default function HomeComponent({ UserData , Leaders} : {UserData: User, L
             <div className="homeComponent">
                 <Battles />
                 <LeaderBoard leaders={Leaders} />
-                <GameHistory UserData={UserData} />
+                <GameHistory UserData={user} NBgames={4} />
             </div>
         </>
     )

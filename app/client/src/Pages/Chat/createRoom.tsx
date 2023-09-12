@@ -10,18 +10,18 @@ import InboxContext from "../../Context/InboxContext";
 interface newRoom {
     channelId: number,
     channelName: string,
-    channelType: "public" | "private" | "protected",
+    channelType: string,
     channelPassword: string,
     channelOwner: number,
 }
 
-export default function CreateRoom({action}: {action: string}) {
+export default function CreateRoom({action, defaultValue}: {action: string, defaultValue: string}) {
 
     const {user, setNotif} = useContext(UserContext)
     const {isBanned} = useContext(InboxContext)
-    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
+    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate, setDefaultRoomType} = useContext(SocketContext)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public", channelOwner: 0})
+    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: defaultValue, channelOwner: 0})
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -39,6 +39,7 @@ export default function CreateRoom({action}: {action: string}) {
     };
 
     const handleSubmit = async () => {
+        setDefaultRoomType("public");
         if (roomData?.channelId)
             newRoom.channelId = roomData?.channelId
         try {
@@ -56,6 +57,7 @@ export default function CreateRoom({action}: {action: string}) {
     const handleLeaving = () => {
         socket?.emit('leaveAndRemoveChannel', roomData);
         setIsClick(prev => !prev);
+        setDefaultRoomType("public");
         window.location.replace('/chat/rooms')
     }
 
@@ -80,7 +82,7 @@ export default function CreateRoom({action}: {action: string}) {
   return (
     <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x">
         <div className="flex justify-end">
-            <img className="w-6 cursor-pointer" onClick={() => {setAction("create"); setIsClick(prev => !prev)}} src={Xmark} alt="exit" />
+            <img className="w-6 cursor-pointer" onClick={() => {setDefaultRoomType("public"); setAction("create"); setIsClick(prev => !prev)}} src={Xmark} alt="exit" />
         </div>
         <div className="channelName flex flex-col">
             <label>Channel Name</label>
@@ -98,15 +100,15 @@ export default function CreateRoom({action}: {action: string}) {
             <label>Accessiblity</label>
             <form className="flex justify-between items-center" >
                 <div className="flex gap-2 items-center">
-                    <input type="radio" className={style} name="channelType" value="public" onChange={handleChange} defaultChecked/>
+                    <input type="radio" className={style} name="channelType" value="public" onChange={handleChange} defaultChecked={defaultValue === 'public'}/>
                     <label>Public</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <input type="radio" className={style} name="channelType" value="private" onChange={handleChange} />
+                    <input type="radio" className={style} name="channelType" value="private" onChange={handleChange} defaultChecked={defaultValue === 'private'}/>
                     <label>Private</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                <input type="radio" className={style} name="channelType" value="protected" onChange={handleChange} />
+                <input type="radio" className={style} name="channelType" value="protected" onChange={handleChange} defaultChecked={defaultValue === 'protected'}/>
                     <label>Protected</label>
                 </div>
             </form>

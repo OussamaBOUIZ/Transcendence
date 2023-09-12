@@ -32,6 +32,7 @@ type typeProps = {
     roomData: roomData;
     showSearch: boolean;
     setShowSearch: React.Dispatch<SetStateAction<boolean>>;
+    setDefaultRoomType: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const SocketContext = createContext<typeProps>({} as typeProps);
@@ -51,6 +52,7 @@ export default function ChatRooms () {
     const [blockedUsers, setBlockedUsers] = useState<{id: number}[]>([])
     const {id} = useParams()
     const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
+    const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -157,7 +159,7 @@ export default function ChatRooms () {
         return null;
 
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, setDefaultRoomType, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
@@ -167,7 +169,7 @@ export default function ChatRooms () {
             {
                 isClick &&
                 <div className="popUp absolute flex items-center justify-center">
-                    <CreateRoom action={action} />
+                    <CreateRoom action={action} defaultValue={defaultRoomType}/>
                 </div>
             }
             {/* {notif && <Notification message={notif} />} */}

@@ -26,6 +26,16 @@ interface FriendUser {
     lastGame: lastGame | string;
 }
 
+export interface gameHistory {
+    userId: number;
+    userName: string;
+    userScore: number;
+    opponentScore: number;
+    opponentId: number;
+    opponentUserName: string;
+    opponentImage?: string;
+}
+
 
 interface Achievement {
     id: number,

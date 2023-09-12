@@ -98,6 +98,7 @@
         background-size: cover;
         background-repeat: no-repeat;
         grid-area: history;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -114,14 +115,24 @@
         }
         .games {
             display: grid;
+            overflow-y: auto;
+            overflow-x: hidden;
             width: 100%;
-            height: 100%;
+            height: 80%;
             grid-template-columns: 1fr;
             grid-template-rows: repeat(3, 1fr);
             grid-gap: 5px;
+            margin-right: 1em;
             justify-items: center;
             padding-bottom: 5px;
-            overflow: hidden;
+            &::-webkit-scrollbar {
+                width: .4em;
+                border-radius: 6em;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #EAEAEA;
+                border-radius: 6em;
+            }
         }
     }
     .friendsCard {

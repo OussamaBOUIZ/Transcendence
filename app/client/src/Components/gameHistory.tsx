@@ -1,12 +1,15 @@
 import History from "./history";
-import React from "react"
+import React, {useRef} from "react"
 import {User} from "../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
-import { useLocation } from "react-router";
+import { useLocation } from "react-router"
+import dataFour from "./dataThree.json"
+import allData from "./allData.json"
 
-export default function GameHistory({UserData}: {UserData: User}) {
+export default function GameHistory({UserData, NBgames}: {UserData: User, NBgames: number}) {
 
+    const games = useRef<React.JSX.Element[]>()
     const {pathname} = useLocation();
     let header: React.JSX.Element | undefined
     if (pathname === "/")
@@ -22,14 +25,18 @@ export default function GameHistory({UserData}: {UserData: User}) {
             </div>
         </header>
     }
+    let data = (NBgames === 4) ? dataFour.dataFour : allData.allData
+    games.current = data.map(game => {
+        return (
+            <History userData={UserData} gameData={game} />
+        )
+    })
 
       return (
         <div className="item GameHistory">
             {header}
             <div className="games">
-                <History userData={UserData} />
-                <History userData={UserData} />
-                <History userData={UserData} />
+                {games.current}
             </div>
         </div>
     )

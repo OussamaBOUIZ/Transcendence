@@ -1,0 +1,28 @@
+{
+    "dataFour": [
+      {
+        "userScore": 1,
+        "opponentScore": 7,
+        "opponentId": 2,
+        "opponentUserName": "yed-dyb"
+      },
+      {
+        "userScore": 1,
+        "opponentScore": 7,
+        "opponentId": 4,
+        "opponentUserName": "luffy"
+      },
+      {
+        "userScore": 1,
+        "opponentScore": 1,
+        "opponentId": 3,
+        "opponentUserName": "ijmari"
+      },
+      {
+        "userScore": 1,
+        "opponentScore": 2,
+        "opponentId": 3,
+        "opponentUserName": "ijmari"
+      }
+    ]
+  }
