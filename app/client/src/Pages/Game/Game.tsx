@@ -83,20 +83,25 @@ export default function Game () {
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
-                user: user,
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: gameModes.get(gameMode)?.xp
             })
 
-            newSocket.on("matched", (data: any) => {
-                console.log("matched room key: ", data);
-                setGameKey(data.roomKey);
-                newSocket.emit("joinGame", data.roomKey);
-                setOppUser(data.user)
+            newSocket.on("matched", (roomKey: string) => {
+                console.log("matched room key: ", roomKey);
+                setGameKey(roomKey);
+                newSocket.emit("sendOppUser", {user, roomKey: key})
+                newSocket.on("recieveOppUser", (user: any) => {
+                    setOppUser(user);
+                })
+                newSocket.emit("joinGame", roomKey);
+        
 
                 setIsMatching(false);
             })
         }
+
+        console.log(oppUser);
 
         return () => {
             console.log("component unmount");

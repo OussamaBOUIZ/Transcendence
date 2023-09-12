@@ -17,12 +17,7 @@ import { gameService } from "./game.service";
 
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
-interface User {
-	socket: Socket;
-	user: any;
-}
-
-const waitingSockets = new Map<String, User[]>([
+const waitingSockets = new Map<String, Socket[]>([
     ["BattleRoyal", []],
     ["IceLand", []],
     ["TheBeat", []],
@@ -95,20 +90,24 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		socket.to(body.roomKey).emit("scoreChanged", body.score);
 	}
 
+	@SubscribeMessage('sendOppUser')
+	onSendOppUser(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("recieveOppUser", body.user);
+	}
+
 	@SubscribeMessage("gameMatching")
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		const users: User[] = waitingSockets.get(body.modeName);
+		const sockets: Socket[] =  waitingSockets.get(body.modeName);
 
-		if (users.length >= 1) {
-			const oppUser: User = users[0];
-			users.unshift();
-			socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
-			oppUser.socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
+		if (sockets.length >= 1) {
+			const oppSocket: Socket = sockets[0];
+			sockets.unshift();
+			socket.emit("matched", socket.id + oppSocket.id);
+			oppSocket.emit("matched",  socket.id + oppSocket.id);
 
-			console.log("socket id: ", socket.id + oppUser.socket.id);
-		} else {
-			users.push({socket: socket, user: body.user});
-		}
+			console.log("socket id: ", socket.id + oppSocket.id);
+		} else
+			sockets.push(socket);
 	}
 
     @SubscribeMessage('game')

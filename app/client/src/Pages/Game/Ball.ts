@@ -44,7 +44,7 @@ export default class Ball {
             || newScore.oppScore == props.gameMode?.maxScore ) {
 
             if (props.isHost) {
-                props.socket?.emit("saveScore", );
+                props.socket?.emit("saveScore");
                 props.socket?.emit("achievement");
                 props.socket?.emit("gameEnd", props.gameKey);
             }
