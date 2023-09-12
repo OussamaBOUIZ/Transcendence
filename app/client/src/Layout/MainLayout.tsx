@@ -21,13 +21,13 @@ const UpdateStatus = async () => {
 
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
-    const {socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
+    const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
     console.log(notif);
     
     // create socket
     useEffect(() => {
-        console.log("create socket 1212");
-        
+      if (!user.firstname.length || !user.lastname.length || !user.username.length)
+        window.location.replace('/info')
       const fd = io("ws://localhost:1212", {
           withCredentials: true,
       })
