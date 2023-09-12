@@ -6,10 +6,13 @@ import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
 import axios from "axios"
 import { SocketContext } from './ChatRooms'
+import UserContext from '../../Context/UserContext'
 
 export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: React.Dispatch<React.SetStateAction<boolean>>}) {
 
-    const {id, socket, roomData, setUpdate, setNotif} = useContext(SocketContext)
+    const {id, socket, roomData, setUpdate} = useContext(SocketContext)
+    const {setNotif} = useContext(UserContext)
+
 
     async function promoteMember() {
         try {

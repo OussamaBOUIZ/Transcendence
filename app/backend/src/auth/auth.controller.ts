@@ -64,7 +64,6 @@ export class AuthController {
     @UseGuards(JwtGuard) 
     async getQrCode(@Req() req: Request, @Res() res: Response)
     {
-        console.log('qrcode')  
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const path = await toDataURL(user.otpPathUrl);
         return res.status(200).send(path);

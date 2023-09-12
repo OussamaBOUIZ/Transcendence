@@ -22,6 +22,12 @@ type typeProps = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   show: "inbox" | "main" | "overview";
   setShow: React.Dispatch<React.SetStateAction<"inbox" | "main" | "overview">>;
+  statusCode: string;
+  setStatusCode: React.Dispatch<React.SetStateAction<string>>;
+  statusText: string;
+  setStatusText: React.Dispatch<React.SetStateAction<string>>;
+  invitation: {image: string;username: string;} | undefined;
+  setInvitation: React.Dispatch<React.SetStateAction<{image: string;username: string;} | undefined>>;
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
@@ -35,6 +41,9 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [update, setUpdate] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
+    const [statusCode, setStatusCode] = useState<string>("")
+    const [statusText, setStatusText] = useState<string>("")
+    const [invitation, setInvitation] = useState<{image: string, username: string}>()
 
 
     const fetchUserData = async () => {
@@ -85,7 +94,10 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             notif, setNotif,
             update, setUpdate,
             isLoading, setIsLoading,
-            show, setShow
+            show, setShow,
+            statusCode, setStatusCode,
+            statusText, setStatusText,
+            invitation, setInvitation
         }}>
             {children}
         </UserContext.Provider>

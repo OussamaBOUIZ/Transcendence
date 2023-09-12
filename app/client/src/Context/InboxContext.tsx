@@ -80,6 +80,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
     useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
+            console.log('new message')
             const inView: boolean = recMsg.authorId === viewIdRef.current;
             if (inView)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);

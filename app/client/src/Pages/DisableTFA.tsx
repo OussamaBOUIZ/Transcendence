@@ -17,8 +17,7 @@ interface Inputs {
 
 export default function DisableTFA() {
 
-    const {user} = useContext(UserContext);
-    const [notif, setNotif] = useState<string>("")
+    const {user, setNotif} = useContext(UserContext);
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
     const collectedCode = Object.values(codeNumber).join('');
@@ -78,7 +77,6 @@ export default function DisableTFA() {
 
   return (
     <>
-        {notif && <Notification message={notif} />}
         <div className="verify-container" >
             <div className="verification">
                 <div className="title">

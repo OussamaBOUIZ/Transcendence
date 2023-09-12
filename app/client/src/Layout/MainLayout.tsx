@@ -6,6 +6,9 @@ import {useOnlineStatus} from "../Hooks/useOnlineStatus"
 import axios from 'axios'
 import io from "socket.io-client"
 import UserContext from '../Context/UserContext'
+import Notification from '../Components/Notification'
+import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
+import { getUserData } from '../Hooks/getUserData'
 
 const UpdateStatus = async () => {
   try {
@@ -18,8 +21,9 @@ const UpdateStatus = async () => {
 
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
-    const {setSocket} = useContext(UserContext)
-
+    const {socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
+    console.log(notif);
+    
     // create socket
     useEffect(() => {
         console.log("create socket 1212");
@@ -27,7 +31,7 @@ export default function MainLayout () {
       const fd = io("ws://localhost:1212", {
           withCredentials: true,
       })
-
+      // setInvitation({image: '', username: 'oouazize'})
       setSocket(fd)
 
       return  () => {
@@ -35,6 +39,21 @@ export default function MainLayout () {
       }
     }, [])
 
+    useEffectOnUpdate(() => {
+      socket?.on('invitation', (hostId: number) => {
+        const fetchUserData = async () => {
+          try {
+            const user = await getUserData(hostId, "id")
+            setInvitation({image: String(user.image), username: user.username})
+          }
+          catch (err) {
+            // console.log(err)
+          }
+      }
+        void fetchUserData()
+      })
+    }, [socket])
+  
     const {pathname} = useLocation()
     const re = new RegExp('/game(/.*)?')
     const chat = new RegExp('/chat(/.*)?')
@@ -43,6 +62,7 @@ export default function MainLayout () {
       void UpdateStatus();
     return (
         <div className='w-screen h-full'>
+          {(notif || invitation?.username )&& <Notification message={notif} playNow={invitation} />}
             <div className="fixed z-50 w-screen top-0 bg-primary-color sm:bg-transparent">
                 {!re.test(pathname) && <Header />}
             </div>

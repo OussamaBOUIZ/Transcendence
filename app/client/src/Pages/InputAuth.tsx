@@ -1,7 +1,7 @@
 import "../scss/auth.scss";
 import axios from "axios"
-import React, {useContext, useState} from "react"
-import UserContext from "../Context/UserContext";
+import React, {useState} from "react"
+import Notification from "../Components/Notification";
 
 interface Inputs {
     [id: number]: string;
@@ -16,7 +16,6 @@ interface Inputs {
 
 export default function InputAuth() {
 
-    const {user} = useContext(UserContext);
     const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 

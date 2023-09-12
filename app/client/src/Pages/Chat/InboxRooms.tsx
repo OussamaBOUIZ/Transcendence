@@ -40,9 +40,7 @@ export default function InboxRooms() {
 
     return (
         <div className={`chat_inbox overflow-x-hidden overflow-y-scroll ${show === 'inbox' ? 'on' : 'off'}`}>
-            <div className="contentRooms ">
-                {JoinedRooms}
-            </div>
+            <div>{JoinedRooms}</div>
         </div>
     );
 }

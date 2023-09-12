@@ -20,7 +20,7 @@ import Auth from './Pages/Auth/Auth'
 import InputAuth from './Pages/InputAuth'
 import DisableTFA from './Pages/DisableTFA'
 import Logout from './Pages/Logout'
-
+import ErrorPage from './Pages/Errors/errorPages'
 
 export default function App () {
 
@@ -36,6 +36,7 @@ export default function App () {
                 <Route path="/inputauth" element={<InputAuth />} />
                 <Route path="/game/:gameMode" element={<Game />} />
                 <Route path="/game/:gameMode/:key" element={<Game />} />
+                <Route path="/error" element={<ErrorPage />} />
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<Home />}/>
                   

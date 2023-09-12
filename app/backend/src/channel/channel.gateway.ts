@@ -6,9 +6,9 @@ import { UserService } from "src/user/user.service";
 import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
+import { invitationDto } from "./dto/invitationDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
-import { log } from "console";
 import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { WsExceptionFilter } from "src/Filter/ws.filter";
 
@@ -71,10 +71,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         await this.userService.saveUser(user);
     }
 
+
+
     async unmuteUser(userId: number, channelservice: ChannelService, server: Server)
     {
         channelservice.unmuteUser(userId);
         server.emit('Unmuted', 'user was unmuted');
+    }
+
+    @SubscribeMessage('receiveInvitation')
+    async receiveInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    {
+        const guest = await this.userService.findUserById(invData.guestId);
+        client.to(guest.socketId).emit('invitation', invData.userId);
     }
 
     @SubscribeMessage('muteuser')

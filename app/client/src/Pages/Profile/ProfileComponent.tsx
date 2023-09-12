@@ -10,12 +10,10 @@ import block from "../../Assets/Icons/block.svg"
 import Friend from "../../Assets/Icons/friend1.svg"
 import AddFriend from "../../Assets/Icons/addUser1.svg"
 import {NavLink} from "react-router-dom"
-import Notification from "../../Components/Notification";
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
 
-    const {user} = useContext(UserContext)
-    const [notif, setNotif] = useState<string>("")
+    const {user, setNotif} = useContext(UserContext)
     const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
     const [update, setUpdate] = useState<number>(0)
 
@@ -60,7 +58,6 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
 
     return (
         <div className="profileComponent bg- bg-green ">
-            {notif && <Notification message={notif} />}
             <div className="item ProfileCard relative pt-4">
                 {user.id !== UserData.id && <img className="absolute top-3 right-3 cursor-pointer" src={block} alt="blockUser" onClick={handleBlock} />}
                 <div className="head flex flex-col items-center">

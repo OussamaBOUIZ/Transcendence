@@ -53,3 +53,9 @@
         }
     }
 }
+
+@media  (min-width: 820px) and (max-width:1450px) {
+    .friend-item > .stats {
+        display: none;
+    }
+}

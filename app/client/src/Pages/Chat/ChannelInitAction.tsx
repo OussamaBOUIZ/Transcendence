@@ -12,12 +12,12 @@ interface channel {
     isClick: boolean;
 }
 
-export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch<React.SetStateAction<string>>}) {
+export default function ChannelInitAction () {
 
     const [channelPassword, setChannelPassword] = useState<string>("")
     const [selectedChannel, setSelectedChannel] = useState<channel>({} as channel)
     const [channels, setChannels] = useState<channel[]>([])
-    const {user} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
     const {setUpdate, setIsClick} = useContext(SocketContext)
 
     const passwordDiv = <input

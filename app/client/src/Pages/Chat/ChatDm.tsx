@@ -17,7 +17,7 @@ import ChatInput from './chatInput';
 
 export default function ChatDm () {
 
-    const {user, setNotif, show} = useContext(UserContext)
+    const {user, show} = useContext(UserContext)
     const { id } = useParams();
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<User>({} as User);
@@ -94,7 +94,7 @@ export default function ChatDm () {
                 status={userOverview.status}
                 />
 
-                <ChatWindow setNotif={setNotif} id={id}>
+                <ChatWindow id={id}>
                     {messagesElements}
                 </ChatWindow>
 

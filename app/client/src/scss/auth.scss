@@ -10,9 +10,12 @@
     .verification {
         @include center-columns;
         justify-content: space-around;
-        width: 30%;
-        height: 60%;
-        padding: 20px;
+        width: 50%;
+        max-width: 600px;
+        min-width: 300px;
+        height: 80%;
+        max-height: 600px;
+        // padding: 20px;
         border-radius: 51px;
         box-shadow:  44px 44px 88px #cccccc,
                     -44px -44px 88px #ffffff;
@@ -21,14 +24,12 @@
             flex-direction: column;
             color: black;
             p {
-                font-size: 2rem;
                 font-weight: 500;
                 margin-bottom: 0;
                 margin: 0;
             }
             p > span {
                 color: #3f3f3f;
-                font-size: 1rem;
                 text-align: center;
                 margin: 0;
             }
@@ -36,6 +37,7 @@
         .qr-code-container {
             @include center-styles;
             flex-direction: column;
+            width: 100%;
             img {
                 width: 60%;
             }
@@ -57,9 +59,8 @@
         }
         .action {
             margin-top: 1.6rem;
-            // width: 70%;
-            // height: 20%;
-            padding: 1rem 12rem;
+            width: 100%;
+            padding: 1rem 0;
             border-radius: 8px;
             border: none;
             background-color: $active-message-bg;

@@ -99,20 +99,9 @@ div.chat_container {
                 margin: 8px;
                 font-weight: 600;
             }
-            // .content {
-            //     padding: 8px auto;
-            //     overflow-x: scroll;
-            //     p {
-            //         text-align: center;
-            //         width: 80%;
-            //         color: $text-grey-color;
-            //         margin: 8px auto;
-            //     }
-            // }
         }
         nav {
-            display: flex;
-            padding: 0 8px;
+            margin: 0 .5em;
             .nav_link {
                 border-bottom: 1px solid #F7BAF8;
                 width: 50%;
@@ -122,6 +111,7 @@ div.chat_container {
                 color: $text-light-color;
             }
             .active {
+                font-weight: 600;
                 border-bottom: 3px solid #F7BAF8;
                 color: $text-pink-color;
             }
@@ -194,8 +184,7 @@ div.chat_container {
             }
             button {
                 @include primary-button;
-    
-                font-size: 16px;
+                font-size: 1rem;
                 padding: 10px 20px;
                 display: inline-block;
             }

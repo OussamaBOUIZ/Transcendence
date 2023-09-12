@@ -1,3 +1,6 @@
+@import "../scss/mixins.scss";
+
+
 .NotifContainer {
 	position: absolute;
 	top: 2px;
@@ -6,13 +9,15 @@
 	height: 50px;
 	display: flex;
 	flex-direction: column;
+	z-index: 999;
 	.rectangle {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
 		position: relative;
-		width: 50px;
-		height: 100%;
+		width: 100%;
+		padding: 0 .5em;
+		height: calc(100% - 5px);
 		background: #380848;
 		border-radius: 50%;
 		color: white;
@@ -25,7 +30,19 @@
 			font-size: 14px;
 			animation: fade-in .65s ease-in forwards;
 		}
-		
+		.PlayButton {
+			font-family: "Poppins";
+			cursor: pointer;
+			background: #fff;
+			color: black;
+			border-radius: 1.5625em;
+			border: none;
+			@include center-styles;
+			span {
+				font-size: 1em;
+				font-weight: 500;
+			}
+		}
 		@keyframes fade-in {
 			0% {
 				opacity: 0;

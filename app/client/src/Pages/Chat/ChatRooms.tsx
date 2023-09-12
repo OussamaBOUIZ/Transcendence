@@ -18,7 +18,6 @@ import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
-import Notification from "../../Components/Notification"
 import InboxContext from '../../Context/InboxContext';
 
 type typeProps = {
@@ -26,7 +25,6 @@ type typeProps = {
     id: string | undefined;
     myGrade: string;
     isClick: boolean;
-    setNotif: React.Dispatch<React.SetStateAction<string>>;
     update: number;
     setUpdate: React.Dispatch<SetStateAction<number>>;
     setIsClick: React.Dispatch<SetStateAction<boolean>>;
@@ -44,16 +42,13 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show} = useContext(UserContext)
+    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show, setStatusCode, setStatusText, setNotif} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
     const [blockedUsers, setBlockedUsers] = useState<{id: number}[]>([])
-    const [notif, setNotif] = useState<string>("")
-
-
     const {id} = useParams()
     const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
 
@@ -75,7 +70,9 @@ export default function ChatRooms () {
                         setBlockedUsers(res.data)
                     }
                     catch (err) {
-                        // console.error(err)
+                        setStatusCode(err.response.status)
+                        setStatusText(err.response.statusText)
+                        // window.location.replace('/error')
                     }
                 }
                 catch (err) {
@@ -160,7 +157,7 @@ export default function ChatRooms () {
         return null;
 
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isClick, setNotif, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
                 <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
@@ -173,11 +170,11 @@ export default function ChatRooms () {
                     <CreateRoom action={action} />
                 </div>
             }
-            {notif && <Notification message={notif} />}
+            {/* {notif && <Notification message={notif} />} */}
             <InboxRooms />
             <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />
-                <ChatWindow setNotif={setNotif} id={id} >
+                <ChatWindow id={id} >
                     {messagesElements}
                 </ChatWindow>
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} id={id}/>

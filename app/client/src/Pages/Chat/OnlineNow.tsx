@@ -48,7 +48,7 @@ export default function OnlineNow () {
     return (
         <section className={`online_now ${show === 'inbox' ? 'on' : 'off'}`}>
             <h3>Online now</h3>
-            <div className="flex p-4 overflow-hidden">
+            <div className="flex mx-4 my-2 overflow-hidden">
                 {
                     users.length === 0 
                     ?

@@ -13,7 +13,7 @@ import UserContext from '../../Context/UserContext';
 export default function RoomHeader () {
     const {id, roomData, setShowSearch, myGrade, setAction, setIsClick} = useContext(SocketContext)
     const {isBanned} = useContext(InboxContext)
-    const {show, setShow} = useContext(UserContext)
+    const {setShow} = useContext(UserContext)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
 
     function handleChange() {
@@ -21,13 +21,20 @@ export default function RoomHeader () {
         setIsClick(prev => !prev)
     }
 
-    if (!id)
-        return <header className={`chat_header bg-room-bar ${show === 'main' ? 'on' : 'off'}`}></header>
+    if (!id) {
+        return (
+            <header className='chat_header'>
+                <figure>
+                    {isSmallDevice && <img className='w-8 h-8' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
+                </figure>
+            </header>    
+        )
+    }
 
     return (
-        <header className={`chat_header bg-room-bar ${show === 'main' ? 'on' : 'off'}`}>
+        <header className='chat_header bg-room-bar'>
             <div className='flex gap-7 text-xl items-center'>
-                {isSmallDevice && <img className='w-8 h-8' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
+                {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
                 <img className="w-10" src={cube} alt="" />
                 <figcaption>
                     <h4>{roomData.channelName}</h4>
@@ -36,7 +43,9 @@ export default function RoomHeader () {
             <div className="flex ml-auto gap-4 justify-around">
                 {myGrade !== "user" && !isBanned && <img className="w-8 cursor-pointer" onClick={() => {setShowSearch(prev => !prev)}} src={addUser} alt="addUser" />}
                 <img className="w-8 cursor-pointer" onClick={handleChange} src={settings} alt="settings" />
-                {isSmallDevice && <img className='w-8 h-8' src={menu} alt="" onClick={() => setShow('overview')}/>}
+                {isSmallDevice && <img className='w-8 h-8 cursor-pointerdiv
+divdiv
+div' src={menu} alt="" onClick={() => setShow('overview')}/>}
             </div>
         </header>
     );

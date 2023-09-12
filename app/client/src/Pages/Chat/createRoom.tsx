@@ -17,9 +17,9 @@ interface newRoom {
 
 export default function CreateRoom({action}: {action: string}) {
 
-    const {user} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
     const {isBanned} = useContext(InboxContext)
-    const {socket, roomData, myGrade, setIsClick, setNotif, setAction, setUpdate} = useContext(SocketContext)
+    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
 
     const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: "public", channelOwner: 0})
 
@@ -42,13 +42,9 @@ export default function CreateRoom({action}: {action: string}) {
         if (roomData?.channelId)
             newRoom.channelId = roomData?.channelId
         try {
-            console.log(newRoom)
             const res = await axios.post<string>(`/api/channel/${action}`, newRoom)
-            console.log(res.data);
-            
-            if (res.data.length) {
+            if (res.data.length)
                 setNotif(res.data)
-            }
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }

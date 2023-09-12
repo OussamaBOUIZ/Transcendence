@@ -6,11 +6,10 @@ import InboxContext from '../../Context/InboxContext';
 
 interface PropType {
     children: (React.JSX.Element | null)[],
-    setNotif: React.Dispatch<React.SetStateAction<string>>
     id: string | undefined;
 }
 
-export default function ChatWindow({children, setNotif, id}: PropType) {
+export default function ChatWindow({children, id}: PropType) {
     
     const {pathname} = useLocation()
     const {outerDiv, innerDiv, isBanned} = useContext(InboxContext)
@@ -23,7 +22,7 @@ export default function ChatWindow({children, setNotif, id}: PropType) {
             <section className={`chat_window bg-chat-body ${isBanned ? 'bg-black opacity-20' : ''}`} ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
                 <div className="w-full h-full flex justify-center items-center" ref={innerDiv} style={{position: 'relative'}}>
                     {chatRegex.test(pathname) && <ChatDmInit />}
-                    {chatRoomsRegex.test(pathname) && <ChannelInitAction setNotif={setNotif} />}
+                    {chatRoomsRegex.test(pathname) && <ChannelInitAction />}
                 </div>
             </section>
         )

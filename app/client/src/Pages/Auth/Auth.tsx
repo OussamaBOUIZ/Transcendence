@@ -92,14 +92,14 @@ export default function Auth() {
     <>
         {notif && <Notification message={notif} />}
         <div className="verify-container" >
-            <div className="verification">
-                <div className="title">
-                    <p>Authenticate your account</p>
-                    <p><span>To get the token, you must scan the QR code below</span></p>
+            <div className="verification p-10 lg:p-14">
+                <div className="title text-center">
+                    <p className="text- text-base sm:text-xl md:text-2xl xl:text-3xl">Authenticate your account</p>
+                    <p><span className="text-xs sm:text-xs md:text-sm">To get the token, you must scan the QR code below</span></p>
                 </div>
                 <div className="qr-code-container">
                     <img src={QRcode} alt="qr-code" />
-                    <div className="inputs">
+                    <div className="inputs flex justify-center flex-wrap">
                         {inputs}
                     </div>
                 </div>
