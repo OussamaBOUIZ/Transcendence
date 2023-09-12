@@ -177,7 +177,7 @@ export default function ChatRooms () {
             <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />
                 <ChatWindow id={id} >
-                    {messagesElements}
+                    {messagesElements.length ? messagesElements : <p>No messages yet</p>}
                 </ChatWindow>
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} id={id}/>
             </div>

@@ -95,7 +95,7 @@ export default function ChatDm () {
                 />
 
                 <ChatWindow id={id}>
-                    {messagesElements}
+                    {messagesElements.length ? messagesElements : <p>No messages yet</p>}
                 </ChatWindow>
 
                 <ChatInput 
