@@ -1,5 +1,21 @@
 version: '3.8'
 
+
+
+volumes:
+  frontend_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/dist
+#  db_data:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/ael-mous/data/mysql
+
 services:
   frontend:
     container_name: frontend
@@ -7,14 +23,27 @@ services:
       context: ./app/client/
       dockerfile: Dockerfile
     image: frontend
-    ports:
-      - "5173:8080"
+#    ports:
+#      - "5173:8080"
     volumes:
-      - ./:/app
-      - /app/node_modules
+      - frontend_data:/app/dist
     depends_on:
       - backend
-    restart: always
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./app/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - frontend_data:/usr/share/nginx/html
+    depends_on:
+      - frontend
+    restart: unless-stopped
+
   backend: 
     build:
       context: ./app/backend/
@@ -25,7 +54,6 @@ services:
     depends_on:
       - postgres
     restart: always
-
 
   postgres:
     image: postgres:13
