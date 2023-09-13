@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react';
-import GameCarousel from '../../Components/GameCarousel';
+import GameCards from '../../Components/GameCards';
+import UserContext from '../../Context/UserContext';
 
 export default function ChatHeader ({id, username, online, avatar}: {id: string | undefined, username:string | undefined, online: boolean, avatar:string | undefined}) {
     if (!id)
         return (null)
+    const {user} = useContext(UserContext)
     const [display, setDisplay] = useState<boolean>(false);
 
 
     return (
         <>
-        {display && <GameCarousel />}
+        {display && <GameCards hostId={String(user.id)} guestId={id} setter={setDisplay}/>}
         <header className='chat_header'>
             <figure>
                 <img src={avatar} alt="cat.jpg" />
@@ -19,7 +21,7 @@ export default function ChatHeader ({id, username, online, avatar}: {id: string 
                     <p>{online ? "online" : ""}</p>
                 </figcaption>
             </figure>
-                <button onClick={() => setDisplay(true)}>
+                <button onClick={() => setDisplay((prevVal) => !prevVal)}>
                     Play Now
                 </button>
         </header>
