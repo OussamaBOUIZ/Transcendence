@@ -53,7 +53,7 @@ export default function UserCard ({userData, message, friend, add}: PropType ) {
             </figcaption>
             <div className='flex justify-between items-center gap-4'>
                     {message && 
-                   <Link to={`/chat/${user.id}`} className='dm-button   bg-primary-pink py-2 px-4 rounded-2xl'>
+                   <Link to={`/chat/${userData.id}`} className='dm-button   bg-primary-pink py-2 px-4 rounded-2xl'>
                         <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/ffffff/filled-chat.png" alt="filled-chat"/>
                     </Link>
                     }
