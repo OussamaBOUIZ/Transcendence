@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Achievement} from "../../../global/Interfaces"
+import {Achievement} from "../../global/Interfaces"
 import {getAchievementImage} from "./getAchievementImage"
 
 export const useAllAchievements = (achievements?: Achievement[]): Achievement[] | [] => {

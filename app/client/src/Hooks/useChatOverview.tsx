@@ -1,30 +1,30 @@
 import {useEffect, useState} from 'react'
-import { StatAchievement } from '../../../global/Interfaces'
-import { PlayerData } from '../../../global/Interfaces'
+import { Achievement } from '../../global/Interfaces'
+import { User } from '../../global/Interfaces'
 import axios from 'axios'
 import { getAchievementImage } from './getAchievementImage'
 import { getUserImage } from './getUserImage'
 
-const mapImageToAch = async (ach:StatAchievement) => {
+const mapImageToAch = async (ach:Achievement) => {
   const img = await getAchievementImage(ach.id);
   return {...ach, image: img};
 }
 
-const fetchAchievementsImages = async (achs: StatAchievement[]): Promise<StatAchievement[]> => {
-  const achsWithImages =  Promise.all<StatAchievement>(
+const fetchAchievementsImages = async (achs: Achievement[]): Promise<Achievement[]> => {
+  const achsWithImages =  Promise.all<Achievement>(
     achs.map(mapImageToAch)
   )
   return achsWithImages;
 }
 
 export const fetchChatOverview  = async (id:number, 
-  setUserOverview: (P:PlayerData) => void ) => {
+  setUserOverview: (P:User) => void ) => {
   try {
-    const res = await axios.get<PlayerData>(`../api/user/user/details/${id}`)
-    const data = res.data;
+    const res = await axios.get<User>(`../api/user/user/details/${id}`)
     const imgRes = await getUserImage(id)
-    data.stat.achievements = await fetchAchievementsImages(data.stat.achievements)
-    setUserOverview({...data, image: imgRes})
+    if (res.data.stat?.achievements)
+      res.data.stat.achievements = await fetchAchievementsImages(res.data.stat?.achievements)
+    setUserOverview({...res.data, image: imgRes})
   } catch (error) {
     console.error(error);
   }
@@ -32,7 +32,7 @@ export const fetchChatOverview  = async (id:number,
 
 
 export default function useChatOverview(id: number) {
-  const [userOverview, setUserOverview] = useState<PlayerData>({} as PlayerData);
+  const [userOverview, setUserOverview] = useState<User>({} as User);
 
   useEffect(()=> {
     fetchChatOverview(id, setUserOverview)

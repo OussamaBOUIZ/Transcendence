@@ -2,7 +2,7 @@ import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
 import React from "react"
 import StarRank from "./starRank";
-import { Leaders } from "../../../global/Interfaces";
+import { Leaders } from "../../global/Interfaces";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 

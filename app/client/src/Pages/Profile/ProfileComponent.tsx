@@ -4,7 +4,7 @@ import FriendsCard from "../../Components/friendsCard";
 import AchievementCard from "../../Components/achievementCard";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import {User} from "../../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import UserContext from "../../Context/UserContext";
 import block from "../../Assets/Icons/block.svg"
 import Friend from "../../Assets/Icons/friend1.svg"

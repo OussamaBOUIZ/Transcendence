@@ -2,7 +2,7 @@ import React from 'react';
 import ChannelInfo from './ChannelInfo';
 import { useLocation } from 'react-router';
 import ContactDetail from './ContactDetail';
-import { PlayerData } from '../../../../global/Interfaces';
+import { User } from '../../../global/Interfaces';
 
 function CustomField ({content}: {content: string}) {
     return (
@@ -14,7 +14,7 @@ function CustomField ({content}: {content: string}) {
     )
 }
 
-export default function ChatOverview({oview, id}: {oview?: PlayerData, id: string | undefined}) {
+export default function ChatOverview({oview, id}: {oview?: User, id: string | undefined}) {
 
     const roomGuideText = "As channels come alive this box will \
     soon be filled with fellow members. Engage in captivating conversations, share\

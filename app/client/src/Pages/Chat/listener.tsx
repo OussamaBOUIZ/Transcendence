@@ -1,4 +1,4 @@
-import {Message} from "../../../../global/Interfaces"
+import {Message} from "../../../global/Interfaces"
 import { getUserImage } from "../../Hooks/getUserImage";
 import {Socket} from "socket.io-client"
 
@@ -14,6 +14,6 @@ export const listener = (socket: Socket | undefined, userId: number, setMessageL
             setBanned(true)
         })
 
-        socket?.on('socketDisconnect', (channelName: string) => socket?.emit('leavechannel', {channelName: channelName, userId: user.id}))
+        socket?.on('socketDisconnect', (channelName: string) => socket?.emit('leavechannel', {channelName: channelName, userId: userId}))
     }
 }

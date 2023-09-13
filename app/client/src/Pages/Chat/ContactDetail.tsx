@@ -1,5 +1,5 @@
 import React from 'react'
-import { User, Achievement } from '../../../../global/Interfaces';
+import { User, Achievement } from '../../../global/Interfaces';
 
 function AllAchievement ({item} :{item: Achievement}) {
     return (
@@ -13,7 +13,7 @@ function AllAchievement ({item} :{item: Achievement}) {
     )
 }
 
-export default function ContactDetail ({oview} : {oview: User}) {
+export default function ContactDetail ({oview} : {oview: User | undefined}) {
     
     const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)
 

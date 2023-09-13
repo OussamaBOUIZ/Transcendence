@@ -35,7 +35,7 @@ import { diskStorage } from 'multer'
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
 
-import { statusDto, userDataDto } from './dto/userDataDto';
+import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
@@ -77,7 +77,6 @@ const updateMuliterConfig = () => ({
 	storage: diskStorage({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
-            console.log('111');
             
 			const supportedExt = ['.png', '.jpeg', '.jpg']
 			if (isNaN(parseInt(req.params['userId'], 10)))
@@ -98,7 +97,7 @@ const updateMuliterConfig = () => ({
 })
  
 @Controller('user')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard) 
 export class UserController {
     constructor(private readonly userService: UserService
         , private readonly jwt: JwtService
@@ -293,31 +292,49 @@ export class UserController {
         return await this.userService.getMatchHistory(userId)
     }
 
-    @Get('2fa/turn-on/:id')
+    @Get('2fa/turn-on/:id') 
     @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
         const data2fa = this.userService.otpsetup(user);
+        console.log('HERE HERE HERE1');
         user.two_factor_secret = data2fa.secret;
         user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
-    @Get('2fa/turn-off/:id')
+    @Post('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
+        const isCodeValid = this.userService.isUserAuthValid(
+            req.body.token,
+            user
+        );
+        console.log(isCodeValid)
+        if(!isCodeValid)
+            return res.status(200).send('two factor token is invalid');
         user.two_factor_secret = null;
         user.otpPathUrl = null;
         user.is_two_factor = false;
         await this.userService.saveUser(user);
-        return res.status(200).send('two factor was turned off')
+        return res.status(200).send('');
     }
 
-    @Post('2fa/login/')
+    @Get('2fa/isTurnedOn/:id')
+    @UseGuards(JwtGuard)
+    async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        if(await this.userService.userHasAuth(user) === true)
+            return res.status(200).send(true);
+        else
+            return res.status(200).send(false);
+    }
+    @Post('2fa/login/') 
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
     {
@@ -331,6 +348,26 @@ export class UserController {
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
     }
+
+    @Put('setUserNames/:id')
+    @UseGuards(JwtGuard)
+    async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
+    {
+        console.log('data is: ', userData);
+            const user = await this.userService.findUserById(id);
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch {
+                return res.status(200).send('nickname already exists');
+            }
+            return res.status(200).send('');
+    }
+
 
     @Post('setUserData/:id')
     @UseGuards(JwtGuard)
@@ -365,18 +402,18 @@ export class UserController {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         return user.firstLog;
     }
-    @Get('logout/:id')
+    @Post('logout/:id')
     @UseGuards(JwtGuard)
     async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
-        const till = payload.iat + 86400;
+        const till = payload.iat + 180;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('http://localhost:5137/');
+        return res.status(200).send('');
     }
 
     @Patch('stat/add')
@@ -394,9 +431,6 @@ export class UserController {
 		}
 	}
 
-    // @UsePipes(new ValidationPipe({
-	// 	transform: true,
-	// }))
 	@Get('search/user')
 	async searchForUser(
 		@Query() dto: searchDto,

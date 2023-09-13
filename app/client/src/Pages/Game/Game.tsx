@@ -15,7 +15,7 @@ let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
-        background: "fire-game.jpg",
+        background: "galaxy.jpg",
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
@@ -34,7 +34,7 @@ let gameModes = new Map<String, GameMode>([
         modeName: "IceLand",
         ball: "iceBall.png",
         paddle: "paddle.png",
-        background: "iceLand.jpg",
+        background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
         maxScore: 7
@@ -56,7 +56,7 @@ export default function Game () {
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
-    const [mode, setMode]  = useState<GameMode | null>(null);
+    const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [oppUser, setOppUser] = useState<any | null>(null);
     const {user} = useContext(UserContext);
@@ -75,7 +75,7 @@ export default function Game () {
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
-        setMode(gameModes.get(gameMode))
+        setMode(gameModes.get(String(gameMode)))
 
         if (key && gameMode) {
             setGameKey(key);

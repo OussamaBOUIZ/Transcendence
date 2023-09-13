@@ -21,10 +21,19 @@ export default {
       colors: {
         'primary-color': '#38125E',
         'primary-pink': '#E72FD0',
+      },
+      screens: {
+        big: { min:"1631px", max: "1752px" },
+        desk:{max: "1631px"},
+        des:{ min:  "1541px",max: "1600px"}, 
+        de: { min:  "1280px",max: "1540px"},
+        xlg: { min:  "1024px",max: "1279px" },
+        lrg: { min:  "768px" ,max: "1023px" },
+        med: { max: "767px" },
+        sml: { max: "639px" },
+        mxl: {max: "1024px"}
       }
     },
   },
   plugins: [],
 }
-
-// A15FE4

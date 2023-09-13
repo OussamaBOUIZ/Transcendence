@@ -1,5 +1,5 @@
-import React, {createContext, useEffect, useState, useRef, useContext} from 'react'
-import { InboxItem, MessageData } from '../../../global/Interfaces';
+import React, {createContext, useState, useRef} from 'react'
+import { InboxItem, MessageData } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'

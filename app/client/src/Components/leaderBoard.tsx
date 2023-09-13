@@ -1,6 +1,6 @@
 import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
-import {Leaders} from "../../../global/Interfaces"
+import {Leaders} from "../../global/Interfaces"
 import React from "react"
 import bg from "../Assets/ice-bg.jpg"
 

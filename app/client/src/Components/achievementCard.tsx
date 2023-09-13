@@ -3,7 +3,7 @@ import awardIcon from "../Assets/Icons/award.svg";
 import ProfileImage from "./profileImage";
 import locked from "../Assets/Icons/lock-solid.svg"
 import unlocked from "../Assets/Icons/lock-open-solid.svg"
-import {Achievement} from "../../../global/Interfaces"
+import {Achievement} from "../../global/Interfaces"
 import React from "react";
 
 export default function AchievementCard({ achievements }: {achievements?: Achievement[]}) {

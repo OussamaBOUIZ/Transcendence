@@ -44,8 +44,11 @@ export default function Auth() {
                     const collected = {
                         token: collectedCode,
                     }
+                    console.log('token: ', collected);
                     await axios.post("/api/user/2fa/login", collected);
-                    window.location.replace('/home');
+                    console.log('here bro');
+                    
+                    window.location.replace('/');
                 } catch (error) {
                     console.log(error);
                 }
@@ -92,8 +95,7 @@ export default function Auth() {
             <div className="verification">
                 <div className="title">
                     <p>Authenticate your account</p>
-                    <p><span>To get the token, scan the QR code below</span></p>
-                    <p><span>or submit a token if you already have one</span></p>
+                    <p><span>To get the token, you must scan the QR code below</span></p>
                 </div>
                 <div className="qr-code-container">
                     <img src={QRcode} alt="qr-code" />

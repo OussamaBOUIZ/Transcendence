@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import MessageOverview from './MessageOverview';
 import InboxContext from '../../Context/InboxContext';
-import { InboxItem } from '../../../../global/Interfaces';
-
 
 export default function InboxDm() {
     const { inboxList, update } = useContext(InboxContext);

@@ -1,7 +1,7 @@
 import {useContext, useState, useEffect} from "react"
 import axios, {AxiosResponse} from "axios"
 import UserContext from "../Context/UserContext"
-import {rooms} from "../../../global/Interfaces"
+import {rooms} from "../../global/Interfaces"
 import { SocketContext } from "../Pages/Chat/ChatRooms"
 
 export function useFetchJoinedRooms() {

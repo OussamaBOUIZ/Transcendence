@@ -2,7 +2,7 @@ import React, { useState, useMemo }  from 'react';
 import TopicRoom from './TopicRoom';
 import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import Rooms from './Rooms';
-import {rooms} from "../../../../global/Interfaces"
+import {rooms} from "../../../global/Interfaces"
 import {nanoid} from "nanoid"
 
 interface Elements {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Data} from "../../../../global/Interfaces"
+import {Data} from "../../../global/Interfaces"
 
 interface typeProps {
   fullName: Data;

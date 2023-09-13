@@ -3,7 +3,7 @@ import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
 import axios, {AxiosRequestConfig} from "axios";
 import { useState } from "react";
-import {Data} from "../../../../global/Interfaces";
+import {Data} from "../../../global/Interfaces";
 import UserName from "./userName";
 import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
