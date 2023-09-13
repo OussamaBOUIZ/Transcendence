@@ -50,6 +50,9 @@ services:
     image: backend
     ports:
       - "3000:3000"
+      - "1212:1212"
+      - "4000:4000"
+      - "4343:4343"
     depends_on:
       - postgres
     restart: always
