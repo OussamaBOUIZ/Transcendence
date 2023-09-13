@@ -1,12 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import arrow from "../../Assets/Icons/arrow.png"
 import UserContext from '../../Context/UserContext';
 import menu from "../../Assets/Icons/menu.png"
 import { useMediaQuery } from "@uidotdev/usehooks";
+import GameCards from '../../Components/GameCards';
 
 export default function ChatHeader ({id, username, status, avatar}: {id: string | undefined, username:string | undefined, status: string, avatar:string | undefined}) {
-    const {socket, user, setShow} = useContext(UserContext)
+    const {user, setShow} = useContext(UserContext)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
+    const [display, setDisplay] = useState<boolean>(false);
 
     if (!id) {
         return (
@@ -18,11 +20,9 @@ export default function ChatHeader ({id, username, status, avatar}: {id: string 
         )
     }
 
-    function handleInv() {
-        socket?.emit('receiveInvitation', {userId: user.id, guestId: id})
-    }
-    
     return (
+        <>
+        {display && <GameCards hostId={user.id} guestId={Number(id)} setter={setDisplay}/>}
         <header className='chat_header'>
             <figure>
                 {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
@@ -32,12 +32,11 @@ export default function ChatHeader ({id, username, status, avatar}: {id: string 
                     <p>{status}</p>
                 </figcaption>
             </figure>
-            <figure>
-                <button onClick={handleInv}>
+                <button onClick={() => setDisplay((prevVal) => !prevVal)}>
                     Play Now
                 </button>
                 {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={menu} alt="" onClick={() => setShow('overview')}/>}
-            </figure>
         </header>
+        </>
     );
 }
