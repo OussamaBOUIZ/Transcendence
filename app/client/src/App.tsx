@@ -29,7 +29,6 @@ export default function App () {
     <UserProvider>
         <BrowserRouter>
             <Routes>
-                  <Route path="/loading" element={<Loading />} />
               <Route path="/sign" element={<Sign />} />
               <Route element={<AuthRequired/>}>
                 <Route path="/info" element={<Prompt />} />

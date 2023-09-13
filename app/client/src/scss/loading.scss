@@ -1,12 +1,16 @@
 @import "./var.scss";
 
   .spinner {
-    position: absolute;
-    top: 10%;
-    left: 50%;
+    position: relative;
+    // top: 10%;
+    width: 280px;
+    height: 120px;
+    // left: 50%;
+    transform: scale(.6);
     text-align: center;
-    transform: translateX(-50%); 
     .ball-container {
+      top: 100px;
+      position: absolute;
       width: 40px;
       transform: translate(130px, -140px);
     }
@@ -15,7 +19,7 @@
       transform-origin: bottom;
       animation: bounce 500ms infinite alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
       circle {
-        fill: orangered;
+        // fill: orangered;
       }
     }
     .raquet {
@@ -31,10 +35,14 @@
         animation: shadow 500ms infinite alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
       }
       &#r-1 {
+        position: absolute;
+        right: 80px;
         transform: translateX(70px) rotateZ(45deg);
         animation: hit-1 1000ms infinite 300ms ease-in-out;
       }
       &#r-2 {
+        position: absolute;
+        left: 80px;
         transform: translateX(-70px) rotateZ(-45deg);
         animation: hit-2 1000ms infinite -200ms ease-in-out;
       }
@@ -45,7 +53,7 @@
         fill: $border-color;
       }
       .back {
-        fill: $primary-color;
+        fill: $bg-color-left;
       }
       .handle {
         &.outer {
@@ -56,9 +64,11 @@
         }
       }
     }
-    .shadow {
-      transform: translateY(-150px);
-      -webkit-filter: blur(2px);
+    .shadows {
+      position: absolute;
+      top: 150px;
+      // transform: translateY(-150px);
+      // -webkit-filter: blur(2px);
       ellipse {
         fill: rgba(0, 0, 0, 0.1)
       }
@@ -66,6 +76,7 @@
         transform-origin: center;
       } 
       #sr-1 {
+        left: 15px;
         animation: grow 1000ms infinite -200ms ease-in-out;
       }
       #sr-2 {
