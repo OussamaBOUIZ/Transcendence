@@ -95,7 +95,7 @@ export default function ChatRooms () {
     useEffect(() => {
         console.log("socket room is called");
         
-        const fd = io("ws://localhost:1212", {
+        const fd = io("ws://10.13.5.5:1212", {
             withCredentials: true,
         })
         setSocket(fd)
