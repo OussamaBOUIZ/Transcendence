@@ -9,6 +9,7 @@ import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
+import Loading from "../Loading";
 
 export default function Prompt() {
 
@@ -22,7 +23,7 @@ export default function Prompt() {
     const updateFullName = setFullName(setData);
 
     if (!user)
-        return null;
+        return (<Loading />)
 
     const clearFields = () => {
         setData({

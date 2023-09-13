@@ -172,7 +172,6 @@ export default function ChatRooms () {
                     <CreateRoom action={action} defaultValue={defaultRoomType}/>
                 </div>
             }
-            {/* {notif && <Notification message={notif} />} */}
             <InboxRooms />
             <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />

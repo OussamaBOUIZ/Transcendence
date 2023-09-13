@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import {User} from "../../../global/Interfaces"
 import {getUserData} from "../../Hooks/getUserData"
 import useEffectOnUpdate from "../../Hooks/useEffectOnUpdate";
+import Loading from "../Loading";
 
 export default function Profile() {
 
@@ -24,7 +25,7 @@ export default function Profile() {
   }, [userData.status])
 
   if (!userData.firstname)
-    return <div className="flex w-full h-full ml-4"></div>
+    return (<Loading />)
 
   return (
     <div className="flex w-full h-full ml-4">

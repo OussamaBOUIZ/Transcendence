@@ -22,7 +22,6 @@ const UpdateStatus = async () => {
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
     const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
-    console.log(notif);
 
     useEffectOnUpdate(() => {
       if (user.id) {

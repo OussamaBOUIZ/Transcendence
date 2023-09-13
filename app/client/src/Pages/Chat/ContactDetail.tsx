@@ -23,12 +23,10 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
 
     return (
-        // <div className="chat_overview">
             <div className="contact_details_container relative">
             <h2>Contact details</h2>
             {isSmallDevice && <HiOutlineX className="absolute top-4 right-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
             <figure className="contact">
-                {/* <img src="../src/Assets/cat.jpg" alt="cat" /> */}
                 <img src={oview?.image} alt="cat" />
                 <figcaption>
                     <h3>{oview?.firstname}</h3>
@@ -40,15 +38,15 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
                 <div className="results">
                     <figcaption className="results-item">
                         <p>Games</p>
-                        <h5>{oview?.stat?.wins! + oview?.stat?.losses!}</h5>
+                        <h5>{String(oview?.stat?.wins) + String(oview?.stat?.losses)}</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Wins</p>
-                        <h5>{oview?.stat?.wins!}</h5>
+                        <h5>{String(oview?.stat?.wins)}</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Losses</p>
-                        <h5>{oview?.stat?.losses!}</h5>
+                        <h5>{String(oview?.stat?.losses)}</h5>
                     </figcaption>
                 </div>
                 <h2>Achievements</h2>
@@ -56,6 +54,5 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
                     {AchievementsElements}
                 </div>
         </div>  
-        // </div>
     );
 }

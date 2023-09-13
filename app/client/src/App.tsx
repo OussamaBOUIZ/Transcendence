@@ -21,8 +21,6 @@ import InputAuth from './Pages/InputAuth'
 import DisableTFA from './Pages/DisableTFA'
 import Logout from './Pages/Logout'
 import ErrorPage from './Pages/Errors/errorPages'
-import Loading from './Pages/Loading'
-
 
 export default function App () {
 
@@ -31,7 +29,6 @@ export default function App () {
         <BrowserRouter>
             <Routes>
               <Route path="/sign" element={<Sign />} />
-                  <Route path="/loading" element={<Loading />} />
               <Route element={<AuthRequired/>}>
                 <Route path="/info" element={<Prompt />} />
                 <Route path="/auth" element={<Auth />} />
