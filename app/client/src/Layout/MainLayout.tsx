@@ -23,11 +23,16 @@ export default function MainLayout () {
     const userStatus = useOnlineStatus();
     const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
     console.log(notif);
+
+    useEffectOnUpdate(() => {
+      if (user.id) {
+        if (!user.firstname || !user.lastname || !user.username)
+        window.location.replace('/info')
+      }
+    }, [user])
     
     // create socket
     useEffect(() => {
-      if (!user.firstname.length || !user.lastname.length || !user.username.length)
-        window.location.replace('/info')
       const fd = io("ws://localhost:1212", {
           withCredentials: true,
       })
