@@ -374,7 +374,7 @@ export class UserController {
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('http://localhost:5137/');
+        return res.redirect('/');
     }
 
     @Patch('stat/add')

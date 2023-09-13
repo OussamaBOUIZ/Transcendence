@@ -29,7 +29,6 @@ services:
       - frontend_data:/app/dist
     depends_on:
       - backend
-    restart: unless-stopped
 
   nginx:
     container_name: nginx
@@ -77,5 +76,5 @@ services:
       PGADMIN_DEFAULT_EMAIL: name@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
 
-#networks:
+# networks:
 #  freecodecamp:
