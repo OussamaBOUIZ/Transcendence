@@ -3,14 +3,16 @@ import { User, Achievement } from '../../../global/Interfaces';
 import { HiOutlineX } from "react-icons/hi";
 import UserContext from '../../Context/UserContext';
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { capitalize } from '../../Helpers/utils';
+import LevelBar from '../../Components/LevelBar';
 
 function AllAchievement ({item} :{item: Achievement}) {
     return (
         <figure className="achievement">
             <img src={item.image} alt="" className="achievement-icon" />
             <figcaption className="achievement-info">
-                <h5 className="achievement-title">{item?.badge_name}</h5>
-                <h6 className="achievement-subtitle">{item?.description}</h6>
+                <h5 className="text-sm font-semibold">{item?.badge_name}</h5>
+                <p className="text-[10px]">{item?.description}</p>
             </figcaption>
         </figure>
     )
@@ -25,30 +27,33 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
     return (
         // <div className="chat_overview">
             <div className="contact_details_container relative">
-            <h2>Contact details</h2>
+            <h2 className='mb-4'>Contact details</h2>
             {isSmallDevice && <HiOutlineX className="absolute top-4 right-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
             <figure className="contact">
                 {/* <img src="../src/Assets/cat.jpg" alt="cat" /> */}
                 <img src={oview?.image} alt="cat" />
                 <figcaption>
-                    <h3>{oview?.firstname}</h3>
-                    <h3>{oview?.lastname}</h3>
+                    <h3 className='font-bold'>{capitalize(oview?.firstname)}</h3>
+                    <h3 className='font-bold'>{capitalize(oview?.lastname)}</h3>
                     <h6>{oview?.stat?.ladder_level}</h6>
-                    <div className="level_bar"></div>
+                    <LevelBar />
                 </figcaption>
             </figure>
                 <div className="results">
                     <figcaption className="results-item">
                         <p>Games</p>
-                        <h5>{oview?.stat?.wins! + oview?.stat?.losses!}</h5>
+                        {/* <h5>{oview?.stat?.wins! + oview?.stat?.losses!}</h5> */}
+                        <h5>34</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Wins</p>
-                        <h5>{oview?.stat?.wins!}</h5>
+                        {/* <h5>{oview?.stat?.wins!}</h5> */}
+                        <h5>67</h5>
                     </figcaption>
                     <figcaption className="results-item">
                         <p>Losses</p>
-                        <h5>{oview?.stat?.losses!}</h5>
+                        {/* <h5>{oview?.stat?.losses!}</h5> */}
+                        <h5>{34 + 67}</h5>
                     </figcaption>
                 </div>
                 <h2>Achievements</h2>
