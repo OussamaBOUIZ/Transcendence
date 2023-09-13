@@ -6,4 +6,14 @@ function shortenMessage(mess:string) :string {
     return (mess?.slice(0, 9) + "...")
 }
 
-export {shortenMessage}
+function capitalize(inputString: string): string {
+    if (inputString.length > 0) {
+      return inputString[0].toUpperCase() + inputString.slice(1);
+    } else {
+      return inputString;
+    }
+  }
+  
+  // Example usage:
+  
+export {shortenMessage, capitalize}

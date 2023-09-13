@@ -39,11 +39,12 @@ export default function Notification({ message, playNow }: {message?: string, pl
 	const invitation = <div className="flex w-full items-center justify-between">
 		<figure className="flex items-center justify-center gap-2">
 			<ProfileImage image={playNow?.image} name={playNow?.username} size="small" />
-			<p>{playNow?.username}</p>
+			<div className="flex flex-col">
+				<p>{playNow?.username}</p>
+				<p>challenge you in</p>
+			</div>
 		</figure>
 		<NavLink to="/game/IceLand"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></NavLink>
-
-		{/* <NavLink to={'/game'}><button className="bg-white text-black px-2 py-1">Play Now</button></NavLink> */}
 	</div>;
 	const Content = (message) ? popUp : invitation
 
