@@ -12,7 +12,7 @@ import { BlockedTokenList } from "src/databases/BlockedTokenList/BlockedTokenLis
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
-    host: 'postgres',
+    host: 'localhost',
     port: 5432,
     username: 'postgres',
     password: '123',

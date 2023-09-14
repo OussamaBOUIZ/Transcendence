@@ -66,11 +66,14 @@ export default function Game () {
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
-            console.log(score);
-
             setScore(score);
         })
+        socket?.on("recieveOppUser", (opUser: any) => {
+            console.log(opUser);
+            setOppUser(opUser);
+        })
     }, [socket])
+
 
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
@@ -84,24 +87,23 @@ export default function Game () {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
-                xp: gameModes.get(gameMode)?.xp
+                xp: gameModes.get(gameMode)?.xp,
+                user: user,
             })
 
-            newSocket.on("matched", (roomKey: string) => {
-                console.log("matched room key: ", roomKey);
-                setGameKey(roomKey);
-                newSocket.emit("sendOppUser", {user, roomKey: key})
-                newSocket.on("recieveOppUser", (user: any) => {
-                    setOppUser(user);
-                })
-                newSocket.emit("joinGame", roomKey);
-        
+            newSocket.on("matched", (data: any) => {
+                console.log("matched room key: ", data.roomKey);
+                setGameKey(data.roomKey);
+                newSocket.emit("joinGame", data.roomKey);
+                setOppUser(data.user);
+
+                console.log(data.user);
+
 
                 setIsMatching(false);
             })
         }
 
-        console.log(oppUser);
 
         return () => {
             console.log("component unmount");
@@ -122,7 +124,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <Board score={score}/>
+                <Board score={score} oppUser={oppUser}/>
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}

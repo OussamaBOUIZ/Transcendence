@@ -52,9 +52,9 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         setIsLoading(true);
           try {
               const response = await axios.get("/api/auth/tokenValidity");    
-              console.log("response.data : ", response.data);
+              // console.log("response.data : ", response.data);
               setAuthenticated(response.data)
-              console.log("setting to TRUE");
+              // console.log("setting to TRUE");
           }
           catch (error) {
               console.log("setting to FALSE");

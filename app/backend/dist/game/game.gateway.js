@@ -19,7 +19,7 @@ const userWinDto_1 = require("./dto/userWinDto");
 const scoreSavingDto_1 = require("./dto/scoreSavingDto");
 const game_service_1 = require("./game.service");
 const gameModes = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"];
-const waitingSockets = new Map([
+const waitingUsers = new Map([
     ["BattleRoyal", []],
     ["IceLand", []],
     ["TheBeat", []],
@@ -38,7 +38,7 @@ let GameGateway = class GameGateway {
     handleDisconnect(socket) {
         console.log('handle disconnect');
         gameModes.forEach((mode) => {
-            waitingSockets.set(mode, waitingSockets.get(mode).filter((s) => s.id !== socket.id));
+            waitingUsers.set(mode, waitingUsers.get(mode).filter((u) => u.socket.id !== socket.id));
         });
     }
     onJoinGame(roomKey, socket) {
@@ -56,28 +56,27 @@ let GameGateway = class GameGateway {
         socket.leave(roomKey);
     }
     async onAchievement(gameData, socket) {
-        await this.gameservice.userGameDataUpdate(gameData);
     }
     async onSaveScore(score, socket) {
-        await this.gameservice.saveScore(score);
     }
     onScore(body, socket) {
         socket.to(body.roomKey).emit("scoreChanged", body.score);
     }
     onSendOppUser(body, socket) {
+        console.log("user: ", body.user.id);
         socket.to(body.roomKey).emit("recieveOppUser", body.user);
     }
     onGameMatching(body, socket) {
-        const sockets = waitingSockets.get(body.modeName);
-        if (sockets.length >= 1) {
-            const oppSocket = sockets[0];
-            sockets.unshift();
-            socket.emit("matched", socket.id + oppSocket.id);
-            oppSocket.emit("matched", socket.id + oppSocket.id);
-            console.log("socket id: ", socket.id + oppSocket.id);
+        const users = waitingUsers.get(body.modeName);
+        if (users.length >= 1) {
+            const oppUser = users[0];
+            users.unshift();
+            socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
+            oppUser.socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: body.user });
+            console.log("socket id: ", socket.id + oppUser.socket.id);
         }
         else
-            sockets.push(socket);
+            users.push({ user: body.user, socket });
     }
     onNewMessage(body, socket) {
         socket.to(body.gameKey).emit("movePad", body);

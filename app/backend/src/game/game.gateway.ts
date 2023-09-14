@@ -17,7 +17,12 @@ import { gameService } from "./game.service";
 
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
-const waitingSockets = new Map<String, Socket[]>([
+interface User {
+	user: any;
+	socket: Socket;
+}
+
+const waitingUsers = new Map<String, User[]>([
     ["BattleRoyal", []],
     ["IceLand", []],
     ["TheBeat", []],
@@ -45,9 +50,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('handle disconnect');
 
 		gameModes.forEach((mode: string) => {
-			waitingSockets.set(mode, 
-				waitingSockets.get(mode).filter(
-					(s: Socket) => s.id !== socket.id)
+			waitingUsers.set(mode, 
+				waitingUsers.get(mode).filter(
+					(u: User) => u.socket.id !== socket.id)
 				);
 		})
 
@@ -77,12 +82,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('achievement')
 	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
-		await this.gameservice.userGameDataUpdate(gameData);
+		// await this.gameservice.userGameDataUpdate(gameData);
 	}
 
 	@SubscribeMessage('saveScore')
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
-		await this.gameservice.saveScore(score);
+		// await this.gameservice.saveScore(score);
 	}
 
 	@SubscribeMessage('gameScore')
@@ -92,22 +97,24 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('sendOppUser')
 	onSendOppUser(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		console.log("user: ", body.user.id);
 		socket.to(body.roomKey).emit("recieveOppUser", body.user);
 	}
 
 	@SubscribeMessage("gameMatching")
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		const sockets: Socket[] =  waitingSockets.get(body.modeName);
+		const users: User[] =  waitingUsers.get(body.modeName);
 
-		if (sockets.length >= 1) {
-			const oppSocket: Socket = sockets[0];
-			sockets.unshift();
-			socket.emit("matched", socket.id + oppSocket.id);
-			oppSocket.emit("matched",  socket.id + oppSocket.id);
+		if (users.length >= 1) {
+			const oppUser: User = users[0];
+			users.unshift();
 
-			console.log("socket id: ", socket.id + oppSocket.id);
+			socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
+			oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
+
+			console.log("socket id: ", socket.id + oppUser.socket.id);
 		} else
-			sockets.push(socket);
+			users.push({user: body.user, socket});
 	}
 
     @SubscribeMessage('game')

@@ -14,7 +14,7 @@ const muted_users_entity_1 = require("../databases/muted_users.entity");
 const BlockedTokenList_entity_1 = require("../databases/BlockedTokenList/BlockedTokenList.entity");
 exports.dataSourceOptions = {
     type: 'postgres',
-    host: 'postgres',
+    host: 'localhost',
     port: 5432,
     username: 'postgres',
     password: '123',

@@ -8,7 +8,7 @@ export declare class ChannelController {
     CreateChannel(channelData: channelDto, res: Response): Promise<Response<any, Record<string, any>>>;
     updateChannel(channelData: channelDto, res: Response): Promise<Response<any, Record<string, any>>>;
     promoteUserFromChannel(userId: number, channelId: number, res: Response): Promise<Response<any, Record<string, any>>>;
-    getUserGrade(userId: number, channelId: number): Promise<"owner" | "admin" | "user">;
+    getUserGrade(userId: number, channelId: number): Promise<"user" | "owner" | "admin">;
     getChannelUsers(id: number): Promise<import("../databases/channel.entity").Channel>;
     getChannelNameById(id: number): Promise<string>;
     getAllChannels(id: number): Promise<import("../databases/channel.entity").Channel[]>;

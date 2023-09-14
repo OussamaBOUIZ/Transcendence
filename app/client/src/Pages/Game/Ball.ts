@@ -2,7 +2,7 @@ import { Color, MySketchProps, Score } from "./Interfaces"
 import vars from "./vars"
 import { reset } from "./Skitch"
 
-let hide;
+let hide = false;
 
 export default class Ball {
     x: number;
@@ -60,7 +60,7 @@ export default class Ball {
             setTimeout(() => { hide = false}, 3000)
         }
         
-        if (hide)
+        if (!hide)
             this.drawBall(p5, ballImg);
 
         if (this.x < 0 || this.x > p5.width) {        

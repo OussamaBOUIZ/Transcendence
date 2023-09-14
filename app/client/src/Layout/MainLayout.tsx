@@ -22,7 +22,7 @@ export default function MainLayout () {
 
     // create socket
     useEffect(() => {
-        console.log("create socket 1212");
+        // console.log("create socket 1212");
         
       const fd = io("ws://localhost:1212", {
           withCredentials: true,
