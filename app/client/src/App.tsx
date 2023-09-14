@@ -48,7 +48,9 @@ export default function App () {
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/logout" element={<Logout />} />
-                <Route path='/profile:username' element={<Profile />} />
+                <Route path='/profile' element={<Profile />} >
+                  <Route path='/profile:username' element={<Profile />} />
+                </Route>
             </Route>
           </Route>
         </Routes>
