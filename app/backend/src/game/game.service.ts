@@ -28,16 +28,16 @@ export class gameService {
     //     await this.userService.saveStat(stat);
     // }
 
-    // async saveScore(scoreData: scoreStoreDto) {
-    //     const user1 = await this.userService.findUserById(scoreData.userId);
-    //     const user2 = await this.userService.findUserById(scoreData.opponentId);
-    //     const game = new Game();
-    //     game.user1 = user1;
-    //     game.user2 = user2;
-    //     game.userShots = scoreData.userScore;
-    //     game.opponentShots = scoreData.opponentScore;
-    //     await this.gameRepo.save(game);
-    // }
+    async saveScore(scoreData: scoreStoreDto) {
+        const user1 = await this.userService.findUserById(scoreData.userId);
+        const user2 = await this.userService.findUserById(scoreData.opponentId);
+        const game = new Game();
+        game.user1 = user1;
+        game.user2 = user2;
+        game.userShots = scoreData.userScore;
+        game.opponentShots = scoreData.opponentScore;
+        await this.gameRepo.save(game);
+    }
 
     
 }

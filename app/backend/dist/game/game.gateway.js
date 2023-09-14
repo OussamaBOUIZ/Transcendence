@@ -58,13 +58,10 @@ let GameGateway = class GameGateway {
     async onAchievement(gameData, socket) {
     }
     async onSaveScore(score, socket) {
+        await this.gameservice.saveScore(score);
     }
     onScore(body, socket) {
         socket.to(body.roomKey).emit("scoreChanged", body.score);
-    }
-    onSendOppUser(body, socket) {
-        console.log("user: ", body.user.id);
-        socket.to(body.roomKey).emit("recieveOppUser", body.user);
     }
     onGameMatching(body, socket) {
         const users = waitingUsers.get(body.modeName);
@@ -139,14 +136,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "onScore", null);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('sendOppUser'),
-    __param(0, (0, websockets_1.MessageBody)()),
-    __param(1, (0, websockets_1.ConnectedSocket)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
-    __metadata("design:returntype", void 0)
-], GameGateway.prototype, "onSendOppUser", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)("gameMatching"),
     __param(0, (0, websockets_1.MessageBody)()),

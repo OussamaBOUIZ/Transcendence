@@ -44,6 +44,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         gameMode: null,
         score: {myScore: 0, oppScore: 0},
         setScore: () => {},
+        isGameEnd: false,
+        setIsGameEnd: () => {}
     }
 
     let backImg: string;

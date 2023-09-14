@@ -10,12 +10,18 @@ export default function PowerBar({ right, oppUser }: {right: boolean, oppUser: U
     const per1 = 70
     const per = 30
 
-    // useEffect(() => {
-    //     try {
-    //         const image = await getUserImage(oppUser.id)
-    //         oppUser.image = image;
-    //     }
-    // }, [])
+    useEffect(() => {
+        const fetchOppImage = async () => {
+            try {
+                const image = await getUserImage(oppUser.id);
+                if (image)
+                    oppUser.image = image;
+            } catch (err) {
+
+            }
+        }
+        void fetchOppImage(); 
+    }, [oppUser])
 
     return (
         right ? 

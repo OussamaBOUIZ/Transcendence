@@ -87,18 +87,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('saveScore')
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
-		// await this.gameservice.saveScore(score);
+		await this.gameservice.saveScore(score);
 	}
 
 	@SubscribeMessage('gameScore')
 	onScore(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.roomKey).emit("scoreChanged", body.score);
-	}
-
-	@SubscribeMessage('sendOppUser')
-	onSendOppUser(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		console.log("user: ", body.user.id);
-		socket.to(body.roomKey).emit("recieveOppUser", body.user);
 	}
 
 	@SubscribeMessage("gameMatching")

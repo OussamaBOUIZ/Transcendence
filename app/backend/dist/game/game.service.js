@@ -25,6 +25,16 @@ let gameService = class gameService {
         this.userService = userService;
         this.achievementService = achievementService;
     }
+    async saveScore(scoreData) {
+        const user1 = await this.userService.findUserById(scoreData.userId);
+        const user2 = await this.userService.findUserById(scoreData.opponentId);
+        const game = new game_entity_1.Game();
+        game.user1 = user1;
+        game.user2 = user2;
+        game.userShots = scoreData.userScore;
+        game.opponentShots = scoreData.opponentScore;
+        await this.gameRepo.save(game);
+    }
 };
 exports.gameService = gameService;
 exports.gameService = gameService = __decorate([

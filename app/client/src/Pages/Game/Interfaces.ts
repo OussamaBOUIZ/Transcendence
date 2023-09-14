@@ -1,16 +1,20 @@
+import React, { SetStateAction } from "react";
 import { SketchProps } from "react-p5-wrapper";
+import { Socket } from "socket.io-client";
 
 export interface MySketchProps extends SketchProps {
     rotation: number;
     theme: string;
-    socket: any;
+    socket: Socket | null;
     isHost: boolean;
-    setIsHost: any;
+    setIsHost:  React.Dispatch<React.SetStateAction<boolean>>;
     gameKey: string;
     isMatching: boolean;
     gameMode: GameMode | null;
     score: Score;
-    setScore: any; 
+    setScore:  React.Dispatch<React.SetStateAction<Score>>;
+    isGameEnd: boolean;
+    setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface Velocity {

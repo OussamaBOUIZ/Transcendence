@@ -11,6 +11,7 @@ import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import UserContext from '../../Context/UserContext';
 
+
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
@@ -59,6 +60,7 @@ export default function Game () {
     const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [oppUser, setOppUser] = useState<any | null>(null);
+    const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
     const {key, gameMode} = useParams();
@@ -68,11 +70,11 @@ export default function Game () {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
         })
-        socket?.on("recieveOppUser", (opUser: any) => {
-            console.log(opUser);
-            setOppUser(opUser);
-        })
     }, [socket])
+
+    useEffect(() => {
+        socket.emi
+    }, [isGameEnd])
 
 
     useEffectOnUpdate( () => {
@@ -124,7 +126,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <Board score={score} oppUser={oppUser}/>
+                <Board score={score} oppUser={oppUser} isHost={isHost}/>
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}
@@ -136,6 +138,8 @@ export default function Game () {
                     isMatching={isMatching}
                     score={score}
                     setScore={setScore}
+                    isGameEnd={isGameEnd}
+                    setIsGameEnd={setIsGameEnd}
                 />
             </div>
         </section>
