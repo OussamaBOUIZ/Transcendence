@@ -34,10 +34,10 @@ export class AuthController {
         const user = await this.userService.findUserByEmail(googlereq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
-            return res.redirect('http://localhost:5173/auth');
+            return res.redirect('/auth');
         if(user.firstLog === true)
-            return res.redirect('http://localhost:5173/info');    
-        return res.redirect('http://localhost:5173/');
+            return res.redirect('/info');    
+        return res.redirect('/');
     }
 
     @Get('42')
@@ -50,15 +50,15 @@ export class AuthController {
     {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if(!token)
-            return res.redirect('http://localhost:5173/');
+            return res.redirect('/');
         this.authService.setResCookie(res, token);
         const user = await this.userService.findUserByEmail(fortyTworeq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
-            return res.redirect('http://localhost:5173/inputauth');
+            return res.redirect('/auth');
         if(user.firstLog === true) 
-            return res.redirect('http://localhost:5173/info');    
-        return res.redirect('http://localhost:5173/');
+            return res.redirect('/info');    
+        return res.redirect('/');
     }
     @Get('qrcode')
     @UseGuards(JwtGuard) 

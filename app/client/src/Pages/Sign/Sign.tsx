@@ -32,7 +32,7 @@ export default function Sign() {
     }, []);
 
     function handleAuth(props: string) {
-        window.location.replace(`http://localhost:3000/api/auth/${props}`)
+        window.location.replace(`http://localhost:5173/api/auth/${props}`)
     }
 
     const welcome = <div className="welcome">

@@ -1,28 +1,61 @@
 version: '3.8'
 
+
+
+volumes:
+  frontend_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/dist
+#  db_data:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/ael-mous/data/mysql
+
 services:
-  # frontend:
-  #   container_name: frontend
-  #   build: ./app/client/
-  #   image: frontend
-  #   ports:
-  #     - "5173:5173"
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     - backend
-  #   restart: always
-  # backend: 
-  #   build:
-  #     context: ./app/backend/
-  #     dockerfile: Dockerfile
-  #   image: backend
-  #   ports:
-  #     - "8080:3000"
-  #   depends_on:
-  #     - postgres
-  #   restart: always
+  frontend:
+    container_name: frontend
+    build:
+      context: ./app/client/
+      dockerfile: Dockerfile
+    image: frontend
+#    ports:
+#      - "5173:8080"
+    volumes:
+      - frontend_data:/app/dist
+    depends_on:
+      - backend
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./app/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - frontend_data:/usr/share/nginx/html
+    depends_on:
+      - frontend
+    restart: unless-stopped
+
+  backend: 
+    build:
+      context: ./app/backend/
+      dockerfile: Dockerfile
+    image: backend
+    ports:
+      - "3000:3000"
+      - "1212:1212"
+      - "4000:4000"
+      - "4343:4343"
+    depends_on:
+      - postgres
+    restart: always
 
   postgres:
     image: postgres:13
@@ -46,5 +79,5 @@ services:
       PGADMIN_DEFAULT_EMAIL: name@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
 
-#networks:
+# networks:
 #  freecodecamp:

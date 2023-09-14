@@ -105,10 +105,8 @@ export class UserController {
 
     @Put('updateStatus')
     async updateUserStatus(@Req() req: Request, @Body() body: statusDto) {
-        console.log(body.status);
-        
-        const userEmail = req.user['email']
-        const user = await this.userService.findUserByEmail(userEmail)
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        // const user = await this.userService.findUserByEmail(userEmail)
         if (!user)
             throw new NotFoundException('user not exist')
         user.status = body.status
@@ -128,8 +126,8 @@ export class UserController {
 
     @Get('online/users')
     async getOnlineUsers(@Req() req: Request) {
-
-        const user = await this.userService.findUserByEmail(req.user['email'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        // const user = await this.userService.findUserByEmail(req.user['email'])
         if (!user)
             throw new NotFoundException('user not found')
         return await this.userService.onlineUsers(user.id)
@@ -211,8 +209,8 @@ export class UserController {
         @Req() req: Request,
         @Res() res: Response
     ) {
-        
-        const ret = await this.userService.blockUser(userId, req.user['email'])
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const ret = await this.userService.blockUser(userId, user.email)
         if(typeof ret === 'string')
             return res.status(HttpStatus.OK).send(ret); 
         return res.status(HttpStatus.OK).send('');
@@ -413,12 +411,13 @@ export class UserController {
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.status(200).send('');
+        return res.redirect('/');
     }
 
     @Patch('stat/add')
 	async addUserStat(@Query() statDto: StatsDto, @Req() req: Request) {
-		await this.userService.addUserStat(statDto, req.user)
+        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+		await this.userService.addUserStat(statDto, user)
 	}
 
 	@Post('gameHistory/add')
