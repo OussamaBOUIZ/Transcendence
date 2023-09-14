@@ -12,7 +12,7 @@ export default function ChatSearchBox () {
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
     const initialRender = React.useRef<boolean>(true)
-    const {notif, setNotif} = useContext(UserContext)
+    const {setNotif} = useContext(UserContext)
 
     const submitStyle = {
         marginTop: "1em",

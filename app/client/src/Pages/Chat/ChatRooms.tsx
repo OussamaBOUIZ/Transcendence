@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, useContext, SetStateAction} from 'react'
 import ChatOverview from './ChatOverview';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
 import axios from 'axios'
 import "../../scss/chat.scss"
@@ -19,6 +19,7 @@ import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import InboxContext from '../../Context/InboxContext';
+import ErrorPage from '../Errors/errorPages';
 
 type typeProps = {
     socket: Socket | undefined;
@@ -43,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show, setStatusCode, setStatusText, setNotif} = useContext(UserContext)
+    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show, navigate, setNotif} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -71,10 +72,8 @@ export default function ChatRooms () {
                         const res = await axios.get<{id: number}[]>(`/api/user/blockedUsers/${user?.id}`);
                         setBlockedUsers(res.data)
                     }
-                    catch (err) {
-                        setStatusCode(err.response.status)
-                        setStatusText(err.response.statusText)
-                        // window.location.replace('/error')
+                    catch (err: any) {
+                        navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                     }
                 }
                 catch (err) {
@@ -92,8 +91,6 @@ export default function ChatRooms () {
 
     // create socket
     useEffect(() => {
-        console.log("socket room is called");
-        
         const fd = io("ws://localhost:1212", {
             withCredentials: true,
         })

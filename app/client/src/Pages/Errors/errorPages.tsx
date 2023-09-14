@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
-import UserContext from '../../Context/UserContext';
+import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const ErrorPage = () => {
-  const {statusCode, statusText} = useContext(UserContext)
 
+  const location = useLocation();
+  const { statusCode, statusText } = location.state;
+  
+  
   return (
     <div className="error-page flex w-full h-full flex-col items-center justify-center font-bold text-3xl gap-4">
         <h1 className=''>Oops! {statusCode}</h1>

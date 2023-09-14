@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import UserContext from '../../Context/UserContext';
 import StepCard from '../../Components/StepCard';
 import "../../scss/settings.scss"

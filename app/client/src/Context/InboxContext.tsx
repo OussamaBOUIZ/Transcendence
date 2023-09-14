@@ -1,10 +1,11 @@
-import React, {createContext, useState, useRef} from 'react'
+import React, {createContext, useState, useRef, useContext} from 'react'
 import { InboxItem, MessageData } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
 import {updateInboxByReceiving} from "../Helpers/chatdm.utils"
+import UserContext from './UserContext';
 
 
 interface InboxContextType {
@@ -37,6 +38,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    // const {navigate} = useContext(UserContext)
 
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
