@@ -52,7 +52,7 @@ export default function OnlineNow () {
                 {
                     users.length === 0 
                     ?
-                    <p>Here's where your online friend will light up</p>
+                    <p className='text-xs text-center text-gray-400'>Here's where your online friend will light up</p>
                     :
                     <div className='flex overflow-x-auto gap-x-2'>{toggle}</div>
                 }

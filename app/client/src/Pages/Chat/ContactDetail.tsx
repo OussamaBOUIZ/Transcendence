@@ -36,7 +36,7 @@ export default function ContactDetail ({oview} : {oview: User | undefined}) {
                     <h3 className='font-bold'>{capitalize(oview?.firstname)}</h3>
                     <h3 className='font-bold'>{capitalize(oview?.lastname)}</h3>
                     <h6>{oview?.stat?.ladder_level}</h6>
-                    <LevelBar />
+                    <LevelBar val='8'/>
                 </figcaption>
             </figure>
                 <div className="results">
