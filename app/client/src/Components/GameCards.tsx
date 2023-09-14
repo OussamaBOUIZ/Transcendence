@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import ModeCard from './ModeCard';
 import '../scss/gameCards.scss'
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -66,11 +66,15 @@ const data = [
 //     );
 // }
 
+function handleInv() {
+  socket?.emit('receiveInvitation', {userId: hostId, guestId: guestId})
+}
+
 export default function GameCards ({hostId, guestId, setter}: {hostId: number, guestId: number, setter: React.Dispatch<SetStateAction<boolean>>}) {
     return (
-    <div id='game-modes' className="absolute w-screen h-screen top-0 left-0 z-50 bg-gray-700 bg-opacity-80"
+    <div id='game-modes' className="absolute flex flex-col justify-center w-screen h-screen top-0 left-0 z-50 bg-gray-700 bg-opacity-80"
     >
-        <header className='p-6 '>
+        <header className='absolute top-0 p-6 '>
             <button name='back' className='text-xl font-semibold'
             onClick={() => setter((prevVal:boolean) => !prevVal)}
             >
@@ -102,15 +106,20 @@ export default function GameCards ({hostId, guestId, setter}: {hostId: number, g
           className='swiper-container'
         >
           {data.map((item) => {
-            return <SwiperSlide><img src={item.image} alt={item.name} /></SwiperSlide>
+            return (
+            <SwiperSlide>
+              <img src={item.image} alt={item.name} onClick={handleInv}/>
+                <figure className='absolute bottom-0 pb-4 w-full h-1/3 bg-gradient-to-t from-black to-transparent flex justify-center items-end'>
+                    <h2 className="mb-1 text-xl font-bold">{item.name}</h2>
+                </figure>
+            </SwiperSlide>
+            )
           })}
           <div className="slider-controler flex justify-center items-center">
             <div className="swiper-button-prev slider-arrow">
-              <img src={left} alt="" />
               <BsArrowLeftCircle />
             </div>
             <div className="swiper-button-next slider-arrow">
-              <img src={left} alt="" />
               <BsArrowRightCircle />
             </div>
             <div className="swiper-pagination"></div>
