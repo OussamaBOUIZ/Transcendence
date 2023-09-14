@@ -29,15 +29,11 @@ export class gameService {
     }
 
     async saveScore(scoreData: scoreStoreDto) {
-        const user1 = await this.userService.findUserById(scoreData.userId);
-        const user2 = await this.userService.findUserById(scoreData.opponentId);
         const game = new Game();
-        game.user1 = user1;
-        game.user2 = user2;
+        game.user1 = scoreData.userId;
+        game.user2 = scoreData.opponentId;
         game.userShots = scoreData.userScore;
         game.opponentShots = scoreData.opponentScore;
         await this.gameRepo.save(game);
     }
-
-    
 }

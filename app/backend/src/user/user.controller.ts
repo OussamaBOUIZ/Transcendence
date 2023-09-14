@@ -40,6 +40,7 @@ import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import { log } from 'console';
+import { Game } from 'src/databases/game.entity';
 // import { User} from "../../../global/Interfaces"
 
 
@@ -260,6 +261,7 @@ export class UserController {
     @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
+        // HAHAHAHAHAHAHA
         const filename = id % 14 !== 0 ? (id % 14) + '.jpg' : 14 + '.jpg'
         const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
@@ -282,15 +284,15 @@ export class UserController {
     {
         return await this.userService.AllFriends(id);
     }
-    @Get('friendLastGame/:friendId')
-    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
-    {
-        return await this.userService.getFriendLastGame(friendId, userId);
-    }
+    // @Get('friendLastGame/:friendId')
+    // async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
+    // {
+    //     return await this.userService.getFriendLastGame(friendId, userId);
+    // }
 
     @Get('game/history/:userId')
-    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Match_history[]> {
-        return await this.userService.getMatchHistory(userId)
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Game[]> {
+        return await this.userService.getGameHistory(userId)
     }
 
     @Get('2fa/turn-on/:id')
@@ -384,15 +386,15 @@ export class UserController {
 		await this.userService.addUserStat(statDto, req.user)
 	}
 
-	@Post('gameHistory/add')
-	@HttpCode(HttpStatus.CREATED)
-	async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
-		console.log(gameHistoryDto)
-		await this.userService.addGameHistory(gameHistoryDto)
-		return {
-			Message: "The content is created"
-		}
-	}
+	// @Post('gameHistory/add')
+	// @HttpCode(HttpStatus.CREATED)
+	// async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
+	// 	console.log(gameHistoryDto)
+	// 	await this.userService.addGameHistory(gameHistoryDto)
+	// 	return {
+	// 		Message: "The content is created"
+	// 	}
+	// }
 
     // @UsePipes(new ValidationPipe({
 	// 	transform: true,

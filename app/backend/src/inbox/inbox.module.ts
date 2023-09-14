@@ -13,9 +13,10 @@ import {UserService} from "../user/user.service";
 import { Achievement } from 'src/databases/achievement/achievement.entity';
 import {Stats} from "../databases/stats.entity";
 import { Match_history } from 'src/databases/match_history.entity';
+import { Game } from 'src/databases/game.entity';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user, Achievement, Stats, Match_history])],
+	imports: [TypeOrmModule.forFeature([User, User_chat, Message, Inbox_user, Achievement, Stats, Match_history, Game])],
 	controllers: [InboxController],
 	providers: [
 		InboxService, ChatGatewayService, JwtService,

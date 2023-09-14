@@ -52,7 +52,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		gameModes.forEach((mode: string) => {
 			waitingSockets.set(mode, 
 				waitingSockets.get(mode).filter(
-					(s: Socket) => s.id !== socket.id)
+					(s: User) => s.socket.id !== socket.id)
 				);
 		})
 
