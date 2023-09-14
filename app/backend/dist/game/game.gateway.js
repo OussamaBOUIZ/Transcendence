@@ -54,6 +54,7 @@ let GameGateway = class GameGateway {
     }
     async onGameEnd(roomKey, socket) {
         socket.leave(roomKey);
+        console.log("leave game");
     }
     async onAchievement(gameData, socket) {
     }

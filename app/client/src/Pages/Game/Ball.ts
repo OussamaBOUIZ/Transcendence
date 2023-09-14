@@ -40,13 +40,10 @@ export default class Ball {
     }
 
     updateScore(props: MySketchProps, newScore: Score) {
-        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: newScore});
-
-        if ( newScore.myScore == props.gameMode?.maxScore
-            || newScore.oppScore == props.gameMode?.maxScore ) {
-
-            props.setIsGameEnd(true);
-        }
+        props.socket?.emit("gameScore", {roomKey: props.gameKey, score: { 
+            myScore: newScore.oppScore,
+            oppScore: newScore.myScore
+        }});
     }
     
     updateBall(p5: any, ballImg: string, props: MySketchProps) {
@@ -84,7 +81,6 @@ export default class Ball {
         if (props.isHost) {
             this.x += vars.vel.x;
             this.y += vars.vel.y;
-            
             if (this.y < (this.r * 2) || this.y > p5.height - (this.r * 2))
                 vars.vel.y *= -1;
         }

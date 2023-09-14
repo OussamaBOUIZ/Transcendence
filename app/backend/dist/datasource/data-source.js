@@ -12,6 +12,7 @@ const match_history_entity_1 = require("../databases/match_history.entity");
 const stats_entity_1 = require("../databases/stats.entity");
 const muted_users_entity_1 = require("../databases/muted_users.entity");
 const BlockedTokenList_entity_1 = require("../databases/BlockedTokenList/BlockedTokenList.entity");
+const game_entity_1 = require("../databases/game.entity");
 exports.dataSourceOptions = {
     type: 'postgres',
     host: 'localhost',
@@ -26,7 +27,7 @@ exports.dataSourceOptions = {
         stats_entity_1.Stats,
         user_entity_1.User, inbox_user_entity_1.Inbox_user,
         userchat_entity_1.User_chat, message_entity_1.Message,
-        BlockedTokenList_entity_1.BlockedTokenList
+        BlockedTokenList_entity_1.BlockedTokenList, game_entity_1.Game
     ],
     synchronize: true,
 };

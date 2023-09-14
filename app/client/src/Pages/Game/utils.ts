@@ -27,6 +27,16 @@ export function collision(pad: Pad, ball: Ball): boolean {
     return dx * dx + dy * dy <= ball.r * ball.r;
 }
 
+function matchingText(p5: P5CanvasInstance<MySketchProps>) {
+  p5.push()
+  p5.fill(255);
+  p5.textSize(40);
+  p5.textAlign(p5.CENTER);
+  p5.textStyle(p5.BOLDITALIC)
+  p5.text("Matching...", p5.width / 2, p5.height / 2);
+  p5.pop();
+}
+
 var time: number = 0;
 export function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
     let img = p5.createImage(p5.width, p5.height);
@@ -40,6 +50,8 @@ export function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
   
     img.updatePixels();
     p5.image(img, 0, 0);
+
+    matchingText(p5)
   
     time = (time + 1) % p5.height;
 }

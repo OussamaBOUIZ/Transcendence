@@ -48,9 +48,13 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setIsGameEnd: () => {}
     }
 
+    let first_time: boolean = true;
+
     let backImg: string;
     let ballImg: string;
     let paddleImg: string;
+    let endGameImg: string;
+    let readyImg : string;
 
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Assets/GameArea/galaxy.jpg");
@@ -75,81 +79,96 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (props.gameMode) {
             backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
             ballImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.ball}`);
-            paddleImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.paddle}`)
+            paddleImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.paddle}`);
+            endGameImg = p5.loadImage(`/src/Assets/GameArea/BigGame.jpg`);
+            readyImg =  p5.loadImage(`/src/Assets/GameArea/Ready.jpg`);
         }
     }
 
     p5.draw = (): void => {
-        if (props.theme === "black")
-            p5.background("#114");
-        else if (props.theme == "white")
-            p5.background(255);
-        else if (props.theme === "grey")
-            p5.background(200);
+        if (props.isGameEnd) {
+            // setTimeout()
+            p5.image(endGameImg, 0, 0, p5.width, p5.height);
+        } else {
+            if (props.theme === "black")
+                p5.background("#114");
 
-
-        props.socket?.on("notHost", () => {
-            props.setIsHost(false);
-            console.log(props.isHost);
-        })
-
-        if (backImg)
-            p5.image(backImg, 0, 0, p5.width, p5.height);
-
-        if (!props.isMatching && props.gameMode) {
-            if (props.isHost) {
-                props.socket?.emit("game", {
-                    gameKey: props.gameKey,
-                    padX: rightPad.y,
-                    ballX: ball?.x,
-                    ballY: ball?.y,
-                    canvasSize: p5.width,
-                });
-            }
-            else {
-                props.socket?.emit("game", {
-                    gameKey: props.gameKey, 
-                    padX: leftPad.y,
-                    canvasSize: p5.width,
-                });
-            }
-
-            props.socket?.on("movePad", (data: any) => {
-                let per = p5.width / data.canvasSize;
-
-                if (props.isHost)    
-                    leftPad.y = data.padX * per;
-                else
-                    rightPad.y = data.padX * per;
-
-                if (!props.isHost) {
-                    ball.x = data.ballX * per;
-                    ball.y = data.ballY * per;
-                }
+            props.socket?.on("notHost", () => {
+                props.setIsHost(false);
+                console.log(props.isHost);
             })
 
-            prevPos.forEach( (b: Ball, idx: number) =>  {
-                b.fadeEffect();
-                b.drawBall(p5, null);
 
-                if (b.r <= 0) {
-                    prevPos.splice(idx, 1);
-                }
-            })
+            if (backImg)
+                p5.image(backImg, 0, 0, p5.width, p5.height);
+
+            p5.background(0, 0, 0, 150);
             
-            prevPos.push(ball.clone(props.gameMode.color));
-    
-            if (props.isHost) {
-                leftPad.updatePad(p5, ball, false, props.isHost, paddleImg);
-                rightPad.updatePad(p5, ball, true, props.isHost, paddleImg);
-            } else {
-                leftPad.updatePad(p5, ball, true, props.isHost, paddleImg);
-                rightPad.updatePad(p5, ball, false, props.isHost, paddleImg);
-            }
 
-            ball.updateBall(p5, ballImg, props);
-        } else
-            makeNoise(p5);
+            if (!props.isMatching && props.gameMode) {
+                if (first_time) {
+                    setTimeout(() => {
+                        first_time = false;
+                    }, 2000)
+                    p5.image(readyImg, 0, 0, p5.width, p5.height);
+                } else {
+     
+                    if (props.isHost) {
+                        props.socket?.emit("game", {
+                            gameKey: props.gameKey,
+                            padX: rightPad.y,
+                            ballX: ball?.x,
+                            ballY: ball?.y,
+                            canvasSize: p5.width,
+                        });
+                    }
+                    else {
+                        props.socket?.emit("game", {
+                            gameKey: props.gameKey, 
+                            padX: leftPad.y,
+                            canvasSize: p5.width,
+                        });
+                    }
+
+                    props.socket?.on("movePad", (data: any) => {
+                        let per = p5.width / data.canvasSize;
+
+                        if (props.isHost)    
+                            leftPad.y = data.padX * per;
+                        else
+                            rightPad.y = data.padX * per;
+
+                        if (!props.isHost) {
+                            ball.x = data.ballX * per;
+                            ball.y = data.ballY * per;
+                        }
+                    })
+
+                    prevPos.forEach( (b: Ball, idx: number) =>  {
+                        b.fadeEffect();
+                        b.drawBall(p5, null);
+
+                        if (b.r <= 0) {
+                            prevPos.splice(idx, 1);
+                        }
+                    })
+                    
+                    prevPos.push(ball.clone(props.gameMode.color));
+            
+                    if (props.isHost) {
+                        leftPad.updatePad(p5, ball, false, props.isHost, paddleImg);
+                        rightPad.updatePad(p5, ball, true, props.isHost, paddleImg);
+                    } else {
+                        leftPad.updatePad(p5, ball, true, props.isHost, paddleImg);
+                        rightPad.updatePad(p5, ball, false, props.isHost, paddleImg);
+                    }
+
+                    ball.updateBall(p5, ballImg, props);
+                }
+            } else
+                makeNoise(p5);
+            
+        }
     }
 }
 

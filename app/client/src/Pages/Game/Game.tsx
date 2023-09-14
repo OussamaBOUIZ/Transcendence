@@ -38,7 +38,7 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 7
+        maxScore: 2
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -73,8 +73,23 @@ export default function Game () {
     }, [socket])
 
     useEffect(() => {
-        socket.emi
-    }, [isGameEnd])
+        if (gameMode && (score.myScore === gameModes.get(gameMode)?.maxScore 
+                || score.oppScore === gameModes.get(gameMode)?.maxScore )) {
+            socket.emit("gameEnd", key)
+            socket.disconnect();
+            setIsGameEnd(true);
+            console.log("game end")
+        }
+
+        // if (gameMode && score.myScore === gameModes.get(gameMode)?.maxScore) {
+        //     socket?.emit("saveScore", {
+        //         userScore: score.myScore,
+        //         opponentScore: score.oppScore,
+        //         userId: user.id,
+        //         opponentId: oppUser.id
+        //     })
+        // }isMatching
+    }, [score])
 
 
     useEffectOnUpdate( () => {
@@ -126,7 +141,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <Board score={score} oppUser={oppUser} isHost={isHost}/>
+                {!isMatching && <Board score={score} oppUser={oppUser} isHost={isHost}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}
