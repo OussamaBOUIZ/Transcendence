@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 interface userType {
 	username: string;
 	image: string;
+	gameName: string;
 }
 
 export default function Notification({ message, playNow }: {message?: string, playNow?: userType}) {
@@ -15,21 +16,21 @@ export default function Notification({ message, playNow }: {message?: string, pl
 	const {isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
 	const outerDivRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-	if(outerDivRef.current)
-		outerDivRef.current.style.setProperty('--duration', '6');
-    const roundTimeBarDiv = document.querySelector('.round-time-bar div')
+	useEffect(() => {
+		if(outerDivRef.current)
+			outerDivRef.current.style.setProperty('--duration', '6');
+		const roundTimeBarDiv = document.querySelector('.round-time-bar div')
 
-    const handleAnimationEnd = () => {
-      setIsAnimationFinished(true)
-    };
+		const handleAnimationEnd = () => {
+			setIsAnimationFinished(true)
+		};
 
-    roundTimeBarDiv?.addEventListener('animationend', handleAnimationEnd)
+		roundTimeBarDiv?.addEventListener('animationend', handleAnimationEnd)
 
-    return () => {
-      roundTimeBarDiv?.removeEventListener('animationend', handleAnimationEnd)
-    };
-  }, []);
+		return () => {
+			roundTimeBarDiv?.removeEventListener('animationend', handleAnimationEnd)
+		};
+	}, []);
 
 
 	const popUp = <div className="notification-text">
@@ -41,7 +42,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 			<ProfileImage image={playNow?.image} name={playNow?.username} size="small" />
 			<div className="flex flex-col">
 				<p>{playNow?.username}</p>
-				<p>challenge you in</p>
+				<p className="text-xs opacity-80 font-normal">{`${playNow?.gameName} challenge!`}</p>
 			</div>
 		</figure>
 		<NavLink to="/game/IceLand"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></NavLink>

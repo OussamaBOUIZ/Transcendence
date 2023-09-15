@@ -5,6 +5,7 @@ import Sidebar from '../Components/Sidebar'
 import {useOnlineStatus} from "../Hooks/useOnlineStatus"
 import axios from 'axios'
 import io from "socket.io-client"
+import {gameInvInfo} from "../../global/Interfaces"
 import UserContext from '../Context/UserContext'
 import Notification from '../Components/Notification'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
@@ -44,11 +45,11 @@ export default function MainLayout () {
     }, [])
 
     useEffectOnUpdate(() => {
-      socket?.on('invitation', (hostId: number) => {
+      socket?.on('invitation', (gameInfo: gameInvInfo) => {
         const fetchUserData = async () => {
           try {
-            const user = await getUserData(hostId, "id")
-            setInvitation({image: String(user.image), username: user.username})
+            const user = await getUserData(gameInfo.userId, "id")
+            setInvitation({image: String(user.image), username: user.username, gameName: gameInfo.gameName})
           }
           catch (err) {
             // console.log(err)
