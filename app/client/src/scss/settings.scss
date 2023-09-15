@@ -24,6 +24,15 @@
         "s s s s s p p p"
         ;
     }
+    @media (max-width: 1351) { 
+        width: 100%;
+        grid-template: 40% 10% 50% / repeat(8, 1fr);
+        grid-template-areas: 
+        "e e e e e p p p"
+        "h h h h h p p p"
+        "s s s s s p p p"
+        ;
+    }
     @media (max-width: 1279px) {
         grid-template-areas: 
         "e e e e e p p p"
@@ -56,10 +65,60 @@
 .heading {
     grid-area: h;
 }
-.info_edit {
+
+#info_edit {
     grid-area: e;
+    @media (max-width: 1366px) {
+        padding: 1em;
+    }
     @media (max-width: 1024px) {
         padding: 1.5rem;
+    }
+    figure {
+        figcaption {
+            @media (max-width: 1366px ) {padding: 0;}
+            h2 {
+                @media (max-width: 1366px ) {
+                    font-size: 1em;
+                }
+            }
+        }
+        #avatar_editor {
+            img {
+                @media (max-width: 1366px) {
+                    width: 5em;
+                    height:5em;
+                }
+            }
+        }
+    }
+    article {
+        form {
+            @media (max-width: 1366px ) {
+                padding: 1em;
+                justify-content: center;
+            }
+            div {
+                @media (max-width: 1366px ) {
+                    margin: .2em auto;
+                }
+               h2 {
+                    @media (max-width: 1366px ) {
+                        font-size: 1em;
+                    }
+                }
+                input {
+                    @media (max-width: 1366px ) {
+                        padding: .2em;
+                    }
+                }
+            }
+            button {
+                @media (max-width: 1366px ) {
+                    flex: 0;
+                }
+            }
+        }
     }
 }
 
@@ -69,6 +128,9 @@
     right: 12px;
     z-index: 1;
     bottom: 0;
+    @media (max-width: 1366px ) {
+        right: 0px;
+    }
     input {
         display: none;
     }
@@ -76,6 +138,10 @@
         @include center-styles;
         width: 34px;
         height: 34px;
+        @media (max-width: 1366px ) {
+            width: 24px;
+            height: 24px;
+        }
         margin-bottom: 0;
         border-radius: 100%;
         background: #FFFFFF;
