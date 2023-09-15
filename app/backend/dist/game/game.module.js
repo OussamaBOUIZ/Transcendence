@@ -25,7 +25,7 @@ let gameModule = class gameModule {
 exports.gameModule = gameModule;
 exports.gameModule = gameModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([game_entity_1.Game, stats_entity_1.Stats, user_entity_1.User, achievement_entity_1.Achievement, match_history_entity_1.Match_history])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([game_entity_1.Game, stats_entity_1.Stats, user_entity_1.User, achievement_entity_1.Achievement, match_history_entity_1.Match_history, game_entity_1.Game])],
         providers: [game_gateway_1.GameGateway, game_service_1.gameService, user_service_1.UserService, jwt_1.JwtService, achievement_service_1.AchievementService],
         controllers: [game_controller_1.gameController]
     })

@@ -27,6 +27,7 @@ const stats_entity_1 = require("../databases/stats.entity");
 const BlockedTokenList_service_1 = require("../databases/BlockedTokenList/BlockedTokenList.service");
 const BlockedTokenList_entity_1 = require("../databases/BlockedTokenList/BlockedTokenList.entity");
 const match_history_entity_1 = require("../databases/match_history.entity");
+const game_entity_1 = require("../databases/game.entity");
 const jwtFactory = {
     useFactory: async (configService) => ({
         global: true,
@@ -41,7 +42,7 @@ exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         controllers: [auth_controller_1.AuthController],
-        imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, achievement_entity_1.Achievement, stats_entity_1.Stats, BlockedTokenList_entity_1.BlockedTokenList, match_history_entity_1.Match_history]),
+        imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, achievement_entity_1.Achievement, stats_entity_1.Stats, BlockedTokenList_entity_1.BlockedTokenList, match_history_entity_1.Match_history, game_entity_1.Game]),
             jwt_1.JwtModule.registerAsync(jwtFactory), passport_1.PassportModule],
         providers: [googleStrategy_1.googleStrategy, auth_service_1.AuthService, _42Strategy_1.fortyTwoStrategy, jwtStrategy_1.JwtStrategy,
             mailer_service_1.MailTemplate, user_service_1.UserService, achievement_service_1.AchievementService, BlockedTokenList_service_1.BlockedTokenlistService],

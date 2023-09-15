@@ -83,8 +83,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('achievement')
 	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
-		// await this.gameservice.userGameDataUpdate(gameData);
-	}// setTimeout()
+		await this.gameservice.userGameDataUpdate(gameData);
+	}
 
 	@SubscribeMessage('saveScore')
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {

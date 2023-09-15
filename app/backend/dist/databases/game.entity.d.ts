@@ -1,9 +1,9 @@
 import { BaseEntity } from "typeorm";
-import { User } from "./user.entity";
 export declare class Game extends BaseEntity {
     id: number;
-    user1: User;
-    user2: User;
+    user1: number;
+    user2: number;
     userShots: number;
     opponentShots: number;
+    CreatedAt: Date;
 }

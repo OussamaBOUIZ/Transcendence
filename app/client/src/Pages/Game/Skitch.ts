@@ -57,7 +57,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let backImg: string;
     let ballImg: string;
     let paddleImg: string;
-    let endGameImg: string;
+    let loseImg: string;
+    let winImg: string;
     let readyImg : string;
 
     p5.preload = (): void => {
@@ -84,15 +85,22 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
             ballImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.ball}`);
             paddleImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.paddle}`);
-            endGameImg = p5.loadImage(`/src/Assets/GameArea/BigGame.jpg`);
+            loseImg = p5.loadImage(`/src/Assets/GameArea/Lose.png`);
+            winImg = p5.loadImage(`/src/Assets/GameArea/Win.png`);
             readyImg =  p5.loadImage(`/src/Assets/GameArea/Ready.jpg`);
         }
     }
 
     p5.draw = (): void => {
         if (props.isGameEnd) {
-            // setTimeout()
-            p5.image(endGameImg, 0, 0, p5.width, p5.height);
+
+            // console.log(props , Number(props.gameMode?.maxScore));
+
+            if (props.score.myScore == props.gameMode?.maxScore)
+                p5.image(winImg, 0, 0, p5.width, p5.height);
+            else
+                p5.image(loseImg, 0, 0, p5.width, p5.height);
+
         } else {
             if (props.theme === "black")
                 p5.background("#114");
@@ -106,7 +114,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             if (backImg)
                 p5.image(backImg, 0, 0, p5.width, p5.height);
 
-            p5.background(0, 0, 0, 150);
+            p5.background(0, 0, 0, 50);
             net.drawAllNets(p5);
             
 

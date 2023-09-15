@@ -1,5 +1,3 @@
-import { Color } from "./Interfaces";
-
 export default class Net {
     w: number;
     h: number;
@@ -16,8 +14,9 @@ export default class Net {
     drawNet (p5: any, x: number, y: number) {
 
         p5.push()
-        p5.fill(255)
-        p5.rect(x, y, this.w, this.h)
+        p5.fill(255, 255, 255, 100)
+        p5.noStroke();
+        p5.rect(x, y, this.w, this.h, 10)
         p5.pop()
     }
 

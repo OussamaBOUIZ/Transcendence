@@ -71,6 +71,6 @@ export function resizeGameVars(width: number) {
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
   vars.SPEED = width / 85;
-  vars.NW = width / 100;
+  vars.NW = width / 200;
   vars.NH = width / 60;
 }

@@ -14,7 +14,7 @@ import { GameGateway } from "./game.gateway";
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Game, Stats, User, Achievement, Match_history])],
+    imports: [TypeOrmModule.forFeature([Game, Stats, User, Achievement, Match_history, Game])],
 	providers: [GameGateway, gameService, UserService, JwtService, AchievementService],
     controllers: [gameController]
 })

@@ -20,14 +20,14 @@ const typeorm_2 = require("@nestjs/typeorm");
 const jwt_1 = require("@nestjs/jwt");
 const achievement_entity_1 = require("../databases/achievement/achievement.entity");
 const stats_entity_1 = require("../databases/stats.entity");
-const match_history_entity_1 = require("../databases/match_history.entity");
 const otplib_1 = require("otplib");
+const game_entity_1 = require("../databases/game.entity");
 let UserService = class UserService {
-    constructor(statsRepo, userRepo, achieveRepo, matchHistoryRepo, jwtService) {
+    constructor(statsRepo, userRepo, achieveRepo, gameRepo, jwtService) {
         this.statsRepo = statsRepo;
         this.userRepo = userRepo;
         this.achieveRepo = achieveRepo;
-        this.matchHistoryRepo = matchHistoryRepo;
+        this.gameRepo = gameRepo;
         this.jwtService = jwtService;
     }
     async saveUserAvatarPath(userId, pathAvatar) {
@@ -168,33 +168,36 @@ let UserService = class UserService {
             return null;
         return this.jwtService.decode(userToken.split(' ')[1]);
     }
-    async getMatchHistory(userId) {
-        return await this.matchHistoryRepo.find({
-            where: {
-                user: {
-                    id: userId
-                }
-            },
-            take: 4
+    async getGameHistory(userId) {
+        console.log(userId);
+        const data = await this.gameRepo.find({
+            where: [
+                { user1: userId },
+                { user2: userId }
+            ],
+            order: { CreatedAt: 'DESC' },
+            take: 3,
+            select: {
+                user1: true,
+                user2: true,
+                userShots: true,
+                opponentShots: true
+            }
         });
+        return data;
     }
     async getFriendLastGame(friendId, userId) {
-        console.log('frid:', friendId, 'userid', userId);
-        let match = await this.matchHistoryRepo
-            .createQueryBuilder('match_history')
-            .where('match_history.userId = :userId', { userId })
-            .andWhere('match_history.opponent = :friendId', { friendId })
-            .orderBy('match_history.id', 'DESC')
-            .getOne();
-        if (!match) {
-            match = await this.matchHistoryRepo
-                .createQueryBuilder('match_history')
-                .where('match_history.userId = :friendId', { friendId })
-                .andWhere('match_history.opponent = :userId', { userId })
-                .orderBy('match_history.id', 'DESC')
-                .getOne();
-        }
-        return match;
+        const match = await this.gameRepo.findOne({
+            where: [
+                { user1: userId, user2: friendId },
+                { user1: friendId, user2: userId }
+            ],
+            order: { CreatedAt: 'DESC' },
+            select: {
+                userShots: true,
+                opponentShots: true
+            },
+        });
     }
     async deleteUserFromDB(id) {
         const user = await this.userRepo.findOneBy({ id: id });
@@ -365,7 +368,7 @@ let UserService = class UserService {
     async addUserStat(statDto, userReq) {
         const user = await this.userRepo.findOne({
             where: {
-                id: userReq.id
+                email: userReq['email']
             },
             relations: {
                 stat: true
@@ -381,34 +384,6 @@ let UserService = class UserService {
         user.stat.ladder_level += statDto.ladder_level;
         user.stat.xp += statDto.xp;
         await this.statsRepo.save(user.stat);
-    }
-    async addGameHistory(gameHistoryDto) {
-        let match_history = new match_history_entity_1.Match_history();
-        match_history.opponent_score = gameHistoryDto.opponent_score;
-        match_history.user_score = gameHistoryDto.user_score;
-        try {
-            const oppenent = await this.findUserById(gameHistoryDto.opponentId);
-            match_history.opponent = oppenent.id;
-            const user = await this.findUserById(gameHistoryDto.userId);
-            match_history.user = user;
-            const history = await this.userRepo.find({
-                relations: {
-                    match_history: true
-                },
-                where: {
-                    id: gameHistoryDto.userId
-                }
-            });
-            if (!history['match_history'])
-                user.match_history = [match_history];
-            else
-                user.match_history = [...user.match_history, match_history];
-            await this.matchHistoryRepo.save(match_history);
-        }
-        catch (e) {
-            console.log(e);
-            throw new common_1.HttpException("The User Not found", common_1.HttpStatus.NOT_FOUND);
-        }
     }
     async getUserProfile(username) {
         return await this.userRepo.findOne({
@@ -481,7 +456,7 @@ exports.UserService = UserService = __decorate([
     __param(0, (0, typeorm_2.InjectRepository)(stats_entity_1.Stats)),
     __param(1, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
     __param(2, (0, typeorm_2.InjectRepository)(achievement_entity_1.Achievement)),
-    __param(3, (0, typeorm_2.InjectRepository)(match_history_entity_1.Match_history)),
+    __param(3, (0, typeorm_2.InjectRepository)(game_entity_1.Game)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
         typeorm_1.Repository,
         typeorm_1.Repository,

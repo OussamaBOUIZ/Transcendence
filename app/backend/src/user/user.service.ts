@@ -11,6 +11,7 @@ import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { log } from 'console';
 import { errorMonitor } from 'events';
+import { Game } from 'src/databases/game.entity';
 
 type tokenPayload = {
     id: number,
@@ -23,7 +24,7 @@ export class UserService {
         @InjectRepository(Stats) private statsRepo: Repository<Stats>,
         @InjectRepository(User) private userRepo: Repository<User>,
         @InjectRepository(Achievement) private achieveRepo: Repository<Achievement>,
-        @InjectRepository(Match_history) private matchHistoryRepo: Repository<Match_history>,
+        @InjectRepository(Game) private gameRepo: Repository<Game>,
         private readonly jwtService: JwtService
     ) {
     }
@@ -183,37 +184,38 @@ export class UserService {
         return this.jwtService.decode(userToken.split(' ')[1]) as tokenPayload
     }
 
-    async getMatchHistory(userId: number): Promise<Match_history[]> {
-        return await this.matchHistoryRepo.find({
-            where: {
-                user: {
-                    id: userId
-                }
-            },
-            take: 4
-        })
+    async getGameHistory(userId: number): Promise<Game[]> {
+        console.log(userId)
+        const data = await this.gameRepo.find({
+            where: [
+                { user1: userId },
+                { user2: userId }
+            ],
+            order: {CreatedAt: 'DESC'},
+            take: 3,
+            select: {
+                user1: true,
+                user2: true,
+                userShots: true,
+                opponentShots: true
+            }
+        });
+        return data;
     }
-    async getFriendLastGame(friendId: number, userId: number)
-    {
-        console.log('frid:', friendId, 'userid', userId);
-        
-        let match = await this.matchHistoryRepo
-        .createQueryBuilder('match_history')
-        .where('match_history.userId = :userId', { userId })
-        .andWhere('match_history.opponent = :friendId', { friendId })
-        .orderBy('match_history.id', 'DESC')
-        .getOne();
-        if(!match)
-        {
-            match = await this.matchHistoryRepo
-            .createQueryBuilder('match_history')
-            .where('match_history.userId = :friendId', { friendId })
-            .andWhere('match_history.opponent = :userId', { userId })
-            .orderBy('match_history.id', 'DESC')
-            .getOne();
-        }
 
-        return match;
+    async getFriendLastGame(friendId: number, userId: number)
+    {   
+        const match = await this.gameRepo.findOne({
+            where: [
+                {user1: userId, user2: friendId},
+                {user1: friendId, user2: userId}
+            ],
+            order: {CreatedAt: 'DESC'},
+            select: {
+                userShots: true,
+                opponentShots: true
+            },
+        });
     }
 
     async deleteUserFromDB(id: number): Promise<void> {
@@ -394,15 +396,15 @@ export class UserService {
         return authenticator.verify({
             token: access_token,
             secret: user.two_factor_secret
-        });
+        })
     }
 
 
-    async addUserStat(statDto: StatsDto, userReq: User) {
+    async addUserStat(statDto: StatsDto, userReq: any) {
 
         const user = await this.userRepo.findOne({
             where: {
-                id: userReq.id
+                email: userReq['email']
             },
             relations: {
                 stat: true
@@ -425,36 +427,36 @@ export class UserService {
 
 
 
-    async addGameHistory(gameHistoryDto: GameHistoryDto) {
+    // async addGameHistory(gameHistoryDto: GameHistoryDto) {
 
-        let match_history = new Match_history()
-        match_history.opponent_score = gameHistoryDto.opponent_score
-        match_history.user_score = gameHistoryDto.user_score
+    //     let match_history = new Match_history()
+    //     match_history.opponent_score = gameHistoryDto.opponent_score
+    //     match_history.user_score = gameHistoryDto.user_score
 
-        try {
-            const oppenent  = await this.findUserById(gameHistoryDto.opponentId)
-            match_history.opponent = oppenent.id
-            const user = await this.findUserById(gameHistoryDto.userId)
-            match_history.user = user
-            const history = await this.userRepo.find({
-                relations: {
-                    match_history: true
-                },
-                where: {
-                    id: gameHistoryDto.userId
-                }
-            })
-            if (!history['match_history'])
-                user.match_history = [match_history]
-            else
-                user.match_history = [...user.match_history, match_history]
-            await this.matchHistoryRepo.save(match_history)
-        }
-        catch (e) {
-            console.log(e)
-            throw new HttpException("The User Not found", HttpStatus.NOT_FOUND)
-        }
-    }
+    //     try {
+    //         const oppenent  = await this.findUserById(gameHistoryDto.opponentId)
+    //         match_history.opponent = oppenent.id
+    //         const user = await this.findUserById(gameHistoryDto.userId)
+    //         match_history.user = user
+    //         const history = await this.userRepo.find({
+    //             relations: {
+    //                 match_history: true
+    //             },
+    //             where: {
+    //                 id: gameHistoryDto.userId
+    //             }
+    //         })
+    //         if (!history['match_history'])
+    //             user.match_history = [match_history]
+    //         else
+    //             user.match_history = [...user.match_history, match_history]
+    //         await this.matchHistoryRepo.save(match_history)
+    //     }
+    //     catch (e) {
+    //         console.log(e)
+    //         throw new HttpException("The User Not found", HttpStatus.NOT_FOUND)
+    //     }
+    // }
 
     async getUserProfile(username: string) {
         return await this.userRepo.findOne({

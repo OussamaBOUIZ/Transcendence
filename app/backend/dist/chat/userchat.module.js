@@ -23,13 +23,14 @@ const inbox_user_entity_1 = require("../databases/inbox_user.entity");
 const achievement_entity_1 = require("../databases/achievement/achievement.entity");
 const stats_entity_1 = require("../databases/stats.entity");
 const match_history_entity_1 = require("../databases/match_history.entity");
+const game_entity_1 = require("../databases/game.entity");
 let ChatGatewayModule = class ChatGatewayModule {
 };
 exports.ChatGatewayModule = ChatGatewayModule;
 exports.ChatGatewayModule = ChatGatewayModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, match_history_entity_1.Match_history, userchat_entity_1.User_chat, message_entity_1.Message, inbox_user_entity_1.Inbox_user, achievement_entity_1.Achievement, stats_entity_1.Stats]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, match_history_entity_1.Match_history, userchat_entity_1.User_chat, message_entity_1.Message, inbox_user_entity_1.Inbox_user, achievement_entity_1.Achievement, stats_entity_1.Stats, game_entity_1.Game]),
         ],
         controllers: [userchat_controller_1.chatController],
         providers: [

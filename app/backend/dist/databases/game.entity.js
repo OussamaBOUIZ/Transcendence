@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const typeorm_1 = require("typeorm");
-const user_entity_1 = require("./user.entity");
 let Game = class Game extends typeorm_1.BaseEntity {
 };
 exports.Game = Game;
@@ -20,14 +19,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Game.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.User),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", user_entity_1.User)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
 ], Game.prototype, "user1", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.User),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", user_entity_1.User)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
 ], Game.prototype, "user2", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
@@ -37,6 +34,10 @@ __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Game.prototype, "opponentShots", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Game.prototype, "CreatedAt", void 0);
 exports.Game = Game = __decorate([
     (0, typeorm_1.Entity)('game')
 ], Game);

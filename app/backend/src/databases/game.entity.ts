@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
 import { User } from "./user.entity";
 
 @Entity('game')
@@ -6,17 +6,18 @@ export class Game extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user1: User
+    @Column()
+    user1: number
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user2: User
+    @Column()
+    user2: number
 
     @Column({default: 0})
     userShots: number
 
     @Column({default: 0})
     opponentShots: number
+
+    @CreateDateColumn()
+    CreatedAt: Date
 }

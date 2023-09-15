@@ -10,6 +10,7 @@ import { ReactP5Wrapper } from "react-p5-wrapper"
 import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import UserContext from '../../Context/UserContext';
+import { User } from '../../../global/Interfaces';
 
 
 let gameModes = new Map<String, GameMode>([
@@ -59,7 +60,7 @@ export default function Game () {
     const [isMatching, setIsMatching] = useState<boolean>(false);
     const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
-    const [oppUser, setOppUser] = useState<any | null>(null);
+    const [oppUser, setOppUser] = useState<User>({} as User);
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
@@ -76,19 +77,25 @@ export default function Game () {
         if (gameMode && (score.myScore === gameModes.get(gameMode)?.maxScore 
                 || score.oppScore === gameModes.get(gameMode)?.maxScore )) {
             socket.emit("gameEnd", key)
-            socket.disconnect();
+            // socket.disconnect();
             setIsGameEnd(true);
-            console.log("game end")
+            console.log("gamee end");
         }
 
-        // if (gameMode && score.myScore === gameModes.get(gameMode)?.maxScore) {
-        //     socket?.emit("saveScore", {
-        //         userScore: score.myScore,
-        //         opponentScore: score.oppScore,
-        //         userId: user.id,
-        //         opponentId: oppUser.id
-        //     })
-        // }isMatching
+        if (gameMode && score.myScore === gameModes.get(gameMode)?.maxScore) {
+            socket?.emit("saveScore", {
+                userScore: score.myScore,
+                opponentScore: score.oppScore,
+                userId: user.id,
+                opponentId: oppUser.id
+            })
+            socket?.emit("achievement", {
+                userId: user.id,
+                wonXp: gameModes.get(gameMode)?.xp,
+                gameName: gameModes.get(gameMode)?.modeName,
+                opponentLevel: oppUser.stat?.ladder_level,
+            })
+        }
     }, [score])
 
 
@@ -99,7 +106,7 @@ export default function Game () {
 
         if (key && gameMode) {
             setGameKey(key);
-            newSocket.emit("joinGame", key);
+            newSocket.emit("joinGame", key);forFeature
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
@@ -149,7 +156,7 @@ export default function Game () {
                     isHost={isHost}
                     setIsHost={setIsHost}
                     gameKey={gameKey}
-                    gameMode={mode}
+                    gameMode={mode}forFeature
                     isMatching={isMatching}
                     score={score}
                     setScore={setScore}

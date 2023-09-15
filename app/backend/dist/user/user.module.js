@@ -18,12 +18,13 @@ const stats_entity_1 = require("../databases/stats.entity");
 const BlockedTokenList_service_1 = require("../databases/BlockedTokenList/BlockedTokenList.service");
 const BlockedTokenList_entity_1 = require("../databases/BlockedTokenList/BlockedTokenList.entity");
 const match_history_entity_1 = require("../databases/match_history.entity");
+const game_entity_1 = require("../databases/game.entity");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
 exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, achievement_entity_1.Achievement, stats_entity_1.Stats, match_history_entity_1.Match_history, BlockedTokenList_entity_1.BlockedTokenList])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, achievement_entity_1.Achievement, stats_entity_1.Stats, match_history_entity_1.Match_history, BlockedTokenList_entity_1.BlockedTokenList, game_entity_1.Game])],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService, jwt_1.JwtService, BlockedTokenList_service_1.BlockedTokenlistService]
     })

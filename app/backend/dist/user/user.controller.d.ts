@@ -3,12 +3,11 @@ import { StreamableFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { Match_history } from "../databases/match_history.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import { StatsDto } from './dto/stats-dto';
-import { GameHistoryDto } from './game-history-dto/game-history-dto';
 import { searchDto } from './game-history-dto/search-dto';
-import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
+import { statusDto, userDataDto } from './dto/userDataDto';
+import { Game } from 'src/databases/game.entity';
 export declare class UserController {
     private readonly userService;
     private readonly jwt;
@@ -34,20 +33,14 @@ export declare class UserController {
     getOnlineFriends(id: number): Promise<import("../databases/user.entity").User[]>;
     addFriend(id: number, friendId: number, res: Response): Promise<Response<any, Record<string, any>>>;
     getAllFriends(id: number): Promise<import("../databases/user.entity").User>;
-    getFriendLastGame(friendId: number, userId: number): Promise<Match_history>;
-    getGameHistory(userId: number): Promise<Match_history[]>;
+    getGameHistory(userId: number): Promise<Game[]>;
     turnOn2fa(id: number, req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
     turnOff2fa(id: number, req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    isTurned2fa(id: number, req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
     login2fa(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    setUserNames(userData: userNamesDto, req: Request, res: Response, id: number): Promise<Response<any, Record<string, any>>>;
     postUsername(userData: userDataDto, req: Request, res: Response, id: number): Promise<Response<any, Record<string, any>>>;
     isFirstLog(req: Request, res: Response): Promise<boolean>;
     logout(id: number, req: Request, res: Response): Promise<void>;
     addUserStat(statDto: StatsDto, req: Request): Promise<void>;
-    createGameHistory(gameHistoryDto: GameHistoryDto): Promise<{
-        Message: string;
-    }>;
     searchForUser(dto: searchDto): Promise<import("../databases/user.entity").User>;
     getUserDetails(id: number): Promise<import("../databases/user.entity").User>;
     getUserProfile(username: string): Promise<import("../databases/user.entity").User>;

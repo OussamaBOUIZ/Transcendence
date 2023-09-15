@@ -22,7 +22,6 @@ const jwtGuard_1 = require("../auth/jwt/jwtGuard");
 const jwt_1 = require("@nestjs/jwt");
 const BlockedTokenList_service_1 = require("../databases/BlockedTokenList/BlockedTokenList.service");
 const stats_dto_1 = require("./dto/stats-dto");
-const game_history_dto_1 = require("./game-history-dto/game-history-dto");
 const search_dto_1 = require("./game-history-dto/search-dto");
 const multer_1 = require("multer");
 const path_1 = require("path");
@@ -59,6 +58,7 @@ const updateMuliterConfig = () => ({
     storage: (0, multer_1.diskStorage)({
         destination: DirUpload,
         filename: async (req, file, cb) => {
+            console.log('111');
             const supportedExt = ['.png', '.jpeg', '.jpg'];
             if (isNaN(parseInt(req.params['userId'], 10)))
                 return cb(new common_1.HttpException('userId Must be a number', common_1.HttpStatus.BAD_REQUEST), false);
@@ -77,7 +77,9 @@ let UserController = class UserController {
         this.BlockedTokenService = BlockedTokenService;
     }
     async updateUserStatus(req, body) {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        console.log(body.status);
+        const userEmail = req.user['email'];
+        const user = await this.userService.findUserByEmail(userEmail);
         if (!user)
             throw new common_1.NotFoundException('user not exist');
         user.status = body.status;
@@ -90,7 +92,7 @@ let UserController = class UserController {
         return await this.getUserDetails(user.id);
     }
     async getOnlineUsers(req) {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        const user = await this.userService.findUserByEmail(req.user['email']);
         if (!user)
             throw new common_1.NotFoundException('user not found');
         return await this.userService.onlineUsers(user.id);
@@ -129,8 +131,7 @@ let UserController = class UserController {
         return trans;
     }
     async blockUser(userId, req, res) {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        const ret = await this.userService.blockUser(userId, user.email);
+        const ret = await this.userService.blockUser(userId, req.user['email']);
         if (typeof ret === 'string')
             return res.status(common_1.HttpStatus.OK).send(ret);
         return res.status(common_1.HttpStatus.OK).send('');
@@ -174,16 +175,12 @@ let UserController = class UserController {
     async getAllFriends(id) {
         return await this.userService.AllFriends(id);
     }
-    async getFriendLastGame(friendId, userId) {
-        return await this.userService.getFriendLastGame(friendId, userId);
-    }
     async getGameHistory(userId) {
-        return await this.userService.getMatchHistory(userId);
+        return await this.userService.getGameHistory(userId);
     }
     async turnOn2fa(id, req, res) {
         const user = await this.userService.findUserById(id);
         const data2fa = this.userService.otpsetup(user);
-        console.log('HERE HERE HERE1');
         user.two_factor_secret = data2fa.secret;
         user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
@@ -192,22 +189,11 @@ let UserController = class UserController {
     }
     async turnOff2fa(id, req, res) {
         const user = await this.userService.findUserById(id);
-        const isCodeValid = this.userService.isUserAuthValid(req.body.token, user);
-        console.log(isCodeValid);
-        if (!isCodeValid)
-            return res.status(200).send('two factor token is invalid');
         user.two_factor_secret = null;
         user.otpPathUrl = null;
         user.is_two_factor = false;
         await this.userService.saveUser(user);
-        return res.status(200).send('');
-    }
-    async isTurned2fa(id, req, res) {
-        const user = await this.userService.findUserById(id);
-        if (await this.userService.userHasAuth(user) === true)
-            return res.status(200).send(true);
-        else
-            return res.status(200).send(false);
+        return res.status(200).send('two factor was turned off');
     }
     async login2fa(req, res) {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -216,20 +202,6 @@ let UserController = class UserController {
         if (!isCodeValid)
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
-    }
-    async setUserNames(userData, req, res, id) {
-        console.log('data is: ', userData);
-        const user = await this.userService.findUserById(id);
-        user.firstname = userData.firstname;
-        user.lastname = userData.lastname;
-        try {
-            user.username = userData.username;
-            await this.userService.saveUser(user);
-        }
-        catch (_a) {
-            return res.status(200).send('nickname already exists');
-        }
-        return res.status(200).send('');
     }
     async postUsername(userData, req, res, id) {
         const user = await this.userService.findUserById(id);
@@ -257,22 +229,14 @@ let UserController = class UserController {
         const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
         const payload = this.jwt.verify(token, { secret: process.env.JWT_SECRET });
-        const till = payload.iat + 180;
+        const till = payload.iat + 86400;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('/');
+        return res.redirect('http://localhost:5137/');
     }
     async addUserStat(statDto, req) {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        await this.userService.addUserStat(statDto, user);
-    }
-    async createGameHistory(gameHistoryDto) {
-        console.log(gameHistoryDto);
-        await this.userService.addGameHistory(gameHistoryDto);
-        return {
-            Message: "The content is created"
-        };
+        await this.userService.addUserStat(statDto, req.user);
     }
     async searchForUser(dto) {
         const { username } = dto;
@@ -437,14 +401,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getAllFriends", null);
 __decorate([
-    (0, common_1.Get)('friendLastGame/:friendId'),
-    __param(0, (0, common_1.Param)('friendId', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Query)('userId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "getFriendLastGame", null);
-__decorate([
     (0, common_1.Get)('game/history/:userId'),
     __param(0, (0, common_1.Param)('userId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
@@ -462,7 +418,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "turnOn2fa", null);
 __decorate([
-    (0, common_1.Post)('2fa/turn-off/:id'),
+    (0, common_1.Get)('2fa/turn-off/:id'),
     (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Req)()),
@@ -472,16 +428,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "turnOff2fa", null);
 __decorate([
-    (0, common_1.Get)('2fa/isTurnedOn/:id'),
-    (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, Object]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "isTurned2fa", null);
-__decorate([
     (0, common_1.Post)('2fa/login/'),
     (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
     __param(0, (0, common_1.Req)()),
@@ -490,17 +436,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "login2fa", null);
-__decorate([
-    (0, common_1.Put)('setUserNames/:id'),
-    (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
-    __param(3, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [userDataDto_1.userNamesDto, Object, Object, Number]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "setUserNames", null);
 __decorate([
     (0, common_1.Post)('setUserData/:id'),
     (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
@@ -522,7 +457,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "isFirstLog", null);
 __decorate([
-    (0, common_1.Post)('logout/:id'),
+    (0, common_1.Get)('logout/:id'),
     (0, common_1.UseGuards)(jwtGuard_1.JwtGuard),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Req)()),
@@ -539,14 +474,6 @@ __decorate([
     __metadata("design:paramtypes", [stats_dto_1.StatsDto, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addUserStat", null);
-__decorate([
-    (0, common_1.Post)('gameHistory/add'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [game_history_dto_1.GameHistoryDto]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "createGameHistory", null);
 __decorate([
     (0, common_1.Get)('search/user'),
     __param(0, (0, common_1.Query)()),

@@ -57,6 +57,7 @@ let GameGateway = class GameGateway {
         console.log("leave game");
     }
     async onAchievement(gameData, socket) {
+        await this.gameservice.userGameDataUpdate(gameData);
     }
     async onSaveScore(score, socket) {
         await this.gameservice.saveScore(score);

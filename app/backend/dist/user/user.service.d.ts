@@ -3,9 +3,8 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from "../databases/achievement/achievement.entity";
 import { Stats } from "../databases/stats.entity";
-import { Match_history } from "../databases/match_history.entity";
 import { StatsDto } from './dto/stats-dto';
-import { GameHistoryDto } from './game-history-dto/game-history-dto';
+import { Game } from 'src/databases/game.entity';
 type tokenPayload = {
     id: number;
     email: string;
@@ -14,9 +13,9 @@ export declare class UserService {
     private statsRepo;
     private userRepo;
     private achieveRepo;
-    private matchHistoryRepo;
+    private gameRepo;
     private readonly jwtService;
-    constructor(statsRepo: Repository<Stats>, userRepo: Repository<User>, achieveRepo: Repository<Achievement>, matchHistoryRepo: Repository<Match_history>, jwtService: JwtService);
+    constructor(statsRepo: Repository<Stats>, userRepo: Repository<User>, achieveRepo: Repository<Achievement>, gameRepo: Repository<Game>, jwtService: JwtService);
     saveUserAvatarPath(userId: number, pathAvatar: string): Promise<User>;
     blockUser(userId: number, user_email: string): Promise<string>;
     onlineUsers(userid: number): Promise<User[]>;
@@ -30,8 +29,8 @@ export declare class UserService {
     userHasAuth(user: User): Promise<boolean>;
     getUserFromJwt(userToken: string): Promise<User>;
     decodeJwtCode(userToken: string): tokenPayload;
-    getMatchHistory(userId: number): Promise<Match_history[]>;
-    getFriendLastGame(friendId: number, userId: number): Promise<Match_history>;
+    getGameHistory(userId: number): Promise<Game[]>;
+    getFriendLastGame(friendId: number, userId: number): Promise<void>;
     deleteUserFromDB(id: number): Promise<void>;
     getPictureById(id: number): void;
     getStatsById(id: number): Promise<User[]>;
@@ -52,8 +51,7 @@ export declare class UserService {
         otpPathUrl: string;
     };
     isUserAuthValid(access_token: string, user: User): boolean;
-    addUserStat(statDto: StatsDto, userReq: User): Promise<void>;
-    addGameHistory(gameHistoryDto: GameHistoryDto): Promise<void>;
+    addUserStat(statDto: StatsDto, userReq: any): Promise<void>;
     getUserProfile(username: string): Promise<User>;
     getUserDetails(id: number): Promise<User>;
 }

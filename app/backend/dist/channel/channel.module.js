@@ -21,12 +21,13 @@ const muted_users_entity_1 = require("../databases/muted_users.entity");
 const achievement_entity_1 = require("../databases/achievement/achievement.entity");
 const stats_entity_1 = require("../databases/stats.entity");
 const match_history_entity_1 = require("../databases/match_history.entity");
+const game_entity_1 = require("../databases/game.entity");
 let ChannelModule = class ChannelModule {
 };
 exports.ChannelModule = ChannelModule;
 exports.ChannelModule = ChannelModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, channel_entity_1.Channel, message_entity_1.Message, muted_users_entity_1.Muted_users, achievement_entity_1.Achievement, stats_entity_1.Stats, match_history_entity_1.Match_history])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, channel_entity_1.Channel, message_entity_1.Message, muted_users_entity_1.Muted_users, achievement_entity_1.Achievement, stats_entity_1.Stats, match_history_entity_1.Match_history, game_entity_1.Game])],
         controllers: [channel_controller_1.ChannelController],
         providers: [channel_service_1.ChannelService, channel_gateway_1.ChannelGateway, jwt_1.JwtService, user_service_1.UserService]
     })
