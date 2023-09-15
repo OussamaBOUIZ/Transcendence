@@ -200,29 +200,23 @@ export class UserService {
                 opponentShots: true
             }
         });
-        console.log('data is: ', data);
         return data;
     }
-    // async getFriendLastGame(friendId: number, userId: number)
-    // {   
-    //     let match = await this.matchHistoryRepo
-    //     .createQueryBuilder('match_history')
-    //     .where('match_history.userId = :userId', { userId })
-    //     .andWhere('match_history.opponent = :friendId', { friendId })
-    //     .orderBy('match_history.id', 'DESC')
-    //     .getOne();
-    //     if(!match)
-    //     {
-    //         match = await this.matchHistoryRepo
-    //         .createQueryBuilder('match_history')
-    //         .where('match_history.userId = :friendId', { friendId })
-    //         .andWhere('match_history.opponent = :userId', { userId })
-    //         .orderBy('match_history.id', 'DESC')
-    //         .getOne();
-    //     }
 
-    //     return match;
-    // }
+    async getFriendLastGame(friendId: number, userId: number)
+    {   
+        const match = await this.gameRepo.findOne({
+            where: [
+                {user1: userId, user2: friendId},
+                {user1: friendId, user2: userId}
+            ],
+            order: {CreatedAt: 'DESC'},
+            select: {
+                userShots: true,
+                opponentShots: true
+            },
+        });
+    }
 
     async deleteUserFromDB(id: number): Promise<void> {
         const user: User = await this.userRepo.findOneBy({ id: id });
