@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, useContext, SetStateAction} from 'react'
 import ChatOverview from './ChatOverview';
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
 import axios from 'axios'
 import "../../scss/chat.scss"
@@ -19,7 +19,7 @@ import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import InboxContext from '../../Context/InboxContext';
-import ErrorPage from '../Errors/errorPages';
+// import ErrorPage from '../Errors/errorPages';
 
 type typeProps = {
     socket: Socket | undefined;
@@ -159,7 +159,7 @@ export default function ChatRooms () {
         <SocketContext.Provider value={{socket, setDefaultRoomType, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
-                <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
+                <div className="addUser z-50 absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
                 </div>
             }

@@ -105,7 +105,6 @@ export default function ChatDm () {
                 id={id} 
                 />
             </div>
-            {/* <ContactDetail oview={userOverview} id={(String(id))}/> */}
             <ChatOverview oview={userOverview} id={id}/>
     </>
     );

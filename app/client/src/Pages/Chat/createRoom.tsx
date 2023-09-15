@@ -6,6 +6,7 @@ import axios from "axios"
 import UserContext from "../../Context/UserContext"
 import { SocketContext } from "./ChatRooms";
 import InboxContext from "../../Context/InboxContext";
+import {handleClickOutside} from "../../Helpers/utils"
 
 interface newRoom {
     channelId: number,
@@ -22,6 +23,8 @@ export default function CreateRoom({action, defaultValue}: {action: string, defa
     const {socket, roomData, myGrade, setIsClick, setAction, setUpdate, setDefaultRoomType} = useContext(SocketContext)
 
     const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: defaultValue, channelOwner: 0})
+    const wrapperRef = handleClickOutside(setIsClick)
+
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -80,7 +83,7 @@ export default function CreateRoom({action, defaultValue}: {action: string, defa
                         </div>
 
   return (
-    <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x">
+    <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x" ref={wrapperRef}>
         <div className="flex justify-end">
             <img className="w-6 cursor-pointer" onClick={() => {setDefaultRoomType("public"); setAction("create"); setIsClick(prev => !prev)}} src={Xmark} alt="exit" />
         </div>
