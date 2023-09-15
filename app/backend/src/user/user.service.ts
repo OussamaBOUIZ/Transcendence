@@ -185,14 +185,23 @@ export class UserService {
     }
 
     async getGameHistory(userId: number): Promise<Game[]> {
-        return await this.gameRepo.find({
-            where: {
-                user1: userId,
-                user2: userId
-            },
-            order: {CreatedAt: 'ASC'},
-            take: 3
+        console.log(userId)
+        const data = await this.gameRepo.find({
+            where: [
+                { user1: userId },
+                { user2: userId }
+            ],
+            order: {CreatedAt: 'DESC'},
+            take: 3,
+            select: {
+                user1: true,
+                user2: true,
+                userShots: true,
+                opponentShots: true
+            }
         });
+        console.log('data is: ', data);
+        return data;
     }
     // async getFriendLastGame(friendId: number, userId: number)
     // {   
