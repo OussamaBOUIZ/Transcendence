@@ -24,13 +24,13 @@
         "s s s s s p p p"
         ;
     }
-    @media (max-width: 1351) { 
+    @media (max-width: 1366px) { 
         width: 100%;
         grid-template: 40% 10% 50% / repeat(8, 1fr);
         grid-template-areas: 
-        "e e e e e p p p"
-        "h h h h h p p p"
-        "s s s s s p p p"
+        "e e e e e e p p"
+        "h h h h h h p p"
+        "s s s s s s p p"
         ;
     }
     @media (max-width: 1279px) {
@@ -56,12 +56,38 @@
     }
 }
 
-.step_cards {
+
+#step_cards {
     grid-area: s;
 }
-.twof-poster {
+#twof-poster {
     grid-area: p;
+    @media (max-width: 1366px ) {
+        justify-self: center;
+        padding: 3em 1em;
+        gap: 1em;
+    }
+    article {
+        h2 {
+            @media (max-width: 1366px ) {
+                // font-size: 1em;
+            }
+        }
+        p {
+            @media (max-width: 1366px ) {
+                margin: 1em auto;
+            }
+        }
+    }
+    figure {
+        img {
+            @media (max-width: 1366px ) {
+                width: 13em;
+            }
+        }
+    }
 }
+
 .heading {
     grid-area: h;
 }
@@ -70,13 +96,14 @@
     grid-area: e;
     @media (max-width: 1366px) {
         padding: 1em;
+        // padding-bottom: 0em;
     }
     @media (max-width: 1024px) {
         padding: 1.5rem;
     }
     figure {
         figcaption {
-            @media (max-width: 1366px ) {padding: 0;}
+            @media (max-width: 1366px ) {padding: 0em ; margin-left: 1em;}
             h2 {
                 @media (max-width: 1366px ) {
                     font-size: 1em;
@@ -102,20 +129,101 @@
                 @media (max-width: 1366px ) {
                     margin: .2em auto;
                 }
-               h2 {
+                h2 {
                     @media (max-width: 1366px ) {
                         font-size: 1em;
                     }
                 }
                 input {
                     @media (max-width: 1366px ) {
-                        padding: .2em;
+                        padding: .2em .4em;
+                        font-size: .8em;
                     }
                 }
             }
-            button {
+            div.button-container {
                 @media (max-width: 1366px ) {
-                    flex: 0;
+                    display: flex;
+                    align-items: end;
+                }
+                
+                button {
+                    @media (max-width: 1366px ) {
+                        padding: .4em 1.5em;
+                        margin-bottom: .2em;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#tfa-heading {
+    h2 {
+        @media (max-width: 1366px ) {
+            margin: 0;
+            paddding: 0;
+            font-size: 1.2em;
+        }
+    }
+}
+
+#step_cards {
+    @media (max-width: 1366px ) {
+        gap: 1em;
+        padding:  .2em;
+        margin: 0 1em;
+    }
+    .step_card {
+        @media (max-width: 1366px ) {
+            width: 33%;
+            margin: 0;
+        }
+        .step-id-container {
+            h2 {
+                @media (max-width: 1366px ) {
+                   font-size: 1em;
+                }
+            }
+        }
+        
+        .card-title-container {
+            @media (max-width: 1366px ) {
+                margin-top: .8em;
+            }
+            h2.card-title  {
+                @media (max-width: 1366px ) {
+                    font-size: .9em;
+                }
+            }
+        }
+        .card-desc-container {
+            @media (max-width: 1366px ) {
+                margin: 1em auto;
+            }
+            p {
+                @media (max-width: 1366px ) {
+                    font-size: .7em;
+                }
+            }
+        }
+        .download-card {
+            @media (max-width: 1366px ) {
+                margin: .2em 2em;
+                padding: .3em;
+            }
+        }
+        img {
+            &.qr-img {
+                @media (max-width: 1366px ) {
+                    width:8em;
+                }
+            }
+            &.pass-img {
+                @media (max-width: 1366px ) {
+                    margin-top: -1em;
+                    height: 8.5em;
                 }
             }
         }

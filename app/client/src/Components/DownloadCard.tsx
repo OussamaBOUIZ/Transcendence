@@ -8,7 +8,7 @@ interface PropType {
 export default function DownloadCard ({image, store, link} : PropType ) {
     return (
         <a href={link} className=' cursor-pointer'>
-            <div className="bg-purple-800 hover:bg-purple-900 p-2 rounded-xl flex gap-5 my-3 mx-5">
+            <div className="bg-purple-800 hover:bg-purple-900 p-2 rounded-xl flex gap-5 my-3 mx-5 download-card">
                 <img src={image} alt="Downlaod" 
                 className=' w-12 desk:w-10 des:h-10'/>
                 <article>

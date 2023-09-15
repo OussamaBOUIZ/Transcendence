@@ -130,8 +130,8 @@ export default function Settings () {
 
     return (
         
-        <section className='settings_grid ml-8 rounded-lg overflow-hidden  mx-auto bg-yellow-200'>
-            <div id="info_edit" className=" bg-yellow-800 px-8 py-10 max-[1351px]:p-0">
+        <section className='settings_grid ml-8 rounded-lg overflow-hidden  mx-auto '>
+            <div id="info_edit" className="px-8 py-10">
                 <figure className='flex  items-center gap-16'>
                     <figcaption className=' px-6 py-8 '>
                         <h2 className='text-xl font-bold '>Your Avatar</h2>
@@ -156,7 +156,7 @@ export default function Settings () {
                             onClick={handleImageUpload}
                         >update</button>
                 </figure>
-                <article className='bg-slate-400'>
+                <article className=''>
                     <form className=' p-10 flex'>
                         <div className="">
                             <div className="username flex my-4">
@@ -167,7 +167,7 @@ export default function Settings () {
                                 />
                             </div>
                             <div className="fullname flex my-4  items-center ">
-                                <h2 className='text-xl font-semibold w-1/2 bg-red-800'>Full Name</h2>
+                                <h2 className='text-xl font-semibold w-1/2 '>Full Name</h2>
                                 <div className="inputs w-1/2  flex gap-4">
                                     <input type="text" name="firstname" id="" value={data.firstname} placeholder={user.firstname} className=' w-1/2 bg-transparent text-white rounded-md p-2 border-gray-500 border-2 '
                                     onChange={updateUserNames}
@@ -178,18 +178,20 @@ export default function Settings () {
                                 </div>
                             </div>
                         </div>
-                        <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 rounded-md '
-                            onClick={handleNamesEdit}
-                        >
-                            Update
-                        </button>
+                        <div className='button-container'>
+                            <button className='bg-pink-500 hover:bg-pink-600 ml-10 px-6 py-8 rounded-md '
+                                onClick={handleNamesEdit}
+                            >
+                                Update
+                            </button>
+                        </div>
                     </form>
                 </article>
             </div>
-            <div className="heading  px-10 py-5">
+            <div id="tfa-heading" className="heading  px-10 py-5">
                 <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
             </div>
-            <div className="twof-poster flex flex-col  gap-14  text-center bg-purple-600 py-32  rounded-2xl w-72 mx-auto
+            <div id='twof-poster' className=" flex flex-col  gap-14  text-center bg-purple-600 py-32  rounded-2xl w-72 mx-auto
                 hover:bg-purple-500 cursor-pointer"
             onClick={handleEnable2FA}
             >
@@ -203,7 +205,7 @@ export default function Settings () {
                     className=' w-56 '/>
                 </figure>
             </div>
-            <div className="step_cards flex px-14 py-2 gap-10">
+            <div id="step_cards" className=" flex px-14 py-2 gap-10">
             <StepCard n={1} heading="Download Google Authenticator" text="Google Authenticator is available in the following app stores">
                 <DownloadCard image='../../../src/Assets/appstore.png' store='App Store' link=''/>
                 <DownloadCard image='../../../src/Assets/playstore.png' store='Google Play' link=''/>
@@ -211,14 +213,14 @@ export default function Settings () {
             <StepCard n={2} heading="Scan the QR code" text="Hold your camera at QR code">
             <div className="mt-6 flex justify-center items-center">
                 <img src="../../../src/Assets/qrcode.png" alt="step card image"
-                    className=' w-44'
+                    className=' w-44 qr-img'
                     />
             </div>
                 </StepCard>
             <StepCard n={3} heading="Enter your 2FA code" text="Enter two factor token from Google Authenticator">
             <div className=" flex justify-center items-center py-8 -mt-8">
                 <img src="../../../src/Assets/password.png" alt="step card image" 
-                    className=' h-44'
+                    className=' h-44 pass-img'
                     />
             </div>
                 </StepCard>
