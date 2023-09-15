@@ -5,6 +5,7 @@ import logo from "../../Assets/Icons/logo1.png"
 import React, {useContext, useEffect, useState} from "react"
 import UserContext from "../../Context/UserContext"
 import Loading from "../Loading"
+import { Link } from "react-router-dom"
 
 
 export default function Sign() {
@@ -30,27 +31,23 @@ export default function Sign() {
         void getImage();
     }, []);
 
-    function handleAuth(props: string) {
-        window.location.replace(`http://localhost:3000/api/auth/${props}`)
-    }
-
     const welcome = <div className="welcome">
         <img src={logo} alt="" />
             <p className="hd" style={{fontSize: "clamp(4rem, 4.8vw, 4.7rem)"}}>Hi there!</p>
-            <p className='pr' style={{fontSize: "clamp(.6rem, .9vw, 1rem)"}}>Welcome to PongLogo, Game Application</p>
+            <p className='pr' style={{fontSize: "clamp(.6rem, .9vw, 1rem)"}}>Welcome to Pong, Game Application</p>
         </div>
 
     const orContent = <div className="orContent">
                             <div className='bar'></div>or<div className='bar'></div>
                         </div>
     const ButtonsAuth = <div className='bttn'>
-                            <button className='btn' onClick={() => handleAuth("google")}>
+                            <Link to={`http://localhost:3000/api/auth/google`} className='btn'>
                                 <img src={googleImg} alt="" /> Sign in with Google
-                            </button>
+                            </Link>
                             {orContent}
-                            <button className='btn'onClick={() => handleAuth("42")}>
+                            <Link to={`http://localhost:3000/api/auth/42`} className='btn'>
                                 <img src={logo42} alt="" /> Sign in with 42 Netowrk
-                            </button>
+                            </Link>
                         </div>
 
     if (isLoading)
