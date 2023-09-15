@@ -30,7 +30,7 @@ export function collision(pad: Pad, ball: Ball): boolean {
 function matchingText(p5: P5CanvasInstance<MySketchProps>) {
   p5.push()
   p5.fill(255);
-  p5.textSize(40);
+  p5.textSize(50);
   p5.textAlign(p5.CENTER);
   p5.textStyle(p5.BOLDITALIC)
   p5.text("Matching...", p5.width / 2, p5.height / 2);
@@ -71,5 +71,6 @@ export function resizeGameVars(width: number) {
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
   vars.SPEED = width / 85;
-  // vars.SPEED = width / 200;
+  vars.NW = width / 100;
+  vars.NH = width / 60;
 }

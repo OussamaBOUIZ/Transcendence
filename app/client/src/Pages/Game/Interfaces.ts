@@ -42,6 +42,8 @@ export interface Vars {
     RADIUS: number;
     SPEED: number;
     vel: Velocity;
+    NW: number;
+    NH: number;
 }
 
 export interface GameMode {

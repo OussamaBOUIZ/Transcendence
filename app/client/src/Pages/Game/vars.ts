@@ -7,6 +7,8 @@ const vars: Vars = {
     PSPEED: 15,
     RADIUS: 8,
     SPEED: 6,
+    NW: 5,
+    NH: 20,
     vel: {
         x: 0,
         y: 0,

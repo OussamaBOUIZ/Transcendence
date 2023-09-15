@@ -4,12 +4,14 @@ import { makeNoise, clipCanvas, resizeGameVars } from "./utils"
 import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
+import Net from "./Net";
 
 const prevPos: Array<Ball> = [];
 
 let leftPad: Pad;
 let rightPad: Pad;
 let ball: Ball;
+let net: Net;
 
 export function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
@@ -22,6 +24,8 @@ export function reset(p5: any, isHost: boolean): void {
     rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     if (isHost)
         ball = new Ball(p5.width / 2, p5.height / 2, vars.RADIUS, {r: 255, g: 13, b: 140, a: 255});
+
+    net = new Net(vars.NW, vars.NH, vars.GAP);
 }
 
 export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
@@ -103,6 +107,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                 p5.image(backImg, 0, 0, p5.width, p5.height);
 
             p5.background(0, 0, 0, 150);
+            net.drawAllNets(p5);
             
 
             if (!props.isMatching && props.gameMode) {
