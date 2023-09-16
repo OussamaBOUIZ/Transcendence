@@ -9,10 +9,16 @@
         background-size: cover;
         padding: 0 16%;
         header {
-        padding: 0 16%;
-            .active {
+            padding: 0 16%;
+            font-weight: 600;
+            a:nth-child(1) {
                 color: $primary-pink;
                 font-weight: 800;
+            }
+            @media (max-width: 870px) {
+                nav {
+                    display: none;
+                }
             }
         }
         .content {
@@ -23,6 +29,25 @@
             p {
                 font-size: 1.125em;
                 font-weight: 600;
+            }
+            @media (max-width: 1110px) {
+                h1 {
+                    font-size: 2rem;
+                }
+                p {
+                    font-size: 1em;
+                }
+            }
+            @media (max-width: 640px) {
+                h1 {
+                    font-size: 1.75rem;
+                }
+                p {
+                    font-size: .75em;
+                }
+            }
+            @media (max-width: 870px) {
+                padding: 0;
             }
             a.button {
                 font-size: 1.125rem;

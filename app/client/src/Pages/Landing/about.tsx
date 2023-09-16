@@ -33,11 +33,11 @@ export default function About() {
     ]
 
     const tech = navLinks.map(item => {
-        return <Link target="_blank" to={item.link} ><img className="h-20" src={item.value} alt="" /></Link>
+        return <Link key={item.value} target="_blank" to={item.link} ><img className="h-20" src={item.value} alt="" /></Link>
     })
 
     const tech2 = navLinks2.map(item => {
-        return <Link target="_blank" to={item.link} ><img className="h-20" src={item.value} alt="" /></Link>
+        return <Link key={item.value} target="_blank" to={item.link} ><img className="h-20" src={item.value} alt="" /></Link>
     })
 
 
