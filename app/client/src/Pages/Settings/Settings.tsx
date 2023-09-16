@@ -154,7 +154,7 @@ export default function Settings () {
                     </div>
                         <button className=' bg-pink-500 hover:bg-pink-600 py-2 px-8   rounded-md'
                             onClick={handleImageUpload}
-                        >update</button>
+                        >Update</button>
                 </figure>
                 <article className=''>
                     <form className=' p-10 flex'>
@@ -207,8 +207,8 @@ export default function Settings () {
             </div>
             <div id="step_cards" className=" flex px-14 py-2 gap-10">
             <StepCard n={1} heading="Download Google Authenticator" text="Google Authenticator is available in the following app stores">
-                <DownloadCard image='../../../src/Assets/appstore.png' store='App Store' link=''/>
-                <DownloadCard image='../../../src/Assets/playstore.png' store='Google Play' link=''/>
+                <DownloadCard image='../../../src/Assets/appstore.png' store='App Store' link="https://apps.apple.com/us/app/google-authenticator/id388497605"/>
+                <DownloadCard image='../../../src/Assets/playstore.png' store='Google Play' link="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&gl=US&pli=1"/>
                 </StepCard>
             <StepCard n={2} heading="Scan the QR code" text="Hold your camera at QR code">
             <div className="mt-6 flex justify-center items-center">
