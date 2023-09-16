@@ -56,3 +56,10 @@ img {
 textarea {
     resize: none;
 }
+
+
+#burger-menu {
+    @media (min-width: 821px ) {
+        display: none;
+    }
+}

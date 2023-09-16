@@ -3,6 +3,7 @@ import logo2 from "../Assets/Icons/logo2.png";
 import { HiMenu, HiOutlineX } from "react-icons/hi";
 import {nanoid} from 'nanoid'
 import { Link } from 'react-router-dom';
+import '../scss/main.scss'
 
 export default function Header () {
 
@@ -28,7 +29,7 @@ export default function Header () {
     return (
         <div className="header flex justify-between px-4 items-center">
             <Link to={'/'}><img className='h-24' src={logo2} alt="logo" /></Link>
-            <HiMenu className="menu sm:hidden w-6 h-6 cursor-pointer" onClick={() => setOn(prev => !prev)}/>
+            <HiMenu id="burger-menu" className="menu  w-6 h-6 cursor-pointer" onClick={() => setOn(prev => !prev)}/>
             {
                 On &&
                 <nav className='nav fixed top-0 right-0 bg-primary-pink w-11/12 h-full p-12 z-50 rounded-bl-full'>
