@@ -48,7 +48,7 @@ export default class Pad {
                 this.y -= vars.PSPEED;
         }
 
-        if (isHost && collision(this, ball)) {
+        if (isHost && ball && collision(this, ball)) {
             const rad: number = p5.radians(45);
             const diff: number = ball.y - this.y;
             const angle: number = p5.map(diff, 0, this.h, -rad, rad);

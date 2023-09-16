@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react'
+import React, {useEffect, useState, useContext, useRef} from 'react'
 import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
@@ -39,7 +39,7 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 2
+        maxScore: 11
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -57,14 +57,14 @@ let roomKey: string;
 
 export default function Game () {
     const [isHost, setIsHost] = useState<boolean>(true);
+    const isWin = useRef<boolean>(false);
+    const oppUser = useRef<User>({} as User);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
-    const [mode, setMode]  = useState<GameMode>();
+    const [mode, setMode]  = useState<GameMode | undefined >(undefined);
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
-    const [oppUser, setOppUser] = useState<User>({} as User);
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const [isWin, setIsWin] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
     const {key, gameMode} = useParams();
@@ -75,42 +75,46 @@ export default function Game () {
                 userScore: finalScore?.myScore,
                 opponentScore: finalScore?.oppScore,
                 userId: user.id,
-                opponentId: oppUser.id || 1000
+                opponentId: oppUser.current.id
             })
             // socket?.emit("achievement", {
             //     userId: user.id,
-            //     wonXp: gameModes.get(gameMode)?.xp,
-            //     gameName: gameModes.get(gameMode)?.modeName,
+            //     wonXp: mode?.xp,
+            //     gameName: mode?.modeName,
             //     opponentLevel: oppUser.stat?.ladder_level,
+            // })
             // })
         }
     }
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
-            setScore(score);
+            setScore(score);oppUser.current.id
         })
-        socket?.on("leaveGame", () => {
-            setIsGameEnd(true);
-            setIsWin(true);
-            if (gameMode)
-                updateDataBase({myScore: gameModes.get(gameMode)?.maxScore, oppScore: 0})
-            socket?.emit("gameEnd", key);
-            socket?.disconnect()
-        })
+        if (!isGameEnd) {
+            socket?.on("leaveGame", () => {
+                setIsGameEnd(true);
+                isWin.current = true;
+                if (gameMode)
+                    updateDataBase({myScore: mode?.maxScore, oppScore: 0})
+                socket?.emit("gameEnd", key);
+                socket?.disconnect()
+            })
+        }
     }, [socket])
 
     useEffect(() => {
-        if (gameMode && (score.myScore === gameModes.get(gameMode)?.maxScore 
-                || score.oppScore === gameModes.get(gameMode)?.maxScore )) {
+        if (gameMode && (score.myScore === mode?.maxScore 
+                || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey)
             console.log("game end");
-            // socket.disconnect();
         }
 
-        if (gameMode && score.myScore === gameModes.get(gameMode)?.maxScore) {
-            setIsWin(true);
+
+        if (gameMode && score.myScore === mode?.maxScore) {
+            console.log(score.myScore, mode?.maxScore);
+            isWin.current = true;
             updateDataBase(score);
         }
     }, [score])
@@ -129,7 +133,7 @@ export default function Game () {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
-                xp: gameModes.get(gameMode)?.xp,
+                xp: mode?.xp,
                 user: user,
             })
 
@@ -138,7 +142,7 @@ export default function Game () {
                 setGameKey(data.roomKey);
                 roomKey = data.roomKey;
                 newSocket.emit("joinGame", data.roomKey);
-                setOppUser(data.user);
+                oppUser.current = data.user;
                 console.log(data.user);
                 setIsMatching(false);
             })
@@ -164,7 +168,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                {!isMatching && <Board score={score} oppUser={oppUser} isHost={isHost}/>}
+                {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}
@@ -178,7 +182,7 @@ export default function Game () {
                     setScore={setScore}
                     isGameEnd={isGameEnd}
                     setIsGameEnd={setIsGameEnd}
-                    isWin={isWin}
+                    isWin={isWin.current}
                 />
             </div>
         </section>

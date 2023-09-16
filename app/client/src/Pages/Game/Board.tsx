@@ -17,8 +17,8 @@ export default function Board({score, oppUser, isHost}: {score: Score, oppUser: 
 
     return (
         <div className='relative flex w-full'>
-            <p id="username" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? user.username : oppUser?.username }</p>
-            <p id="username2" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? oppUser?.username : user.username }</p>
+            <p id="username" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? oppUser?.username: user.username  }</p>
+            <p id="username2" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? user.username : oppUser?.username  }</p>
 
 
             <PowerBar right={true} oppUser={oppUser}/>
@@ -26,7 +26,7 @@ export default function Board({score, oppUser, isHost}: {score: Score, oppUser: 
 
             <div className='absolute w-full  flex text-2xl font-bold justify-center'>
                     <p className=" text-xl sm:text-xl md:text-xl lg:text-xl">
-                        {hostScore} - {guestScore}
+                        {guestScore} - {hostScore}
                     </p>
             </div>
         </div>

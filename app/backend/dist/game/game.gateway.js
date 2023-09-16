@@ -49,6 +49,7 @@ let GameGateway = class GameGateway {
             const socketsSet = this.server.sockets.adapter.rooms.get(roomKey);
             const socketsArr = Array.from(socketsSet);
             const sock = this.server.sockets.sockets.get(socketsArr[0]);
+            console.log(sock.id);
             sock.emit("notHost");
         }
     }
