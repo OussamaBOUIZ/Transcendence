@@ -29,7 +29,7 @@ function AllAchievement ({item} :{item: Achievement}) {
     )
 }
 
-export default function ContactDetail ({title, oview} : {title: string, oview: User}) {
+export default function ContactDetail ({title, oview} : {title: string, oview?: User}) {
     
     const {setShow} = useContext(UserContext)
     const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)
