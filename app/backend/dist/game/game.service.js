@@ -34,9 +34,7 @@ let gameService = class gameService {
         stat.xp += userWinData.wonXp;
         const newLevel = 0.02 * Math.sqrt(stat.xp);
         stat.ladder_level = Math.floor(newLevel);
-        console.log('newLevel : ', (newLevel - stat.ladder_level));
         stat.levelPercentage = Math.round((newLevel - stat.ladder_level) * 100);
-        console.log('stat:', stat);
         await this.achievementService.setLevelAchievement(oldLevel, stat.ladder_level, userWinData.userId);
         await this.userService.saveStat(stat);
     }

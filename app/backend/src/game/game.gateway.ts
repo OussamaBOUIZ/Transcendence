@@ -54,8 +54,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				waitingUsers.get(mode).filter(
 					(u: User) => u.socket.id !== socket.id)
 				);
-		})
-
+		});
     }
 
 	@SubscribeMessage('joinGame')
@@ -77,8 +76,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('gameEnd')
 	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		socket.leave(roomKey);
+		socket.to(roomKey).emit("leaveGame");
 		console.log("leave game");
+
+		socket.leave(roomKey);
 	}
 
 	@SubscribeMessage('achievement')

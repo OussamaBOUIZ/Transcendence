@@ -15,6 +15,7 @@ export interface MySketchProps extends SketchProps {
     setScore:  React.Dispatch<React.SetStateAction<Score>>;
     isGameEnd: boolean;
     setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
+    isWin: boolean;
 }
 
 export interface Velocity {

@@ -1,6 +1,6 @@
 all: 
 	rm -rf dist/* 
-	docker compose up --build
+	docker compose up --build -d
 
 clean:
 	docker system prune -af

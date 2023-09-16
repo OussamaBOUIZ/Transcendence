@@ -52,6 +52,8 @@ let gameModes = new Map<String, GameMode>([
     }],
 ]);
 
+let roomKey: string;
+
 
 export default function Game () {
     const [isHost, setIsHost] = useState<boolean>(true);
@@ -62,39 +64,54 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [oppUser, setOppUser] = useState<User>({} as User);
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
+    const [isWin, setIsWin] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
     const {key, gameMode} = useParams();
 
+    const updateDataBase = (finalScore: Score | undefined) => {
+        if (gameMode) {
+            socket?.emit("saveScore", {
+                userScore: finalScore?.myScore,
+                opponentScore: finalScore?.oppScore,
+                userId: user.id,
+                opponentId: oppUser.id || 1000
+            })
+            // socket?.emit("achievement", {
+            //     userId: user.id,
+            //     wonXp: gameModes.get(gameMode)?.xp,
+            //     gameName: gameModes.get(gameMode)?.modeName,
+            //     opponentLevel: oppUser.stat?.ladder_level,
+            // })
+        }
+    }
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
+        })
+        socket?.on("leaveGame", () => {
+            setIsGameEnd(true);
+            setIsWin(true);
+            if (gameMode)
+                updateDataBase({myScore: gameModes.get(gameMode)?.maxScore, oppScore: 0})
+            socket?.emit("gameEnd", key);
+            socket?.disconnect()
         })
     }, [socket])
 
     useEffect(() => {
         if (gameMode && (score.myScore === gameModes.get(gameMode)?.maxScore 
                 || score.oppScore === gameModes.get(gameMode)?.maxScore )) {
-            socket.emit("gameEnd", key)
-            // socket.disconnect();
             setIsGameEnd(true);
-            console.log("gamee end");
+            socket?.emit("gameEnd", gameKey)
+            console.log("game end");
+            // socket.disconnect();
         }
 
         if (gameMode && score.myScore === gameModes.get(gameMode)?.maxScore) {
-            socket?.emit("saveScore", {
-                userScore: score.myScore,
-                opponentScore: score.oppScore,
-                userId: user.id,
-                opponentId: oppUser.id
-            })
-            socket?.emit("achievement", {
-                userId: user.id,
-                wonXp: gameModes.get(gameMode)?.xp,
-                gameName: gameModes.get(gameMode)?.modeName,
-                opponentLevel: oppUser.stat?.ladder_level,
-            })
+            setIsWin(true);
+            updateDataBase(score);
         }
     }, [score])
 
@@ -106,7 +123,8 @@ export default function Game () {
 
         if (key && gameMode) {
             setGameKey(key);
-            newSocket.emit("joinGame", key);forFeature
+            roomKey = key;
+            newSocket.emit("joinGame", key);
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
@@ -118,12 +136,10 @@ export default function Game () {
             newSocket.on("matched", (data: any) => {
                 console.log("matched room key: ", data.roomKey);
                 setGameKey(data.roomKey);
+                roomKey = data.roomKey;
                 newSocket.emit("joinGame", data.roomKey);
                 setOppUser(data.user);
-
                 console.log(data.user);
-
-
                 setIsMatching(false);
             })
         }
@@ -131,7 +147,7 @@ export default function Game () {
 
         return () => {
             console.log("component unmount");
-            newSocket.emit("gameEnd", key)
+            newSocket.emit("gameEnd", roomKey);
             newSocket.disconnect();
         };
     }, [])
@@ -162,6 +178,7 @@ export default function Game () {
                     setScore={setScore}
                     isGameEnd={isGameEnd}
                     setIsGameEnd={setIsGameEnd}
+                    isWin={isWin}
                 />
             </div>
         </section>

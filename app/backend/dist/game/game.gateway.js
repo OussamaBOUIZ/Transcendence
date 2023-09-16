@@ -53,8 +53,9 @@ let GameGateway = class GameGateway {
         }
     }
     async onGameEnd(roomKey, socket) {
-        socket.leave(roomKey);
+        socket.to(roomKey).emit("leaveGame");
         console.log("leave game");
+        socket.leave(roomKey);
     }
     async onAchievement(gameData, socket) {
         await this.gameservice.userGameDataUpdate(gameData);

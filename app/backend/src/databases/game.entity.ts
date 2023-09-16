@@ -6,10 +6,10 @@ export class Game extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @Column()
+    @Column({nullable: true})
     user1: number
 
-    @Column()
+    @Column({nullable: true})
     user2: number
 
     @Column({default: 0})

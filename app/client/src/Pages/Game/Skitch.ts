@@ -49,7 +49,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         score: {myScore: 0, oppScore: 0},
         setScore: () => {},
         isGameEnd: false,
-        setIsGameEnd: () => {}
+        setIsGameEnd: () => {},
+        isWin: false
     }
 
     let first_time: boolean = true;
@@ -93,10 +94,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     p5.draw = (): void => {
         if (props.isGameEnd) {
-
-            // console.log(props , Number(props.gameMode?.maxScore));
-
-            if (props.score.myScore == props.gameMode?.maxScore)
+            if (props.isWin)
                 p5.image(winImg, 0, 0, p5.width, p5.height);
             else
                 p5.image(loseImg, 0, 0, p5.width, p5.height);
