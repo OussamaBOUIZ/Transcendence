@@ -43,7 +43,7 @@ export default function ChatOverview({oview, id}: {oview?: User, id: string | un
     
     switch (true) {
       case chatRegex.test(pathname):
-        val = (id) ? <ContactDetail oview={oview} /> : <CustomField content={dmGuideText}/>;
+        val = (id) ? <ContactDetail title="Contact details" oview={oview} /> : <CustomField content={dmGuideText}/>;
         break;
       case chatRoomsRegex.test(pathname):
         val = (id) ? <ChannelInfo /> : <CustomField content={roomGuideText}/>;
