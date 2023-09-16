@@ -16,11 +16,11 @@ export default function Team() {
 
     const team = navLinks.map(item => {
         return (
-            <div className="team-member flex flex-col gap-8 item-center">
+            <div key={item.github} className="team-member flex flex-col gap-8 item-center">
                 <div className="photo relative  w-32 h-32">
                     <img className="relative rounded-full w-full h-full z-10" src={item.image} alt="" />
                     <svg className="absolute -top-2 -left-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" fill="none">
-                        <circle cx="85" cy="85" r="83" stroke="white" stroke-width="3"/>
+                        <circle cx="85" cy="85" r="83" stroke="white" strokeWidth="3"/>
                     </svg>
                 </div>
                 <div className="flex gap-4 justify-center">
