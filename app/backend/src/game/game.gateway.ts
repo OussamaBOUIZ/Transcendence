@@ -14,6 +14,7 @@ import { Game } from 'src/databases/game.entity';
 import { userWinDto } from "./dto/userWinDto";
 import { scoreStoreDto } from "./dto/scoreSavingDto";
 import { gameService } from "./game.service";
+import { log } from "console";
 
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
@@ -68,10 +69,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
 			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
 			const socketsArr: Array<string> = Array.from(socketsSet);
+			console.log(socketsArr);
 			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
 
-			console.log(sock.id);
-			sock.emit("notHost");
+			try {
+
+				sock.emit("notHost", (err, response) => {
+					console.log('error is: ', err);
+				});
+			}
+			catch (e)
+			{
+				console.log('error is: ', e);
+			}
+			console.log('HERE AFTER');
 		}
 	}
 

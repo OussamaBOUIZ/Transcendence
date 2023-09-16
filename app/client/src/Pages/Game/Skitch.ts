@@ -105,7 +105,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
             props.socket?.on("notHost", () => {
                 props.setIsHost(false);
-                console.log(props.isHost);
+                console.log("This client is not the host");
             })
 
 

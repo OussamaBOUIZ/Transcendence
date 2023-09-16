@@ -18,7 +18,7 @@ export default class Ball {
     }
     
     fadeEffect () {
-        this.color.a -= 12;
+        this.color.a -= 15;
         this.r -= 0.5;
     }
     

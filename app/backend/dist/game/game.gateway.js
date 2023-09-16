@@ -48,9 +48,17 @@ let GameGateway = class GameGateway {
         if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
             const socketsSet = this.server.sockets.adapter.rooms.get(roomKey);
             const socketsArr = Array.from(socketsSet);
+            console.log(socketsArr);
             const sock = this.server.sockets.sockets.get(socketsArr[0]);
-            console.log(sock.id);
-            sock.emit("notHost");
+            try {
+                sock.emit("notHost", (err, response) => {
+                    console.log('error is: ', err);
+                });
+            }
+            catch (e) {
+                console.log('error is: ', e);
+            }
+            console.log('HERE AFTER');
         }
     }
     async onGameEnd(roomKey, socket) {

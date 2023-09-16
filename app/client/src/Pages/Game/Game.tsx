@@ -97,7 +97,7 @@ export default function Game () {
                 isWin.current = true;
                 if (gameMode)
                     updateDataBase({myScore: mode?.maxScore, oppScore: 0})
-                socket?.emit("gameEnd", key);
+                socket?.emit("gameEnd", key);   
                 socket?.disconnect()
             })
         }
