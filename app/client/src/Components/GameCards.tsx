@@ -15,22 +15,18 @@ const data = [
   {
     "name": "Battle Royal",
     "image": "/src/Assets/GameArea/galaxy.jpg",
-    "description": "Embrace thrilling challenges, face fierce opponents",
   },
   {
     "name": "Blazing Pong", 
     "image": "/src/Assets/GameArea/snowy-mount.jpg",
-    "description": "Defeat rivals in intense head-to-head battles",
   },
   {
     "name": "Arctic Pong",
     "image": "/src/Assets/GameArea/arcticarea.jpg", 
-    "description": "Unleash your competitive spirit in Arctic Area"
   },
   {
      "name": "Retro Pong",
      "image": "/src/Assets/GameArea/RetroPong.jpg",
-     "description": "Outmatch, outplay, and claim victory over opponents."  
   }
 ]
 

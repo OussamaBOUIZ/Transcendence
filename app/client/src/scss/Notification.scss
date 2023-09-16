@@ -83,7 +83,9 @@
 	  animation: scale-in .3s ease-out forwards,
 		  expand .35s .25s ease-out forwards;
 	}
-	
+	.reset {
+		animation: none;
+	}
 	@keyframes scale-in {
 	  100% {
 		  transform: scale(1);

@@ -13,8 +13,7 @@ import Loading from "../Loading";
 
 export default function Prompt() {
 
-    const {user} = useContext(UserContext)
-    const [notif, setNotif] = useState("")
+    const {user, notif, setNotif} = useContext(UserContext)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
 
@@ -46,7 +45,6 @@ export default function Prompt() {
     }
 
     const handleSubmit = () => {
-        setNotif('')
         const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
                 if (data) {

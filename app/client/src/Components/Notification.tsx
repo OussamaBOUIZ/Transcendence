@@ -20,23 +20,18 @@ export default function Notification({ message, playNow }: {message?: string, pl
 		if(outerDivRef.current)
 			outerDivRef.current.style.setProperty('--duration', '6');
 		const roundTimeBarDiv = document.querySelector('.round-time-bar div')
-
-		const handleAnimationEnd = () => {
-			setIsAnimationFinished(true)
-		};
-
-		roundTimeBarDiv?.addEventListener('animationend', handleAnimationEnd)
+		roundTimeBarDiv?.addEventListener('animationend', () => setIsAnimationFinished(true))
 
 		return () => {
-			roundTimeBarDiv?.removeEventListener('animationend', handleAnimationEnd)
+			roundTimeBarDiv?.removeEventListener('animationend', () => setIsAnimationFinished(true))
 		};
 	}, []);
-
 
 	const popUp = <div className="notification-text">
 					<BsFillInfoCircleFill />
 					<p>{message}</p>
 				</div>
+
 	const invitation = <div className="flex w-full items-center justify-between">
 		<figure className="flex items-center justify-center gap-2">
 			<ProfileImage image={playNow?.image} name={playNow?.username} size="small" />
@@ -53,7 +48,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 		<>
 			{!isAnimationFinished && (<div className="NotifContainer">
 				<div className="rectangle">{Content}</div>
-				<div ref={outerDivRef}className="round-time-bar" data-style="smooth">
+				<div ref={outerDivRef}className='round-time-bar' data-style="smooth">
 					<div></div>
 				</div>
 			</div>)}

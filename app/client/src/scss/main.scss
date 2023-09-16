@@ -8,6 +8,11 @@
    box-sizing: border-box;
 }
 
+body,
+html {
+  overflow-x: hidden;
+}
+
 *:focus {
     outline : none;
 }

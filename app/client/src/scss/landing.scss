@@ -1,0 +1,89 @@
+@import './var.scss';
+
+.landing {
+    .cover {
+        background: linear-gradient(180deg, rgba(14, 14, 14, 0.00) 47.65%, #000 100%),
+        linear-gradient(to bottom, #6E0C87 0%, rgba(92, 10, 113, 0.00) 64.55%),
+        url("../Assets/headerBackground.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding: 0 16%;
+        header {
+        padding: 0 16%;
+            .active {
+                color: $primary-pink;
+                font-weight: 800;
+            }
+        }
+        .content {
+            h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+            }
+            p {
+                font-size: 1.125em;
+                font-weight: 600;
+            }
+            a.button {
+                font-size: 1.125rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                padding: 0.625rem 4.3125rem;
+                border-radius: 0 1.25rem;
+                background: var(--Linear, linear-gradient(93deg, #FD40D0 -49.51%, #710B8A 98.11%));
+                box-shadow: 0px 2px 20px 0px #300D55;
+            }
+        }
+        .shadow {
+            width: 40.125rem;
+            height: 24.0625rem;
+            border-radius: 40.125rem;
+            background: rgba(33, 7, 74, 0.70);
+            filter: blur(90px);
+        }
+    }
+    .gameInfo2 {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 77.69%, #000 99.33%),
+        linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.00) 14.92%);
+    }
+    
+    .gameInfo2::before {
+        content: "";
+        background-image: url("../Assets/two\ people\ playing\ ping\ pong\ in\ the\ mountain\,\ viol_xl-beta-v2-2-2.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.25;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+    .gameInfo {
+        padding: 0 16%;
+        h1 {
+            font-size: 1.375em;
+        }
+        p {
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+        a.button {
+            width: 14rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            padding: 0.625rem 4.3125rem;
+            border-radius: 0 1.25rem;
+            background: var(--Linear, linear-gradient(93deg, #FD40D0 -49.51%, #710B8A 98.11%));
+            box-shadow: 0px 2px 20px 0px #300D55;
+        }
+    }
+    #about figure {
+        padding: 0 16%;
+    }
+    .team {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 77.69%, #000 99.33%),
+        linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.00) 14.92%);
+    }
+}
