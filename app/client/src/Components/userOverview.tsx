@@ -20,7 +20,7 @@ export default function UserOverview ({UserData}: {UserData: User}) {
     // const AchievementsElements = UserData?.stat?.achievements?.map((item) => <GetAchievementsCard key={item.id} item={item} />)
     return (
         <div className="user_overview">
-            <ContactDetail oview={UserData} />
+            <ContactDetail title="My Profile" oview={UserData} />
         </div>
     );
 }
