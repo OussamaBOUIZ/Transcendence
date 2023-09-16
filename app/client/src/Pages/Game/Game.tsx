@@ -106,7 +106,7 @@ export default function Game () {
 
         if (key && gameMode) {
             setGameKey(key);
-            newSocket.emit("joinGame", key);forFeature
+            newSocket.emit("joinGame", key);
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {

@@ -19,11 +19,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Game.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], Game.prototype, "user1", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], Game.prototype, "user2", void 0);
 __decorate([

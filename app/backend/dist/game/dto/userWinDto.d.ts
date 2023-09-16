@@ -3,4 +3,5 @@ export declare class userWinDto {
     wonXp: number;
     gameName: string;
     opponentLevel: number;
+    opponentId: number;
 }
