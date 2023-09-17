@@ -7,6 +7,7 @@ import Team from "./team.tsx"
 import "../../scss/landing.scss"
 
 export default function Landing() {
+    
     return (
         <div className="landing w-full h-full">
             <Cover />

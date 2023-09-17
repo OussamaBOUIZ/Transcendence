@@ -1,5 +1,4 @@
 import React from 'react'
-import "../../scss/utils.scss"
 import axios, {AxiosResponse} from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'

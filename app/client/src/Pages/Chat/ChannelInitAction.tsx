@@ -69,7 +69,7 @@ export default function ChannelInitAction () {
 
     const list = channels.map((channel) => {
         return (
-            <section>
+            <section key={channel.id}>
                 <div className={`channel flex gap-3 justify-start cursor-pointer px-4 py-4 ${selectedChannel?.id === channel.id ? 'bg-room-bar' : ''}`} key={channel.id} onClick={() => setSelectedChannel(channel)}>
                     <img src={cube} alt="cube" />
                     <h2>{channel.channel_name}</h2>

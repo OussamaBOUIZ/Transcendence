@@ -3,7 +3,7 @@ import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
 import UserContext from "../Context/UserContext";
 import ProfileImage from "./profileImage";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface userType {
 	username: string;
@@ -40,7 +40,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 				<p className="text-xs opacity-80 font-normal">{`${playNow?.gameName} challenge!`}</p>
 			</div>
 		</figure>
-		<NavLink to="/game/IceLand"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></NavLink>
+		<Link to="/game/IceLand"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></Link>
 	</div>;
 	const Content = (message) ? popUp : invitation
 

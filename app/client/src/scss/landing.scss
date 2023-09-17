@@ -143,11 +143,8 @@
         figure {
             width: 80%;
         }
-        .tableIMG {
+        #table {
             width: 80%;
-            @media (max-width: 640px) {
-                width: 100%;
-            }
         }
     }
     #about figure {

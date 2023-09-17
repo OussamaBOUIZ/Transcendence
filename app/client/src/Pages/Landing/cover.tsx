@@ -10,7 +10,6 @@ export default function Cover() {
         { link: '#about', value: 'About' },
         { link: '#team', value: 'Team' }
     ]
-
     const Links = navLinks.map((navLink) => {
         return (
             <a
@@ -22,7 +21,6 @@ export default function Cover() {
             </a>
         )
     })
-    
 
     return (
         <div id="home" className="cover flex flex-col w-full h-screen relative">

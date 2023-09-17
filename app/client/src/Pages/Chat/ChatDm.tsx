@@ -24,10 +24,10 @@ export default function ChatDm () {
     const [messageToSendValue, setMessageToSendValue] = useState<string>("");
     const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
 
-    const messagesElements = messagesList.map((msg) => {
+    const messagesElements = messagesList.map((msg, index) => {
         if (msg.message !== "") {
             return (
-                <MessageBox
+                <MessageBox key={index}
                 id={msg.authorId !== user?.id}
                 >
                 {msg.message}

@@ -11,7 +11,7 @@ export default function Battles() {
 
     const battlesElements = battles.map(battle => {
         return (
-            <NavLink to={battle.link} className={`item ${battle.id}`}>
+            <NavLink key={battle.id} to={battle.link} className={`item ${battle.id}`}>
                 <span className={battle.style}>{battle.value}</span>
             </NavLink>
         )

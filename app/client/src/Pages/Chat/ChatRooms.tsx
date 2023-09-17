@@ -44,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show, navigate, setNotif} = useContext(UserContext)
+    const {socket, setSocket, user, show, navigate} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -54,6 +54,7 @@ export default function ChatRooms () {
     const {id} = useParams()
     const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
     const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
+
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -85,7 +86,7 @@ export default function ChatRooms () {
             }
         }
         viewIdRef.current = NaN;
-        if (user && id)
+        if (user.id && id)
             void getInfo()
     }, [id, user])
 
