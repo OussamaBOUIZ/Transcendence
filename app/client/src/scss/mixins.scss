@@ -29,3 +29,8 @@
     flex-direction: column;
     align-items: center;
 }
+
+@mixin mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
