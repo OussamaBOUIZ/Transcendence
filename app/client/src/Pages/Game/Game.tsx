@@ -57,8 +57,6 @@ export default function Game () {
     const [isMatching, setIsMatching] = useState<boolean>(false);
     const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
-    
-    // const { user } = useContext(UserContext);
     const {key, gameMode} = useParams();
 
     useEffect(() => {
@@ -100,10 +98,6 @@ export default function Game () {
 
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
-            {/* <div className='usersBG absolute flex w-full h-full top-0'>
-                <div className='users leftUser'><img src={img} alt="" /></div>
-                <div className='users rightUser'><img src={img2} alt="" /></div>
-            </div> */}
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>

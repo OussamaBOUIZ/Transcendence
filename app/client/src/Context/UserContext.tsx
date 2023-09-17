@@ -3,6 +3,7 @@ import { User } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import { Socket } from 'socket.io-client';
+import { NavigateFunction, useNavigate } from 'react-router';
 
 
 type typeProps = {
@@ -26,8 +27,9 @@ type typeProps = {
   setStatusCode: React.Dispatch<React.SetStateAction<string>>;
   statusText: string;
   setStatusText: React.Dispatch<React.SetStateAction<string>>;
-  invitation: {image: string;username: string;} | undefined;
-  setInvitation: React.Dispatch<React.SetStateAction<{image: string;username: string;} | undefined>>;
+  invitation: {image: string;username: string; gameName: string} | undefined;
+  setInvitation: React.Dispatch<React.SetStateAction<{image: string;username: string; gameName: string} | undefined>>;
+  navigate: NavigateFunction
 }
 
 const UserContext = createContext<typeProps>({} as typeProps);
@@ -43,7 +45,9 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
     const [statusCode, setStatusCode] = useState<string>("")
     const [statusText, setStatusText] = useState<string>("")
-    const [invitation, setInvitation] = useState<{image: string, username: string}>()
+    const [invitation, setInvitation] = useState<{image: string, username: string, gameName: string}>()
+    const navigate = useNavigate()
+
 
 
     const fetchUserData = async () => {
@@ -97,7 +101,8 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             show, setShow,
             statusCode, setStatusCode,
             statusText, setStatusText,
-            invitation, setInvitation
+            invitation, setInvitation,
+            navigate
         }}>
             {children}
         </UserContext.Provider>

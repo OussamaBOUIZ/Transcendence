@@ -100,6 +100,12 @@ interface channelData {
     channelUsers: {id: number, firstname: string, lastname: string, username: string, image?: string, stat: {wins: number, losses: number}}[]
 }
 
+export interface gameInvInfo {
+    userId: number;
+    guestId: number;
+    gameName: string;
+}
+
 interface rooms {
     channel_type: string;
     id: number;

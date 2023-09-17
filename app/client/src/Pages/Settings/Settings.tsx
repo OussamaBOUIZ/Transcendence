@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import UserContext from '../../Context/UserContext';
 import StepCard from '../../Components/StepCard';
 import "../../scss/settings.scss"
@@ -8,6 +8,7 @@ import { Data } from '../../../global/Interfaces';
 import axios, { AxiosRequestConfig } from 'axios';
 import { setFullName } from '../../Hooks/setFullName';
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import Loading from '../Loading';
 
 export default function Settings () {
 
@@ -126,7 +127,7 @@ export default function Settings () {
     } , [user])
     
     if (user === undefined)
-        return (null)
+        return (<Loading />)
 
     return (
         

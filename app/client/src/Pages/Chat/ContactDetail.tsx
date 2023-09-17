@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { User, Achievement } from '../../../global/Interfaces';
 import { HiOutlineX } from "react-icons/hi";
 import UserContext from '../../Context/UserContext';
@@ -29,7 +29,7 @@ function AllAchievement ({item} :{item: Achievement}) {
     )
 }
 
-export default function ContactDetail ({title, oview} : {title: string, oview: User}) {
+export default function ContactDetail ({title, oview} : {title: string, oview?: User}) {
     
     const {setShow} = useContext(UserContext)
     const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)

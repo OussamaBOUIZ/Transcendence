@@ -1,5 +1,4 @@
 import React from 'react'
-import "../../scss/utils.scss"
 import axios, {AxiosResponse} from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
@@ -12,7 +11,7 @@ export default function ChatSearchBox () {
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
     const initialRender = React.useRef<boolean>(true)
-    const {notif, setNotif} = useContext(UserContext)
+    const {setNotif} = useContext(UserContext)
 
     const submitStyle = {
         marginTop: "1em",

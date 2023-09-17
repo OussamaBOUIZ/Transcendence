@@ -26,9 +26,9 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
         </header>
     }
     let data = (NBgames === 4) ? dataFour.dataFour : allData.allData
-    games.current = data.map(game => {
+    games.current = data.map((game, index) => {
         return (
-            <History userData={UserData} gameData={game} />
+            <History key={index} userData={UserData} gameData={game} />
         )
     })
 

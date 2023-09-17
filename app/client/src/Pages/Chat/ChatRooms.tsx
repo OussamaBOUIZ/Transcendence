@@ -19,6 +19,7 @@ import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import InboxContext from '../../Context/InboxContext';
+// import ErrorPage from '../Errors/errorPages';
 
 type typeProps = {
     socket: Socket | undefined;
@@ -43,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, isAnimationFinished, setIsAnimationFinished, show, setStatusCode, setStatusText, setNotif} = useContext(UserContext)
+    const {socket, setSocket, user, show, navigate} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -53,6 +54,7 @@ export default function ChatRooms () {
     const {id} = useParams()
     const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
     const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
+
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -71,10 +73,8 @@ export default function ChatRooms () {
                         const res = await axios.get<{id: number}[]>(`/api/user/blockedUsers/${user?.id}`);
                         setBlockedUsers(res.data)
                     }
-                    catch (err) {
-                        setStatusCode(err.response.status)
-                        setStatusText(err.response.statusText)
-                        // window.location.replace('/error')
+                    catch (err: any) {
+                        navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                     }
                 }
                 catch (err) {
@@ -86,14 +86,12 @@ export default function ChatRooms () {
             }
         }
         viewIdRef.current = NaN;
-        if (user && id)
+        if (user.id && id)
             void getInfo()
     }, [id, user])
 
     // create socket
     useEffect(() => {
-        console.log("socket room is called");
-        
         const fd = io("ws://localhost:1212", {
             withCredentials: true,
         })
@@ -153,7 +151,7 @@ export default function ChatRooms () {
     // listener
     useEffectOnUpdate(listener(socket, user.id, setMessageList, setBanned), [socket]);
 
-    useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
+    // useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
 
     if (!socket && !roomData)
         return null;
@@ -162,7 +160,7 @@ export default function ChatRooms () {
         <SocketContext.Provider value={{socket, setDefaultRoomType, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
-                <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
+                <div className="addUser z-50 absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
                 </div>
             }
@@ -172,7 +170,6 @@ export default function ChatRooms () {
                     <CreateRoom action={action} defaultValue={defaultRoomType}/>
                 </div>
             }
-            {/* {notif && <Notification message={notif} />} */}
             <InboxRooms />
             <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />

@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ionic/core": "^7.4.0",
     "@react-three/fiber": "^8.13.5",
     "@uidotdev/usehooks": "^2.2.0",
     "framer-motion-3d": "^10.12.21",
@@ -23,6 +24,7 @@
     "react-router-dom": "^6.14.1",
     "sass": "^1.63.6",
     "socket.io-client": "^4.7.1",
+    "swiper": "^10.2.0",
     "three": "^0.154.0"
   },
   "devDependencies": {

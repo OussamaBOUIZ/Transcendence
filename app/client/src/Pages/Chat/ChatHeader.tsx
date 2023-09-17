@@ -8,7 +8,7 @@ import GameCards from '../../Components/GameCards';
 export default function ChatHeader ({id, username, status, avatar}: {id: string | undefined, username:string | undefined, status: string, avatar:string | undefined}) {
     const {user, setShow} = useContext(UserContext)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
-    const [display, setDisplay] = useState<boolean>(false);
+    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
 
     if (!id) {
         return (
@@ -22,7 +22,7 @@ export default function ChatHeader ({id, username, status, avatar}: {id: string 
 
     return (
         <>
-        {display && <GameCards hostId={user.id} guestId={Number(id)} setter={setDisplay}/>}
+        {isPopupOpen && <GameCards hostId={user.id} guestId={Number(id)} setPopupOpen={setPopupOpen}/>}
         <header className='chat_header'>
             <figure>
                 {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
@@ -32,7 +32,7 @@ export default function ChatHeader ({id, username, status, avatar}: {id: string 
                     <p>{status}</p>
                 </figcaption>
             </figure>
-                <button onClick={() => setDisplay((prevVal) => !prevVal)}>
+                <button onClick={() => setPopupOpen((prevVal) => !prevVal)}>
                     Play Now
                 </button>
                 {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={menu} alt="" onClick={() => setShow('overview')}/>}

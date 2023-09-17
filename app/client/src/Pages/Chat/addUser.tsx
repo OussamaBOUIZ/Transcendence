@@ -5,13 +5,15 @@ import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 import { SocketContext } from './ChatRooms'
 import Xmark from "../../Assets/Icons/xmark-solid.svg"
+import {handleClickOutside} from "../../Helpers/utils"
 
 export default function AddUser() {
-    const [currentSearch, setCurrentSearch] = useState("")
-    const [submittedName, setSubmittedName] = useState("")
+    const [currentSearch, setCurrentSearch] = useState<string>("")
+    const [submittedName, setSubmittedName] = useState<string>("")
     const [searchedUser, setSearchedUser] = useState<User>({} as User);
     const initialRender = useRef(true)
     const {setShowSearch} = useContext(SocketContext)
+    const wrapperRef = handleClickOutside(setShowSearch)
 
     function handleChange (e: { target: { value: string; }; }) {
         setCurrentSearch(e.target.value)
@@ -45,9 +47,9 @@ export default function AddUser() {
     }, [submittedName])
 
     return (
-        <section className="bg-primary-color flex flex-col rounded-xl p-2">
+        <section className="bg-primary-color flex flex-col rounded-xl p-2" ref={wrapperRef}>
             <div className="flex justify-end">
-                <img className="w-6 cursor-pointer" onClick={() => setShowSearch(prev => !prev)} src={Xmark} alt="exit" />
+                <img className="w-6 cursor-pointer" onClick={() => setShowSearch(false)} src={Xmark} alt="exit" />
             </div>
             <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                 <label>Search</label>
@@ -59,7 +61,7 @@ export default function AddUser() {
                     onChange={handleChange}
                     value={currentSearch}
                     />
-                    <input className="bg-violet-900 py-1 px-2 rounded-md" type="submit" value="search" />
+                    <input className="bg-primary-pink py-1 px-2 rounded-md" type="submit" value="search" />
                 </div>
             </form>
             {searchedUser.id

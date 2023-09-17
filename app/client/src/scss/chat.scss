@@ -16,6 +16,9 @@ div.chat_container {
         "l l l m m m m m m m m m o o o"
         "l l l m m m m m m m m m o o o"
     ;
+    .addUser {
+        background: rgba(44, 9, 78, 0.85);
+    }
     .popUp {
         width: 100vw;
         height: 100vh;
@@ -103,17 +106,20 @@ div.chat_container {
         nav {
             margin: 0 .5em;
             .nav_link {
-                border-bottom: 1px solid #F7BAF8;
                 width: 50%;
                 padding: 8px;
                 background: transparent;
                 font-size: 16px;
-                color: $text-light-color;
             }
             .active {
                 font-weight: 600;
                 border-bottom: 3px solid #F7BAF8;
                 color: $text-pink-color;
+            }
+            .disactive {
+                font-weight: 400;
+                border-bottom: 1px solid #F7BAF8;
+                color: $text-light-color;
             }
         }
     }

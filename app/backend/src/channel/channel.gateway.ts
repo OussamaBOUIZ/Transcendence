@@ -83,7 +83,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     async receiveInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
     {
         const guest = await this.userService.findUserById(invData.guestId);
-        client.to(guest.socketId).emit('invitation', invData.userId);
+        client.to(guest.socketId).emit('invitation', invData);
     }
 
     @SubscribeMessage('muteuser')
