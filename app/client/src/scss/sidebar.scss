@@ -2,7 +2,7 @@
 @import './mixins.scss';
 
 div.sidebar {
-    width: 60px;
+    width: 4.3em;
     height: 100%;
     margin-left: 0.75em;
     border-radius: 25px;
@@ -12,15 +12,15 @@ div.sidebar {
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding: 1em 0;
-
+    gap: .3em;
+    padding: .5em 0;
     a.sidebar_button {
         @include center-styles;
         background-color: $sdb-color;
-        padding: 5px;
+        padding: .6em;
         border-radius: 10px;
-        width: 26px;
-        height: 26px;
+        // width: 2em;
+        // height: 2em;
         margin: 10px;
         * {
             display: block;
