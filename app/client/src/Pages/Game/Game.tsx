@@ -5,7 +5,7 @@ import {FaSignOutAlt} from 'react-icons/fa'
 import { NavLink } from 'react-router-dom';
 import {io} from "socket.io-client";
 import { useParams } from "react-router-dom"
-import { GameMode, Score } from './Interfaces';
+import { GameMode, Persentage, Score } from './Interfaces';
 import { ReactP5Wrapper } from "react-p5-wrapper"
 import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
@@ -39,7 +39,7 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 30
+        maxScore: 20
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -63,7 +63,9 @@ export default function Game () {
     const [isMatching, setIsMatching] = useState<boolean>(false);
     const [mode, setMode]  = useState<GameMode | undefined >(undefined);
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
+    const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
+    // const [isEffect, setIsEffect] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
     const {key, gameMode} = useParams();
@@ -85,6 +87,27 @@ export default function Game () {
             // })
         }
     }
+
+    
+    useEffect(()  => {
+        setTimeout(() => {
+            setPersentage((prevState) => {
+                return  {...prevState, myPersentage: prevState.myPersentage + 25}
+            });
+
+            if (persentage.myPersentage == 100)
+                setPersentage((prevState) => {
+                    return  {...prevState, myPersentage: 0 }
+                });
+
+            socket.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
+            socket.on("recvPersentage", (per: number) => {
+                setPersentage((prevState) => {
+                    return  {...prevState, oppPersentage: per }
+                });
+            })
+        }, 500)
+    }, [persentage.myPersentage])
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
@@ -110,7 +133,6 @@ export default function Game () {
             console.log("game end");
         }
 
-
         if (gameMode && score.myScore === mode?.maxScore) {
             console.log(score.myScore, mode?.maxScore);
             isWin.current = true;
@@ -118,16 +140,13 @@ export default function Game () {
         }
     }, [score])
 
-
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)))
 
         if (key && gameMode) {
-            setGameKey(key);
-            roomKey = key;
-            newSocket.emit("joinGame", key);
+
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
@@ -167,7 +186,7 @@ export default function Game () {
             </NavLink>
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost}/>}
+                {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}

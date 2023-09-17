@@ -13,6 +13,7 @@ export interface User {
     image?: string;
     stat?: Stat;
     status: string;
+    persentage: number;
 }
 
 interface FriendUser {

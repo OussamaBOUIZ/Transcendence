@@ -63,3 +63,8 @@ export interface Score {
     myScore: number;
     oppScore: number;
 }
+
+export interface Persentage {
+    myPersentage: number;
+    oppPersentage: number;
+}

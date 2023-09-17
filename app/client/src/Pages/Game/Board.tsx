@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import UserContext from '../../Context/UserContext';
 import PowerBar from './PowerBar';
-import { Score } from './Interfaces';
+import { Persentage, Score } from './Interfaces';
 import { User } from '../../../global/Interfaces';
 
-export default function Board({score, oppUser, isHost}: {score: Score, oppUser: User, isHost: boolean}) {
+export default function Board({score, oppUser, isHost, persentage}: {score: Score, oppUser: User, isHost: boolean, persentage: Persentage}) {
     const {user} = useContext(UserContext);
     let hostScore = score.myScore;
     let guestScore = score.oppScore;
@@ -21,8 +21,8 @@ export default function Board({score, oppUser, isHost}: {score: Score, oppUser: 
             <p id="username2" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? user.username : oppUser?.username  }</p>
 
 
-            <PowerBar right={true} oppUser={oppUser}/>
-            <PowerBar right={false} oppUser={oppUser}/>
+            <PowerBar right={true} oppUser={oppUser} persentage={persentage}/>
+            <PowerBar right={false} oppUser={oppUser} persentage={persentage}/>
 
             <div className='absolute w-full  flex text-2xl font-bold justify-center'>
                     <p className=" text-xl sm:text-xl md:text-xl lg:text-xl">

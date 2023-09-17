@@ -60,28 +60,30 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		console.log('join game');
 		
-		socket.join(roomKey);
+		socket.join(roomKey); 
 
 		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
 
-		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
-			const socketsArr: Array<string> = Array.from(socketsSet);
-			console.log(socketsArr);
-			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
+		// if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
+		// 	const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
+		// 	const socketsArr: Array<string> = Array.from(socketsSet);
+		// 	const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
 
-			try {
-
-				sock.emit("notHost", (err, response) => {
-					console.log('error is: ', err);
-				});
-			}
-			catch (e)
-			{
-				console.log('error is: ', e);
-			}
-			console.log('HERE AFTER');
-		}
+		// 	sock.emit("notHost", "This client is not the host", (error) => {
+		// 		if (error === 'error') {
+		// 			console.error('Emit failed');
+		// 		} else {
+		// 			console.log('Emit successful');
+		// 		}}
+		// 	)
+		// 	console.log("Heeeeeeeeeeeeeeeere");
+		// 	// }
+		// 	// catch (e)
+		// 	// {
+		// 	// 	console.log('error is: ', e);
+		// 	// }
+		// 	// console.log('HERE AFTER');
+		// }
 	}
 
 	@SubscribeMessage('gameEnd')
@@ -105,6 +107,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('gameScore')
 	onScore(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.roomKey).emit("scoreChanged", body.score);
+	}
+
+	@SubscribeMessage('changePersentage')
+	onChangePersentage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("recvPersentage", body.persentage);
 	}
 
 
@@ -132,5 +139,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage('game')
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
+
+		if (this.server.sockets.adapter.rooms.get(body.gameKey)?.size == 2) {
+			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(body.gameKey);
+			const socketsArr: Array<string> = Array.from(socketsSet);
+			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
+
+			sock.emit("notHost");
+		}
 	}
 }

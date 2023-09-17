@@ -45,21 +45,6 @@ let GameGateway = class GameGateway {
         console.log('join game');
         socket.join(roomKey);
         console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
-        if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-            const socketsSet = this.server.sockets.adapter.rooms.get(roomKey);
-            const socketsArr = Array.from(socketsSet);
-            console.log(socketsArr);
-            const sock = this.server.sockets.sockets.get(socketsArr[0]);
-            try {
-                sock.emit("notHost", (err, response) => {
-                    console.log('error is: ', err);
-                });
-            }
-            catch (e) {
-                console.log('error is: ', e);
-            }
-            console.log('HERE AFTER');
-        }
     }
     async onGameEnd(roomKey, socket) {
         socket.to(roomKey).emit("leaveGame");
@@ -74,6 +59,9 @@ let GameGateway = class GameGateway {
     }
     onScore(body, socket) {
         socket.to(body.roomKey).emit("scoreChanged", body.score);
+    }
+    onChangePersentage(body, socket) {
+        socket.to(body.roomKey).emit("recvPersentage", body.persentage);
     }
     onSendEffect(body, socket) {
         socket.to(body.roomKey).emit("recieveEffect", body.effect);
@@ -91,7 +79,14 @@ let GameGateway = class GameGateway {
             users.push({ user: body.user, socket });
     }
     onNewMessage(body, socket) {
+        var _a;
         socket.to(body.gameKey).emit("movePad", body);
+        if (((_a = this.server.sockets.adapter.rooms.get(body.gameKey)) === null || _a === void 0 ? void 0 : _a.size) == 2) {
+            const socketsSet = this.server.sockets.adapter.rooms.get(body.gameKey);
+            const socketsArr = Array.from(socketsSet);
+            const sock = this.server.sockets.sockets.get(socketsArr[0]);
+            sock.emit("notHost");
+        }
     }
 };
 exports.GameGateway = GameGateway;
@@ -151,6 +146,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "onScore", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('changePersentage'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "onChangePersentage", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('sendEffect'),
     __param(0, (0, websockets_1.MessageBody)()),

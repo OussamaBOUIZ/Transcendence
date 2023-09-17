@@ -80,7 +80,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
-        reset(p5, props.isHost);
+        reset(p5, props.isHost);  
 
         if (props.gameMode) {
             backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
@@ -90,7 +90,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             winImg = p5.loadImage(`/src/Assets/GameArea/Win.png`);
             readyImg =  p5.loadImage(`/src/Assets/GameArea/Ready.jpg`);
         }
-    }
+    }  
 
     p5.draw = (): void => {
         if (props.isGameEnd) {
@@ -105,9 +105,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
             props.socket?.on("notHost", () => {
                 props.setIsHost(false);
-                console.log("This client is not the host");
             })
-
 
             if (backImg)
                 p5.image(backImg, 0, 0, p5.width, p5.height);
@@ -180,13 +178,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     if (vars.effect === 82) {
                         if (vars.isEffect && props.isHost) {
-                            vars.vel.y -= 0.5;
-                            vars.vel.x -= 0.6;
-                            vars.effect = 0;
+                            vars.vel.y -= 0.4;
+                            vars.vel.x -= 0.5;
                         } else {
-                            vars.vel.y += 0.5;
-                            vars.vel.x += 0.6;
-                            vars.effect = 0;
+                            vars.vel.y += 0.4;
+                            vars.vel.x += 0.5;
                         }
                     }
 
