@@ -39,7 +39,7 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 100
+        maxScore: 30
     }],
     ["BrighGround", {
         modeName: "BrighGround",

@@ -123,7 +123,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }, 2000)
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
-                    ActivateEffect(p5);
+                    if (!vars.isEffect)
+                        ActivateEffect(p5);
                     
                     if (props.isHost) {
                         props.socket?.emit("game", {
@@ -144,7 +145,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     if (vars.isEffect) {
                         props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: vars.effect});
-                        vars.isEffect = false;
+                        // vars.isEffect = false;
                     }
                     props.socket?.on("recieveEffect", (effect: number) => {
                         vars.effect = effect;
@@ -177,16 +178,23 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                         }
                     })
 
-                    if (vars.effect === 83) {
-                        if (props.isHost) {
+                    if (vars.effect === 82) {
+                        if (vars.isEffect && props.isHost) {
                             vars.vel.y -= 0.5;
-                            vars.vel.x -= 0.5;
+                            vars.vel.x -= 0.6;
                             vars.effect = 0;
                         } else {
                             vars.vel.y += 0.5;
-                            vars.vel.x += 0.5;
+                            vars.vel.x += 0.6;
                             vars.effect = 0;
                         }
+                    }
+
+
+                    if (vars.effect === 83) {
+                            vars.vel.y *= 2;
+                            vars.vel.x *= 2;
+                            vars.effect = 0;
                     }
                     
                     prevPos.push(ball.clone(props.gameMode.color));
