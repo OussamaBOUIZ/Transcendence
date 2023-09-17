@@ -25,7 +25,7 @@ export default function Cover() {
     
 
     return (
-        <div id="home" className="cover flex flex-col w-full h-full relative">
+        <div id="home" className="cover flex flex-col w-full h-screen relative">
             <header className="absolute left-0 w-full flex justify-between items-center">
                 <Link to='/'><img className='h-24' src={logo2} alt="logo" /></Link>
                 <nav>

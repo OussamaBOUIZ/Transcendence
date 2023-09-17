@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 
 export default function GameInfo1() {
     return (
-        <div id="gameInfo" className="gameInfo h-full bg-black">
-            <div className="h-full flex justify-between items-center px-28">
+        <div id="gameInfo" className="gameInfo h-screen bg-black">
+            <div className="content h-full flex justify-between items-center px-28">
                 <img src={card1} alt="" />
                 <figure className="w-2/5 flex flex-col gap-4">
                     <div className="flex gap-4 items-center font-semibold">

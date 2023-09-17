@@ -32,10 +32,10 @@ export default function Team() {
     })
 
     return (
-        <div id="team" className="team h-full">
+        <div id="team" className="team h-screen">
             <section className="h-full flex flex-col justify-evenly items-center">
                 <header className="font font-semibold text-3xl">Diam urna tincidunt et semper mi suspendisse:</header>
-                <figure className="flex w-full items-center justify-evenly">
+                <figure className="flex gap-4 flex-wrap w-full items-center justify-evenly">
                     {team}
                 </figure>
             </section>

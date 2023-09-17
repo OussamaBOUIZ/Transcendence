@@ -15,11 +15,6 @@
                 color: $primary-pink;
                 font-weight: 800;
             }
-            @media (max-width: 870px) {
-                nav {
-                    display: none;
-                }
-            }
         }
         .content {
             h1 {
@@ -29,25 +24,6 @@
             p {
                 font-size: 1.125em;
                 font-weight: 600;
-            }
-            @media (max-width: 1110px) {
-                h1 {
-                    font-size: 2rem;
-                }
-                p {
-                    font-size: 1em;
-                }
-            }
-            @media (max-width: 640px) {
-                h1 {
-                    font-size: 1.75rem;
-                }
-                p {
-                    font-size: .75em;
-                }
-            }
-            @media (max-width: 870px) {
-                padding: 0;
             }
             a.button {
                 font-size: 1.125rem;
@@ -87,6 +63,26 @@
     }
     .gameInfo {
         padding: 0 16%;
+        @media (max-width: 1100px) {
+            padding: 0 10%;
+        }
+        @media (max-width: 900px) {
+            padding: 0 5%;
+        }
+        .content {
+            @media (max-width: 1580px) {
+                padding: 0 3rem;
+            }
+            @media (max-width: 1310px) {
+                padding: 0 1.5rem;
+                .tableIMG {
+                    width: 60%;
+                }
+            }
+            @media (max-width: 1190px) {
+                padding: 0 .5rem;
+            }
+        }
         h1 {
             font-size: 1.375em;
         }
@@ -106,9 +102,66 @@
     }
     #about figure {
         padding: 0 16%;
+        @media (max-width: 900px) {
+            padding: 0 10%;
+        }
     }
     .team {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 77.69%, #000 99.33%),
         linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.00) 14.92%);
+    }
+    section header {
+        padding: 0 16%;
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 1110px) {
+    .cover .content {
+        h1 {
+            font-size: 2rem;
+        }
+        p {
+            font-size: 1em;
+        }
+    }
+}
+
+@media (max-width: 870px) {
+    .cover {
+        header nav {
+            display: none;
+        }
+        .content {
+            padding: 0;
+        }
+    }
+    .gameInfo .content {
+        flex-direction: column;
+        justify-content: space-evenly;
+        figure {
+            width: 80%;
+        }
+        .tableIMG {
+            width: 80%;
+            @media (max-width: 640px) {
+                width: 100%;
+            }
+        }
+    }
+    #about figure {
+        padding: 0 5%;
+    }
+}
+
+@media (max-width: 640px) {
+    .cover .content {
+        h1 {
+            font-size: 1.75rem;
+        }
+        p {
+            font-size: .75em;
+        }
     }
 }
