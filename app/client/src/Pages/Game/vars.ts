@@ -12,7 +12,9 @@ const vars: Vars = {
     vel: {
         x: 0,
         y: 0,
-    }
+    },
+    isEffect: false,
+    effect: 0
 }
 
 export default vars;

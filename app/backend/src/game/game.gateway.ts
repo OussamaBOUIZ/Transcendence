@@ -14,8 +14,6 @@ import { Game } from 'src/databases/game.entity';
 import { userWinDto } from "./dto/userWinDto";
 import { scoreStoreDto } from "./dto/scoreSavingDto";
 import { gameService } from "./game.service";
-import { log } from "console";
-
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
 interface User {
@@ -107,6 +105,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('gameScore')
 	onScore(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.roomKey).emit("scoreChanged", body.score);
+	}
+
+
+	@SubscribeMessage('sendEffect')
+	onSendEffect(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("recieveEffect", body.effect);
 	}
 
 	@SubscribeMessage("gameMatching")

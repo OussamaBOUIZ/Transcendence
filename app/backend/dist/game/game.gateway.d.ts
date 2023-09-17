@@ -15,6 +15,7 @@ export declare class GameGateway implements OnGatewayInit, OnGatewayConnection, 
     onAchievement(gameData: userWinDto, socket: Socket): Promise<void>;
     onSaveScore(score: scoreStoreDto, socket: Socket): Promise<void>;
     onScore(body: any, socket: Socket): void;
+    onSendEffect(body: any, socket: Socket): void;
     onGameMatching(body: any, socket: Socket): void;
     onNewMessage(body: any, socket: Socket): void;
 }

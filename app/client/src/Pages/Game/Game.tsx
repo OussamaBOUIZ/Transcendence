@@ -39,7 +39,7 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 11
+        maxScore: 100
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -53,7 +53,6 @@ let gameModes = new Map<String, GameMode>([
 ]);
 
 let roomKey: string;
-
 
 export default function Game () {
     const [isHost, setIsHost] = useState<boolean>(true);
@@ -96,7 +95,7 @@ export default function Game () {
                 setIsGameEnd(true);
                 isWin.current = true;
                 if (gameMode)
-                    updateDataBase({myScore: mode?.maxScore, oppScore: 0})
+                    updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0})
                 socket?.emit("gameEnd", key);   
                 socket?.disconnect()
             })

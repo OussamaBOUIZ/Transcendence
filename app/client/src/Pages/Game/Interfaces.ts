@@ -42,9 +42,11 @@ export interface Vars {
     PSPEED: number;
     RADIUS: number;
     SPEED: number;
-    vel: Velocity;
     NW: number;
     NH: number;
+    vel: Velocity;
+    isEffect: boolean;
+    effect: number;
 }
 
 export interface GameMode {

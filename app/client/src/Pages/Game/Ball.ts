@@ -2,8 +2,6 @@ import { Color, MySketchProps, Score } from "./Interfaces"
 import vars from "./vars"
 import { reset } from "./Skitch"
 
-let hide = false;
-
 export default class Ball {
     x: number;
     y: number;
@@ -18,8 +16,8 @@ export default class Ball {
     }
     
     fadeEffect () {
-        this.color.a -= 15;
-        this.r -= 0.5;
+        this.color.a -= 20;
+        this.r -= 1;
     }
     
     drawBall(p5: any, ballImg: string | null) {
@@ -47,12 +45,8 @@ export default class Ball {
     }
     
     updateBall(p5: any, ballImg: string, props: MySketchProps) {
-        if (p5.keyIsPressed && p5.keyCode === 72) {
-            hide = true;
-            setTimeout(() => { hide = false}, 3000)
-        }
-        
-        if (!hide)
+
+        if (vars.effect !== 72)
             this.drawBall(p5, ballImg);
 
         if (this.x < 0 || this.x > p5.width) {        
@@ -98,9 +92,4 @@ export default class Ball {
         return newBall;
     }
 
-    // hideBall() {
-    //     setTimeout(() => {
-
-    //     }, 1000)
-    // }
 }

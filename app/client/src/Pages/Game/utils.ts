@@ -74,3 +74,14 @@ export function resizeGameVars(width: number) {
   vars.NW = width / 200;
   vars.NH = width / 60;
 }
+
+export function ActivateEffect(p5: any) {
+  if (p5.keyIsPressed) {
+    vars.isEffect = true;
+    vars.effect = p5.keyCode;
+    setTimeout(() => {
+      vars.isEffect = false;
+      vars.effect = 0;
+    }, 800)
+  }
+}

@@ -75,6 +75,9 @@ let GameGateway = class GameGateway {
     onScore(body, socket) {
         socket.to(body.roomKey).emit("scoreChanged", body.score);
     }
+    onSendEffect(body, socket) {
+        socket.to(body.roomKey).emit("recieveEffect", body.effect);
+    }
     onGameMatching(body, socket) {
         const users = waitingUsers.get(body.modeName);
         if (users.length >= 1) {
@@ -148,6 +151,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "onScore", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('sendEffect'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "onSendEffect", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)("gameMatching"),
     __param(0, (0, websockets_1.MessageBody)()),

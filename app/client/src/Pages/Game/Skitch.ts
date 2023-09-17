@@ -1,6 +1,6 @@
 import { P5CanvasInstance } from "react-p5-wrapper";
-import { MySketchProps, Score} from "./Interfaces";
-import { makeNoise, clipCanvas, resizeGameVars } from "./utils"
+import { MySketchProps} from "./Interfaces";
+import { makeNoise, clipCanvas, resizeGameVars, ActivateEffect } from "./utils"
 import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
@@ -34,7 +34,7 @@ export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
     leftPad?.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad?.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
 }
-
+ActivateEffect
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -123,7 +123,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }, 2000)
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
-     
+                    ActivateEffect(p5);
+                    
                     if (props.isHost) {
                         props.socket?.emit("game", {
                             gameKey: props.gameKey,
@@ -141,6 +142,17 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                         });
                     }
 
+                    if (vars.isEffect) {
+                        props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: vars.effect});
+                        vars.isEffect = false;
+                    }
+                    props.socket?.on("recieveEffect", (effect: number) => {
+                        vars.effect = effect;
+                        setTimeout(() => {
+                            vars.effect = 0;
+                        }, 800)
+                    })
+
                     props.socket?.on("movePad", (data: any) => {
                         let per = p5.width / data.canvasSize;
 
@@ -157,12 +169,25 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     prevPos.forEach( (b: Ball, idx: number) =>  {
                         b.fadeEffect();
-                        b.drawBall(p5, null);
+                        if (vars.effect !== 72)
+                            b.drawBall(p5, null);
 
                         if (b.r <= 0) {
                             prevPos.splice(idx, 1);
                         }
                     })
+
+                    if (vars.effect === 83) {
+                        if (props.isHost) {
+                            vars.vel.y -= 0.5;
+                            vars.vel.x -= 0.5;
+                            vars.effect = 0;
+                        } else {
+                            vars.vel.y += 0.5;
+                            vars.vel.x += 0.5;
+                            vars.effect = 0;
+                        }
+                    }
                     
                     prevPos.push(ball.clone(props.gameMode.color));
             
