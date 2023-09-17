@@ -9,7 +9,6 @@ section.settings_grid {
         overflow: visible;
     }
     height: 100%;
-    background-color: red;
     display: grid;
     grid-template: repeat(2, 1fr) 4em repeat(2, 1fr) / repeat(12, 1fr);
     grid-template-areas: 
@@ -77,6 +76,7 @@ section.settings_grid {
 
     @media (max-width: 1920px ) {
         width: 95%;
+        margin-bottom: .5em;
     }
     @media (max-width: 1366px ) {
         justify-self: center;
@@ -380,10 +380,10 @@ section.settings_grid {
 }
 
 #step_cards {
-    background-color: yellow;
     @media (max-width: 1920px ) {
         gap: 0;
         padding-right: 0;
+        padding-bottom: 0;
     }
     @media (max-width: 1366px ) {
         gap: 1em;
@@ -464,6 +464,10 @@ section.settings_grid {
                 margin-top: .2em;
             }
             p {
+                @media (max-width: 1920px ) {
+                    font-size: 1em;
+                    line-height: 1.1em;
+                }
                 @media (max-width: 1366px ) {
                     font-size: .7em;
                 }
