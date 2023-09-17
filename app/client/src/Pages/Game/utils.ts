@@ -75,9 +75,13 @@ export function resizeGameVars(width: number) {
   vars.NH = width / 60;
 }
 
-export function ActivateEffect(p5: any) {
-  if (p5.keyIsPressed) {
+export function ActivateEffect(p5: any, props: MySketchProps) {
+  if (p5.keyIsPressed && props.isEffect) {
+    props.isEffect.current = true;
     vars.isEffect = true;
+    props.setPersentage((prevState) => {
+      return {...prevState, myPersentage: 0}
+    })
     vars.effect = p5.keyCode;
     setTimeout(() => {
       vars.isEffect = false;

@@ -52,10 +52,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setIsGameEnd: () => {},
         isWin: false,
         isEffect: null,
+        setPersentage: () => {}
     }
 
     let first_time: boolean = true;
-
     let backImg: string;
     let ballImg: string;
     let paddleImg: string;
@@ -123,7 +123,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
                     if (props.isEffect?.current && !vars.isEffect) {
-                        ActivateEffect(p5);
+                        ActivateEffect(p5, props);
                     }
                     
                     if (props.isHost) {

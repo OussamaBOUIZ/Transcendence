@@ -92,10 +92,10 @@ export default function Game () {
     useEffect(()  => {
         setTimeout(() => {
             setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 50}
+                return  {...prevState, myPersentage: prevState.myPersentage + 1}
             });
 
-            if (persentage.myPersentage == 100) {
+            if (persentage.myPersentage === 100) {
                 console.log("teeeeeeeeeeest");
                 isEffect.current = true;
             }
@@ -203,6 +203,7 @@ export default function Game () {
                     setIsGameEnd={setIsGameEnd}
                     isWin={isWin.current}
                     isEffect={isEffect}
+                    setPersentage={setPersentage}
                 />
             </div>
         </section>
