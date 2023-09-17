@@ -1,12 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UnauthorizedException, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { GoogleAuthGuard } from './googleapi/googleguard';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwtGuard';
 import { FortyTwoGuard } from './42api/42guard';
-import { MailTemplate } from './MailService/mailer.service';
 import {toDataURL, toFileStream} from "qrcode"
 import { UserService } from 'src/user/user.service';
 import { tokenValidity } from './Filter/tokenFilter';
@@ -17,8 +16,7 @@ export class AuthController {
     constructor(private readonly configService: ConfigService,
         private readonly httpServer: HttpService,
         private readonly authService: AuthService,
-        private readonly userService: UserService,
-        private readonly mailTemp: MailTemplate) {}
+        private readonly userService: UserService) {}
 
 
     @Get('google')
@@ -64,7 +62,6 @@ export class AuthController {
     @UseGuards(JwtGuard) 
     async getQrCode(@Req() req: Request, @Res() res: Response)
     {
-        console.log('qrcode')  
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const path = await toDataURL(user.otpPathUrl);
         return res.status(200).send(path);

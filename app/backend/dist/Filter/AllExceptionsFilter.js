@@ -13,10 +13,19 @@ let AllExceptionFilter = class AllExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
+        let message;
         const status = exception instanceof common_1.HttpException ? exception.getStatus() : 500;
+        if (status == 500)
+            message = 'Internal Server Error';
+        else if (status == 400)
+            message = 'Bad Input Data';
+        else if (status == 404)
+            message = 'Resourse Not Found';
+        else
+            message = exception.message;
         response.status(status).json({
             statusCode: status,
-            message: `error ${status}`
+            message: `${message}`
         });
     }
 };
