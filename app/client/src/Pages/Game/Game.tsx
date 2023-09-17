@@ -57,6 +57,7 @@ let roomKey: string;
 export default function Game () {
     const [isHost, setIsHost] = useState<boolean>(true);
     const isWin = useRef<boolean>(false);
+    const isEffect = useRef<boolean>(false);
     const oppUser = useRef<User>({} as User);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
@@ -65,7 +66,6 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    // const [isEffect, setIsEffect] = useState<boolean>(false);
     const {user} = useContext(UserContext);
     
     const {key, gameMode} = useParams();
@@ -92,13 +92,13 @@ export default function Game () {
     useEffect(()  => {
         setTimeout(() => {
             setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 25}
+                return  {...prevState, myPersentage: prevState.myPersentage + 50}
             });
 
-            if (persentage.myPersentage == 100)
-                setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: 0 }
-                });
+            if (persentage.myPersentage == 100) {
+                console.log("teeeeeeeeeeest");
+                isEffect.current = true;
+            }
 
             socket.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
             socket.on("recvPersentage", (per: number) => {
@@ -181,6 +181,7 @@ export default function Game () {
                 <div className='users leftUser'><img src={img} alt="" /></div>
                 <div className='users rightUser'><img src={img2} alt="" /></div>
             </div> */}
+
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
@@ -194,13 +195,14 @@ export default function Game () {
                     isHost={isHost}
                     setIsHost={setIsHost}
                     gameKey={gameKey}
-                    gameMode={mode}forFeature
+                    gameMode={mode}
                     isMatching={isMatching}
                     score={score}
                     setScore={setScore}
                     isGameEnd={isGameEnd}
                     setIsGameEnd={setIsGameEnd}
                     isWin={isWin.current}
+                    isEffect={isEffect}
                 />
             </div>
         </section>

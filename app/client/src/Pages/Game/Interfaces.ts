@@ -16,6 +16,7 @@ export interface MySketchProps extends SketchProps {
     isGameEnd: boolean;
     setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
     isWin: boolean;
+    isEffect: React.MutableRefObject<boolean> | null;
 }
 
 export interface Velocity {

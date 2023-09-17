@@ -50,7 +50,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setScore: () => {},
         isGameEnd: false,
         setIsGameEnd: () => {},
-        isWin: false
+        isWin: false,
+        isEffect: null,
     }
 
     let first_time: boolean = true;
@@ -121,8 +122,9 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }, 2000)
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
-                    if (!vars.isEffect)
+                    if (props.isEffect?.current && !vars.isEffect) {
                         ActivateEffect(p5);
+                    }
                     
                     if (props.isHost) {
                         props.socket?.emit("game", {
