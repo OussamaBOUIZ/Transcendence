@@ -27,6 +27,16 @@ export function collision(pad: Pad, ball: Ball): boolean {
     return dx * dx + dy * dy <= ball.r * ball.r;
 }
 
+function matchingText(p5: P5CanvasInstance<MySketchProps>) {
+  p5.push()
+  p5.fill(255);
+  p5.textSize(50);
+  p5.textAlign(p5.CENTER);
+  p5.textStyle(p5.BOLDITALIC)
+  p5.text("Matching...", p5.width / 2, p5.height / 2);
+  p5.pop();
+}
+
 var time: number = 0;
 export function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
     let img = p5.createImage(p5.width, p5.height);
@@ -40,6 +50,8 @@ export function makeNoise(p5: P5CanvasInstance<MySketchProps>) {
   
     img.updatePixels();
     p5.image(img, 0, 0);
+
+    matchingText(p5)
   
     time = (time + 1) % p5.height;
 }
@@ -59,5 +71,21 @@ export function resizeGameVars(width: number) {
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
   vars.SPEED = width / 85;
-  // vars.SPEED = width / 200;
+  vars.NW = width / 200;
+  vars.NH = width / 60;
+}
+
+export function ActivateEffect(p5: any, props: MySketchProps) {
+  if (p5.keyIsPressed && props.isEffect) {
+    props.isEffect.current = false;
+    vars.isEffect = true;
+    props.setPersentage((prevState) => {
+      return {...prevState, myPersentage: 0}
+    })
+    vars.effect = p5.keyCode;
+    setTimeout(() => {
+      vars.isEffect = false;
+      vars.effect = 0;
+    }, 800)
+  }
 }

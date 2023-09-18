@@ -1,15 +1,24 @@
+import React, { SetStateAction } from "react";
 import { SketchProps } from "react-p5-wrapper";
+import { Socket } from "socket.io-client";
 
 export interface MySketchProps extends SketchProps {
     rotation: number;
     theme: string;
-    socket: any;
+    socket: Socket | null;
     isHost: boolean;
-    setIsHost: any;
+    setIsHost:  React.Dispatch<React.SetStateAction<boolean>>;
     gameKey: string;
     isMatching: boolean;
     gameMode: GameMode | null;
-    setScore: any; 
+    score: Score;
+    setScore:  React.Dispatch<React.SetStateAction<Score>>;
+    isGameEnd: boolean;
+    setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
+    isWin: boolean;
+    isEffect: React.MutableRefObject<boolean> | null;
+    setPersentage: React.Dispatch<React.SetStateAction<Persentage>>;
+    firstTime: React.MutableRefObject<boolean>;
 }
 
 export interface Velocity {
@@ -36,7 +45,11 @@ export interface Vars {
     PSPEED: number;
     RADIUS: number;
     SPEED: number;
+    NW: number;
+    NH: number;
     vel: Velocity;
+    isEffect: boolean;
+    effect: number;
 }
 
 export interface GameMode {
@@ -52,4 +65,9 @@ export interface GameMode {
 export interface Score {
     myScore: number;
     oppScore: number;
+}
+
+export interface Persentage {
+    myPersentage: number;
+    oppPersentage: number;
 }

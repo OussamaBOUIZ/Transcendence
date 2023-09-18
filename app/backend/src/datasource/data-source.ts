@@ -9,6 +9,7 @@ import { Match_history } from "src/databases/match_history.entity";
 import { Stats } from "src/databases/stats.entity";
 import { Muted_users } from "src/databases/muted_users.entity";
 import { BlockedTokenList } from "src/databases/BlockedTokenList/BlockedTokenList.entity";
+import { Game } from "src/databases/game.entity";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
@@ -24,7 +25,7 @@ export const dataSourceOptions: DataSourceOptions = {
        Stats,
        User, Inbox_user
        , User_chat, Message
-       , BlockedTokenList
+       , BlockedTokenList, Game
     ],
     synchronize: true,
 

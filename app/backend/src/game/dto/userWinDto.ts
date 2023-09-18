@@ -1,7 +1,6 @@
 import {  IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
 export class userWinDto {
-    
     @IsNotEmpty()
     @IsNumber()
     userId: number
@@ -17,4 +16,8 @@ export class userWinDto {
     @IsNotEmpty()
     @IsNumber()
     opponentLevel: number
+
+    @IsNotEmpty()
+    @IsNumber()
+    opponentId: number
 }

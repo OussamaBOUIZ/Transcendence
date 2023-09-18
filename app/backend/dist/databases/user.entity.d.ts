@@ -1,0 +1,34 @@
+import { BaseEntity } from "typeorm";
+import { Inbox_user } from "./inbox_user.entity";
+import { User_chat } from "./userchat.entity";
+import { Match_history } from "./match_history.entity";
+import { Stats } from "./stats.entity";
+import { Channel } from "./channel.entity";
+export declare class User extends BaseEntity {
+    id: number;
+    socketId: string;
+    status: string;
+    isActive: boolean;
+    firstname: string;
+    lastname: string;
+    username: string;
+    password: string;
+    avatar: string;
+    firstLog: boolean;
+    email: string;
+    isEmailConfirmed: boolean;
+    is_two_factor: boolean;
+    two_factor_secret: string;
+    otpPathUrl: string;
+    friends: User[];
+    friendOf: User[];
+    blocked_users: User[];
+    stat: Stats;
+    match_history: Match_history[];
+    user_chat: User_chat[];
+    inbox_users: Inbox_user[];
+    userRoleChannels: Channel[];
+    adminRoleChannels: Channel[];
+    ownerRoleChannels: Channel[];
+    userBannedChannels: Channel[];
+}

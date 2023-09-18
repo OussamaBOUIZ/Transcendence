@@ -11,15 +11,17 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/databases/game.entity';
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { brotliDecompressSync } from "zlib";
-import { log } from "console";
-import { subscribe } from "diagnostics_channel";
-
+import { userWinDto } from "./dto/userWinDto";
+import { scoreStoreDto } from "./dto/scoreSavingDto";
+import { gameService } from "./game.service";
 const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
 
-const waitingSockets = new Map<String, Socket[]>([
+interface User {
+	user: any;
+	socket: Socket;
+}
+
+const waitingUsers = new Map<String, User[]>([
     ["BattleRoyal", []],
     ["IceLand", []],
     ["TheBeat", []],
@@ -33,6 +35,8 @@ const waitingSockets = new Map<String, Socket[]>([
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
 
+	constructor(private readonly gameservice: gameService) {}
+
     afterInit(server: any) {
         console.log('after init');
     }
@@ -45,58 +49,104 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('handle disconnect');
 
 		gameModes.forEach((mode: string) => {
-			waitingSockets.set(mode, 
-				waitingSockets.get(mode).filter(
-					(s: Socket) => s.id !== socket.id)
+			waitingUsers.set(mode, 
+				waitingUsers.get(mode).filter(
+					(u: User) => u.socket.id !== socket.id)
 				);
-		})
-
+		});
     }
 
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		console.log('join game');
 		
-		socket.join(roomKey);
+		socket.join(roomKey); 
 
 		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
 
-		if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
-			// socket.emit("notHost");
+		// if (this.server.sockets.adapter.rooms.get(roomKey).size == 2) {
+		// 	const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
+		// 	const socketsArr: Array<string> = Array.from(socketsSet);
+		// 	const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
 
-			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
-			const socketsArr: Array<string> = Array.from(socketsSet);
-			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
-
-			sock.emit("notHost");
-		}
+		// 	sock.emit("notHost", "This client is not the host", (error) => {
+		// 		if (error === 'error') {
+		// 			console.error('Emit failed');
+		// 		} else {
+		// 			console.log('Emit successful');
+		// 		}}
+		// 	)
+		// 	console.log("Heeeeeeeeeeeeeeeere");
+		// 	// }
+		// 	// catch (e)
+		// 	// {
+		// 	// 	console.log('error is: ', e);
+		// 	// }
+		// 	// console.log('HERE AFTER');
+		// }
 	}
 
 	@SubscribeMessage('gameEnd')
-	onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log('leave game');
-		
+	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		socket.to(roomKey).emit("leaveGame");
+		console.log("leave game");
+
 		socket.leave(roomKey);
+	}
+
+	@SubscribeMessage('achievement')
+	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
+		await this.gameservice.userGameDataUpdate(gameData);
+	}
+	
+
+	@SubscribeMessage('saveScore')
+	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
+		await this.gameservice.saveScore(score);
+	}
+
+	@SubscribeMessage('gameScore')
+	onScore(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("scoreChanged", body.score);
+	}
+
+	@SubscribeMessage('changePersentage')
+	onChangePersentage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("recvPersentage", body.persentage);
+	}
+
+
+	@SubscribeMessage('sendEffect')
+	onSendEffect(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+		socket.to(body.roomKey).emit("recieveEffect", body.effect);
 	}
 
 	@SubscribeMessage("gameMatching")
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
-		const sockets: Socket[] = waitingSockets.get(body.modeName);
+		const users: User[] =  waitingUsers.get(body.modeName);
 
-		if (sockets.length >= 1) {
-			const oppSocket: Socket = sockets[0];
-			sockets.unshift();
-			socket.emit("matched", socket.id + oppSocket.id);
-			oppSocket.emit("matched", socket.id + oppSocket.id);
+		if (users.length >= 1) {
+			const oppUser: User = users[0];
+			users.unshift();
 
-			console.log("socket id: ", socket.id + oppSocket.id);
-		} else {
-			sockets.push(socket);
-		}
+			socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
+			oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
+
+			console.log("socket id: ", socket.id + oppUser.socket.id);
+		} else
+			users.push({user: body.user, socket});
 	}
 
     @SubscribeMessage('game')
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
+
+		if (this.server.sockets.adapter.rooms.get(body.gameKey)?.size == 2) {
+			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(body.gameKey);
+			const socketsArr: Array<string> = Array.from(socketsSet);
+			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
+
+			sock.emit("notHost");
+		}
 	}
 }
