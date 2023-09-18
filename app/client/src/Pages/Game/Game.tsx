@@ -3,7 +3,7 @@ import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
 import { NavLink } from 'react-router-dom';
-import {io} from "socket.io-client";
+import { io } from "socket.io-client";
 import { useParams } from "react-router-dom"
 import { GameMode, Persentage, Score } from './Interfaces';
 import { ReactP5Wrapper } from "react-p5-wrapper"
@@ -87,29 +87,27 @@ export default function Game () {
             // })
         }
     }
-
-    // console.log('heeeeeeeeeeeeeeeeere');
     
-    useEffect(()  => {
-        setTimeout(() => {
+    useEffectOnUpdate(()  => {
+        setInterval(() => {
             setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 3}
+                return  {...prevState, myPersentage: prevState.myPersentage + 1}
             });
 
-            // console.log("my persentage ", persentage.myPersentage);
-
-            if (persentage.myPersentage >= 100)
-                isEffect.current = true;
-
-            socket?.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
-            socket?.on("recvPersentage", (per: number) => {
-                setPersentage((prevState) => {
-                    return  {...prevState, oppPersentage: per }
-                });
-            })
-
-        }, 500)
+        }, 100)
     }, [])
+
+    useEffect(() => {
+        if (persentage.myPersentage >= 100)
+            isEffect.current = true;
+
+        socket?.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
+        socket?.on("recvPersentage", (per: number) => {
+            setPersentage((prevState) => {
+                return  {...prevState, oppPersentage: per }
+            });
+        })
+    }, [persentage.myPersentage])
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
