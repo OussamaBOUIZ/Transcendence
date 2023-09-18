@@ -92,7 +92,7 @@ export default function Game () {
     useEffect(()  => {
         setTimeout(() => {
             setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 1}
+                return  {...prevState, myPersentage: prevState.myPersentage + 20}
             });
 
             if (persentage.myPersentage === 100) {
