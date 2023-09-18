@@ -20,17 +20,15 @@ const googleguard_1 = require("./googleapi/googleguard");
 const auth_service_1 = require("./auth.service");
 const jwtGuard_1 = require("./jwt/jwtGuard");
 const _42guard_1 = require("./42api/42guard");
-const mailer_service_1 = require("./MailService/mailer.service");
 const qrcode_1 = require("qrcode");
 const user_service_1 = require("../user/user.service");
 const tokenFilter_1 = require("./Filter/tokenFilter");
 let AuthController = class AuthController {
-    constructor(configService, httpServer, authService, userService, mailTemp) {
+    constructor(configService, httpServer, authService, userService) {
         this.configService = configService;
         this.httpServer = httpServer;
         this.authService = authService;
         this.userService = userService;
-        this.mailTemp = mailTemp;
     }
     googleLogin() { }
     async googleRedirect(googlereq, res) {
@@ -39,28 +37,27 @@ let AuthController = class AuthController {
         const user = await this.userService.findUserByEmail(googlereq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if (userHasAuth === true)
-            return res.redirect('localhost:5173/auth');
+            return res.redirect('http://localhost:5173/auth');
         if (user.firstLog === true)
-            return res.redirect('localhost:5173/info');
-        return res.redirect('localhost:5173/');
+            return res.redirect('http://localhost:5173/info');
+        return res.redirect('http://localhost:5173/');
     }
     fortyTwoLogin() {
     }
     async fortyTwoRedirect(fortyTworeq, res) {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if (!token)
-            return res.redirect('localhost:5173/');
+            return res.redirect('http://localhost:5173/');
         this.authService.setResCookie(res, token);
         const user = await this.userService.findUserByEmail(fortyTworeq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if (userHasAuth === true)
-            return res.redirect('localhost:5173/auth');
+            return res.redirect('http://localhost:5173/auth');
         if (user.firstLog === true)
-            return res.redirect('localhost:5173/info');
-        return res.redirect('localhost:5173/');
+            return res.redirect('http://localhost:5173/info');
+        return res.redirect('http://localhost:5173/');
     }
     async getQrCode(req, res) {
-        console.log('qrcode');
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         const path = await (0, qrcode_1.toDataURL)(user.otpPathUrl);
         return res.status(200).send(path);
@@ -126,7 +123,6 @@ exports.AuthController = AuthController = __decorate([
     __metadata("design:paramtypes", [config_1.ConfigService,
         axios_1.HttpService,
         auth_service_1.AuthService,
-        user_service_1.UserService,
-        mailer_service_1.MailTemplate])
+        user_service_1.UserService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

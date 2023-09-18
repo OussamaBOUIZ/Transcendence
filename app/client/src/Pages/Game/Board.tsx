@@ -21,8 +21,8 @@ export default function Board({score, oppUser, isHost, persentage}: {score: Scor
             <p id="username2" className='user absolute font-bold text-xs sm:text-xs md:text-md lg:text-base'>{ isHost ? user.username : oppUser?.username  }</p>
 
 
-            <PowerBar right={true} oppUser={oppUser} persentage={persentage}/>
-            <PowerBar right={false} oppUser={oppUser} persentage={persentage}/>
+            <PowerBar right={true} isHost={isHost} oppUser={oppUser} persentage={persentage}/>
+            <PowerBar right={false} isHost={isHost} oppUser={oppUser} persentage={persentage}/>
 
             <div className='absolute w-full  flex text-2xl font-bold justify-center'>
                     <p className=" text-xl sm:text-xl md:text-xl lg:text-xl">

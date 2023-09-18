@@ -14,14 +14,25 @@ export class gameService {
     private readonly achievementService: AchievementService){}
 
 
+    async addLoserStat(userId: number) {
+
+        const stat = await this.userService.getStat(userId);
+        stat.losses += 1;
+        stat.consecutive_wins = 0;
+        await this.userService.saveStat(stat);
+    }
+
     async userGameDataUpdate(userWinData: userWinDto)
     {
-        await this.achievementService.setGameAchievement(userWinData.gameName, userWinData.userId);
         const stat = await this.userService.getStat(userWinData.userId);
+        await this.achievementService.setGameAchievement(userWinData.gameName, userWinData.userId, stat.wins);
         if(userWinData.opponentLevel >= stat.ladder_level + 2)
             await this.achievementService.setUnderdogAchievement(userWinData.userId);
         const oldLevel = stat.ladder_level;
         stat.xp += userWinData.wonXp;
+        stat.wins += 1;
+        stat.consecutive_wins += 1;
+        await this.achievementService.setShooterAchievement(stat.consecutive_wins, userWinData.userId);
         const newLevel = 0.02 * Math.sqrt(stat.xp);
         stat.ladder_level = Math.floor(newLevel);
         stat.levelPercentage = Math.round((newLevel - stat.ladder_level) * 100);

@@ -19,7 +19,6 @@ const auth_service_1 = require("./auth.service");
 const _42Strategy_1 = require("./42api/42Strategy");
 const jwtStrategy_1 = require("./jwt/jwtStrategy");
 const passport_1 = require("@nestjs/passport");
-const mailer_service_1 = require("./MailService/mailer.service");
 const user_service_1 = require("../user/user.service");
 const achievement_service_1 = require("../databases/achievement/achievement.service");
 const achievement_entity_1 = require("../databases/achievement/achievement.entity");
@@ -44,8 +43,7 @@ exports.AuthModule = AuthModule = __decorate([
         controllers: [auth_controller_1.AuthController],
         imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, achievement_entity_1.Achievement, stats_entity_1.Stats, BlockedTokenList_entity_1.BlockedTokenList, match_history_entity_1.Match_history, game_entity_1.Game]),
             jwt_1.JwtModule.registerAsync(jwtFactory), passport_1.PassportModule],
-        providers: [googleStrategy_1.googleStrategy, auth_service_1.AuthService, _42Strategy_1.fortyTwoStrategy, jwtStrategy_1.JwtStrategy,
-            mailer_service_1.MailTemplate, user_service_1.UserService, achievement_service_1.AchievementService, BlockedTokenList_service_1.BlockedTokenlistService],
+        providers: [googleStrategy_1.googleStrategy, auth_service_1.AuthService, _42Strategy_1.fortyTwoStrategy, jwtStrategy_1.JwtStrategy, user_service_1.UserService, achievement_service_1.AchievementService, BlockedTokenList_service_1.BlockedTokenlistService],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

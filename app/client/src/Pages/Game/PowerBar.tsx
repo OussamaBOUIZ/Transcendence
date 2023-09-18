@@ -6,7 +6,7 @@ import { User } from '../../../global/Interfaces';
 import { getUserImage } from '../../Hooks/getUserImage';
 import { Persentage } from './Interfaces';
 
-export default function PowerBar({ right, oppUser, persentage}: {right: boolean, oppUser: User, persentage: Persentage}) {
+export default function PowerBar({ right, isHost, oppUser, persentage}: {right: boolean, isHost: boolean, oppUser: User, persentage: Persentage}) {
     const {user} = useContext(UserContext);
 
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function PowerBar({ right, oppUser, persentage}: {right: boolean,
                         <stop stop-color="#C100B1"/>
                         <stop offset="1" stop-color="#2D0093"/>per
                     </linearGradient>
-                    <linearGradient id="paint1_linear_1304_404" x1="32" y1="38" x2={32+(287 - 32) * persentage.myPersentage / 100} y2="38" gradientUnits="userSpaceOnUse">
+                    <linearGradient id="paint1_linear_1304_404" x1="32" y1="38" x2={32+(287 - 32) * (isHost ? persentage.oppPersentage : persentage.myPersentage) / 100} y2="38" gradientUnits="userSpaceOnUse">
                         <stop offset="0.9999" stop-color="#FD40D0"/>
                         <stop offset="1" stop-color="#FD40D0" stop-opacity="0"/>
                     </linearGradient>
@@ -62,7 +62,7 @@ export default function PowerBar({ right, oppUser, persentage}: {right: boolean,
                         <stop stop-color="#C100B1"/>
                         <stop offset="1" stop-color="#2D0093"/>number
                     </linearGradient>
-                    <linearGradient id="paint1_linear_1304_1046" x1="283" y1="38" x2={283+(28 - 283) * persentage.oppPersentage / 100} y2="38" gradientUnits="userSpaceOnUse">
+                    <linearGradient id="paint1_linear_1304_1046" x1="283" y1="38" x2={283+(28 - 283) * (isHost ? persentage.myPersentage : persentage.oppPersentage) / 100} y2="38" gradientUnits="userSpaceOnUse">
                         <stop offset="0.9999" stop-color="#FD40D0"/>
                         <stop offset="1" stop-color="#FD40D0" stop-opacity="0"/>
                     </linearGradient>

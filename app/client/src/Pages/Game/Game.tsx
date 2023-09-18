@@ -88,39 +88,41 @@ export default function Game () {
         }
     }
 
+    // console.log('heeeeeeeeeeeeeeeeere');
     
     useEffect(()  => {
         setTimeout(() => {
             setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 20}
+                return  {...prevState, myPersentage: prevState.myPersentage + 3}
             });
 
-            if (persentage.myPersentage === 100) {
-                console.log("teeeeeeeeeeest");
-                isEffect.current = true;
-            }
+            // console.log("my persentage ", persentage.myPersentage);
 
-            socket.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
-            socket.on("recvPersentage", (per: number) => {
+            if (persentage.myPersentage >= 100)
+                isEffect.current = true;
+
+            socket?.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
+            socket?.on("recvPersentage", (per: number) => {
                 setPersentage((prevState) => {
                     return  {...prevState, oppPersentage: per }
                 });
             })
+
         }, 500)
-    }, [persentage.myPersentage])
+    }, [])
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
-            setScore(score);oppUser.current.id
+            setScore(score);oppUser.current.id;
         })
         if (!isGameEnd) {
             socket?.on("leaveGame", () => {
                 setIsGameEnd(true);
                 isWin.current = true;
                 if (gameMode)
-                    updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0})
+                    updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
                 socket?.emit("gameEnd", key);   
-                socket?.disconnect()
+                socket?.disconnect();
             })
         }
     }, [socket])
@@ -129,7 +131,7 @@ export default function Game () {
         if (gameMode && (score.myScore === mode?.maxScore 
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
-            socket?.emit("gameEnd", gameKey)
+            socket?.emit("gameEnd", gameKey);
             console.log("game end");
         }
 
@@ -143,17 +145,18 @@ export default function Game () {
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
-        setMode(gameModes.get(String(gameMode)))
+        setMode(gameModes.get(String(gameMode)));
 
         if (key && gameMode) {
-
+            setGameKey(key);
+            newSocket.emit("joinGame", key);
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: mode?.xp,
                 user: user,
-            })
+            });
 
             newSocket.on("matched", (data: any) => {
                 console.log("matched room key: ", data.roomKey);
@@ -163,16 +166,15 @@ export default function Game () {
                 oppUser.current = data.user;
                 console.log(data.user);
                 setIsMatching(false);
-            })
+            });
         }
-
 
         return () => {
             console.log("component unmount");
             newSocket.emit("gameEnd", roomKey);
             newSocket.disconnect();
         };
-    }, [])remotes/origin/achievementFix
+    }, [])
 
 
     return (

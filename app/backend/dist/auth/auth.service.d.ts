@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/databases/user.entity';
-import { userSignUpDto } from './dto/userSignUpDto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { AchievementService } from 'src/databases/achievement/achievement.service';
@@ -16,6 +15,5 @@ export declare class AuthService {
     searchForEmail(email: any): Promise<User>;
     validateUser(email: string, password: string): Promise<string>;
     signToken(user: User): string;
-    signup(userdto: userSignUpDto): Promise<string>;
     setResCookie(res: Response, token: string): void;
 }

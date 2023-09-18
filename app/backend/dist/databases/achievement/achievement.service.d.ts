@@ -15,7 +15,8 @@ export declare class AchievementService {
     createAchievements(user: User): Promise<void>;
     unlockAchievement(badge_name: string, userId: number): Promise<void>;
     setUnderdogAchievement(userId: number): Promise<void>;
+    setShooterAchievement(consecutive_wins: number, userId: number): Promise<void>;
     setLevelAchievement(oldlevel: number, level: number, userId: number): Promise<void>;
-    setGameAchievement(gameType: string, userId: number): Promise<void>;
+    setGameAchievement(gameType: string, userId: number, wins: number): Promise<void>;
 }
 export {};

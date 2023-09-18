@@ -2,16 +2,23 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/co
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-
+    let message;
     const status = exception instanceof HttpException ? exception.getStatus() : 500;
-
+    if (status == 500)
+      message = 'Internal Server Error';
+    else if (status == 400)
+      message = 'Bad Input Data';
+    else if (status == 404)
+      message = 'Resourse Not Found';
+    else
+      message = exception.message;
     response.status(status).json({
       statusCode: status,
-      message: `error ${status}`
+      message: `${message}`
     });
   }
 }

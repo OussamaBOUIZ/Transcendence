@@ -77,27 +77,6 @@ let AuthService = class AuthService {
             email: user.email
         }, { secret });
     }
-    async signup(userdto) {
-        const pass_hash = await argon.hash(userdto.password);
-        try {
-            const newUser = new user_entity_1.User();
-            newUser.email = userdto.email;
-            newUser.firstname = userdto.firstname;
-            newUser.lastname = userdto.lastname;
-            newUser.username = userdto.firstname[0] + userdto.lastname;
-            newUser.password = pass_hash;
-            await this.userService.saveUser(newUser);
-            await this.achievementService.createAchievements(newUser);
-            const secret = this.configService.get('JWT_SECRET');
-            return this.jwtService.sign({
-                id: newUser.id,
-                email: newUser.email
-            }, { secret });
-        }
-        catch (error) {
-            return null;
-        }
-    }
     setResCookie(res, token) {
         res.cookie('access_token', token, {
             maxAge: 2592000000,

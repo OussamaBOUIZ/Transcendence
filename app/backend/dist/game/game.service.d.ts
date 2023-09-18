@@ -9,6 +9,7 @@ export declare class gameService {
     private readonly userService;
     private readonly achievementService;
     constructor(gameRepo: Repository<Game>, userService: UserService, achievementService: AchievementService);
+    addLoserStat(userId: number): Promise<void>;
     userGameDataUpdate(userWinData: userWinDto): Promise<void>;
     saveScore(scoreData: scoreStoreDto): Promise<void>;
 }

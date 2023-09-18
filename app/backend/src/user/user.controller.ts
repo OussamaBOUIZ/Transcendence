@@ -220,13 +220,6 @@ export class UserController {
         return res.status(HttpStatus.OK).send('');
     }
 
-    // @Post('/:userId/uploadImage')
-    // uploadImage(
-    //     @Param('userId', ParseIntPipe) id: number,
-    //     @UploadedFile() image
-    // ) {
-    //
-    // }
 	@Get('avatar/:id')
 	@Header('Content-Type', 'image/jpg')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {

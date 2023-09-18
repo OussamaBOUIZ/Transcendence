@@ -34,4 +34,9 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], userWinDto.prototype, "opponentLevel", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], userWinDto.prototype, "opponentId", void 0);
 //# sourceMappingURL=userWinDto.js.map
