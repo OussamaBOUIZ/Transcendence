@@ -87,7 +87,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     useEffect(() => {
         if (user)
           void fetchUserData();
-      }, [])
+      }, [update])
 
     return (
         <UserContext.Provider value={{

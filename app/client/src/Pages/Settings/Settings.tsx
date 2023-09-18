@@ -193,7 +193,7 @@ export default function Settings () {
                 <h2 className='text-xl font-semibold mx-8'>Two Factor Authentication</h2>
             </div>
             <div id='twof-poster' className=" flex flex-col justify-center  gap-14  text-center bg-purple-600 py-32  rounded-2xl w-72 mx-auto
-                hover:bg-purple-500 cursor-pointer"
+                hover:bg-purple-500 cursor-pointer" style={tfaStatus ? {animationName: "none"} : {}}
             onClick={handleEnable2FA}
             >
                 <article className='flex flex-col items-center'>
