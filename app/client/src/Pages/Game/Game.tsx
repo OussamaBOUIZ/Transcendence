@@ -59,6 +59,7 @@ export default function Game () {
     const isWin = useRef<boolean>(false);
     const isEffect = useRef<boolean>(false);
     const oppUser = useRef<User>({} as User);
+    const firstTime = useRef<boolean>(true);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
@@ -89,13 +90,18 @@ export default function Game () {
     }
     
     useEffectOnUpdate(()  => {
-        setInterval(() => {
-            setPersentage((prevState) => {
-                return  {...prevState, myPersentage: prevState.myPersentage + 1}
-            });
+        console.log(firstTime.current);
+        
+        if (!firstTime.current) {
+            setInterval(() => {
+                setPersentage((prevState) => {
+                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
+                });
+                firstTime.current
+            }, 100)
+        }
+    }, [firstTime.current])
 
-        }, 100)
-    }, [])
 
     useEffect(() => {
         if (persentage.myPersentage >= 100)
@@ -111,7 +117,7 @@ export default function Game () {
 
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
-            setScore(score);oppUser.current.id;
+            setScore(score);
         })
         if (!isGameEnd) {
             socket?.on("leaveGame", () => {
@@ -133,8 +139,9 @@ export default function Game () {
             console.log("game end");
         }
 
+        console.log(score.myScore, mode?.maxScore);
+
         if (gameMode && score.myScore === mode?.maxScore) {
-            console.log(score.myScore, mode?.maxScore);
             isWin.current = true;
             updateDataBase(score);
         }
@@ -204,6 +211,7 @@ export default function Game () {
                     isWin={isWin.current}
                     isEffect={isEffect}
                     setPersentage={setPersentage}
+                    firstTime={firstTime}
                 />
             </div>
         </section>

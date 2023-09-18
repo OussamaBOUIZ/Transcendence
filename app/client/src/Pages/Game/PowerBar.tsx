@@ -13,12 +13,13 @@ export default function PowerBar({ right, isHost, oppUser, persentage}: {right: 
         const fetchOppImage = async () => {
             try {
                 const image = await getUserImage(oppUser.id);
-                if (image)
-                    oppUser.image = image;
-            } catch (err) {persentage
+                oppUser.image = image;
+            } catch (err) {
+                console.log(err);
+            }
         }
         void fetchOppImage();
-    }}, [oppUser])
+    }, [oppUser])
 
     return (
         right ? 

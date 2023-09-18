@@ -52,16 +52,18 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setIsGameEnd: () => {},
         isWin: false,
         isEffect: null,
-        setPersentage: () => {}
+        setPersentage: () => {},
+        firstTime: { current: true }
     }
 
-    let first_time: boolean = true;
+    let gameEnd: boolean = false; 
     let backImg: string;
     let ballImg: string;
     let paddleImg: string;
     let loseImg: string;
     let winImg: string;
     let readyImg : string;
+
 
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Assets/GameArea/galaxy.jpg");
@@ -94,12 +96,20 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     }  
 
     p5.draw = (): void => {
+        if (gameEnd)
+            return;
+
         if (props.isGameEnd) {
+
+            console.log(props.isWin);
+
             if (props.isWin)
                 p5.image(winImg, 0, 0, p5.width, p5.height);
             else
                 p5.image(loseImg, 0, 0, p5.width, p5.height);
 
+            gameEnd = true;
+            
         } else {
             if (props.theme === "black")
                 p5.background("#114");
@@ -116,10 +126,12 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             
 
             if (!props.isMatching && props.gameMode) {
-                if (first_time) {
+                if (props.firstTime.current) {
+
                     setTimeout(() => {
-                        first_time = false;
+                        props.firstTime.current = false;
                     }, 2000)
+
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
                     if (props.isEffect?.current && !vars.isEffect) {
