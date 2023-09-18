@@ -11,11 +11,11 @@ import { Link } from "react-router-dom"
 export default function Sign() {
 
     const [signInImage, setSignInImage] = useState<string>("");
-    const {authenticated, isLoading} = useContext(UserContext);
+    const {authenticated, isLoading, navigate} = useContext(UserContext);
 
     console.log("authenticated : ", authenticated);
     if (authenticated)
-        window.location.replace('/')
+        navigate('/')
 
     useEffect(() => {
         const getImage = async () => {

@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
 import axios, {AxiosResponse} from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
-import { useContext } from 'react'
 import UserContext from '../../Context/UserContext'
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate'
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState<string>("")
@@ -22,11 +22,11 @@ export default function ChatSearchBox () {
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
-        if (currentSearch !== "")
-            setSubmittedName(currentSearch)
+        if (currentSearch.trim())
+            setSubmittedName(currentSearch.trim())
     }
 
-    React.useEffect(() => {
+    useEffectOnUpdate(() => {
         if (initialRender.current) {
             initialRender.current = false
             return
@@ -34,36 +34,34 @@ export default function ChatSearchBox () {
         async function getUserCard () {
             try {
                 const response: AxiosResponse<User> = await axios(`/api/user/search/user/?username=${submittedName}`)
-                console.log("response.data.id", response.data.id)
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                console.log(err);
                 setNotif("User not Found");
+                // console.log(err);
             }
         }
-        if (submittedName !== "")
-            void getUserCard()
+        void getUserCard()
     }, [submittedName])
     return (
         <section className="search_box">
             <form onSubmit={handleSubmit}>
                 <label>Search</label>
                 <input 
-                type="search"  
+                type="search"
                 placeholder="Type a username"
                 onChange={handleChange}
                 value={currentSearch}
                 />
                 <input style={submitStyle}type="submit" value="submit" />
             </form>
-            {searchedUser
-            && 
-            <UserCard 
-                userData={searchedUser}
-                message={true}
-                friend={false}
-            />
+            {
+                searchedUser && 
+                <UserCard 
+                    userData={searchedUser}
+                    message={true}
+                    friend={false}
+                />
             }
         </section>
     );

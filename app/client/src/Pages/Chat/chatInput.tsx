@@ -21,7 +21,13 @@ export default function ChatInput({message, setMessage, sender, id}: {message: s
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
             />
-            <button className={`bg-primary-pink ${isBanned ? 'cursor-not-allowed pointer-events-none' : ''}`} type="submit">Send</button>
+            <button
+                className={`bg-primary-pink ${isBanned ? 'cursor-not-allowed pointer-events-none' : ''}`}
+                type="submit"
+                disabled={isBanned || !message.trim()}
+            >
+                Send
+            </button>
         </form>
     )
 }

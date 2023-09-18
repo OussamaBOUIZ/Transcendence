@@ -18,7 +18,7 @@ interface newRoom {
 
 export default function CreateRoom({action, defaultValue}: {action: string, defaultValue: string}) {
 
-    const {user, setNotif} = useContext(UserContext)
+    const {user, setNotif, navigate} = useContext(UserContext)
     const {isBanned} = useContext(InboxContext)
     const {socket, roomData, myGrade, setIsClick, setAction, setUpdate, setDefaultRoomType} = useContext(SocketContext)
 
@@ -61,7 +61,7 @@ export default function CreateRoom({action, defaultValue}: {action: string, defa
         socket?.emit('leaveAndRemoveChannel', roomData);
         setIsClick(prev => !prev);
         setDefaultRoomType("public");
-        window.location.replace('/chat/rooms')
+        navigate('/chat/rooms')
     }
 
     const style = (((myGrade === "user" || isBanned) && action === 'update') ? 'pointer-events-none' : '')

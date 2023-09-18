@@ -1,8 +1,9 @@
 import "../../scss/auth.scss";
 import axios from "axios"
-import React, {useState} from "react"
+import React, {useContext, useState} from "react"
 import Notification from "../../Components/Notification"
 import { useFetchQRcode } from "../../Hooks/useFetchQRcode"
+import UserContext from "../../Context/UserContext";
 
 interface Inputs {
     [id: number]: string;
@@ -17,10 +18,9 @@ interface Inputs {
 
 export default function Auth() {
 
+    const {navigate} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
-
     const QRcode = useFetchQRcode();
-
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
 
@@ -48,7 +48,7 @@ export default function Auth() {
                     await axios.post("/api/user/2fa/login", collected);
                     console.log('here bro');
                     
-                    window.location.replace('/');
+                    navigate('/');
                 } catch (error) {
                     console.log(error);
                 }

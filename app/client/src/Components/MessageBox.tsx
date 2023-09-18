@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import UserContext from '../Context/UserContext';
 
 interface PropType {
     children: React.ReactNode;
@@ -9,9 +10,10 @@ interface PropType {
 }
 
 export default function MessageBox ({children, username, avatar, id, isBlocked}: PropType) {
+    const {navigate} = useContext(UserContext)
     const styleHiddenMessage = (isBlocked) ? 'bg-room-active-bar opacity-80' : 'bg-messages rounded-tl-none'
 
-    const handleClick = () => window.location.replace(`/profile/${String(username)}`)
+    const handleClick = () => navigate(`/profile/${String(username)}`)
     return (
         <article className={`flex ${id ? "items-start" : "items-end"} my-3 flex-col`}>
             {id && <p className='ml-14 font-medium text-sm mb-1 lowercase'>{username}</p>}

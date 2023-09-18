@@ -22,12 +22,12 @@ const UpdateStatus = async () => {
 
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
-    const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
+    const {user, socket, setSocket, notif, invitation, setInvitation, navigate} = useContext(UserContext)
 
     useEffectOnUpdate(() => {
       if (user.id) {
         if (!user.firstname || !user.lastname || !user.username)
-        window.location.replace('/info')
+        navigate('/info')
       }
     }, [user])
     

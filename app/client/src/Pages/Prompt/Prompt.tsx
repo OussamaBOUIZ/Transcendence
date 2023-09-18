@@ -13,7 +13,7 @@ import Loading from "../Loading";
 
 export default function Prompt() {
 
-    const {user, notif, setNotif} = useContext(UserContext)
+    const {user, navigate, notif, setNotif} = useContext(UserContext)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
 
@@ -53,7 +53,7 @@ export default function Prompt() {
                     clearFields()
                 }
                 if (val === 2)
-                    window.location.replace('/')
+                    navigate('/')
             }
             catch (error: any) {
                 setNotif(error.response.data)

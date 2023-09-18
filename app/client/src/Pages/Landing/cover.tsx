@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo2 from '../../Assets/Icons/logo2.png'
+import logo from '../../Assets/Icons/logo.svg'
 
 export default function Cover() {
 
@@ -25,7 +25,7 @@ export default function Cover() {
     return (
         <div id="home" className="cover flex flex-col w-full h-screen relative">
             <header className="absolute left-0 w-full flex justify-between items-center">
-                <Link to='/'><img className='h-24' src={logo2} alt="logo" /></Link>
+                <Link to='/'><img className='h-24' src={logo} alt="logo" /></Link>
                 <nav>
                     <ul className="flex">{Links}</ul>
                 </nav>

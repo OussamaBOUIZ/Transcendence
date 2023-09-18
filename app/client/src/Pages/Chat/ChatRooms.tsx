@@ -104,7 +104,8 @@ export default function ChatRooms () {
 
     const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();
-
+        console.log("sendMessage is called");
+        
         if (message !== "") {
             const messageData: Message = {
                 message: message,
@@ -129,7 +130,7 @@ export default function ChatRooms () {
         }
     }
 
-    const messagesElements = messageList.map((mess) => {
+    const messagesElements = messageList.map((mess, index) => {
         if (binarySearch(blockedUsers, mess.fromUser)) {
             mess.message = 'Message from blocked user'
             mess.image = ""
@@ -137,7 +138,7 @@ export default function ChatRooms () {
             mess.isBlocked = true
         }
         return (
-            <MessageBox key={mess.id} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} isBlocked={mess.isBlocked} >
+            <MessageBox key={index} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} isBlocked={mess.isBlocked} >
                 {mess.message}
             </MessageBox>
         )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo2 from "../Assets/Icons/logo2.png";
+import logo from "../Assets/Icons/logo.svg";
 import { HiMenu, HiOutlineX } from "react-icons/hi";
 import {nanoid} from 'nanoid'
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ export default function Header () {
 
     return (
         <div className="header flex justify-between px-4 items-center">
-            <Link to={'/'}><img className='h-24' src={logo2} alt="logo" /></Link>
+            <Link to={'/'}><img className='h-24' src={logo} alt="logo" /></Link>
             <HiMenu id="burger-menu" className="menu  w-6 h-6 cursor-pointer" onClick={() => setOn(prev => !prev)}/>
             {
                 On &&

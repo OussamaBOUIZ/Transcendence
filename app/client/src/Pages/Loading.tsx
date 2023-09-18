@@ -1,5 +1,5 @@
 import React from 'react'
-import logo2 from "../Assets/Icons/logo2.png";
+import logo from "../Assets/Icons/logo.svg";
 import "../scss/loading.scss"
 
 export default function Loading() {
@@ -37,7 +37,7 @@ export default function Loading() {
           <ellipse id="sr-2" cx="230" cy="30" rx="50" ry="15"/>
         </svg>
       </div>
-      <img src={logo2} alt="" className=' w-40'/>
+      <img src={logo} alt="" className=' w-40'/>
       </div>
     </div>
   )

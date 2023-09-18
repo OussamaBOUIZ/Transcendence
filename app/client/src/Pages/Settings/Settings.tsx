@@ -12,7 +12,7 @@ import Loading from '../Loading';
 
 export default function Settings () {
 
-    const {user, setUpdate, setNotif} = useContext(UserContext)
+    const {user, navigate, setUpdate, setNotif} = useContext(UserContext)
     const [imgPrev, setimgPrev] = useState<string>("");
     const [image, setImage] = useState<string | null>(null)
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
@@ -97,14 +97,14 @@ export default function Settings () {
                 const res = await axios.get(path);
                 console.log(`res: ${res}`)
                 if(res.data.length !== 0)
-                    window.location.replace('/auth')
+                    navigate('/auth')
             } catch (error) {
                 // console.log(error);
                 
             }
         }
         if (tfaStatus)
-            window.location.replace('/disabletfa')
+            navigate('/disabletfa')
         else
             sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
     }

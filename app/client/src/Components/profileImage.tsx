@@ -1,11 +1,14 @@
+import UserContext from "../Context/UserContext"
 import "../scss/profileImage.scss"
-import React from "react"
+import React, { useContext } from "react"
 
 export default function ProfileImage({image, name, size}: {image: string |undefined, name?: string, size: string}) {
+    
+    const {navigate} = useContext(UserContext)
 
     function handleClick() {
         if (name)
-            window.location.replace(`/profile/${name}`)
+            navigate(`/profile/${name}`)
     }
 
     return (
