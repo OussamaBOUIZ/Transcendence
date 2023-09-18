@@ -2,7 +2,6 @@ import "../scss/auth.scss";
 import axios from "axios"
 import React, {useContext, useState} from "react"
 import UserContext from "../Context/UserContext";
-import Notification from "../Components/Notification";
 
 interface Inputs {
     [id: number]: string;

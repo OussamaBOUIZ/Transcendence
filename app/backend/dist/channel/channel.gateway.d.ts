@@ -5,6 +5,7 @@ import { UserService } from "src/user/user.service";
 import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
+import { invitationDto } from "./dto/invitationDto";
 import { channelAccess } from "./dto/channelAccess";
 export declare class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private readonly channelservice;
@@ -15,6 +16,7 @@ export declare class ChannelGateway implements OnGatewayInit, OnGatewayConnectio
     handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): Promise<void>;
     unmuteUser(userId: number, channelservice: ChannelService, server: Server): Promise<void>;
+    receiveInvitation(invData: invitationDto, client: Socket): Promise<void>;
     muteuser(user: muteUserDto, client: Socket): Promise<void>;
     createChannel(channelData: channelAccess, client: Socket): Promise<void>;
     leaveAndRemoveChannel(channelData: channelAccess, client: Socket): Promise<void>;

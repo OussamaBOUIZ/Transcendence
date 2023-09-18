@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import axios, {AxiosResponse} from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'

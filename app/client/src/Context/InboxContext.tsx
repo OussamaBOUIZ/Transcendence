@@ -1,11 +1,10 @@
-import React, {createContext, useState, useRef, useContext} from 'react'
+import React, {createContext, useState, useRef} from 'react'
 import { InboxItem, MessageData } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
 import {updateInboxByReceiving} from "../Helpers/chatdm.utils"
-import UserContext from './UserContext';
 
 
 interface InboxContextType {

@@ -22,8 +22,8 @@ function capitalize(inputString: string | undefined): string | undefined {
     const count = useRef<number>(0);
     
     useEffect(() => {
-      function handleClick(event) {
-        if (count.current && wrapperRef.current && !wrapperRef.current.contains(event.target))
+      function handleClick(event: MouseEvent) {
+        if (count.current && wrapperRef.current && !wrapperRef.current.contains(event.target as Node))
           setPopupOpen(false)
         count.current += 1;
       }

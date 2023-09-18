@@ -13,8 +13,8 @@ import Loading from '../Loading';
 export default function Settings () {
 
     const {user, navigate, setUpdate, setNotif} = useContext(UserContext)
-    const [imgPrev, setimgPrev] = useState<string>("");
-    const [image, setImage] = useState<string | null>(null)
+    const [imgPrev, setimgPrev] = useState<File | null>(null);
+    const [image, setImage] = useState<string>("")
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [tfaStatus, setTfaStatus] = useState<boolean>(false);
 
@@ -27,26 +27,22 @@ export default function Settings () {
         return false;
     }
 
-    const handleImageChange = (event: { target: { files: any[]; }; }) => {
-    console.log("event : ", event)
-      const file = event.target.files[0];
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
       setimgPrev(file)
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          setImage(e.target.result);
+          setImage(String(e.target?.result));
         };
         reader.readAsDataURL(file);
       }
     };
 
-    const handleNamesEdit = (event) => {
+    const handleNamesEdit = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
-        console.log("data : ", data)
-        if (checkInput()) {
-            console.log("one info is empty")
+        if (checkInput())
             return ;
-        }
         const sendNames = async (path: string, userAllNames: Data | null , headers: AxiosRequestConfig<Data>) => {
             try {
                 if (userAllNames) {
@@ -100,7 +96,6 @@ export default function Settings () {
                     navigate('/auth')
             } catch (error) {
                 // console.log(error);
-                
             }
         }
         if (tfaStatus)

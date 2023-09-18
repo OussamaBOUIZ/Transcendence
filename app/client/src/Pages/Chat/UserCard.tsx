@@ -4,8 +4,6 @@ import {Link} from 'react-router-dom'
 import {User} from "../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
-import AddUser from "../../Assets/Icons/addUser.svg"
-import UserContext from '../../Context/UserContext'
 import { capitalize } from '../../Helpers/utils'
 
 interface PropType {
@@ -16,7 +14,6 @@ interface PropType {
 }
 export default function UserCard ({userData, message, friend, add}: PropType ) {
     const {roomData, setShowSearch} = useContext(SocketContext)
-    const {user} = useContext(UserContext)
     
     const handleAddUser = () => {
         const fetch = async () => {
@@ -29,15 +26,6 @@ export default function UserCard ({userData, message, friend, add}: PropType ) {
             }      
         }
         void fetch();
-    }
-
-    async function handleFriend() {
-        try {
-            await axios.post(`/api/user/addfriend/${user.id}?friendId=${userData.id}`, null)
-        }
-        catch (err) {
-            // console.log(err)
-        }
     }
 
     return (
@@ -57,7 +45,7 @@ export default function UserCard ({userData, message, friend, add}: PropType ) {
                         <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/ffffff/filled-chat.png" alt="filled-chat"/>
                     </Link>
                     }
-                    {friend && <button className='bg-primary-pink py-2 px-4 rounded-2xl px-8'>
+                    {friend && <button className='bg-primary-pink py-2 rounded-2xl px-8'>
                         <img width="30" height="30" src="https://img.icons8.com/pastel-glyph/64/ffffff/add-male-user.png" alt="add-male-user"/>    
                     </button>}
                     {add && <button className='bg-primary-pink py-2 px-4 rounded-2xl' onClick={handleAddUser} >Add</button>}

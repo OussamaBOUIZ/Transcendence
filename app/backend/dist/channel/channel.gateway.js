@@ -20,6 +20,7 @@ const user_service_1 = require("../user/user.service");
 const channelMessageDto_1 = require("./dto/channelMessageDto");
 const operateUserDto_1 = require("./dto/operateUserDto");
 const muteUserDto_1 = require("./dto/muteUserDto");
+const invitationDto_1 = require("./dto/invitationDto");
 const channelAccess_1 = require("./dto/channelAccess");
 const common_1 = require("@nestjs/common");
 const ws_filter_1 = require("../Filter/ws.filter");
@@ -69,6 +70,10 @@ let ChannelGateway = class ChannelGateway {
     async unmuteUser(userId, channelservice, server) {
         channelservice.unmuteUser(userId);
         server.emit('Unmuted', 'user was unmuted');
+    }
+    async receiveInvitation(invData, client) {
+        const guest = await this.userService.findUserById(invData.guestId);
+        client.to(guest.socketId).emit('invitation', invData);
     }
     async muteuser(user, client) {
         const channel = await this.channelservice.getChannel(user.channelName);
@@ -131,6 +136,14 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], ChannelGateway.prototype, "server", void 0);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('receiveInvitation'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [invitationDto_1.invitationDto, socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChannelGateway.prototype, "receiveInvitation", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('muteuser'),
     __param(0, (0, websockets_1.MessageBody)()),
