@@ -13,7 +13,7 @@ import { Game } from "src/databases/game.entity";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
-    host: 'localhost',
+    host: 'postgres',
     port: 5432,
     username: 'postgres',
     password: '123',

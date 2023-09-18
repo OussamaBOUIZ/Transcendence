@@ -14,7 +14,7 @@ import { WsExceptionFilter } from "src/Filter/ws.filter";
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(1212, {cors: {
-	origin: "http://localhost:5173",
+	origin: "http://10.13.7.7:5173",
     credentials: true
 }}) 
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

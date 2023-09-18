@@ -33,7 +33,7 @@ export default function MainLayout () {
     
     // create socket
     useEffect(() => {
-      const fd = io("ws://localhost:1212", {
+      const fd = io("ws://10.13.7.7:1212", {
           withCredentials: true,
       })
       // setInvitation({image: '', username: 'oouazize'})

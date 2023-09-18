@@ -69,7 +69,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     useEffectOnUpdate(() => {
         //init socket
         const value = document.cookie.split('=')[1]
-        const newSocket = io('ws://localhost:4000', {
+        const newSocket = io('ws://10.13.7.7:4000', {
             auth: {
                 token: value
             }})

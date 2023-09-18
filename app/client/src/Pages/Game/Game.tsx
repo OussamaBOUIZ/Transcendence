@@ -148,7 +148,7 @@ export default function Game () {
     }, [score])
 
     useEffectOnUpdate( () => {
-        const newSocket: any = io("ws://localhost:4343");
+        const newSocket: any = io("ws://10.13.7.7:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 

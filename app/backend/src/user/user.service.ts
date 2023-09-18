@@ -400,11 +400,11 @@ export class UserService {
     }
 
 
-    async addUserStat(statDto: StatsDto, userReq: any) {
+    async addUserStat(statDto: StatsDto, email: string) {
 
         const user = await this.userRepo.findOne({
             where: {
-                email: userReq['email']
+                email: email
             },
             relations: {
                 stat: true
