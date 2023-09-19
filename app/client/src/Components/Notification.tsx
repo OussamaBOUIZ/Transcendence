@@ -40,7 +40,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 				<p className="text-xs opacity-80 font-normal">{`${playNow?.gameName} challenge!`}</p>
 			</div>
 		</figure>
-		<Link to="/game/IceLand"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></Link>
+		<Link to="/game/BattleRoyal"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></Link>
 	</div>;
 	const Content = (message) ? popUp : invitation
 

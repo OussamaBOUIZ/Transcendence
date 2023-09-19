@@ -11,44 +11,49 @@ import sketch from "./Skitch"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import UserContext from '../../Context/UserContext';
 import { User } from '../../../global/Interfaces';
+import BattleRoyal from "../../Assets/GameArea/BattleRoyal.jpg"
+import BlazingPong from "../../Assets/GameArea/BlazingPong.jpg"
+import ArcticPong from "../../Assets/GameArea/ArcticPong.jpg"
+import RetroPong from "../../Assets/GameArea/RetroPong.jpg"
 
+let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
-        background: "galaxy.jpg",
+        background: "BattleRoyal.jpg",
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 11,
+        maxScore: 14,
         ability: ""
     }],
-    ["TheBeat", {
-        modeName: "TheBeat",
+    ["BlazingPong", {
+        modeName: "BlazingPong",
         ball: "fireBall.png",
         paddle: "paddle.png",
-        background: "fire-game.jpg",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        background: "BlazingPong.jpg",
+        color: {r: 255, g: 154, b: 0, a: 1},
         xp: 5000,
-        maxScore: 7,
+        maxScore: 11,
         ability: "speed"
     }],
-    ["IceLand", {
-        modeName: "IceLand",
+    ["ArcticPong", {
+        modeName: "ArcticPong",
         ball: "iceBall.png",
         paddle: "paddle.png",
-        background: "galaxy.jpg",
+        background: "ArcticPong.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 3,
+        maxScore: 8,
         ability: "speed"
     }],
-    ["BrighGround", {
-        modeName: "BrighGround",
-        ball: "fireBall.png",
+    ["RetroPong", {
+        modeName: "RetroPong",
+        ball: "iceBall.png",
         paddle: "paddle.png",
-        background: "fire-game.jpg",
+        background: "RetroPong.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
         maxScore: 5,
@@ -56,7 +61,7 @@ let gameModes = new Map<String, GameMode>([
     }],
 ]);
 
-const abilities: string[] = ["reverse", "hide", "speed"]
+const abilities: string[] = ["hide", "reverse", "speed"]
 
 let roomKey: string;
 
@@ -69,7 +74,7 @@ export default function Game () {
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
-    const [mode, setMode]  = useState<GameMode | undefined >(undefined);
+    const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
@@ -191,13 +196,16 @@ export default function Game () {
         };
     }, [])
 
+    const modeName = String(mode?.modeName)
+    const backgroundImage = ModeImages.find(mode => mode.includes(modeName))
+
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
             
-            <div className='bg absolute w-full h-full top-0'></div>
+            <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
             <div className='main-container flex flex-col justify-center gap-1'>
                 <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
                 {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}

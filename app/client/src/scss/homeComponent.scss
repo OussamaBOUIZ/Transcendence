@@ -51,7 +51,7 @@
         display: flex;
         justify-content: space-between;
         position: relative;
-        background-image: url("../Assets/GameArea/galaxy.jpg");
+        background-image: url("../Assets/GameArea/BattleRoyal.jpg");
         background-position: 100%;
         background-repeat: no-repeat;
         background-size: cover;
@@ -99,13 +99,13 @@
     
     .BlazingPong {
         grid-area: BlazingPong;
-        background-image: url("../Assets/GameArea/snowy-mount.jpg");
+        background-image: url("../Assets/GameArea/BlazingPong.jpg");
         background-size: cover;
         background-repeat: no-repeat;
     }
     .ArcticPong {
         grid-area: ArcticPong;
-        background-image: url("../Assets/GameArea/arcticarea.jpg");
+        background-image: url("../Assets/GameArea/ArcticPong.jpg");
         background-size: cover;
         background-repeat: no-repeat;
     }

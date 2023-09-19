@@ -14,7 +14,7 @@ import { Game } from 'src/databases/game.entity';
 import { userWinDto } from "./dto/userWinDto";
 import { scoreStoreDto } from "./dto/scoreSavingDto";
 import { gameService } from "./game.service";
-const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"]
+const gameModes: string[] = ["BattleRoyal", "BlazingPong", "ArcticPong", "RetroPong"]
 
 interface User {
 	user: any;
@@ -23,9 +23,9 @@ interface User {
 
 const waitingUsers = new Map<String, User[]>([
     ["BattleRoyal", []],
-    ["IceLand", []],
-    ["TheBeat", []],
-    ["BrighGround", []]
+    ["BlazingPong", []],
+    ["ArcticPong", []],
+    ["RetroPong", []]
 ]);
 
 @WebSocketGateway(4343, {cors: {

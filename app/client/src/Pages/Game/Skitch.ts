@@ -70,7 +70,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
 
     p5.preload = (): void => {
-        backImg = p5.loadImage("/src/Assets/GameArea/galaxy.jpg");
+        backImg = p5.loadImage("/src/Assets/GameArea/BattleRoyal.jpg");
     }
 
     p5.windowResized = (): void => {
