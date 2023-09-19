@@ -60,6 +60,7 @@ export interface GameMode {
     color: Color | null;
     xp: number;
     maxScore: number;
+    ability: string;
 };
 
 export interface Score {

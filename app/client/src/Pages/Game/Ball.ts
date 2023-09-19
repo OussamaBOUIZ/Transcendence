@@ -46,7 +46,7 @@ export default class Ball {
     
     updateBall(p5: any, ballImg: string, props: MySketchProps) {
 
-        if (vars.effect !== 72)
+        if (vars.effect !== 32 || props.gameMode?.ability !== "hide")
             this.drawBall(p5, ballImg);
 
         if (this.x < 0 || this.x > p5.width) {        

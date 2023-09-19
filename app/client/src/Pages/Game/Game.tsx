@@ -21,7 +21,8 @@ let gameModes = new Map<String, GameMode>([
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 9
+        maxScore: 21,
+        ability: ""
     }],
     ["TheBeat", {
         modeName: "TheBeat",
@@ -30,7 +31,8 @@ let gameModes = new Map<String, GameMode>([
         background: "fire-game.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 5000,
-        maxScore: 7
+        maxScore: 7,
+        ability: "speed"
     }],
     ["IceLand", {
         modeName: "IceLand",
@@ -39,7 +41,8 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 20
+        maxScore: 20,
+        ability: "hide"
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -48,9 +51,12 @@ let gameModes = new Map<String, GameMode>([
         background: "fire-game.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
-        maxScore: 5
+        maxScore: 5,
+        ability: "reverse"
     }],
 ]);
+
+const abilities: string[] = ["reverse", "hide", "speed"]
 
 let roomKey: string;
 
@@ -92,10 +98,10 @@ export default function Game () {
     useEffectOnUpdate(()  => {
         console.log(firstTime.current);
         
-        if (!firstTime.current) {
+        if (!firstTime.current && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
+                    return  {...prevState, myPersentage: prevState.myPersentage + 5}
                 });
             }, 100)
         }
@@ -103,8 +109,12 @@ export default function Game () {
 
 
     useEffect(() => {
-        if (persentage.myPersentage >= 100)
+        if (persentage.myPersentage >= 100 && !isEffect.current) {
             isEffect.current = true;
+            if (mode && mode.modeName === "BattleRoyal") {
+                mode.ability = abilities[1];
+            }
+        }
 
         socket?.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
         socket?.on("recvPersentage", (per: number) => {

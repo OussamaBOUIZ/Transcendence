@@ -68,15 +68,15 @@ export function resizeGameVars(width: number) {
   vars.PH = width / 12;
   vars.PW = width / 80;
   vars.GAP = width / 80;
-  vars.PSPEED = width / 60;
+  vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
-  vars.SPEED = width / 60;
+  vars.SPEED = width / 80;
   vars.NW = width / 200;
   vars.NH = width / 60;
 }
 
 export function ActivateEffect(p5: any, props: MySketchProps) {
-  if (p5.keyIsPressed && props.isEffect) {
+  if (p5.keyIsPressed && props.isEffect && p5.keyCode === 32) {
     props.isEffect.current = false;
     vars.isEffect = true;
     props.setPersentage((prevState) => {
