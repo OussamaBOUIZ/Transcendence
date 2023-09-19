@@ -42,7 +42,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
         maxScore: 20,
-        ability: "hide"
+        ability: "speed"
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -65,7 +65,7 @@ export default function Game () {
     const isWin = useRef<boolean>(false);
     const isEffect = useRef<boolean>(false);
     const oppUser = useRef<User>({} as User);
-    const firstTime = useRef<boolean>(true);
+    const [firstTime, setFirstTime] = useState<boolean>(true);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
@@ -74,7 +74,9 @@ export default function Game () {
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
     const {user} = useContext(UserContext);
-    
+    const [ability, setAbility] = useState<string>(mode?.ability || "");
+    const [isClicked, setIsClicked] = useState<boolean>(false);
+
     const {key, gameMode} = useParams();
 
     const updateDataBase = (finalScore: Score | undefined) => {
@@ -85,27 +87,27 @@ export default function Game () {
                 userId: user.id,
                 opponentId: oppUser.current.id
             })
-            // socket?.emit("achievement", {
-            //     userId: user.id,
-            //     wonXp: mode?.xp,
-            //     gameName: mode?.modeName,
-            //     opponentLevel: oppUser.stat?.ladder_level,
-            // })
-            // })
+            socket?.emit("achievement", {
+                userId: user.id,
+                wonXp: mode?.xp,
+                gameName: mode?.modeName,
+                opponentLevel: oppUser.current.stat?.ladder_level,
+                opponentId: oppUser.current.id,
+            })
         }
     }
     
     useEffectOnUpdate(()  => {
-    console.log(firstTime.current);
+    // console.log(firstTime);
         
-        if (!firstTime.current && persentage.myPersentage < 100) {
+        if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
                     return  {...prevState, myPersentage: prevState.myPersentage + 5}
                 });
             }, 100)
         }
-    }, [firstTime.current])
+    }, [firstTime])
 
 
     useEffect(() => {
@@ -113,6 +115,7 @@ export default function Game () {
             isEffect.current = true;
             if (mode && mode.modeName === "BattleRoyal") {
                 mode.ability = abilities[Math.floor(Math.random() * 3)];
+                setAbility(mode.ability);
             }
         }
 
@@ -145,10 +148,10 @@ export default function Game () {
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey);
-            console.log("game end");
+            // console.log("game end");
         }
 
-        console.log(score.myScore, mode?.maxScore);
+        // console.log(score.myScore, mode?.msetIsClickedaxScore);
 
         if (gameMode && score.myScore === mode?.maxScore) {
             isWin.current = true;
@@ -161,7 +164,7 @@ export default function Game () {
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 
-        if (key && gameMode) {
+        if (key && gameMode) {setIsClicked
             setGameKey(key);
             newSocket.emit("joinGame", key);
         } else if (gameMode) {
@@ -169,7 +172,7 @@ export default function Game () {
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: mode?.xp,
-                user: user,
+                user: user,setIsClicked
             });
 
             newSocket.on("matched", (data: any) => {
@@ -178,31 +181,25 @@ export default function Game () {
                 roomKey = data.roomKey;
                 newSocket.emit("joinGame", data.roomKey);
                 oppUser.current = data.user;
-                console.log(data.user);
                 setIsMatching(false);
             });
         }
 
-        return () => {
-            console.log("component unmount");
+        return () => {;
             newSocket.emit("gameEnd", roomKey);
             newSocket.disconnect();
         };
     }, [])
 
-
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
-            {/* <div className='usersBG absolute flex w-full h-full top-0'>
-                <div className='users leftUser'><img src={img} alt="" /></div>
-                <div className='users rightUser'><img src={img2} alt="" /></div>
-            </div> */}
-
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
+            
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
+                <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
                 {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
@@ -221,6 +218,9 @@ export default function Game () {
                     isEffect={isEffect}
                     setPersentage={setPersentage}
                     firstTime={firstTime}
+                    setFirstTime={setFirstTime}
+                    isClicked={isClicked}
+                    setIsClicked={setIsClicked}
                 />
             </div>
         </section>

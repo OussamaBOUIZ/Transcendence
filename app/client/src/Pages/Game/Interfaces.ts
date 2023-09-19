@@ -18,7 +18,10 @@ export interface MySketchProps extends SketchProps {
     isWin: boolean;
     isEffect: React.MutableRefObject<boolean> | null;
     setPersentage: React.Dispatch<React.SetStateAction<Persentage>>;
-    firstTime: React.MutableRefObject<boolean>;
+    firstTime: boolean;
+    setFirstTime: React.Dispatch<React.SetStateAction<boolean>>;
+    isClicked: boolean;
+    setIsClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Velocity {

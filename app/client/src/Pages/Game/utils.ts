@@ -77,13 +77,19 @@ export function resizeGameVars(width: number) {
 }
 
 export function ActivateEffect(p5: any, props: MySketchProps) {
-  if (p5.keyIsPressed && props.isEffect && p5.keyCode === 32) {
+
+  if (props.isEffect && ((p5.keyIsPressed && p5.keyCode === 32) || props.isClicked)) {
     props.isEffect.current = false;
+    props.setIsClicked(false);
+
+    console.log("setIsClicked");
     vars.isEffect = true;
+    vars.effect = props.gameMode?.ability || "";
+
     props.setPersentage((prevState) => {
       return {...prevState, myPersentage: 0}
     })
-    vars.effect = props.gameMode?.ability || "";
+
     setTimeout(() => {
       vars.isEffect = false;
       vars.effect = "";

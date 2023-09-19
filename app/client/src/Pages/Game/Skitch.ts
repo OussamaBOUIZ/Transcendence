@@ -17,6 +17,8 @@ export function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
     vars.vel.x = vars.ISPEED * p5.cos(angle);
     vars.vel.y = vars.ISPEED * p5.sin(angle);
+    vars.effect = "";
+    vars.isEffect = false;
 
     vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
@@ -34,7 +36,6 @@ export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
     leftPad?.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad?.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
 }
-ActivateEffect
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -53,7 +54,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isWin: false,
         isEffect: null,
         setPersentage: () => {},
-        firstTime: { current: true }
+        firstTime: true,
+        setFirstTime: () => {},
+        isClicked: true,
+        setIsClicked: () => {},
     }
 
     let gameEnd: boolean = false; 
@@ -74,6 +78,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
     }
+
 
     p5.updateWithProps = (p: any) => {
         props = Object.assign(props, p)
@@ -127,16 +132,16 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             
 
             if (!props.isMatching && props.gameMode) {
-                if (props.firstTime.current) {
+                if (props.firstTime) {
 
                     setTimeout(() => {
-                        props.firstTime.current = false;
-                        console.log("props.firstTime.current: ", props.firstTime.current)
+                        props.setFirstTime(false);
                     }, 2000)
 
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
                     if (props.isEffect?.current && !vars.isEffect) {
+                        // console.log("heeeeeeeeeeeeeeeere");
                         ActivateEffect(p5, props);
                     }
                     
@@ -199,13 +204,14 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                             vars.vel.y += 0.3;
                             vars.vel.x += 0.4;
                         }
+                        // vars.effect = "";
+                        // console.log(vars.effect);
                     }
 
 
                     if (vars.effect === "speed") {
-                            vars.vel.y *= 2;
-                            vars.vel.x *= 2;
-                            vars.effect = "";
+                        vars.vel.y *= 1.03;
+                        vars.vel.x *= 1.03;
                     }
                     
                     prevPos.push(ball.clone(props.gameMode.color));
