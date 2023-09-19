@@ -96,7 +96,7 @@ export default function Game () {
     }
     
     useEffectOnUpdate(()  => {
-        console.log(firstTime.current);
+    console.log(firstTime.current);
         
         if (!firstTime.current && persentage.myPersentage < 100) {
             setInterval(() => {
@@ -112,7 +112,7 @@ export default function Game () {
         if (persentage.myPersentage >= 100 && !isEffect.current) {
             isEffect.current = true;
             if (mode && mode.modeName === "BattleRoyal") {
-                mode.ability = abilities[1];
+                mode.ability = abilities[Math.floor(Math.random() * 3)];
             }
         }
 

@@ -45,11 +45,12 @@ export interface Vars {
     PSPEED: number;
     RADIUS: number;
     SPEED: number;
+    ISPEED: number;
     NW: number;
     NH: number;
     vel: Velocity;
     isEffect: boolean;
-    effect: number;
+    effect: string;
 }
 
 export interface GameMode {

@@ -71,6 +71,7 @@ export function resizeGameVars(width: number) {
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
   vars.SPEED = width / 80;
+  vars.ISPEED = width / 150;
   vars.NW = width / 200;
   vars.NH = width / 60;
 }
@@ -82,10 +83,10 @@ export function ActivateEffect(p5: any, props: MySketchProps) {
     props.setPersentage((prevState) => {
       return {...prevState, myPersentage: 0}
     })
-    vars.effect = p5.keyCode;
+    vars.effect = props.gameMode?.ability || "";
     setTimeout(() => {
       vars.isEffect = false;
-      vars.effect = 0;
+      vars.effect = "";
     }, 800)
   }
 }

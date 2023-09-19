@@ -10,6 +10,7 @@ export default function PowerBar({ right, isHost, oppUser, persentage}: {right: 
     const {user} = useContext(UserContext);
 
     useEffect(() => {
+        
         const fetchOppImage = async () => {
             try {
                 const image = await getUserImage(oppUser.id);
@@ -19,7 +20,7 @@ export default function PowerBar({ right, isHost, oppUser, persentage}: {right: 
             }
         }
         void fetchOppImage();
-    }, [oppUser])
+    }, [])
 
     return (
         right ? 

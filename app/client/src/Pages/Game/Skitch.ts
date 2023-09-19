@@ -15,8 +15,8 @@ let net: Net;
 
 export function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
-    vars.vel.x = vars.SPEED * p5.cos(angle);
-    vars.vel.y = vars.SPEED * p5.sin(angle);
+    vars.vel.x = vars.ISPEED * p5.cos(angle);
+    vars.vel.y = vars.ISPEED * p5.sin(angle);
 
     vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
@@ -84,7 +84,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         p5.frameRate(602)
         adjustGame(p5);
-        reset(p5, props.isHost);  
+        reset(p5, props.isHost);
 
         if (props.gameMode) {
             backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
@@ -131,6 +131,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     setTimeout(() => {
                         props.firstTime.current = false;
+                        console.log("props.firstTime.current: ", props.firstTime.current)
                     }, 2000)
 
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
@@ -157,13 +158,12 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }
 
                     if (vars.isEffect) {
-                        props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: vars.effect});
-                        // vars.isEffect = false;
+                        props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: props.gameMode.ability });
                     }
-                    props.socket?.on("recieveEffect", (effect: number) => {
+                    props.socket?.on("recieveEffect", (effect: string) => {
                         vars.effect = effect;
                         setTimeout(() => {
-                            vars.effect = 0;
+                            vars.effect = "";
                         }, 800)
                     })
 
@@ -183,7 +183,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     prevPos.forEach( (b: Ball, idx: number) =>  {
                         b.fadeEffect();
-                        if (vars.effect !== 32 || props.gameMode?.ability !== "hide" )
+                        if (vars.effect !== "hide")
                             b.drawBall(p5, null);
 
                         if (b.r <= 0) {
@@ -191,7 +191,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                         }
                     })
 
-                    if (vars.effect === 32 && props.gameMode.ability === "reverse") {
+                    if (vars.effect === "reverse") {
                         if (vars.isEffect && props.isHost) {
                             vars.vel.y -= 0.3;
                             vars.vel.x -= 0.4;
@@ -202,10 +202,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }
 
 
-                    if (vars.effect === 32 &&  props.gameMode.ability === "speed") {
+                    if (vars.effect === "speed") {
                             vars.vel.y *= 2;
                             vars.vel.x *= 2;
-                            vars.effect = 0;
+                            vars.effect = "";
                     }
                     
                     prevPos.push(ball.clone(props.gameMode.color));
