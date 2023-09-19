@@ -8,7 +8,7 @@ import UserContext from '../../Context/UserContext';
 function CustomField ({content}: {content: string}) {
     return (
         <div className='flex justify-center items-center w-full h-full px-2 text-center'>
-        <p>
+        <p className='text-neutral-400 w-2/3'>
             {content}
         </p>
     </div>

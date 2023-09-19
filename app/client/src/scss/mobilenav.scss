@@ -1,0 +1,30 @@
+@keyframes growMenu {
+    0% {
+        height: 10vh;
+        width: 10vw; 
+        border-radius: 0 0 0 300%;
+    }
+    100% {
+        height: 100vh;
+        width: 100vw;
+        border-radius: 0 0 0 0;
+    }
+}
+
+@keyframes glow {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+
+#mobile-nav {
+    // background-color: aqua;
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0 0 0 50%;
+    animation: growMenu 1s ease-out 0s 1 normal forwards;
+    ul {
+        opacity: 0;
+        animation: glow .5s ease-out .5s 1 normal forwards;
+    }
+
+}
