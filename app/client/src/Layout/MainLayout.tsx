@@ -10,6 +10,7 @@ import UserContext from '../Context/UserContext'
 import Notification from '../Components/Notification'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
 import { getUserData } from '../Hooks/getUserData'
+import Loading from '../Pages/Loading'
 
 const UpdateStatus = async () => {
   try {
@@ -68,6 +69,10 @@ export default function MainLayout () {
   
     if (!userStatus)
       void UpdateStatus();
+
+    if (!user.id)
+      return <Loading />
+
     return (
         <div className='w-screen h-full'>
           {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />}

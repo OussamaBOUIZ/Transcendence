@@ -10,13 +10,15 @@ export default function Home() {
     const {user} = useContext(UserContext);
     const leaders = useFetchLeaders();
 
-    if (!user && !leaders)
+    console.log(user);
+    
+    if (!user.id || !leaders)
       return (<Loading />)
 
   return (
       <div className="flex h-full w-full">
         <HomeComponent Leaders={leaders} />
-        <UserOverview UserData={user} />
+        <UserOverview UserData={user}/>
       </div>
   );
 }

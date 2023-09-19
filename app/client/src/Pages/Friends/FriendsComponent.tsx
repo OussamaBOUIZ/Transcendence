@@ -17,6 +17,8 @@ export default function FriendsComponent() {
 
     const FriendsToggle = allFriends.map((friend) => {
         let result: React.JSX.Element;
+        console.log(friend.lastGame);
+        
         if (typeof friend.lastGame === 'string') {
             result = (
                 <main>

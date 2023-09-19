@@ -16,7 +16,7 @@ import { Achievement } from 'src/databases/achievement/achievement.entity';
 import { Stats } from 'src/databases/stats.entity';
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import { BlockedTokenList } from 'src/databases/BlockedTokenList/BlockedTokenList.entity';
-import { Match_history } from 'src/databases/match_history.entity';
+
 import { Game } from 'src/databases/game.entity';
 
 const jwtFactory = {
@@ -29,7 +29,7 @@ const jwtFactory = {
 };
 @Module({
   controllers: [AuthController],
-  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, BlockedTokenList, Match_history, Game]),
+  imports: [HttpModule, TypeOrmModule.forFeature([User, Achievement, Stats, BlockedTokenList, Game]),
    JwtModule.registerAsync(jwtFactory), PassportModule ],
   providers: [googleStrategy, AuthService, fortyTwoStrategy, JwtStrategy, UserService, AchievementService, BlockedTokenlistService],
 })

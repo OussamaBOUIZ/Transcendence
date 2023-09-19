@@ -1,13 +1,39 @@
 import History from "./history";
-import React, {useRef} from "react"
-import {User} from "../../global/Interfaces"
+import React, {useEffect, useRef, useState} from "react"
+import {User, gameHistory} from "../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import { useLocation } from "react-router"
 import dataFour from "./dataThree.json"
 import allData from "./allData.json"
+import axios from "axios";
+import Loading from "../Pages/Loading";
+import { getUserImage } from "../Hooks/getUserImage";
+import useEffectOnUpdate from "../Hooks/useEffectOnUpdate";
 
 export default function GameHistory({UserData, NBgames}: {UserData: User, NBgames: number}) {
+
+    const [dataFetch, setDataFetch] = useState<gameHistory[]>([])
+
+    useEffectOnUpdate(() => {
+        const fetchGames = async () => {
+            try {
+                console.log('fetching.......');
+                const res = await axios.get<gameHistory[]>(`/api/user/game/history/${UserData.id}`)
+                const datawithImage = await Promise.all(res.data.map(async (game) => {
+                    let imageId = (game.opponentId === UserData.id) ? game.userId : game.opponentId
+                    game.opponentImage = await getUserImage(imageId)
+                    return game;
+                }))
+                setDataFetch(datawithImage)
+            }
+            catch (error) {
+                // console.log(error)
+            }
+        }
+        if (UserData.id)
+            void fetchGames()
+    }, [UserData.id])
 
     const games = useRef<React.JSX.Element[]>()
     const {pathname} = useLocation();
@@ -25,14 +51,16 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
             </div>
         </header>
     }
-    let data = (NBgames === 4) ? dataFour.dataFour : allData.allData
-    games.current = data.map((game, index) => {
+    let data = (NBgames === 4) ? dataFetch : allData.allData
+    console.log(data);
+    
+    games.current = data?.map((game, index) => {
         return (
             <History key={index} userData={UserData} gameData={game} />
         )
     })
 
-      return (
+    return (
         <div className="item GameHistory">
             {header}
             <div className="games">

@@ -34,6 +34,8 @@ export const useFetchAllFriends = (id: number, update?: number, setIsMyFriend?: 
               else {
                 const res = await axios.get<lastGame | string>(`/api/user/friendLastGame/${friend.id}?userId=${user.id}`)
                 lastGame = res.data;
+                console.log(res.data);
+                
               }
               const image = await getUserImage(friend.id);
               return { ...friend, lastGame, image };

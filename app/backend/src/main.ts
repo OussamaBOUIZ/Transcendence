@@ -7,7 +7,7 @@ import { AllExceptionFilter } from './Filter/AllExceptionsFilter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://10.13.6.4:5173',
+    origin: process.env.FRONTEND_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type',
     credentials: true,
@@ -16,6 +16,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.setGlobalPrefix('api');
   app.use(cookieParser())
-  await app.listen(3000); 
+  await app.listen(process.env.BACKEND_PORT); 
 }
 bootstrap();

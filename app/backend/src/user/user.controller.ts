@@ -26,7 +26,6 @@ import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { JwtGuard } from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
-import { Match_history } from "../databases/match_history.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
@@ -227,7 +226,6 @@ export class UserController {
 	@Header('Content-Type', 'image/jpg')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
-        console.log('user: ', user);
 		if (!user)
 			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
 		const imagePath = user.avatar
@@ -280,14 +278,14 @@ export class UserController {
     {
         return await this.userService.AllFriends(id);
     }
-    // @Get('friendLastGame/:friendId')
-    // async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
-    // {
-    //     return await this.userService.getFriendLastGame(friendId, userId);
-    // }
+    @Get('friendLastGame/:friendId')
+    async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
+    {
+        return await this.userService.getFriendLastGame(friendId, userId);
+    }
 
     @Get('game/history/:userId')
-    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Game[]> {
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) {
         return await this.userService.getGameHistory(userId)
     }
 

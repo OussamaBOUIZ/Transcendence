@@ -38,7 +38,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt')
 
     async validate(payload: JwtPayload) {
         const user = await this.userService.findUserByEmail(payload.email);
-        console.log('UUser is: ', user);
         if (!user) throw new UnauthorizedException('Please log in to continue');
         if((await this.BlockedTokenService.blackListHasToken(this.request.cookies['access_token'])) === true)
             throw new UnauthorizedException('token is not valid');

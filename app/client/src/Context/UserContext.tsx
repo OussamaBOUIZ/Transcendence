@@ -55,27 +55,25 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         try {
         
           const response = await axios.get<User>("/api/user"); 
-          console.log('response is: ', response);
           const image = await getUserImage(response.data.id)
+          
           setUser({...response.data, image});
           
         } catch (error) {
           // console.log(error);
         }
-        setIsLoading(false);
+        setIsLoading(false);        
       };
-
+      
+      // console.log('USER HERE: ', user);
 
       const verifyAuthentication = async () => {
         setIsLoading(true);
           try {
               const response = await axios.get("/api/auth/tokenValidity");    
-              console.log("response.data : ", response.data);
               setAuthenticated(response.data)
-              console.log("setting to TRUE");
           }
           catch (error) {
-              console.log("setting to FALSE");
               setAuthenticated(false)
           }
           setIsLoading(false)
