@@ -82,6 +82,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     p5.setup = (): void => {
         let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
+        p5.frameRate(30);
         adjustGame(p5);
         reset(p5, props.isHost);  
 
@@ -192,11 +193,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     if (vars.effect === 82) {
                         if (vars.isEffect && props.isHost) {
-                            vars.vel.y -= 0.4;
-                            vars.vel.x -= 0.5;
+                            vars.vel.y -= 1;
+                            vars.vel.x -= 1.1;
                         } else {
-                            vars.vel.y += 0.4;
-                            vars.vel.x += 0.5;
+                            vars.vel.y += 1;
+                            vars.vel.x += 1.1;
                         }
                     }
 

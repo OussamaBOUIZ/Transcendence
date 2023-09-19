@@ -97,7 +97,6 @@ export default function Game () {
                 setPersentage((prevState) => {
                     return  {...prevState, myPersentage: prevState.myPersentage + 1}
                 });
-                firstTime.current
             }, 100)
         }
     }, [firstTime.current])
