@@ -13,9 +13,9 @@ export declare class UserController {
     private readonly jwt;
     private readonly BlockedTokenService;
     constructor(userService: UserService, jwt: JwtService, BlockedTokenService: BlockedTokenlistService);
-    updateUserStatus(req: Request, body: statusDto): Promise<void>;
+    updateUserStatus(req: any, body: statusDto): Promise<void>;
     getUserData(req: Request): Promise<import("../databases/user.entity").User>;
-    getOnlineUsers(req: Request): Promise<import("../databases/user.entity").User[]>;
+    getOnlineUsers(req: any): Promise<import("../databases/user.entity").User[]>;
     uploadImage(id: number, image: Express.Multer.File, res: Response): Promise<Response<any, Record<string, any>>>;
     updateAvatar(id: number, image: Express.Multer.File, res: Response): Promise<Response<any, Record<string, any>>>;
     deleteUser(userId: number): Promise<string>;
@@ -25,7 +25,7 @@ export declare class UserController {
     getBlockedUser(userId: number, req: Request): Promise<{
         id: number;
     }[]>;
-    blockUser(userId: number, req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
+    blockUser(userId: number, req: any, res: Response): Promise<Response<any, Record<string, any>>>;
     getAvatarById(id: number): Promise<StreamableFile>;
     getStatsById(id: number): Promise<import("../databases/user.entity").User[]>;
     getLastThree(id: number): Promise<import("../databases/achievement/achievement.entity").Achievement[]>;
@@ -40,7 +40,7 @@ export declare class UserController {
     postUsername(userData: userDataDto, req: Request, res: Response, id: number): Promise<Response<any, Record<string, any>>>;
     isFirstLog(req: Request, res: Response): Promise<boolean>;
     logout(id: number, req: Request, res: Response): Promise<void>;
-    addUserStat(statDto: StatsDto, req: Request): Promise<void>;
+    addUserStat(statDto: StatsDto, req: any): Promise<void>;
     searchForUser(dto: searchDto): Promise<import("../databases/user.entity").User>;
     getUserDetails(id: number): Promise<import("../databases/user.entity").User>;
     getUserProfile(username: string): Promise<import("../databases/user.entity").User>;

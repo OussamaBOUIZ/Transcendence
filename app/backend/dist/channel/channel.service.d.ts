@@ -35,7 +35,7 @@ export declare class ChannelService {
     leaveChannel(channelName: string, userId: number): Promise<void>;
     getChannelData(id: number): Promise<Channel>;
     getChannelName(channelId: number): Promise<string>;
-    getUserGrade(userId: number, channelId: number): Promise<"user" | "owner" | "admin">;
+    getUserGrade(userId: number, channelId: number): Promise<"owner" | "admin" | "user">;
     getAllChannels(id: number): Promise<Channel[]>;
     getAccessibleChannels(): Promise<Channel[]>;
     checkProtectedChannel(channelData: protectedChannelDto, userId: any): Promise<boolean | "You are already a member">;

@@ -49,7 +49,6 @@ export class InboxController {
         @Req() req: Request
     ) {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        // const user = await this.userService.findUserByEmail(req.user['email'])
         if (user === null)
             return 'Not authorized';
         const inboxes = await this.inboxService.getAllInboxOfUser(user.id)

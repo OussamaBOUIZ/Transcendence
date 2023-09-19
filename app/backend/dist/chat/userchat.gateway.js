@@ -138,7 +138,7 @@ __decorate([
 exports.ChatGateway = ChatGateway = ChatGateway_1 = __decorate([
     (0, common_1.UseFilters)(ws_filter_1.WsExceptionFilter),
     (0, websockets_1.WebSocketGateway)(4000, { cors: {
-            origin: "http://localhost:5173",
+            origin: "http://10.13.6.4:5173",
             credentials: true
         } }),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),

@@ -8,7 +8,7 @@ var vite_config_default = defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "http://10.13.6.4:3000",
         changeOrigin: true
       }
     }

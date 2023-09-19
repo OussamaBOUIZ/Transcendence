@@ -39,6 +39,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
     }
     async validate(payload) {
         const user = await this.userService.findUserByEmail(payload.email);
+        console.log('UUser is: ', user);
         if (!user)
             throw new common_1.UnauthorizedException('Please log in to continue');
         if ((await this.BlockedTokenService.blackListHasToken(this.request.cookies['access_token'])) === true)

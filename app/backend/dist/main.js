@@ -8,7 +8,7 @@ const AllExceptionsFilter_1 = require("./Filter/AllExceptionsFilter");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: 'http://10.13.6.4:5173',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         allowedHeaders: 'Content-Type',
         credentials: true,

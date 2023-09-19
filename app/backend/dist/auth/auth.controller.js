@@ -37,25 +37,25 @@ let AuthController = class AuthController {
         const user = await this.userService.findUserByEmail(googlereq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if (userHasAuth === true)
-            return res.redirect('http://localhost:5173/auth');
+            return res.redirect('http://10.13.6.4:5173/auth');
         if (user.firstLog === true)
-            return res.redirect('http://localhost:5173/info');
-        return res.redirect('http://localhost:5173/');
+            return res.redirect('http://10.13.6.4:5173/info');
+        return res.redirect('http://10.13.6.4:5173/');
     }
     fortyTwoLogin() {
     }
     async fortyTwoRedirect(fortyTworeq, res) {
         const token = await this.authService.apisignin(fortyTworeq.user);
         if (!token)
-            return res.redirect('http://localhost:5173/');
+            return res.redirect('http://10.13.6.4:5173/');
         this.authService.setResCookie(res, token);
         const user = await this.userService.findUserByEmail(fortyTworeq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if (userHasAuth === true)
-            return res.redirect('http://localhost:5173/auth');
+            return res.redirect('http://10.13.6.4:5173/auth');
         if (user.firstLog === true)
-            return res.redirect('http://localhost:5173/info');
-        return res.redirect('http://localhost:5173/');
+            return res.redirect('http://10.13.6.4:5173/info');
+        return res.redirect('http://10.13.6.4:5173/');
     }
     async getQrCode(req, res) {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);

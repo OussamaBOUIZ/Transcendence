@@ -92,7 +92,7 @@ export default function ChatRooms () {
 
     // create socket
     useEffect(() => {
-        const fd = io("ws://localhost:1212", {
+        const fd = io("ws://10.13.6.4:1212", {
             withCredentials: true,
         })
         setSocket(fd)

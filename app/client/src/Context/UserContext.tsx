@@ -48,12 +48,14 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [invitation, setInvitation] = useState<{image: string, username: string, gameName: string}>()
     const navigate = useNavigate()
 
-
+  
 
     const fetchUserData = async () => {
         setIsLoading(true);
         try {
+        
           const response = await axios.get<User>("/api/user"); 
+          console.log('response is: ', response);
           const image = await getUserImage(response.data.id)
           setUser({...response.data, image});
           
@@ -68,9 +70,9 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         setIsLoading(true);
           try {
               const response = await axios.get("/api/auth/tokenValidity");    
-              // console.log("response.data : ", response.data);
+              console.log("response.data : ", response.data);
               setAuthenticated(response.data)
-              // console.log("setting to TRUE");
+              console.log("setting to TRUE");
           }
           catch (error) {
               console.log("setting to FALSE");
@@ -87,7 +89,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     useEffect(() => {
         if (user)
           void fetchUserData();
-      }, [update])
+      }, [])
 
     return (
         <UserContext.Provider value={{

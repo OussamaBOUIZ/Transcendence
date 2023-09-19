@@ -85,7 +85,7 @@ export class UserService {
     }
     async saveStat(stat: Stats) {
         await this.statsRepo.save(stat);
-    }
+    } 
 
     async findUserByEmail(email: string): Promise<User> {
         return await this.userRepo.findOneBy({ email: email });

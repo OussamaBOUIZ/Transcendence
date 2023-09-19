@@ -180,7 +180,7 @@ __decorate([
 ], GameGateway.prototype, "onNewMessage", null);
 exports.GameGateway = GameGateway = __decorate([
     (0, websockets_1.WebSocketGateway)(4343, { cors: {
-            origin: "http://localhost:5173",
+            origin: "http://10.13.6.4:5173",
             credentials: true
         } }),
     __metadata("design:paramtypes", [game_service_1.gameService])

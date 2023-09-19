@@ -16,7 +16,7 @@ interface Inputs {
 
 export default function DisableTFA() {
 
-    const {user, setNotif, navigate} = useContext(UserContext);
+    const {user, setNotif} = useContext(UserContext);
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
     const collectedCode = Object.values(codeNumber).join('');
@@ -32,7 +32,7 @@ export default function DisableTFA() {
                     console.log(collected);
                     const res  = await axios.post(`/api/user/2fa/turn-off/${user?.id}`, collected);
                     if (res.data.length === 0)
-                        navigate('/')
+                        window.location.replace('/')
                     else
                         setNotif(res.data);
                 } catch (error) {

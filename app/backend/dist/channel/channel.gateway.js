@@ -206,7 +206,7 @@ __decorate([
 exports.ChannelGateway = ChannelGateway = __decorate([
     (0, common_1.UseFilters)(ws_filter_1.WsExceptionFilter),
     (0, websockets_1.WebSocketGateway)(1212, { cors: {
-            origin: "http://localhost:5173",
+            origin: "http://10.13.6.4:5173",
             credentials: true
         } }),
     __metadata("design:paramtypes", [channel_service_1.ChannelService,

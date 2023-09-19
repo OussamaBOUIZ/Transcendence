@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import {User} from "../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
-import { capitalize } from '../../Helpers/utils'
 
 interface PropType {
     userData: User,
@@ -34,7 +33,7 @@ export default function UserCard ({userData, message, friend, add}: PropType ) {
                 <div className='flex gap-6'>
                     <ProfileImage image={userData.image} name={userData.username} size="regular"/>
                     <div>
-                        <h5 className='font-semibold'>{capitalize(userData.firstname)} {capitalize(userData.lastname)}</h5>
+                        <h5 className='font-semibold'>{String(userData.firstname)} {String(userData.lastname)}</h5>
                         <p className='text-sm'>{userData.username}</p>
                     </div>
                 </div>

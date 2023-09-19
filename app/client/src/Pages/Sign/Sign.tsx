@@ -11,11 +11,11 @@ import { Link } from "react-router-dom"
 export default function Sign() {
 
     const [signInImage, setSignInImage] = useState<string>("");
-    const {authenticated, isLoading, navigate} = useContext(UserContext);
+    const {authenticated, isLoading} = useContext(UserContext);
 
     console.log("authenticated : ", authenticated);
     if (authenticated)
-        navigate('/')
+        window.location.replace('/')
 
     useEffect(() => {
         const getImage = async () => {
@@ -41,11 +41,11 @@ export default function Sign() {
                             <div className='bar'></div>or<div className='bar'></div>
                         </div>
     const ButtonsAuth = <div className='bttn'>
-                            <Link to={`http://localhost:3000/api/auth/google`} className='btn'>
+                            <Link to={`http://10.13.6.4:3000/api/auth/google`} className='btn'>
                                 <img src={googleImg} alt="" /> Sign in with Google
                             </Link>
                             {orContent}
-                            <Link to={`http://localhost:3000/api/auth/42`} className='btn'>
+                            <Link to={`http://10.13.6.4:3000/api/auth/42`} className='btn'>
                                 <img src={logo42} alt="" /> Sign in with 42 Netowrk
                             </Link>
                         </div>

@@ -7,15 +7,15 @@ function shortenMessage(mess:string) :string {
     return (mess?.slice(0, 9) + "...")
 }
 
-function capitalize(inputString: string | undefined): string | undefined {
-    if (inputString === undefined)
-      return undefined
-    if (inputString.length > 0) {
-      return inputString[0].toUpperCase() + inputString.slice(1);
-    } else {
-      return inputString;
-    }
-  }
+// function capitalize(inputString: string | undefined): string | undefined {
+//     if (inputString === undefined)
+//       return undefined
+//     if (inputString.length > 0) {
+//       return inputString[0].toUpperCase() + inputString.slice(1);
+//     } else {
+//       return inputString;
+//     }
+//   }
   
   function handleClickOutside(setPopupOpen: React.Dispatch<SetStateAction<boolean>>) {
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -36,4 +36,4 @@ function capitalize(inputString: string | undefined): string | undefined {
     return wrapperRef;
   }
   
-export {shortenMessage, capitalize, handleClickOutside}
+export {shortenMessage, handleClickOutside}

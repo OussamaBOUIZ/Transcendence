@@ -78,7 +78,7 @@ let UserController = class UserController {
     }
     async updateUserStatus(req, body) {
         console.log(body.status);
-        const userEmail = req.user['email'];
+        const userEmail = req.user.email;
         const user = await this.userService.findUserByEmail(userEmail);
         if (!user)
             throw new common_1.NotFoundException('user not exist');
@@ -92,12 +92,13 @@ let UserController = class UserController {
         return await this.getUserDetails(user.id);
     }
     async getOnlineUsers(req) {
-        const user = await this.userService.findUserByEmail(req.user['email']);
+        const user = await this.userService.findUserByEmail(req.user.email);
         if (!user)
             throw new common_1.NotFoundException('user not found');
         return await this.userService.onlineUsers(user.id);
     }
     async uploadImage(id, image, res) {
+        console.log('inside upload');
         await this.userService.saveUserAvatarPath(id, image.path);
         return res.status(common_1.HttpStatus.CREATED).send('Avatar Uploaded');
     }
@@ -131,13 +132,14 @@ let UserController = class UserController {
         return trans;
     }
     async blockUser(userId, req, res) {
-        const ret = await this.userService.blockUser(userId, req.user['email']);
+        const ret = await this.userService.blockUser(userId, req.user.email);
         if (typeof ret === 'string')
             return res.status(common_1.HttpStatus.OK).send(ret);
         return res.status(common_1.HttpStatus.OK).send('');
     }
     async getAvatarById(id) {
         const user = await this.userService.findUserById(id);
+        console.log('user: ', user);
         if (!user)
             throw new common_1.HttpException('User Not Found !!', common_1.HttpStatus.NOT_FOUND);
         const imagePath = user.avatar;
@@ -219,6 +221,7 @@ let UserController = class UserController {
                 return res.status(400).send('nickname is already used');
             }
         }
+        console.log('user is: ', user);
         return res.status(201).send('data was set succesfully');
     }
     async isFirstLog(req, res) {
@@ -233,7 +236,7 @@ let UserController = class UserController {
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('http://localhost:5137/');
+        return res.redirect('http://10.13.6.4:5137/');
     }
     async addUserStat(statDto, req) {
         await this.userService.addUserStat(statDto, req.user);

@@ -1,8 +1,7 @@
 import "../scss/auth.scss";
 import axios from "axios"
-import React, {useContext, useState} from "react"
+import React, {useState} from "react"
 import Notification from "../Components/Notification";
-import UserContext from "../Context/UserContext";
 
 interface Inputs {
     [id: number]: string;
@@ -17,7 +16,6 @@ interface Inputs {
 
 export default function InputAuth() {
 
-    const {navigate} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -32,7 +30,7 @@ export default function InputAuth() {
                         token: collectedCode,
                     }
                     await axios.post("/api/user/2fa/login", collected);
-                    navigate('/');
+                    window.location.replace('/');
                 } catch (error) {
                     console.log(error);
                 }

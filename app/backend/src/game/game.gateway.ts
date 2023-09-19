@@ -29,7 +29,7 @@ const waitingUsers = new Map<String, User[]>([
 ]);
 
 @WebSocketGateway(4343, {cors: {
-	origin: "http://localhost:5173",
+	origin: "http://10.13.6.4:5173",
 	credentials: true
 }})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

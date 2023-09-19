@@ -106,10 +106,10 @@ export class UserController {
         , private readonly BlockedTokenService: BlockedTokenlistService) {}
 
     @Put('updateStatus')
-    async updateUserStatus(@Req() req: Request, @Body() body: statusDto) {
+    async updateUserStatus(@Req() req, @Body() body: statusDto) {
         console.log(body.status);
         
-        const userEmail = req.user['email']
+        const userEmail = req.user.email
         const user = await this.userService.findUserByEmail(userEmail)
         if (!user)
             throw new NotFoundException('user not exist')
@@ -129,9 +129,9 @@ export class UserController {
     }   
 
     @Get('online/users')
-    async getOnlineUsers(@Req() req: Request) {
+    async getOnlineUsers(@Req() req) {
 
-        const user = await this.userService.findUserByEmail(req.user['email'])
+        const user = await this.userService.findUserByEmail(req.user.email)
         if (!user)
             throw new NotFoundException('user not found')
         return await this.userService.onlineUsers(user.id)
@@ -147,6 +147,8 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	) {
+        console.log('inside upload');
+        
 	    await this.userService.saveUserAvatarPath(id, image.path)
         return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
@@ -210,11 +212,11 @@ export class UserController {
     @Post('block/:userId')
     async blockUser(
         @Param('userId', ParseIntPipe) userId: number,
-        @Req() req: Request,
+        @Req() req,
         @Res() res: Response
     ) {
         
-        const ret = await this.userService.blockUser(userId, req.user['email'])
+        const ret = await this.userService.blockUser(userId, req.user.email)
         if(typeof ret === 'string')
             return res.status(HttpStatus.OK).send(ret); 
         return res.status(HttpStatus.OK).send('');
@@ -224,7 +226,7 @@ export class UserController {
 	@Header('Content-Type', 'image/jpg')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
-
+        console.log('user: ', user);
 		if (!user)
 			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
 		const imagePath = user.avatar
@@ -351,6 +353,7 @@ export class UserController {
                 return res.status(400).send('nickname is already used');
             }
         }
+        console.log('user is: ', user);
         return res.status(201).send('data was set succesfully');
     }
     @Get('isFirstLog')
@@ -371,11 +374,11 @@ export class UserController {
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('http://localhost:5137/');
+        return res.redirect('http://10.13.6.4:5137/');
     }
 
     @Patch('stat/add')
-	async addUserStat(@Query() statDto: StatsDto, @Req() req: Request) {
+	async addUserStat(@Query() statDto: StatsDto, @Req() req) {
 		await this.userService.addUserStat(statDto, req.user) 
 	}
 

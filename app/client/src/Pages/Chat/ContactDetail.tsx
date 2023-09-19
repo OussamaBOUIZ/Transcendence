@@ -3,7 +3,6 @@ import { User, Achievement } from '../../../global/Interfaces';
 import { HiOutlineX } from "react-icons/hi";
 import UserContext from '../../Context/UserContext';
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { capitalize } from '../../Helpers/utils';
 import LevelBar from '../../Components/LevelBar';
 import { getAchievementImage } from '../../Hooks/getAchievementImage';
 
@@ -42,8 +41,8 @@ export default function ContactDetail ({title, oview} : {title: string, oview?: 
             <figure className="contact">
                 <img src={oview?.image} alt="cat" />
                 <figcaption>
-                    <h3 className='font-bold'>{capitalize(oview?.firstname)}</h3>
-                    <h3 className='font-bold'>{capitalize(oview?.lastname)}</h3>
+                    <h3 className='font-bold'>{oview?.firstname}</h3>
+                    <h3 className='font-bold'>{oview?.lastname}</h3>
                     <h6>level {String(oview?.stat?.ladder_level)}</h6>
                     <LevelBar val={String(oview?.stat?.levelPercentage)} />
                 </figcaption>

@@ -14,6 +14,7 @@ let tokenValidity = class tokenValidity {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const status = exception.getStatus();
+        console.log('response is isis: ', exception.getStatus());
         return response.status(status).send(false);
     }
 };

@@ -37,7 +37,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    // const {navigate} = useContext(UserContext)
 
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
@@ -69,7 +68,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     useEffectOnUpdate(() => {
         //init socket
         const value = document.cookie.split('=')[1]
-        const newSocket = io('ws://localhost:4000', {
+        const newSocket = io('ws://10.13.6.4:4000', {
             auth: {
                 token: value
             }})

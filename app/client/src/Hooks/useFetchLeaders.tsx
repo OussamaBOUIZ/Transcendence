@@ -10,8 +10,11 @@ export const useFetchLeaders = (): Leaders[] | [] => {
       const getInfo = async () => {
         try {
           const response = await axios.get<Leaders[] | []>("/api/user/leaders");
+          console.log(response.data);
           const leadersWithImages = await Promise.all(
             response.data.map(async (leader) => {
+              console.log();
+              
               const image = await getUserImage(leader.id);
               return { ...leader, image };
             })

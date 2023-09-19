@@ -18,7 +18,6 @@ interface Inputs {
 
 export default function Auth() {
 
-    const {navigate} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
     const QRcode = useFetchQRcode();
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
@@ -48,7 +47,7 @@ export default function Auth() {
                     await axios.post("/api/user/2fa/login", collected);
                     console.log('here bro');
                     
-                    navigate('/');
+                    window.location.replace('/');
                 } catch (error) {
                     console.log(error);
                 }

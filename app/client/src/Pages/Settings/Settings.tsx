@@ -93,13 +93,13 @@ export default function Settings () {
                 const res = await axios.get(path);
                 console.log(`res: ${res}`)
                 if(res.data.length !== 0)
-                    navigate('/auth')
+                    window.location.replace('/auth')
             } catch (error) {
                 // console.log(error);
             }
         }
         if (tfaStatus)
-            navigate('/disabletfa')
+            window.location.replace('/disabletfa')
         else
             sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
     }

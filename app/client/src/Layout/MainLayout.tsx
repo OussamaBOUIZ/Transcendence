@@ -22,18 +22,21 @@ const UpdateStatus = async () => {
 
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
-    const {user, socket, setSocket, notif, invitation, setInvitation, navigate} = useContext(UserContext)
+    const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
+
+    console.log(user);
+    
 
     useEffectOnUpdate(() => {
       if (user.id) {
         if (!user.firstname || !user.lastname || !user.username)
-        navigate('/info')
+          window.location.replace('/info')
       }
     }, [user])
     
     // create socket
     useEffect(() => {
-      const fd = io("ws://localhost:1212", {
+      const fd = io("ws://10.13.6.4:1212", {
           withCredentials: true,
       })
       // setInvitation({image: '', username: 'oouazize'})

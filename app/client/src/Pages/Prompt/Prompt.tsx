@@ -53,7 +53,7 @@ export default function Prompt() {
                     clearFields()
                 }
                 if (val === 2)
-                    navigate('/')
+                    window.location.replace('/')
             }
             catch (error: any) {
                 setNotif(error.response.data)
