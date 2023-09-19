@@ -37,7 +37,6 @@ export default function Loading() {
           <ellipse id="sr-2" cx="230" cy="30" rx="50" ry="15"/>
         </svg>
       </div>
-      <img src={logo2} alt="" className=' w-40'/>
       </div>
     </div>
   )
