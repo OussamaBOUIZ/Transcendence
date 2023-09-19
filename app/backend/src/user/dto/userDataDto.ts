@@ -1,4 +1,6 @@
+import { Transform, Type } from 'class-transformer';
 import {  IsNotEmpty, IsString} from 'class-validator';
+import { trim } from 'src/interfaces/interfaces';
 
 export class userDataDto {
     @IsString()
@@ -14,14 +16,20 @@ export class userDataDto {
 export class userNamesDto {
     @IsNotEmpty()
     @IsString()
+    // @Type(() => String)
+	@Transform(({value}) => trim(value))
     public firstname: string
 
     @IsNotEmpty()
     @IsString()
+    @Type(() => String)
+	@Transform(({value}) => trim(value))
     public lastname: string
 
     @IsNotEmpty()
     @IsString()
+    @Type(() => String)
+	@Transform(({value}) => trim(value))
     public username: string
 }
 

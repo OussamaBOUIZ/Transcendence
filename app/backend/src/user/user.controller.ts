@@ -35,7 +35,7 @@ import { diskStorage } from 'multer'
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
 
-import { statusDto, userDataDto } from './dto/userDataDto';
+import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
@@ -147,7 +147,7 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	) {
-        console.log('inside upload');
+        
         
 	    await this.userService.saveUserAvatarPath(id, image.path)
         return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
@@ -158,10 +158,11 @@ export class UserController {
 	async updateAvatar(
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
-			fileIsRequired: true
+			fileIsRequired: false
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	) {
+        console.log('inside upload');
 		const user = await this.userService.saveUserAvatarPath(id, image.path)
 		if (!user) {
 			await unlink(image.path)
@@ -314,6 +315,17 @@ export class UserController {
         return res.status(200).send('two factor was turned off')
     }
 
+    @Get('2fa/isTurnedOn/:id')
+    @UseGuards(JwtGuard)
+    async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        if(await this.userService.userHasAuth(user) === true)
+            return res.status(200).send(true);
+        else
+            return res.status(200).send(false);
+    }
+    
     @Post('2fa/login/')
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
@@ -327,6 +339,25 @@ export class UserController {
         if(!isCodeValid)
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
+    }
+
+    @Put('setUserNames/:id')
+    @UseGuards(JwtGuard)
+    async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
+    {
+        console.log('data is: ', userData);
+            const user = await this.userService.findUserById(id);
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch {
+                return res.status(200).send('nickname already exists');
+            }
+            return res.status(200).send('');
     }
 
     @Post('setUserData/:id')

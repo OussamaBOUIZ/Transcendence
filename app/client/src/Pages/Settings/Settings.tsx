@@ -12,7 +12,7 @@ import Loading from '../Loading';
 
 export default function Settings () {
 
-    const {user, navigate, setUpdate, setNotif} = useContext(UserContext)
+    const {user, setUpdate, setNotif} = useContext(UserContext)
     const [imgPrev, setimgPrev] = useState<File | null>(null);
     const [image, setImage] = useState<string>("")
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
@@ -82,7 +82,7 @@ export default function Settings () {
         };
         let imgFormData: FormData | null  = new FormData();
         imgPrev ? imgFormData.append('image', imgPrev) : imgFormData = null
-        sendImage(`/api/user/${user.id}/upload`, imgFormData, headers)
+        sendImage(`/api/user/${user.id}/avatar`, imgFormData, headers)
     }
 
 
