@@ -18,7 +18,10 @@ export interface MySketchProps extends SketchProps {
     isWin: boolean;
     isEffect: React.MutableRefObject<boolean> | null;
     setPersentage: React.Dispatch<React.SetStateAction<Persentage>>;
-    firstTime: React.MutableRefObject<boolean>;
+    firstTime: boolean;
+    setFirstTime: React.Dispatch<React.SetStateAction<boolean>>;
+    isClicked: boolean;
+    setIsClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Velocity {
@@ -45,11 +48,12 @@ export interface Vars {
     PSPEED: number;
     RADIUS: number;
     SPEED: number;
+    ISPEED: number;
     NW: number;
     NH: number;
     vel: Velocity;
     isEffect: boolean;
-    effect: number;
+    effect: string;
 }
 
 export interface GameMode {
@@ -60,6 +64,7 @@ export interface GameMode {
     color: Color | null;
     xp: number;
     maxScore: number;
+    ability: string;
 };
 
 export interface Score {

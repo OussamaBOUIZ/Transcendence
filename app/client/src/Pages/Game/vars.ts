@@ -7,6 +7,7 @@ const vars: Vars = {
     PSPEED: 15,
     RADIUS: 8,
     SPEED: 6,
+    ISPEED: 4,
     NW: 5,
     NH: 20,
     vel: {
@@ -14,7 +15,7 @@ const vars: Vars = {
         y: 0,
     },
     isEffect: false,
-    effect: 0
+    effect: ""
 }
 
 export default vars;

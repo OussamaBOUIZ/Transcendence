@@ -21,7 +21,8 @@ let gameModes = new Map<String, GameMode>([
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 9
+        maxScore: 11,
+        ability: ""
     }],
     ["TheBeat", {
         modeName: "TheBeat",
@@ -30,7 +31,8 @@ let gameModes = new Map<String, GameMode>([
         background: "fire-game.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 5000,
-        maxScore: 7
+        maxScore: 7,
+        ability: "speed"
     }],
     ["IceLand", {
         modeName: "IceLand",
@@ -39,7 +41,8 @@ let gameModes = new Map<String, GameMode>([
         background: "galaxy.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
-        maxScore: 3
+        maxScore: 3,
+        ability: "speed"
     }],
     ["BrighGround", {
         modeName: "BrighGround",
@@ -48,9 +51,12 @@ let gameModes = new Map<String, GameMode>([
         background: "fire-game.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
-        maxScore: 5
+        maxScore: 5,
+        ability: "reverse"
     }],
 ]);
+
+const abilities: string[] = ["reverse", "hide", "speed"]
 
 let roomKey: string;
 
@@ -59,7 +65,7 @@ export default function Game () {
     const isWin = useRef<boolean>(false);
     const isEffect = useRef<boolean>(false);
     const oppUser = useRef<User>({} as User);
-    const firstTime = useRef<boolean>(true);
+    const [firstTime, setFirstTime] = useState<boolean>(true);
     const [socket, setSocket] = useState<any>(null);
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
@@ -68,7 +74,9 @@ export default function Game () {
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
     const {user} = useContext(UserContext);
-    
+    const [ability, setAbility] = useState<string>(mode?.ability || "");
+    const [isClicked, setIsClicked] = useState<boolean>(false);
+
     const {key, gameMode} = useParams();
 
     const updateDataBase = (finalScore: Score | undefined) => {
@@ -90,22 +98,26 @@ export default function Game () {
     }
     
     useEffectOnUpdate(()  => {
-        console.log(firstTime.current);
+    // console.log(firstTime);
         
-        if (!firstTime.current) {
+        if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
+                    return  {...prevState, myPersentage: prevState.myPersentage + 5}
                 });
-                firstTime.current
             }, 100)
         }
-    }, [firstTime.current])
+    }, [firstTime])
 
 
     useEffect(() => {
-        if (persentage.myPersentage >= 100)
+        if (persentage.myPersentage >= 100 && !isEffect.current) {
             isEffect.current = true;
+            if (mode && mode.modeName === "BattleRoyal") {
+                mode.ability = abilities[Math.floor(Math.random() * 3)];
+                setAbility(mode.ability);
+            }
+        }
 
         socket?.emit("changePersentage", {roomKey: roomKey, persentage: persentage.myPersentage});
         socket?.on("recvPersentage", (per: number) => {
@@ -119,16 +131,16 @@ export default function Game () {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
         })
-        if (!isGameEnd) {
+
             socket?.on("leaveGame", () => {
                 setIsGameEnd(true);
                 isWin.current = true;
-                if (gameMode)
+                if (gameMode && !isGameEnd)
                     updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
                 socket?.emit("gameEnd", key);   
                 socket?.disconnect();
             })
-        }
+
     }, [socket])
 
     useEffect(() => {
@@ -136,10 +148,10 @@ export default function Game () {
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey);
-            console.log("game end");
+            // console.log("game end");
         }
 
-        console.log(score.myScore, mode?.maxScore);
+        // console.log(score.myScore, mode?.msetIsClickedaxScore);
 
         if (gameMode && score.myScore === mode?.maxScore) {
             isWin.current = true;
@@ -152,7 +164,7 @@ export default function Game () {
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 
-        if (key && gameMode) {
+        if (key && gameMode) {setIsClicked
             setGameKey(key);
             newSocket.emit("joinGame", key);
         } else if (gameMode) {
@@ -160,7 +172,7 @@ export default function Game () {
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: mode?.xp,
-                user: user,
+                user: user,setIsClicked
             });
 
             newSocket.on("matched", (data: any) => {
@@ -169,26 +181,25 @@ export default function Game () {
                 roomKey = data.roomKey;
                 newSocket.emit("joinGame", data.roomKey);
                 oppUser.current = data.user;
-                console.log(data.user);
                 setIsMatching(false);
             });
         }
 
-        return () => {
-            console.log("component unmount");
+        return () => {;
             newSocket.emit("gameEnd", roomKey);
             newSocket.disconnect();
         };
     }, [])
-
 
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
+            
             <div className='bg absolute w-full h-full top-0'></div>
             <div className='main-container flex flex-col justify-center gap-1'>
+                <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
                 {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
@@ -207,6 +218,9 @@ export default function Game () {
                     isEffect={isEffect}
                     setPersentage={setPersentage}
                     firstTime={firstTime}
+                    setFirstTime={setFirstTime}
+                    isClicked={isClicked}
+                    setIsClicked={setIsClicked}
                 />
             </div>
         </section>

@@ -16,7 +16,7 @@ export class Game extends BaseEntity {
     userShots: number
 
     @Column({default: 0})
-    opponentShots: number
+    opponentShots: number 
 
     @CreateDateColumn()
     CreatedAt: Date

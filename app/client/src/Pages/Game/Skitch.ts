@@ -15,8 +15,10 @@ let net: Net;
 
 export function reset(p5: any, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
-    vars.vel.x = vars.SPEED * p5.cos(angle);
-    vars.vel.y = vars.SPEED * p5.sin(angle);
+    vars.vel.x = vars.ISPEED * p5.cos(angle);
+    vars.vel.y = vars.ISPEED * p5.sin(angle);
+    vars.effect = "";
+    vars.isEffect = false;
 
     vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
@@ -34,7 +36,6 @@ export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
     leftPad?.updateAttr(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad?.updateAttr(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
 }
-ActivateEffect
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
@@ -53,7 +54,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         isWin: false,
         isEffect: null,
         setPersentage: () => {},
-        firstTime: { current: true }
+        firstTime: true,
+        setFirstTime: () => {},
+        isClicked: true,
+        setIsClicked: () => {},
     }
 
     let gameEnd: boolean = false; 
@@ -75,6 +79,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         adjustGame(p5);
     }
 
+
     p5.updateWithProps = (p: any) => {
         props = Object.assign(props, p)
     };
@@ -82,8 +87,9 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     p5.setup = (): void => {
         let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
+        p5.frameRate(602)
         adjustGame(p5);
-        reset(p5, props.isHost);  
+        reset(p5, props.isHost);
 
         if (props.gameMode) {
             backImg = p5.loadImage(`/src/Assets/GameArea/${props.gameMode.background}`);
@@ -126,15 +132,16 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             
 
             if (!props.isMatching && props.gameMode) {
-                if (props.firstTime.current) {
+                if (props.firstTime) {
 
                     setTimeout(() => {
-                        props.firstTime.current = false;
+                        props.setFirstTime(false);
                     }, 2000)
 
                     p5.image(readyImg, 0, 0, p5.width, p5.height);
                 } else {
                     if (props.isEffect?.current && !vars.isEffect) {
+                        // console.log("heeeeeeeeeeeeeeeere");
                         ActivateEffect(p5, props);
                     }
                     
@@ -156,13 +163,12 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                     }
 
                     if (vars.isEffect) {
-                        props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: vars.effect});
-                        // vars.isEffect = false;
+                        props.socket?.emit("sendEffect", {roomKey: props.gameKey, effect: props.gameMode.ability });
                     }
-                    props.socket?.on("recieveEffect", (effect: number) => {
+                    props.socket?.on("recieveEffect", (effect: string) => {
                         vars.effect = effect;
                         setTimeout(() => {
-                            vars.effect = 0;
+                            vars.effect = "";
                         }, 800)
                     })
 
@@ -182,7 +188,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     prevPos.forEach( (b: Ball, idx: number) =>  {
                         b.fadeEffect();
-                        if (vars.effect !== 72)
+                        if (vars.effect !== "hide")
                             b.drawBall(p5, null);
 
                         if (b.r <= 0) {
@@ -190,21 +196,22 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
                         }
                     })
 
-                    if (vars.effect === 82) {
+                    if (vars.effect === "reverse") {
                         if (vars.isEffect && props.isHost) {
-                            vars.vel.y -= 0.4;
-                            vars.vel.x -= 0.5;
+                            vars.vel.y -= 0.3;
+                            vars.vel.x -= 0.4;
                         } else {
-                            vars.vel.y += 0.4;
-                            vars.vel.x += 0.5;
+                            vars.vel.y += 0.3;
+                            vars.vel.x += 0.4;
                         }
+                        // vars.effect = "";
+                        // console.log(vars.effect);
                     }
 
 
-                    if (vars.effect === 83) {
-                            vars.vel.y *= 2;
-                            vars.vel.x *= 2;
-                            vars.effect = 0;
+                    if (vars.effect === "speed") {
+                        vars.vel.y *= 1.03;
+                        vars.vel.x *= 1.03;
                     }
                     
                     prevPos.push(ball.clone(props.gameMode.color));

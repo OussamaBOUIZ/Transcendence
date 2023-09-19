@@ -70,22 +70,29 @@ export function resizeGameVars(width: number) {
   vars.GAP = width / 80;
   vars.PSPEED = width / 80;
   vars.RADIUS = width / 80;
-  vars.SPEED = width / 85;
+  vars.SPEED = width / 80;
+  vars.ISPEED = width / 150;
   vars.NW = width / 200;
   vars.NH = width / 60;
 }
 
 export function ActivateEffect(p5: any, props: MySketchProps) {
-  if (p5.keyIsPressed && props.isEffect) {
+
+  if (props.isEffect && ((p5.keyIsPressed && p5.keyCode === 32) || props.isClicked)) {
     props.isEffect.current = false;
+    props.setIsClicked(false);
+
+    console.log("setIsClicked");
     vars.isEffect = true;
+    vars.effect = props.gameMode?.ability || "";
+
     props.setPersentage((prevState) => {
       return {...prevState, myPersentage: 0}
     })
-    vars.effect = p5.keyCode;
+
     setTimeout(() => {
       vars.isEffect = false;
-      vars.effect = 0;
+      vars.effect = "";
     }, 800)
   }
 }

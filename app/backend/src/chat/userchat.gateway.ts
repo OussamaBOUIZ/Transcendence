@@ -38,7 +38,7 @@ import { WsExceptionFilter } from "src/Filter/ws.filter";
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(4000, {cors: {
-	origin: process.env.FRONTEND_URL,
+	origin: "http://10.13.6.4:5173",
 		credentials: true
 }})
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -54,6 +54,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		private readonly configService: ConfigService
 	) {
 		this.logger = new Logger(ChatGateway.name);
+		
 	}
 	
 	@UsePipes(new ValidationPipe({ 
