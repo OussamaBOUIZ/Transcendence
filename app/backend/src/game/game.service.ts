@@ -26,7 +26,7 @@ export class gameService {
     {
         const stat = await this.userService.getStat(userWinData.userId);
         await this.achievementService.setGameAchievement(userWinData.gameName, userWinData.userId, stat.wins);
-        if(userWinData.opponentLevel >= stat.ladder_level + 2)
+        if(userWinData.opponentLevel >= stat.ladder_level + 2) 
             await this.achievementService.setUnderdogAchievement(userWinData.userId);
         const oldLevel = stat.ladder_level;
         stat.xp += userWinData.wonXp;

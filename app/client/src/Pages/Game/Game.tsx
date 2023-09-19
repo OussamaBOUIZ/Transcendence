@@ -79,13 +79,13 @@ export default function Game () {
                 userId: user.id,
                 opponentId: oppUser.current.id
             })
-            // socket?.emit("achievement", {
-            //     userId: user.id,
-            //     wonXp: mode?.xp,
-            //     gameName: mode?.modeName,
-            //     opponentLevel: oppUser.stat?.ladder_level,
-            // })
-            // })
+            socket?.emit("achievement", {
+                userId: user.id,
+                wonXp: mode?.xp,
+                gameName: mode?.modeName,
+                opponentLevel: oppUser.current.stat?.ladder_level,
+                opponentId: oppUser.current.id,
+            })
         }
     }
     

@@ -12,6 +12,7 @@ import { log } from 'console';
 import { errorMonitor } from 'events';
 import { Game } from 'src/databases/game.entity';
 import { async } from 'rxjs';
+import { create } from 'domain';
 
 type tokenPayload = {
     id: number,
@@ -185,7 +186,6 @@ export class UserService {
     }
 
     async getGameHistory(userId: number, toTake: number = 4) {
-        console.log(userId)
         const data = await this.gameRepo.find({
             where: [
                 { user1: userId },
@@ -197,15 +197,37 @@ export class UserService {
                 user1: true,
                 user2: true,
                 userShots: true,
-                opponentShots: true
+                opponentShots: true,
+                CreatedAt: true
             }
         });
 
         let storedUser1: User;
-    
        const retData = await Promise.all(data.map(async (game) => {
-            const user1 = await this.userRepo.findOne({where: {id: game.user1}})
-            const user2 = await this.userRepo.findOne(({where: {id: game.user2}}))
+            let user1: User;
+            let user2: User;
+            if(storedUser1 == null || storedUser1.id !== game.user1)
+                user1 = await this.userRepo.findOne({where: {id: game.user1}})
+            else
+                user1 = storedUser1;
+            if (storedUser1 == null || storedUser1.id !== game.user2)
+                user2 = await this.userRepo.findOne(({where: {id: game.user2}}))
+            else
+                user2 = storedUser1;
+            if(storedUser1 !== null && user1.id == userId)
+                storedUser1 = user1;
+            else if(storedUser1 !== null && user2.id == userId)
+                storedUser1 = user2;
+            console.log('***********************************')
+            console.log({
+                userId: user1.id,
+                userName: user1.username,
+                userScore: game.userShots,
+                opponentScore: game.opponentShots,
+                opponentId: user2.id,
+                opponentUserName: user2.username
+            });
+            console.log('***********************************')
             return {
                 userId: user1.id,
                 userName: user1.username,
