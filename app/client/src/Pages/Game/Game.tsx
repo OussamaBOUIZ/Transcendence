@@ -174,7 +174,7 @@ export default function Game () {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
-
+      
         void UpdateStatus()
 
         if (key && gameMode) {

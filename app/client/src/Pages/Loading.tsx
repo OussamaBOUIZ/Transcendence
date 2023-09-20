@@ -3,7 +3,7 @@ import "../scss/loading.scss"
 
 export default function Loading() {
   return (
-    <div className='w-screen h-screen bg-purple-500 flex justify-center items-center'>
+    <div className='w-screen h-screen absolute right-0 top-0 left-0 bottom-0 z-50 bg-purple-500 flex justify-center items-center'>
       <div className="flex flex-col items-center">
         <div className="spinner">
           <svg className="raquet " id="r-1">
