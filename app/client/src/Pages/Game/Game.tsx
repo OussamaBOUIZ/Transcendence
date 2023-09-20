@@ -144,7 +144,6 @@ export default function Game () {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
         });
-
         socket?.on("leaveGame", () => {
             setIsGameEnd(true);
             isWin.current = true;
@@ -156,7 +155,7 @@ export default function Game () {
     }, [socket])
 
     useEffect(() => {
-        if (gameMode && (score.myScore === mode?.maxScore 
+        if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey);
@@ -180,6 +179,7 @@ export default function Game () {
         if (key && gameMode) {
             setIsMatching(true);
             setGameKey(key);
+            roomKey = key;
 
             newSocket.emit("joinGame", key);
             newSocket.emit("waiting", key);
