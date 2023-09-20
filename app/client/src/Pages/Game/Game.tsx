@@ -109,7 +109,7 @@ export default function Game () {
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: prevState.myPersentage + 5}
+                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
                 });
             }, 100)
         }

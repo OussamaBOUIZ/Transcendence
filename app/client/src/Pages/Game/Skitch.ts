@@ -210,8 +210,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
 
                     if (vars.effect === "speed") {
-                        vars.vel.y *= 1.03;
-                        vars.vel.x *= 1.03;
+                        vars.vel.y *= 1.02;
+                        vars.vel.x *= 1.02;
                     }
                     
                     prevPos.push(ball.clone(props.gameMode.color));
