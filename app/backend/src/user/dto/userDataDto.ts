@@ -16,7 +16,6 @@ export class userDataDto {
 export class userNamesDto {
     @IsNotEmpty()
     @IsString()
-    // @Type(() => String)
 	@Transform(({value}) => trim(value))
     public firstname: string
 
