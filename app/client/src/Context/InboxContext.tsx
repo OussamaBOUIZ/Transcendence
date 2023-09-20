@@ -86,7 +86,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
             const fetch =async () => {
                 try {
-                    const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
+                    const newInboxList = await updateInboxByReceiving(recMsg, inboxList, inView);
                     inboxList.current = newInboxList;
                     setUpdate(prev => prev + 1)
                 }

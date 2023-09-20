@@ -117,6 +117,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('messageSeen')
 	async  resetUnseenMessage(socket: Socket, peerDto: number) {
+		console.log('messageSeen', peerDto);
+		
 		const userEmail = socket.data.user.email
 
 		const user = await this.userService.findUserByEmail(userEmail);
@@ -129,9 +131,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 
 		 const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
+		 console.log('inside messageSeen', inbox);
+		 
 		if (!inbox)
 			throw new WsException('there is no prior conversation !')
 		inbox.unseenMessages = 0
+		
 		await this.inboxService.updateInbox(inbox)
 	}
  

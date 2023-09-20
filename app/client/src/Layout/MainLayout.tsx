@@ -25,9 +25,6 @@ export default function MainLayout () {
     const userStatus = useOnlineStatus();
     const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
 
-    console.log(user);
-    
-
     useEffectOnUpdate(() => {
       if (user.id) {
         if (!user.firstname || !user.lastname || !user.username)
@@ -50,8 +47,6 @@ export default function MainLayout () {
 
     useEffectOnUpdate(() => {
       socket?.on('invitation', (gameInfo: gameInvInfo) => {
-
-        console.log("sam3an");
 
         const fetchUserData = async () => {
           try {
