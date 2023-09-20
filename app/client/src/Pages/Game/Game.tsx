@@ -79,7 +79,7 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const {user} = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const [ability, setAbility] = useState<string>(mode?.ability || "");
     const [isClicked, setIsClicked] = useState<boolean>(false);
 
@@ -143,7 +143,7 @@ export default function Game () {
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
-        })
+        });
 
         socket?.on("leaveGame", () => {
             setIsGameEnd(true);
@@ -152,7 +152,7 @@ export default function Game () {
                 updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
             socket?.emit("gameEnd", key);
             socket?.disconnect();
-        })
+        });
     }, [socket])
 
     useEffect(() => {
@@ -182,14 +182,19 @@ export default function Game () {
             setGameKey(key);
 
             newSocket.emit("joinGame", key);
-            newSocket.emit("waiting", {roomKey, user});
+            newSocket.emit("waiting", key);
 
-            
-
-            newSocket.on("startGame", (opUser: User) => {
+            newSocket.on("startGame", () => {
                 setIsMatching(false);
-                oppUser.current = opUser;
-                console.log("start game .....")
+                
+                console.log("my user: ", user);
+                newSocket.emit("sendUser", {roomKey: key, user});
+                newSocket.on("recvOppUser", (opUser: User) => {
+                    oppUser.current = opUser;
+
+                    console.log("user", opUser)
+                })
+
             })
 
         } else if (gameMode) {

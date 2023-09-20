@@ -27,8 +27,6 @@ const waitingUsers = new Map<String, User[]>([
     ["RetroPong", []]
 ]);
 
-let rooms: Map<string, User[]>;
-
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
 	credentials: true
@@ -58,15 +56,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
 	@SubscribeMessage('waiting')
-	onWaiting(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-		if (rooms?.get(data.roomKey)) {
-			rooms?.get(data.roomKey).push(data.user);
-		} else
-			rooms?.set(data.roomKey, data.user);
-
-		if (this.server.sockets.adapter.rooms.get(data.roomKey)?.size == 2) {
-			this.server.to(data.roomKey).emit("startGame", rooms.get(data.roomKey));
+	onWaiting(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2) {
+			this.server.to(roomKey).emit("startGame");
 		}
+	}
+
+	@SubscribeMessage('sendUser')
+	onSendUser(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+		socket.to(data.roomKey).emit("recvOppUser", data.user)
 	}
 
 	@SubscribeMessage('joinGame')
