@@ -10,11 +10,20 @@ export default function GameInfo2() {
                 <figure className="w-2/5 flex flex-col gap-4">
                     <div className="flex gap-4 items-center font-semibold">
                         <img src={rectangle} alt="" />
-                        <h1>Convallis phasellus nisi felis urna </h1>
+                        <h1>Coordinate strategies, share tips and tricks, and stay connected with your gaming squad. </h1>
                     </div>
-                    <p>Convallis phasellus nisi felis urna in. Volutpat dolor rhoncus platea tristique. Egestas proin lobortis sit mauris aliquet. Condimentum congue adipiscing pharetra in pellentesque. Sed scelerisque commodo interdum dolor diam.<br></br><br></br>Nunc gravida consectetur dignissim mattis magna vulputate tellus inerisque consequat gravida risus in.<br></br>At aliquam nibh quam arcu mattis arcu massa sit at. Ridiculus metus in massa. Magna gravida volutpat molestie tristique dapibus dolor pretium fames ut mauris.</p>
+                    <p>
+                    Connect with your friends and challenge them to epic battles in our direct messaging feature.
+                    Coordinate strategies, share tips and tricks, and stay connected with your gaming squad.
+                    Engage in private conversations, exchange in-game items, and build lasting friendships.
+                    Join the vibrant community of passionate gamers in our channel chat feature.
+                    Engage in lively discussions, share your achievements, and seek advice from experienced players.
+                    Participate in community events, tournaments, and competitions for a chance to win exclusive rewards.
+                    Collaborate with fellow gamers, form alliances, and dominate the leaderboards together.
+                    </p>
                 </figure>
                 <img id="table" className="tableIMG" src={card2} alt="" />
+                {/*  */}
             </div>
         </div>
     )

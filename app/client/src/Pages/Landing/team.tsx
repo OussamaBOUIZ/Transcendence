@@ -1,17 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import photo from "../../Assets/0file.jpg"
-import github from "../../Assets/Icons/github.png"
-import linkedin from "../../Assets/Icons/linkedin.png"
+import photo from "../../Assets/0file.jpg";
+import github from "../../Assets/Icons/github.png";
+import linkedin from "../../Assets/Icons/linkedin.png";
+import ouazize from "../../Assets/ouazize.jpeg";
+import obouizga from "../../Assets/obouizga.jpeg";
+import abde from "../../Assets/abde.jpeg";
+import dib from "../../Assets/dib.jpeg";
 
 export default function Team() {
-
     const navLinks = [
-        {linkedin: 'https://react.dev/', github: 'https://react.dev/', image: photo},
-        {linkedin: 'https://react.dev/', github: 'https://www.docker.com/', image: photo},
-        {linkedin: 'https://react.dev/', github: 'https://nestjs.com/', image: photo},
+        {linkedin: 'https://react.dev/', github: 'https://react.dev/', image: ouazize},
+        {linkedin: 'https://react.dev/', github: 'https://www.docker.com/', image: obouizga},
+        {linkedin: 'https://react.dev/', github: 'https://nestjs.com/', image: abde},
         {linkedin: 'https://react.dev/', github: 'https://www.postgresql.org/', image: photo},
-        {linkedin: 'https://react.dev/', github: 'https://www.typescriptlang.org/', image: photo},
+        {linkedin: 'https://react.dev/', github: 'https://www.typescriptlang.org/', image: dib},
     ]
 
     const team = navLinks.map(item => {
