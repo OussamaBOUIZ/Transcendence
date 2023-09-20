@@ -5,7 +5,7 @@ import menu from "../../Assets/Icons/menu.png"
 import { useMediaQuery } from "@uidotdev/usehooks";
 import GameCards from '../../Components/GameCards';
 
-export default function ChatHeader ({id, username, status, avatar}: {id: string | undefined, username:string | undefined, status: string, avatar:string | undefined}) {
+export default function ChatHeader ({id, username, status, avatar}: {id: string | undefined, username:string, status: string, avatar?:string}) {
     const {user, setShow} = useContext(UserContext)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
     const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
