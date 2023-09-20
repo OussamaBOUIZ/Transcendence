@@ -10,6 +10,7 @@ import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
 import Loading from "../Loading";
+import { Navigate } from "react-router";
 
 export default function Prompt() {
 
@@ -23,6 +24,9 @@ export default function Prompt() {
 
     if (!user)
         return (<Loading />)
+
+    if (user.username)
+        return <Navigate to="/" />
 
     const clearFields = () => {
         setData({
