@@ -29,9 +29,9 @@ export default function App () {
     <BrowserRouter>
       <UserProvider>
         <Routes>
-          <Route element={<ProtectedLanding />}>
+          {/* <Route element={<ProtectedLanding />}> */}
             <Route path="/home" element={<Landing />} />
-          </Route>
+          {/* </Route> */}
           
           <Route path="/sign" element={<Sign />} />
           <Route path="/error" element={<ErrorPage />} />

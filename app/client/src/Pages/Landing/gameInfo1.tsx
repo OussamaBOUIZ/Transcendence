@@ -12,9 +12,16 @@ export default function GameInfo1() {
                 <figure className="w-2/5 flex flex-col gap-4">
                     <div className="flex gap-4 items-center font-semibold">
                         <img src={rectangle} alt="" />
-                        <h1>Convallis phasellus nisi felis urna </h1>
+                        <h1>Get ready for an immersive gaming experience like never before!</h1>
                     </div>
-                    <p>Convallis phasellus nisi felis urna in. Volutpat dolor rhoncus platea tristique. Egestas proin lobortis sit mauris aliquet. Condimentum congue adipiscing pharetra in pellentesque. Sed scelerisque commodo interdum dolor diam.<br></br><br></br>Nunc gravida consectetur dignissim mattis magna vulputate tellus inerisque consequat gravida risus in.<br></br>At aliquam nibh quam arcu mattis arcu massa sit at. Ridiculus metus in massa. Magna gravida volutpat molestie tristique dapibus dolor pretium fames ut mauris.</p>
+                    <p>
+                    Dive into the captivating world of PONG and unleash your inner hero!
+                    Embark on epic quests, battle ferocious enemies, and discover hidden treasures.
+                    Choose from a wide range of powerful characters, each with unique abilities and playstyles.
+                    Engage in thrilling PvP battles and prove your dominance in intense multiplayer arenas.
+                    Explore vast, breathtaking landscapes filled with stunning visuals and immersive soundtracks.
+                    Stay updated with regular content updates, new challenges, and exciting events to keep the adventure fresh and exciting.
+                    </p>
                     <Link to='/sign' className="button">Play Now</Link>
                 </figure>
             </div>
