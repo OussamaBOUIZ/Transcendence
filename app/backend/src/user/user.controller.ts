@@ -332,7 +332,7 @@ export class UserController {
             req.body.token,
             user
         );
-        console.log(isCodeValid);
+        console.log('code is: ', isCodeValid);
         if(!isCodeValid)
             return res.status(200).send('two factor token is invalid');
         return res.status(200).send('');
