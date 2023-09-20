@@ -46,6 +46,9 @@ export default function MainLayout () {
     }, [])
 
     useEffectOnUpdate(() => {
+      socket?.on('challengeAccepted', (key: number) => {
+        Navigate(`/game/`)
+      })
       socket?.on('invitation', (gameInfo: gameInvInfo) => {
 
         const fetchUserData = async () => {
