@@ -44,7 +44,8 @@ export default function Auth() {
                         token: collectedCode,
                     }
                     const res = await axios.post("/api/user/2fa/login", collected);
-                    if(res.data.length !== 0)
+                    console.log('res is: ', res);
+                    if(res.data.length == 0)
                     {
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                         window.location.replace('/');
