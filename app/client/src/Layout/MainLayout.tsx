@@ -50,8 +50,13 @@ export default function MainLayout () {
 
     useEffectOnUpdate(() => {
       socket?.on('invitation', (gameInfo: gameInvInfo) => {
+
+        console.log("sam3an");
+
         const fetchUserData = async () => {
           try {
+            console.log(gameInfo);
+            
             const user = await getUserData(gameInfo.userId, "id")
             setInvitation({image: String(user.image), username: user.username, gameName: gameInfo.gameName})
           }

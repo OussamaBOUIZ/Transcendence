@@ -102,6 +102,15 @@ export default function Game () {
             })
         }
     }
+
+    const UpdateStatus = async () => {
+        try {
+          void axios.put('/api/user/updateStatus', {status: "InGame"})
+        }
+        catch (error) {
+          // console.log(error)
+        }
+    }
     
     useEffectOnUpdate(()  => {
     // console.log(firstTime);
@@ -138,15 +147,14 @@ export default function Game () {
             setScore(score);
         })
 
-            socket?.on("leaveGame", () => {
-                setIsGameEnd(true);
-                isWin.current = true;
-                if (gameMode && !isGameEnd)
-                    updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
-                socket?.emit("gameEnd", key);   
-                socket?.disconnect();
-            })
-
+        socket?.on("leaveGame", () => {
+            setIsGameEnd(true);
+            isWin.current = true;
+            if (gameMode && !isGameEnd)
+                updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
+            socket?.emit("gameEnd", key);   
+            socket?.disconnect();
+        })
     }, [socket])
 
     useEffect(() => {
@@ -154,10 +162,7 @@ export default function Game () {
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey);
-            // console.log("game end");
         }
-
-        // console.log(score.myScore, mode?.msetIsClickedaxScore);
 
         if (gameMode && score.myScore === mode?.maxScore) {
             isWin.current = true;
@@ -165,30 +170,32 @@ export default function Game () {
         }
     }, [score])
 
+
+
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 
-        const UpdateStatus = async () => {
-            try {
-              void axios.put('/api/user/updateStatus', {status: "InGame"})
-            }
-            catch (error) {
-              // console.log(error)
-            }
-          }
-          void UpdateStatus()
+        void UpdateStatus()
 
-        if (key && gameMode) {setIsClicked
+        if (key && gameMode) {
+            setIsMatching(true);
             setGameKey(key);
+
             newSocket.emit("joinGame", key);
+            newSocket.emit("waiting", key)
+
+            newSocket.on("startGame", () => {
+                setIsMatching(false);
+                
+            })
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: mode?.xp,
-                user: user,setIsClicked
+                user: user,
             });
 
             newSocket.on("matched", (data: any) => {

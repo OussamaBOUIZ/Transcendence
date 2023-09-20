@@ -79,11 +79,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         server.emit('Unmuted', 'user was unmuted');
     }
 
-    @SubscribeMessage('receiveInvitation')
-    async receiveInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    @SubscribeMessage('sendInvitation')
+    async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
     {
         const guest = await this.userService.findUserById(invData.guestId);
         client.to(guest.socketId).emit('invitation', invData);
+        console.log("invitation data: ", invData);
+        console.log("guest socket: ", guest.socketId);
     }
 
     @SubscribeMessage('muteuser')
