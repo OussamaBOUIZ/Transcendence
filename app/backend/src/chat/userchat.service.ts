@@ -88,25 +88,25 @@ export class ChatGatewayService {
         if (!author || !receiver) { 
             throw {
                 msg: 'Invalid sender or receiver',
-                socket: author.socketId
+                socket: author.chatId
             }
         }
         if (author.id === receiver.id)
             throw {
                 msg: 'You cannot send message to your self?',
-                socket: author.socketId
+                socket: author.chatId
             }
         if (await this.isReceiverInBlocked(author.id, receiver.id) === true || await this.isReceiverInBlocked(receiver.id, author.id) == true)
             throw { 
                 msg: 'the user blocked',
-                socket: author.socketId
+                socket: author.chatId
             }
         await this.saveMessage(messageDto, receiver, author)
         // check status of receiver
         await this.inboxService.saveInbox(receiver, author, messageDto) 
         const ss: sentMsg = {
             authorId: author.id,
-            socketId: receiver.socketId,
+            socketId: receiver.chatId,
             username: author.username
         }
         return ss
