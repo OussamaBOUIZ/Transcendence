@@ -214,17 +214,6 @@ export class UserService {
                 storedUser1 = user1;
             else if(storedUser1 !== null && user2.id == userId)
                 storedUser1 = user2;
-            console.log('***********************************')
-            console.log({
-                userId: user1.id,
-                userName: user1.username,
-                userScore: game.userShots,
-                opponentScore: game.opponentShots,
-                opponentId: user2.id,
-                opponentUserName: user2.username
-            });
-            console.log('***********************************')
-
             return {
                 userId: user1.id,
                 userName: user1.username,

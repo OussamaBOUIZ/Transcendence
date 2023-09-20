@@ -17,7 +17,7 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
             try {
                 console.log('fetching.......');
                 const res = await axios.get<gameHistory[]>(`/api/user/game/history/${UserData.id}/${NBgames}`)
-                console.log(res.data);
+                console.log('DATA is: ', res.data);
                 
                 const datawithImage = await Promise.all(res.data.map(async (game) => {
                     let imageId = (game.opponentId === UserData.id) ? game.userId : game.opponentId
