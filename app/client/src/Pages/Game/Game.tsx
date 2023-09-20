@@ -19,6 +19,15 @@ import axios from 'axios';
 
 let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
+
+            {/* 
+                app/client/src/Assets/GameArea/HideAbility.png       | Bin 0 -> 355371 bytes
+ app/client/src/Assets/GameArea/RetroPaddle.png       | Bin 0 -> 144330 bytes
+ app/client/src/Assets/GameArea/ReverseAbility.png    | Bin 0 -> 272902 bytes
+ app/client/src/Assets/GameArea/SpeedAbility.png      | Bin 0 -> 252708 bytes
+
+            */}
+
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
@@ -28,7 +37,8 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
         maxScore: 14,
-        ability: ""
+        abilityImg: "../../Assets/GameArea/HideAbility.png",
+        ability: "hide"
     }],
     ["BlazingPong", {
         modeName: "BlazingPong",
@@ -38,6 +48,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 5000,
         maxScore: 11,
+        abilityImg: "../../Assets/GameArea/SpeedAbility.png " ,
         ability: "speed"
     }],
     ["ArcticPong", {
@@ -48,6 +59,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
         maxScore: 8,
+        abilityImg: "../../Assets/GameArea/ReverseAbility.png.png",
         ability: "speed"
     }],
     ["RetroPong", {
@@ -58,6 +70,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
         maxScore: 5,
+        abilityImg: "../../Assets/GameArea/RetroPaddle.png",
         ability: "reverse"
     }],
 ]);
@@ -221,10 +234,10 @@ export default function Game () {
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
-            
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
+                {/* <div onClick={() => setIsClicked(true)} id="ability-icon" className='w-12 h-12 bg-red-400 absolute  uppercase text-center '>{ability[0]}</div> */}
+                <img onClick={() => setIsClicked(true)}  id="ability-icon" className=' block w-12 h-12 bg-red-400' />
                 {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}
