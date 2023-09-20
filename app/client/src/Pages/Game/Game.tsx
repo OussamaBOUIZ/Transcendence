@@ -103,7 +103,7 @@ export default function Game () {
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: prevState.myPersentage + 5}
+                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
                 });
             }, 100)
         }
@@ -135,7 +135,7 @@ export default function Game () {
             socket?.on("leaveGame", () => {
                 setIsGameEnd(true);
                 isWin.current = true;
-                if (gameMode)
+                if (gameMode && !isGameEnd)
                     updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
                 socket?.emit("gameEnd", key);   
                 socket?.disconnect();

@@ -68,15 +68,19 @@ let GameGateway = class GameGateway {
     }
     onGameMatching(body, socket) {
         const users = waitingUsers.get(body.modeName);
-        if (users.length >= 1) {
-            const oppUser = users[0];
-            users.unshift();
-            socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
-            oppUser.socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: body.user });
-            console.log("socket id: ", socket.id + oppUser.socket.id);
+        if (!users.find((user) => user.user.id == body.user.id)) {
+            if (users.length >= 1) {
+                const oppUser = users[0];
+                users.unshift();
+                setTimeout(() => {
+                    socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: oppUser.user });
+                    oppUser.socket.emit("matched", { roomKey: socket.id + oppUser.socket.id, user: body.user });
+                }, 1000);
+                console.log("socket id: ", socket.id + oppUser.socket.id);
+            }
+            else
+                users.push({ user: body.user, socket });
         }
-        else
-            users.push({ user: body.user, socket });
     }
     onNewMessage(body, socket) {
         var _a;
