@@ -14,7 +14,7 @@ export default function AuthRequired () {
     if (isLoading)
         return <Loading />
     if (!authenticated)
-        return <Navigate to="/sign" />
+        return <Navigate to="/home" />
     return (
         <>
             {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />}

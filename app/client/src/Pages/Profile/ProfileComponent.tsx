@@ -94,7 +94,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                     </div>
                 }
             </div>
-            <GameHistory UserData={UserData} NBgames={NaN} />
+            <GameHistory UserData={UserData} NBgames={100} />
             <FriendsCard id={UserData.id} update={update} setIsMyFriend={setIsMyFriend} />
             <AchievementCard achievements={UserData.stat?.achievements} />
         </div>

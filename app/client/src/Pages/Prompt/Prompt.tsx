@@ -10,6 +10,7 @@ import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
 import Loading from "../Loading";
+import { Navigate } from "react-router";
 
 export default function Prompt() {
 
@@ -23,6 +24,9 @@ export default function Prompt() {
 
     if (!user)
         return (<Loading />)
+
+    if (user.username)
+        return <Navigate to="/" />
 
     const clearFields = () => {
         setData({
@@ -48,8 +52,11 @@ export default function Prompt() {
         const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
                 if (data) {
-                    await axios.post(Path, data, headers)
-                    increment(prev => prev + 1)
+                    const res = await axios.post(Path, data, headers);
+                    if(res.data.length)
+                        setNotif(res.data);
+                    else
+                        increment(prev => prev + 1)
                     clearFields()
                 }
                 if (val === 2)
