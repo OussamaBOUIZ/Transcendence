@@ -19,6 +19,15 @@ import axios from 'axios';
 
 let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
+
+            {/* 
+                app/client/src/Assets/GameArea/HideAbility.png       | Bin 0 -> 355371 bytes
+ app/client/src/Assets/GameArea/RetroPaddle.png       | Bin 0 -> 144330 bytes
+ app/client/src/Assets/GameArea/ReverseAbility.png    | Bin 0 -> 272902 bytes
+ app/client/src/Assets/GameArea/SpeedAbility.png      | Bin 0 -> 252708 bytes
+
+            */}
+
 let gameModes = new Map<String, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
@@ -28,7 +37,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
         maxScore: 14,
-        ability: ""
+        ability: "hide"
     }],
     ["BlazingPong", {
         modeName: "BlazingPong",
@@ -215,16 +224,21 @@ export default function Game () {
 
     const modeName = String(mode?.modeName)
     const backgroundImage = ModeImages.find(mode => mode.includes(modeName))
+    const [iconStyle, setIconStyle] = React.useState({});
+    const  handleClick = () => {
+        setIsClicked(true);
+        setIconStyle({animationName: "none"});
+    }
 
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
-            
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
+                {/* <div onClick={() => setIsClicked(true)} id="ability-icon" className='w-12 h-12 bg-red-400 absolute  uppercase text-center '>{ability[0]}</div> */}
+                {!isMatching && <img onClick={handleClick} style={iconStyle} id="ability-icon" src={BattleRoyal} className='bg-red-400 ability-position-modifier' />}
                 {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
                 <ReactP5Wrapper 
                     sketch={sketch}

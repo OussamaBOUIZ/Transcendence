@@ -1,20 +1,4 @@
-@keyframes growMenu {
-    0% {
-        height: 10vh;
-        width: 10vw; 
-        border-radius: 0 0 0 300%;
-    }
-    100% {
-        height: 100vh;
-        width: 100vw;
-        border-radius: 0 0 0 300px;
-    }
-}
-
-@keyframes glow {
-    from { opacity: 0;}
-    to { opacity: 1;}
-}
+@import './animations.scss';
 
 #mobile-nav {
     // background-color: aqua;

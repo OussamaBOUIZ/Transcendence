@@ -1,3 +1,7 @@
+// import "../var.scss"
+@import "./var.scss";
+@import "./animations.scss";
+
 section {
     .usersBG {
         .users {
@@ -100,4 +104,23 @@ section {
             width: 100%;
         }
     }
+}
+
+
+#ability-icon {
+    top: 37%;
+    left: 10%;
+    position: absolute;
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-width: 3px;
+    border-color: $primary-pink;
+    border-radius: 1em;
+    animation: brilliance 1.1s ease-out 0s infinite normal none;
+}
+
+#ability-icon.ability-position-modifier {
+    right: 10%;
+    left: auto;
 }
