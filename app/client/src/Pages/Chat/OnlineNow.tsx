@@ -41,7 +41,7 @@ export default function OnlineNow () {
 
     const toggle = users.map(user => {
         return (
-            <Avatar username={user.username} imgSource={String(user.image)}/>
+            <Avatar username={user.username} status={user.status} imgSource={String(user.image)}/>
         )
     })
 

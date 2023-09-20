@@ -172,7 +172,7 @@ export default function Game () {
 
         const UpdateStatus = async () => {
             try {
-              void axios.put('/api/user/updateStatus', {status: "InGame"})
+              void axios.put('/api/user/updateStatus', {status: "In A Game"})
             }
             catch (error) {
               // console.log(error)
