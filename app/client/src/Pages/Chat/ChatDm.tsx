@@ -57,13 +57,14 @@ export default function ChatDm () {
         }
     }
     
-    
+    console.log(dmSocket?.id);
+
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`/api/chat/${id}`)
             setMessagesList(res.data)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 

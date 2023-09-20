@@ -1,4 +1,6 @@
 import {
+	ConnectedSocket,
+	MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 	OnGatewayInit,
@@ -21,6 +23,7 @@ import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
 import {MessageData} from "../interfaces/interfaces"
 import { WsExceptionFilter } from "src/Filter/ws.filter";
+import { invitationDto } from "src/channel/dto/invitationDto";
 /**
  * RxJS :
  *
@@ -104,6 +107,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		await this.inboxService.updateInbox(inbox)
 	}
 
+	// @SubscribeMessage('sendInvitation')
+    // async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    // {
+    //     const guest = await this.userService.findUserById(invData.guestId);
+    //     client.to(guest.chatId).emit('invitation', invData);
+    //     console.log(guest.chatId);
+    // }
+
 	@SubscribeMessage('messageSeen')
 	async  resetUnseenMessage(socket: Socket, peerDto: number) {
 		const userEmail = socket.data.user.email
@@ -147,7 +158,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)
 			throw new WsException("the user not found")
-		user.socketId = client.id
+		user.chatId = client.id
 		user.isActive = true
 		await this.userRepository.save(user)
 	}

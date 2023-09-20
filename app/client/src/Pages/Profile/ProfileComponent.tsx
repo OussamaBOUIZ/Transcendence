@@ -49,7 +49,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
             statusIcon = "bg-slate-600";
             break;
         default:
-            statusIcon = "bg-pink-500";
+            statusIcon = "bg-green-500 border-2 border-pink-400";
             break;
     }
 

@@ -44,7 +44,7 @@ export default function ChatRooms () {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {socket, setSocket, user, show, navigate} = useContext(UserContext)
+    const {socket, user, show, navigate} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
@@ -91,16 +91,16 @@ export default function ChatRooms () {
     }, [id, user])
 
     // create socket
-    useEffect(() => {
-        const fd = io("ws://localhost:1212", {
-            withCredentials: true,
-        })
-        setSocket(fd)
+    // useEffect(() => {
+    //     const fd = io("ws://localhost:1212", {
+    //         withCredentials: true,
+    //     })
+    //     setSocket(fd)
 
-        return  () => {
-                fd.disconnect();
-            }
-    }, [])
+    //     return  () => {
+    //             fd.disconnect();
+    //         }
+    // }, [])
 
     const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();

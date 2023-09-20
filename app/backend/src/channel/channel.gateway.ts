@@ -49,7 +49,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 
     async handleDisconnect(client: Socket) {
-        
         const AllCookies = client.handshake.headers.cookie;
         if (AllCookies == undefined)
             return ;
@@ -58,15 +57,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         end = end !== -1 ? end : AllCookies.length;
         const accessToken = AllCookies.substring(start, end);
         const user = await this.userService.getUserFromJwt(accessToken);
-        if(!user) 
+        if(!user)
         {
-
             client.emit('exception', 'user not authenticated');
             client.disconnect();
             return ;
             // throw new WsException('user is not authenticated');
         }
-        user.socketId = client.id;
+        user.socketId = "";
         user.status = 'Offline'
         await this.userService.saveUser(user);
     }
@@ -79,11 +77,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         server.emit('Unmuted', 'user was unmuted');
     }
 
-    @SubscribeMessage('receiveInvitation')
-    async receiveInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    @SubscribeMessage('sendInvitation')
+    async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
     {
         const guest = await this.userService.findUserById(invData.guestId);
         client.to(guest.socketId).emit('invitation', invData);
+        console.log("invitation data: ", invData);
+        console.log("guest socket: ", guest.socketId);
     }
 
     @SubscribeMessage('muteuser')
