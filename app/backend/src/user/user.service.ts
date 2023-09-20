@@ -8,6 +8,7 @@ import { Stats } from "../databases/stats.entity";
 import { authenticator } from 'otplib';
 import { StatsDto } from './dto/stats-dto';
 import { Game } from 'src/databases/game.entity';
+import { gameData } from 'src/interfaces/interfaces';
 
 type tokenPayload = {
     id: number,
@@ -198,7 +199,7 @@ export class UserService {
         });
 
         let storedUser1: User;
-       const retData = await Promise.all(data.map(async (game) => {
+       const retData = await Promise.all(data.map(async (game): Promise<gameData> => {
             let user1: User;
             let user2: User;
             if(storedUser1 == null || storedUser1.id !== game.user1)
@@ -213,16 +214,6 @@ export class UserService {
                 storedUser1 = user1;
             else if(storedUser1 !== null && user2.id == userId)
                 storedUser1 = user2;
-            console.log('***********************************')
-            console.log({
-                userId: user1.id,
-                userName: user1.username,
-                userScore: game.userShots,
-                opponentScore: game.opponentShots,
-                opponentId: user2.id,
-                opponentUserName: user2.username
-            });
-            console.log('***********************************')
             return {
                 userId: user1.id,
                 userName: user1.username,
@@ -232,7 +223,7 @@ export class UserService {
                 opponentUserName: user2.username
             }
         }))
-        
+        console.log(retData);   
         return retData;
     }
 
@@ -259,7 +250,7 @@ export class UserService {
             opponent: friendId,
             opponent_score: match.user1 === friendId ? match.userShots : match.opponentShots,
             user_score: match.user2 !== friendId ? match.userShots : match.opponentShots
-        }
+         }
 
     }
 
