@@ -105,7 +105,7 @@ export default function Game () {
 
     const UpdateStatus = async () => {
         try {
-          void axios.put('/api/user/updateStatus', {status: "InGame"})
+            void axios.put('/api/user/updateStatus', {status: "InGame"})
         }
         catch (error) {
           // console.log(error)
@@ -113,8 +113,6 @@ export default function Game () {
     }
     
     useEffectOnUpdate(()  => {
-    // console.log(firstTime);
-        
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
@@ -152,7 +150,7 @@ export default function Game () {
             isWin.current = true;
             if (gameMode && !isGameEnd)
                 updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
-            socket?.emit("gameEnd", key);   
+            socket?.emit("gameEnd", key);
             socket?.disconnect();
         })
     }, [socket])
@@ -184,12 +182,16 @@ export default function Game () {
             setGameKey(key);
 
             newSocket.emit("joinGame", key);
-            newSocket.emit("waiting", key)
+            newSocket.emit("waiting", {roomKey, user});
 
-            newSocket.on("startGame", () => {
+            
+
+            newSocket.on("startGame", (opUser: User) => {
                 setIsMatching(false);
-                
+                oppUser.current = opUser;
+                console.log("start game .....")
             })
+
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
