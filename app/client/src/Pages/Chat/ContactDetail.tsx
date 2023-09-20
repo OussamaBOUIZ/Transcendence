@@ -5,6 +5,7 @@ import UserContext from '../../Context/UserContext';
 import { useMediaQuery } from "@uidotdev/usehooks";
 import LevelBar from '../../Components/LevelBar';
 import { getAchievementImage } from '../../Hooks/getAchievementImage';
+import ProfileImage from '../../Components/profileImage';
 
 function AllAchievement ({item} :{item: Achievement}) {
     const [image, setImage] = useState<string>()
@@ -39,7 +40,7 @@ export default function ContactDetail ({title, oview} : {title: string, oview?: 
             <h2 className='mb-4'>{title}</h2>
             {isSmallDevice && <HiOutlineX className="absolute top-4 right-4 w-6 h-6 cursor-pointer" onClick={() => setShow('main')}/>}
             <figure className="contact">
-                <img src={oview?.image} alt="cat" />
+                <ProfileImage image={oview?.image} name={oview?.username} size="big" />
                 <figcaption>
                     <h3 className='font-bold'>{oview?.firstname}</h3>
                     <h3 className='font-bold'>{oview?.lastname}</h3>
@@ -54,11 +55,11 @@ export default function ContactDetail ({title, oview} : {title: string, oview?: 
                 </figcaption>
                 <figcaption className="results-item">
                     <p>Wins</p>
-                    <h5>{oview?.stat?.wins!}</h5>
+                    <h5>{String(oview?.stat?.wins)}</h5>
                 </figcaption>
                 <figcaption className="results-item">
                     <p>Losses</p>
-                    <h5>{oview?.stat?.losses!}</h5>
+                    <h5>{String(oview?.stat?.losses)}</h5>
                 </figcaption>
             </div>
             <h2>Achievements</h2>

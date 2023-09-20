@@ -67,7 +67,7 @@
         // Attach event listener to the button
         buttonGl.addEventListener("click", function() {
             // Send request to the backend
-            fetch("http://10.13.6.4:3000/auth/google", {
+            fetch("http://localhost:3000/auth/google", {
                 method: "GET"
             })
             .then(response => response.json())

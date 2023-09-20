@@ -15,7 +15,7 @@ import {
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();
     
-       response.status(status).redirect('http://10.13.6.4:5173/home');
+       response.status(status).redirect('http://localhost:5173/home');
      }
    }
    
