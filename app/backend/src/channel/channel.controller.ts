@@ -5,7 +5,6 @@ import { Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import { protectedChannelDto } from './dto/protectedChannelDto';
-import { Console, log } from 'console';
 
 @Controller('channel')
 export class ChannelController {    

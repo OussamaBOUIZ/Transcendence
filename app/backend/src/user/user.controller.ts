@@ -36,11 +36,6 @@ import { access, unlink } from 'fs/promises';
 
 import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
-import { promises } from 'dns';
-import { plainToClass, plainToInstance } from 'class-transformer';
-import { log } from 'console';
-import { Game } from 'src/databases/game.entity';
-// import { User} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
