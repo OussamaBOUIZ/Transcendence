@@ -5,11 +5,18 @@ import React from "react";
 
 export default function History({userData, gameData}: {userData: User, gameData: gameHistory}) {
 
+    /*
+    X := X XOR Y; // XOR the values and store the result in X
+Y := Y XOR X; // XOR the values and store the result in Y
+X := X XOR Y;
+    */
     if (gameData.opponentId === userData.id) {
         gameData.userScore ^= gameData.opponentScore
         gameData.opponentScore ^= gameData.userScore
+        gameData.userScore ^= gameData.opponentScore
         gameData.opponentId ^= gameData.userId
         gameData.userId ^= gameData.opponentId
+        gameData.opponentId ^= gameData.userId
         const name = gameData.userName
         gameData.userName = gameData.opponentUserName
         gameData.opponentUserName = name

@@ -48,8 +48,11 @@ export default function Prompt() {
         const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
                 if (data) {
-                    await axios.post(Path, data, headers)
-                    increment(prev => prev + 1)
+                    const res = await axios.post(Path, data, headers);
+                    if(res.data.length)
+                        setNotif(res.data);
+                    else
+                        increment(prev => prev + 1)
                     clearFields()
                 }
                 if (val === 2)
