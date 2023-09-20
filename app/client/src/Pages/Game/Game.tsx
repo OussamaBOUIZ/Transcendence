@@ -102,15 +102,6 @@ export default function Game () {
             })
         }
     }
-
-    const UpdateStatus = async () => {
-        try {
-          void axios.put('/api/user/updateStatus', {status: "InGame"})
-        }
-        catch (error) {
-          // console.log(error)
-        }
-    }
     
     useEffectOnUpdate(()  => {
     // console.log(firstTime);
@@ -177,7 +168,15 @@ export default function Game () {
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 
-        void UpdateStatus()
+        const UpdateStatus = async () => {
+            try {
+              void axios.put('/api/user/updateStatus', {status: "In A Game"})
+            }
+            catch (error) {
+              // console.log(error)
+            }
+          }
+          void UpdateStatus()
 
         if (key && gameMode) {
             setIsMatching(true);
