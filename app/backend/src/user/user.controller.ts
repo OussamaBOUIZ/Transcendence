@@ -399,7 +399,7 @@ export class UserController {
         const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
-        const till = payload.iat + 86400;
+        const till = payload.iat + 259200;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
