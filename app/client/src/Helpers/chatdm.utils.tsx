@@ -16,7 +16,6 @@ const updateInbox = (setter:React.Dispatch<SetStateAction<InboxItem[]>>, lastMsg
                             )
                         })
                 } else {
-                    console.log('empty inbox')
                     return  [...prevInbox, {
                         author: {id: id, username: username},
                         lastMessage: lastMsg.message,
@@ -32,8 +31,6 @@ const handleReceivedMsg = (recMsg: MessageData,
                         setMsgs:React.Dispatch<SetStateAction<MessageData[]>>, 
                         setInL:React.Dispatch<SetStateAction<InboxItem[]>>,
                         id:number) => {
-    console.log("recMsg.authorId", recMsg.authorId)
-    console.log("id : ", id)
     if (recMsg?.authorId === id)
         setMsgs((prevList:MessageData[]) => [...prevList, recMsg])
     else {
@@ -82,16 +79,13 @@ const updateInboxBySending  = (sendMsg: MessageData,
 }
 
 const updateInboxByReceiving = async (
-    socket: Socket | undefined,
     recMsg: MessageData,
     inboxList: React.MutableRefObject<InboxItem[]>,
     inView: boolean
   ): Promise<InboxItem[]> => {
         if (inboxList.current.find((inbx) => inbx.author.id === recMsg.authorId)) {
             return inboxList.current.map((inbx) => {
-                console.log(inbx.author.id, ": ", recMsg.authorId, "IN VIEW: ", inView)
                 if (inbx.author.id === recMsg.authorId ) {
-                    socket?.emit('updateUnseenMessage', inbx.author.id)
                     return {...inbx,
                         lastMessage: recMsg.message, 
                         CreatedAt: recMsg.creationTime,
@@ -118,8 +112,6 @@ const updateInboxByReceiving = async (
 
 
 const resetUnseenMsgs = (socket: Socket | undefined, inboxList: React.MutableRefObject<InboxItem[]>, setUpdate: React.Dispatch<SetStateAction<number>>, viewId:number) => {
-    console.log('resetMessages is called!!!');
-    
     inboxList.current = inboxList.current.map((inbx) => {
         if (inbx.author?.id === viewId) {
             socket?.emit('messageSeen', inbx.author.id)
