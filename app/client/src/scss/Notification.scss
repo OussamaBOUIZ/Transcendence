@@ -1,5 +1,5 @@
 @import "../scss/mixins.scss";
-
+@import "../scss/var.scss";
 
 .NotifContainer {
 	position: absolute;
@@ -18,7 +18,7 @@
 		width: 100%;
 		padding: 0 .5em;
 		height: calc(100% - 5px);
-		background: #380848;
+		background: $primary-pink;
 		border-radius: 50%;
 		color: white;
 		.notification-text {
