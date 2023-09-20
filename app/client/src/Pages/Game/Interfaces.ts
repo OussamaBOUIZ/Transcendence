@@ -64,7 +64,6 @@ export interface GameMode {
     color: Color | null;
     xp: number;
     maxScore: number;
-    abilityImg: string;
     ability: string;
 };
 
