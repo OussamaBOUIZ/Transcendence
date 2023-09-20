@@ -88,12 +88,9 @@ export default function Settings () {
 
     const handleEnable2FA = () => {
         
-        const sendEnable = async (path: string) => {
+        const sendEnable = async () => {
             try {
-                const res = await axios.get(path);
-                console.log(`res: ${res}`)
-                if(res.data.length !== 0)
-                    window.location.replace('/auth')
+                window.location.replace('/auth')
             } catch (error) {
                 // console.log(error);
             }
@@ -101,7 +98,7 @@ export default function Settings () {
         if (tfaStatus)
             window.location.replace('/disabletfa')
         else
-            sendEnable(`/api/user/2fa/turn-on/${user?.id}`); 
+            sendEnable(); 
     }
     
     const get2FAStatus =async () => {

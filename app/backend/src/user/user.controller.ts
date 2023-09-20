@@ -289,23 +289,27 @@ export class UserController {
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
-        const data2fa = this.userService.otpsetup(user);
-        user.two_factor_secret = data2fa.secret;
-        user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
-    @Get('2fa/turn-off/:id')
+
+    @Post('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
+        const isCodeValid = this.userService.isUserAuthValid(
+            req.body.token,
+            user
+        );
+        if(!isCodeValid)
+            return res.status(200).send('two factor token is invalid');
         user.two_factor_secret = null;
         user.otpPathUrl = null;
         user.is_two_factor = false;
         await this.userService.saveUser(user);
-        return res.status(200).send('two factor was turned off')
+        return res.status(200).send('');
     }
 
     @Get('2fa/isTurnedOn/:id')
@@ -330,8 +334,8 @@ export class UserController {
         );
         console.log(isCodeValid);
         if(!isCodeValid)
-            return res.status(400).send('two factor token is invalid');
-        return res.status(200).send('correct two factor token');
+            return res.status(200).send('two factor token is invalid');
+        return res.status(200).send('');
     }
 
     @Put('setUserNames/:id')
@@ -339,18 +343,17 @@ export class UserController {
     async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
-        console.log('data is: ', userData);
-            const user = await this.userService.findUserById(id);
-            user.firstname = userData.firstname;
-            user.lastname = userData.lastname;
-            try {
-                user.username = userData.username;
-                await this.userService.saveUser(user);
-            }
-            catch {
-                return res.status(200).send('nickname already exists');
-            }
-            return res.status(200).send('');
+        const user = await this.userService.findUserById(id);
+        user.firstname = userData.firstname;
+        user.lastname = userData.lastname;
+        try {
+            user.username = userData.username;
+            await this.userService.saveUser(user);
+        }
+        catch {
+            return res.status(200).send('nickname already exists');
+        }
+        return res.status(200).send('');
     }
 
     @Post('setUserData/:id')
