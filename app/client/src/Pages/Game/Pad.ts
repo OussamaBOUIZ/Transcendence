@@ -39,12 +39,12 @@ export default class Pad {
         
         if (myPad) {
             p5.mouseMoved = () => {
-                if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)
-                    this.y += vars.PSPEED;
+                if (p5.pmouseY >= vars.GAP && p5.pmouseY + this.h  <= p5.height- vars.GAP)
+                    this.y = p5.pmouseY;
             }
-
-            if (p5.pmouseY >= vars.GAP && p5.pmouseY + this.h  <= p5.height- vars.GAP)
-                this.y = p5.pmouseY
+            
+            if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)
+                this.y += vars.PSPEED;
 
             if (p5.keyIsDown(p5.UP_ARROW) && this.y > vars.GAP)
                 this.y -= vars.PSPEED;

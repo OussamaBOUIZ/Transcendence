@@ -117,7 +117,15 @@ section {
     border-width: 3px;
     border-color: $primary-pink;
     border-radius: 1em;
-    animation: brilliance 1.1s ease-out 0s infinite normal none;
+
+    animation-name: brilliance;
+    animation-duration: 1.1s;
+    animation-timing-function: ease-out;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+
 }
 
 #ability-icon.ability-position-modifier {

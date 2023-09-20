@@ -11,7 +11,7 @@ export default function Sidebar () {
     const allIcons = [
         {id: nanoid() ,to:"/",value: <GoHomeFill />},
         {id: nanoid() ,to:"/chat",value: <BsChatSquareFill />},
-        {id: nanoid() ,to:"/game/BattleRoyal",value: <FaGamepad />},
+        {id: nanoid() ,to:"/game/BattleRoyal/111",value: <FaGamepad />},
         {id: nanoid() ,to:"/friends",value: <FaUserFriends />},
         {id: nanoid() ,to:"/settings",value: <IoMdSettings />},
         {id: nanoid() ,to:"/logout",value: <FaSignOutAlt />}

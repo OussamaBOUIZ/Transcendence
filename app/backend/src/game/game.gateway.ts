@@ -57,14 +57,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('waiting')
 	onWaiting(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2)
-			this.server.to(roomKey).emit("startGame")
+		if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2) {
+			this.server.to(roomKey).emit("startGame");
+		}
+	}
+
+	@SubscribeMessage('sendUser')
+	onSendUser(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+		socket.to(data.roomKey).emit("recvOppUser", data.user)
 	}
 
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		console.log('join game');
-		// if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2)
+		// if (this.server.sockets.adapter.rooms.get(roomKey)?.size < 2)
 			socket.join(roomKey);
 	}
 
