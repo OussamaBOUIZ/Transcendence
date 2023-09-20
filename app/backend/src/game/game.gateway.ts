@@ -48,20 +48,24 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('handle disconnect');
 
 		gameModes.forEach((mode: string) => {
-			waitingUsers.set(mode, 
-				waitingUsers.get(mode).filter(
+			waitingUsers?.set(mode, 
+				waitingUsers.get(mode)?.filter(
 					(u: User) => u.socket.id !== socket.id)
 				);
 		});
     }
 
+	@SubscribeMessage('waiting')
+	onWaiting(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2)
+			this.server.to(roomKey).emit("startGame")
+	}
+
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		console.log('join game');
-		
-		socket.join(roomKey); 
-
-		console.log(this.server.sockets.adapter.rooms.get(roomKey).size);
+		// if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2)
+			socket.join(roomKey);
 	}
 
 	@SubscribeMessage('gameEnd')
@@ -105,7 +109,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		const users: User[] =  waitingUsers.get(body.modeName);
 
-		if (!users.find((user: User) => user.user.id == body.user.id )) {
+		if (!users?.find((user: User) => user.user.id == body.user.id )) {
 			if (users.length >= 1) {
 				const oppUser: User = users[0];
 				users.unshift();

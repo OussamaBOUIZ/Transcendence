@@ -17,7 +17,7 @@ interface Inputs {
 
 
 export default function Auth() {
-
+    const {user} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
     const QRcode = useFetchQRcode();
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
@@ -43,11 +43,14 @@ export default function Auth() {
                     const collected = {
                         token: collectedCode,
                     }
-                    console.log('token: ', collected);
-                    await axios.post("/api/user/2fa/login", collected);
-                    console.log('here bro');
-                    
-                    window.location.replace('/');
+                    const res = await axios.post("/api/user/2fa/login", collected);
+                    if(res.data.length !== 0)
+                    {
+                        await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
+                        window.location.replace('/');
+                    }
+                    else
+                        setNotif('token is not valid');
                 } catch (error) {
                     console.log(error);
                 }
