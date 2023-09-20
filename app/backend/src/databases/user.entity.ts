@@ -22,8 +22,11 @@ export class User extends BaseEntity {
     id: number
 
     @Column({nullable: true})
-    socketId: string
+    chatId: string
 
+    @Column({nullable: true})
+    socketId: string
+    
     @Column({default: 'Offline'})
     status: string
 
