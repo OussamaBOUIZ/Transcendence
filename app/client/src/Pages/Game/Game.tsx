@@ -15,6 +15,7 @@ import BattleRoyal from "../../Assets/GameArea/BattleRoyal.jpg"
 import BlazingPong from "../../Assets/GameArea/BlazingPong.jpg"
 import ArcticPong from "../../Assets/GameArea/ArcticPong.jpg"
 import RetroPong from "../../Assets/GameArea/RetroPong.jpg"
+import axios from 'axios';
 
 let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
@@ -168,6 +169,16 @@ export default function Game () {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
+
+        const UpdateStatus = async () => {
+            try {
+              void axios.put('/api/user/updateStatus', {status: "InGame"})
+            }
+            catch (error) {
+              // console.log(error)
+            }
+          }
+          void UpdateStatus()
 
         if (key && gameMode) {setIsClicked
             setGameKey(key);
