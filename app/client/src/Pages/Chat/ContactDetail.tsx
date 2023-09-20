@@ -6,6 +6,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import LevelBar from '../../Components/LevelBar';
 import { getAchievementImage } from '../../Hooks/getAchievementImage';
 import ProfileImage from '../../Components/profileImage';
+import { capitalize } from '../../Helpers/utils';
 
 function AllAchievement ({item} :{item: Achievement}) {
     const [image, setImage] = useState<string>()
@@ -42,8 +43,8 @@ export default function ContactDetail ({title, oview} : {title: string, oview?: 
             <figure className="contact">
                 <ProfileImage image={oview?.image} name={oview?.username} size="big" />
                 <figcaption>
-                    <h3 className='font-bold'>{oview?.firstname}</h3>
-                    <h3 className='font-bold'>{oview?.lastname}</h3>
+                    <h3 className='font-bold'>{capitalize(oview?.firstname)}</h3>
+                    <h3 className='font-bold'>{capitalize(oview?.lastname)}</h3>
                     <h6>level {String(oview?.stat?.ladder_level)}</h6>
                     <LevelBar val={String(oview?.stat?.levelPercentage)} />
                 </figcaption>
