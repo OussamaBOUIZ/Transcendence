@@ -12,12 +12,12 @@ interface channel {
     isClick: boolean;
 }
 
-export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch<React.SetStateAction<string>>}) {
+export default function ChannelInitAction () {
 
     const [channelPassword, setChannelPassword] = useState<string>("")
     const [selectedChannel, setSelectedChannel] = useState<channel>({} as channel)
     const [channels, setChannels] = useState<channel[]>([])
-    const {user} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
     const {setUpdate, setIsClick} = useContext(SocketContext)
 
     const passwordDiv = <input
@@ -43,13 +43,15 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
     }, [])
 
     async function handleSubmit() {
+        if (!selectedChannel.channel_name)
+            return;
         if (selectedChannel.channel_type === 'protected') {
             try {
                 const res: AxiosResponse<boolean | string> = await axios.post(`/api/channel/checkProtected/${user?.id}`, {channelName: selectedChannel.channel_name, channelPassword: channelPassword})
                 if (typeof res.data === 'string')
                     setNotif(res.data)
                 else
-                    res.data ? setUpdate(prev => !prev) : setNotif("Wrong password")
+                    res.data ? setUpdate(prev => prev + 1) : setNotif("Wrong password")
             }
             catch (err) {
                 // console.log(err)
@@ -57,7 +59,7 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
         } else {
             try {
                 const res: AxiosResponse<string> = await axios.get(`/api/channel/addToChannel/${user?.id}?channelName=${selectedChannel.channel_name}`)
-                res.data ? setNotif(res.data) : setUpdate(prev => !prev) 
+                res.data ? setNotif(res.data) : setUpdate(prev => prev + 1) 
             }
             catch (err) {
                 // console.log(err)
@@ -67,7 +69,7 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
 
     const list = channels.map((channel) => {
         return (
-            <section>
+            <section key={channel.id}>
                 <div className={`channel flex gap-3 justify-start cursor-pointer px-4 py-4 ${selectedChannel?.id === channel.id ? 'bg-room-bar' : ''}`} key={channel.id} onClick={() => setSelectedChannel(channel)}>
                     <img src={cube} alt="cube" />
                     <h2>{channel.channel_name}</h2>
@@ -89,11 +91,11 @@ export default function ChannelInitAction ({setNotif}: {setNotif: React.Dispatch
                     Create
                 </button>
             </div>
-            <div className='border-2 rounded-2xl border-white flex flex-col w-1/2 overflow-hidden max-h-56'>
+            {list.length >0 && <div className='border-2 rounded-2xl border-white flex flex-col w-1/2 overflow-hidden max-h-56'>
                 <div className='channels_list overflow-x-hidden overflow-y-auto'>
                     {list}
                 </div>
-            </div>
+            </div>}
         </section>
     );
 }

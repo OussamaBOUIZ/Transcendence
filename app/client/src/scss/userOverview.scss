@@ -6,7 +6,7 @@ div.user_overview {
     background: $overview-gradient;
     grid-area: o;
     margin-left: auto;
-    width: 22.45%;
+    width: 320px;
     height: 97%;
     border-radius:  0 0 0 1rem;
     position: absolute;
@@ -31,6 +31,7 @@ div.user_overview {
             display: flex;
             align-items: center;
             margin-top: 10px;
+            margin-left: .5em;
             img {
                 width: 85px;
                 height: 85px;
@@ -40,12 +41,15 @@ div.user_overview {
                 border: $square-avatar-border;
             }
             figcaption {
-                // background: red;
                 display: flex;
+                width: 80%;
                 flex-direction: column;
                 // justify-content: center;
                 margin-left: 10px;
                 margin-bottom: 5px;
+                h3 {
+                    font-size: 1.3em;
+                }
                 span {
                     font-size: 1.875rem;
                     font-style: italic;
@@ -55,9 +59,12 @@ div.user_overview {
 
                 }
                 p {
-                    font-size: 0.75rem;
+                    font-size: 0.7rem;
                     font-weight: 500;
                     margin-bottom: 5px;
+                }
+                h6 {
+                    font-size: .8em;
                 }
                 .level_bar {
                     width: 100%;
@@ -89,30 +96,47 @@ div.user_overview {
             figcaption.results-item {
                 text-align: center;
                 p {
-                    font-size: 12px;
+                    font-size: 1em;
                     font-weight: 500;
+                }
+                h5 {
+                    font-size: 1.4em;
+                    font-weight: bold;
                 }
             }
         }
         div.achievement-container {
             figure.achievement {
-                background-color: red;
                 margin: 8px auto;
                 display: flex;
                 padding: 3px 8px;
+                padding: .5em;
                 align-items: center;
                 border-radius: 16px;
                 border: 0.5px solid rgba(0, 0, 0, 0.05);
                 background: rgba(0, 0, 0, 0.20);
                 box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25);
                 img.achievement-icon {
-                    width: 40px;
-                    height: 40px;
+                    width: 3.2em; 
+                    height: 3.2em;
                     border: $square-avatar-border;
                     border-radius: 16px;
                     margin-right: 15px;
                 }
+                h5 {
+                    font-size: 1.2em;
+                    margin-top: -.2em;
+                }
+                p {
+                    font-size: .7em;
+                }
             }
         }
+    }
+}
+
+@media (max-width: 1280px) {
+    div.user_overview {
+        display: none;
     }
 }

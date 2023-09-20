@@ -1,15 +1,17 @@
-import React from 'react'
-import "../../scss/utils.scss"
+import React, { useContext } from 'react'
 import axios, {AxiosResponse} from "axios"
-import {User} from '../../../../global/Interfaces'
+import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
+import UserContext from '../../Context/UserContext'
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate'
 
 export default function ChatSearchBox () {
     const [currentSearch, setCurrentSearch] = React.useState<string>("")
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
     const initialRender = React.useRef<boolean>(true)
+    const {setNotif} = useContext(UserContext)
 
     const submitStyle = {
         marginTop: "1em",
@@ -20,11 +22,11 @@ export default function ChatSearchBox () {
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
-        if (currentSearch !== "")
-            setSubmittedName(currentSearch)
+        if (currentSearch.trim())
+            setSubmittedName(currentSearch.trim())
     }
 
-    React.useEffect(() => {
+    useEffectOnUpdate(() => {
         if (initialRender.current) {
             initialRender.current = false
             return
@@ -35,32 +37,31 @@ export default function ChatSearchBox () {
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err) {
-                // console.log(err.message)
+                setNotif("User not Found");
+                // console.log(err);
             }
         }
-        if (submittedName !== "")
-            void getUserCard()
+        void getUserCard()
     }, [submittedName])
-
     return (
         <section className="search_box">
             <form onSubmit={handleSubmit}>
                 <label>Search</label>
                 <input 
-                type="search"  
+                type="search"
                 placeholder="Type a username"
                 onChange={handleChange}
                 value={currentSearch}
                 />
                 <input style={submitStyle}type="submit" value="submit" />
             </form>
-            {searchedUser
-            && 
-            <UserCard 
-                user={searchedUser}
-                message={true}
-                friend={true}
-            />
+            {
+                searchedUser && 
+                <UserCard 
+                    userData={searchedUser}
+                    message={true}
+                    friend={false}
+                />
             }
         </section>
     );

@@ -5,21 +5,26 @@ import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import axios from "axios"
 import UserContext from "../../Context/UserContext"
 import { SocketContext } from "./ChatRooms";
+import InboxContext from "../../Context/InboxContext";
+import {handleClickOutside} from "../../Helpers/utils"
 
 interface newRoom {
-    prevChannelName: string,
+    channelId: number,
     channelName: string,
-    channelType: "public" | "private" | "protected",
+    channelType: string,
     channelPassword: string,
     channelOwner: number,
 }
 
-export default function CreateRoom({action}: {action: string}) {
+export default function CreateRoom({action, defaultValue}: {action: string, defaultValue: string}) {
 
-    const {user} = useContext(UserContext)
-    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate} = useContext(SocketContext)
+    const {user, setNotif, navigate} = useContext(UserContext)
+    const {isBanned} = useContext(InboxContext)
+    const {socket, roomData, myGrade, setIsClick, setAction, setUpdate, setDefaultRoomType} = useContext(SocketContext)
 
-    const [newRoom, setNewRoom] = useState<newRoom>({ prevChannelName: "",channelName: "", channelPassword: "", channelType: "public"} as newRoom)
+    const [newRoom, setNewRoom] = useState<newRoom>({ channelId: 0,channelName: "", channelPassword: "", channelType: defaultValue, channelOwner: 0})
+    const wrapperRef = handleClickOutside(setIsClick)
+
 
     function handleChange(event: { target: { name: string; value: string; }; }) {
         const { name, value } = event.target;
@@ -36,12 +41,14 @@ export default function CreateRoom({action}: {action: string}) {
       setInputType(inputType === 'password' ? 'text' : 'password');
     };
 
-    const handleSubmit = () => {
-        newRoom.prevChannelName = "";
-        if (roomData?.channelName) newRoom.prevChannelName = roomData?.channelName
-        console.log(newRoom)
+    const handleSubmit = async () => {
+        setDefaultRoomType("public");
+        if (roomData?.channelId)
+            newRoom.channelId = roomData?.channelId
         try {
-            void axios.post(`/api/channel/${action}`, newRoom)
+            const res = await axios.post<string>(`/api/channel/${action}`, newRoom)
+            if (res.data.length)
+                setNotif(res.data)
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }
@@ -53,15 +60,17 @@ export default function CreateRoom({action}: {action: string}) {
     const handleLeaving = () => {
         socket?.emit('leaveAndRemoveChannel', roomData);
         setIsClick(prev => !prev);
-        window.location.replace('/chat/rooms')
+        setDefaultRoomType("public");
+        navigate('/chat/rooms')
     }
 
-    const style = ((myGrade === "user" && action === 'update') ? 'pointer-events-none' : '')
+    const style = (((myGrade === "user" || isBanned) && action === 'update') ? 'pointer-events-none' : '')
 
     const passwordCard = <div className="setPassword flex flex-col">
                             <label>set a password</label>
                             <form className="flex justify-between gap-3">
                                 <input
+                                autoFocus
                                 className="flex-grow"
                                     type={inputType}
                                     placeholder="type password"
@@ -74,13 +83,14 @@ export default function CreateRoom({action}: {action: string}) {
                         </div>
 
   return (
-    <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x">
+    <div className="createRoom flex flex-col justify-around p-4 gap-5 rounded-2x" ref={wrapperRef}>
         <div className="flex justify-end">
-            <img className="w-6 cursor-pointer" onClick={() => {setAction("create"); setIsClick(prev => !prev)}} src={Xmark} alt="exit" />
+            <img className="w-6 cursor-pointer" onClick={() => {setDefaultRoomType("public"); setAction("create"); setIsClick(prev => !prev)}} src={Xmark} alt="exit" />
         </div>
         <div className="channelName flex flex-col">
             <label>Channel Name</label>
             <input
+                autoFocus
                 type="text"
                 placeholder="channel name"
                 className={`${style}`}
@@ -93,15 +103,15 @@ export default function CreateRoom({action}: {action: string}) {
             <label>Accessiblity</label>
             <form className="flex justify-between items-center" >
                 <div className="flex gap-2 items-center">
-                    <input type="radio" className={style} name="channelType" value="public" onChange={handleChange} defaultChecked/>
+                    <input type="radio" className={style} name="channelType" value="public" onChange={handleChange} defaultChecked={defaultValue === 'public'}/>
                     <label>Public</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <input type="radio" className={style} name="channelType" value="private" onChange={handleChange} />
+                    <input type="radio" className={style} name="channelType" value="private" onChange={handleChange} defaultChecked={defaultValue === 'private'}/>
                     <label>Private</label>
                 </div>
                 <div className="flex gap-2 items-center">
-                <input type="radio" className={style} name="channelType" value="protected" onChange={handleChange} />
+                <input type="radio" className={style} name="channelType" value="protected" onChange={handleChange} defaultChecked={defaultValue === 'protected'}/>
                     <label>Protected</label>
                 </div>
             </form>

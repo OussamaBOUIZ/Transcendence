@@ -19,10 +19,10 @@ import { gameModule } from './game/game.module';
   InboxModule,
   ChannelModule,
   UserModule,
+  gameModule,
   ConfigModule.forRoot({
     isGlobal: true,
   }),
-  gameModule,
   ChatGatewayModule,
   MailerModule.forRoot({
     transport: {

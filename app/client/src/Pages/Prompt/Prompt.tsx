@@ -3,17 +3,17 @@ import "../../scss/prompt.scss";
 import Notification from "../../Components/Notification"
 import axios, {AxiosRequestConfig} from "axios";
 import { useState } from "react";
-import {Data} from "../../../../global/Interfaces";
+import {Data} from "../../../global/Interfaces";
 import UserName from "./userName";
 import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
+import Loading from "../Loading";
 
 export default function Prompt() {
 
-    const {user} = useContext(UserContext)
-    const [notif, setNotif] = useState("")
+    const {user, navigate, notif, setNotif} = useContext(UserContext)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
 
@@ -22,7 +22,7 @@ export default function Prompt() {
     const updateFullName = setFullName(setData);
 
     if (!user)
-        return null;
+        return (<Loading />)
 
     const clearFields = () => {
         setData({
@@ -45,7 +45,6 @@ export default function Prompt() {
     }
 
     const handleSubmit = () => {
-        setNotif('')
         const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
                 if (data) {

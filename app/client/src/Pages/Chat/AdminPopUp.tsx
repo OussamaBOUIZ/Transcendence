@@ -6,15 +6,19 @@ import promoteIcon from "../../Assets/Icons/upgrade.svg"
 import {nanoid} from "nanoid"
 import axios from "axios"
 import { SocketContext } from './ChatRooms'
-
+import UserContext from '../../Context/UserContext'
 
 export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: React.Dispatch<React.SetStateAction<boolean>>}) {
 
     const {id, socket, roomData, setUpdate} = useContext(SocketContext)
+    const {setNotif} = useContext(UserContext)
+
 
     async function promoteMember() {
         try {
-            await axios.post(`/api/channel/promoteuser/${Userid}?channelId=${id}`)
+            const res = await axios.post(`/api/channel/promoteuser/${Userid}?channelId=${id}`)
+            if (res.data)
+                setNotif(res.data)
             setUpdate(prev => prev + 1)
         }
         catch (err) {
@@ -25,13 +29,13 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
     function kickMember() {
         const data ={userId: Userid, channelName: roomData.channelName}
         socket?.emit('kickuser', data);
-        setUpdate(prev => prev + 1)
+        setTimeout(() => setUpdate(prev => prev + 1), 300)
     }
 
     function banMember() {
         const data ={userId: Userid, channelName: roomData.channelName}
         console.log(data)
-        socket.emit('banuser', data)
+        socket?.emit('banuser', data)
     }
 
     async function handleClick(name: string) {

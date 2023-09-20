@@ -11,10 +11,10 @@ import { Message } from 'src/databases/message.entity';
 import { Muted_users } from 'src/databases/muted_users.entity';
 import { Achievement } from 'src/databases/achievement/achievement.entity';
 import {Stats} from "../databases/stats.entity";
-import { Match_history } from 'src/databases/match_history.entity';
+import { Game } from 'src/databases/game.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Message, Muted_users, Achievement, Stats, Match_history])],
+  imports: [TypeOrmModule.forFeature([User, Channel, Message, Muted_users, Achievement, Stats, Game])],
   controllers: [ChannelController],
   providers: [ChannelService, ChannelGateway, JwtService, UserService]
 })

@@ -24,15 +24,13 @@
     box-shadow: 0px 0px 20px 0px #E62FD0;
 }
 
-
-@mixin avatar-styling {
-    height: 60px;
-    width: 60px;
-    border-radius: 100%;
-}
-
 @mixin center-columns {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@mixin mx-auto {
+    margin-left: auto;
+    margin-right: auto;
 }

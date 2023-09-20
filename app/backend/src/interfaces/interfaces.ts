@@ -9,7 +9,7 @@ export class ReceiverDto {
 	userId: number;
 }
 
-function trim(value: string): string {
+export function trim(value: string): string {
     return value.trim();
 }
 
@@ -31,11 +31,13 @@ export class  MessageDto {
 
 export interface sentMsg {
 	authorId: number,
-	socketId: string
+	socketId: string,
+	username: string
 }
 
 export interface MessageData {
 	authorId: number,
+	username: string,
     message: string,
     creationTime: Date,
 }

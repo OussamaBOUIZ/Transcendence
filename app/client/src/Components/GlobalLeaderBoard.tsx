@@ -2,11 +2,9 @@ import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
 import React from "react"
 import StarRank from "./starRank";
-import { Leaders } from "../../../global/Interfaces";
+import { Leaders } from "../../global/Interfaces";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
-
-    console.log(Leaders)
 
     if (Leaders.length < 3) {
         return (
@@ -27,43 +25,34 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
         )
     }
 
-    const users = [
+    const topThree = [
         {id: nanoid(), rank: 2, userData: Leaders[1], size: "medium"},
         {id: nanoid(), rank: 1, userData: Leaders[0], size: "medium"},
         {id: nanoid(), rank: 3, userData: Leaders[2], size: "medium"}
     ]
 
-    const ThreeUsers = users.map(user => {
-        console.log(user)
+
+    const RestOfThem = Leaders.slice(3);
+
+    const ThreeUsers = topThree.map((user) => {
         return (
-            <div className={`rank rank${user.rank}`} >
+            <div key={user.id} className={`rank rank${user.rank}`} >
                 <RankContent
                 key={user.id}
                 userData={user.userData}
-                size={user.size}
+                size="medium"
                 Rank={user.rank} />
             </div>
         )
     })
-    const topEleven = users.map(user => {
+
+    const TopTwelve = RestOfThem.map((user, index) => {
         return (
-            <>
-                <div className={`topRank`} >
-                    <StarRank RankNumber={4} color="#A0A0A0" />
-                    <p>{user.userData.user.username}</p>
-                    <span><p>{`level 0`}</p></span>
-                </div>
-                    <div className={`topRank`} >
-                        <StarRank RankNumber={4} color="#A0A0A0" />
-                        <p>{user.userData.user.username}</p>
-                        <span><p>{`level 0`}</p></span>
-                    </div>
-                    <div className={`topRank`} >
-                        <StarRank RankNumber={4} color="#A0A0A0" />
-                        <p>{user.userData.user.username}</p>
-                        <span><p>{`level 0`}</p></span>
-                    </div>
-            </>
+            <div key={user.id} className={`topRank`} >
+                <StarRank RankNumber={index + 4} color="#A0A0A0" />
+                <p>{user.username}</p>
+                <span><p>{`level ${user.ladder_level}`}</p></span>
+            </div>
         )
     })
 
@@ -82,8 +71,8 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
                 <div className="board">
                     {ThreeUsers}
                 </div>
-                <div className="topEleven">
-                    {users.length < 12 && topEleven}
+                <div className="TopTwelve">
+                    {Leaders.length <= 12 && TopTwelve}
                 </div>
             </section>
         </div>

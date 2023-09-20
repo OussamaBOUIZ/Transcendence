@@ -40,6 +40,7 @@ export class ChatGatewayService {
         });
     }
 
+
     async getUserByEmail(email: string) {
         return await this.userRepository.findOneBy({email: email})
     }
@@ -79,18 +80,12 @@ export class ChatGatewayService {
         return isBlocked
     }
     async processMessage(socket: Socket, messageDto: MessageDto) {
-        console.log('id:', messageDto.receiverId)  
-        console.log('message:', messageDto)
 
         const receiver = await this.getUserById(messageDto.receiverId)
-        console.log(receiver);
         
         const author = await this.userRepository.findOneBy({email: socket.data.user.email})
-        this.logger.log({receiver})
-        this.logger.log(socket.data.user.email)
-        this.logger.log({author})
  
-        if (!author || !receiver) {
+        if (!author || !receiver) { 
             throw {
                 msg: 'Invalid sender or receiver',
                 socket: author.socketId
@@ -102,16 +97,17 @@ export class ChatGatewayService {
                 socket: author.socketId
             }
         if (await this.isReceiverInBlocked(author.id, receiver.id) === true || await this.isReceiverInBlocked(receiver.id, author.id) == true)
-            throw {
+            throw { 
                 msg: 'the user blocked',
                 socket: author.socketId
             }
         await this.saveMessage(messageDto, receiver, author)
         // check status of receiver
-        await this.inboxService.saveInbox(receiver, author, messageDto)
+        await this.inboxService.saveInbox(receiver, author, messageDto) 
         const ss: sentMsg = {
             authorId: author.id,
-            socketId: receiver.socketId
+            socketId: receiver.socketId,
+            username: author.username
         }
         return ss
     }
@@ -133,27 +129,26 @@ export class ChatGatewayService {
             ],
             order: {
                 messages:{ 
-                    CreatedAt: 'DESC'
+                    CreatedAt: 'ASC'
                 }
-            },
-            take: 30
+            }
         })
     }
 
     async loadMessage(user: User, receiver: number) {
         const message = await this.getAllMessages(user.id, receiver)
+        
         const transformedArray = message.map(item => {
             const message = item.messages[0]
             if (!message)
-                return []
+                return 
             return {
                 authorId : item.author.id,
                 message: message?.message,
-                date: new Date(message?.CreatedAt)
+                creaionTime: new Date(message?.CreatedAt)
             }
         })
-        console.log(transformedArray);
-        
+         
         return transformedArray
     }
 

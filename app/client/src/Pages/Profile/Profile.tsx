@@ -1,38 +1,35 @@
-import "../../scss/home.scss";
 import ProfileComponent from "./ProfileComponent";
-import React, { useState , useEffect} from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
-import {User} from "../../../../global/Interfaces"
+import {User} from "../../../global/Interfaces"
 import {getUserData} from "../../Hooks/getUserData"
+import useEffectOnUpdate from "../../Hooks/useEffectOnUpdate";
+import Loading from "../Loading";
 
 export default function Profile() {
 
   const {username} = useParams();
-  const [user, setUser] = useState<User>({} as User)
+  const [userData, setUser] = useState<User>({} as User)
 
-  useEffect(() => {
+  useEffectOnUpdate(() => {
     const getData = async () => {
       try {
-        const userData = await getUserData(String(username), "username")
-        setUser(userData)
+        const data = await getUserData(String(username), "username")
+        setUser(data)
       }
       catch (error) {
         // console.log(error)
       }
     }
     void getData();
-  }, [username])
+  }, [userData.status])
 
-  if (!user.firstname) {
-    return (
-      <div className="Home">
-      </div>
-    );
-  }
+  if (!userData.firstname)
+    return (<Loading />)
 
   return (
-    <div className="Home">
-      <ProfileComponent UserData={user} />
+    <div className="flex w-full h-full ml-4">
+      <ProfileComponent UserData={userData} />
     </div>
   );
 }

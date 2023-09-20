@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {User} from "../databases/user.entity";
 import {MoreThan, Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Inbox_user} from "../databases/inbox_user.entity";
 import {MessageDto} from "../interfaces/interfaces";
-import {Status} from "../interfaces/enums";
 
 @Injectable()
 export class InboxService {
     constructor(@InjectRepository(Inbox_user) private inboxRepository: Repository<Inbox_user>) {
     }
-    async getUserInboxByUnseenMessage(user: User) {
+    async getUserInboxByunseenMessage(user: User) {
         return await this.inboxRepository.findAndCount({
             relations: {user: true},
             select: ["unseenMessages"],
@@ -22,8 +21,12 @@ export class InboxService {
     }
     async saveInbox(receiver: User, author: User, msgDto: MessageDto) {
         let inbox: Inbox_user
+        
         inbox = await this.getInboxBySenderId(author, receiver)
+
         if (!inbox) {
+            console.log('new inbox');
+            
             inbox = new Inbox_user()
             inbox.author = author; // id of the receiver
             inbox.lastMessage = msgDto.message;
@@ -35,15 +38,15 @@ export class InboxService {
             inbox.CreatedAt = msgDto.creationTime
         }
         // I assume that the receiver is on chat page
-        if (receiver.isActive === true)
-            inbox.unseenMessages = 0
-        else
+        if (receiver.isActive !== true)
             inbox.unseenMessages += 1
+        console.log(inbox);
+        
         await this.inboxRepository.save(inbox)
     }
 
     async getInboxBySenderId(author: User, receiver: User): Promise<Inbox_user> {
-        const tmp = await this.inboxRepository.findOne({
+        return await this.inboxRepository.findOne({
             relations: {
                 user: true,
                 author: true
@@ -56,22 +59,22 @@ export class InboxService {
                     id: receiver.id
                 }
             }
-        })
-
-        return tmp;
+        });
     }
 
     async getAllInboxOfUser(authorId: number) {
+
+        console.log(authorId);
+        
         return await this.inboxRepository.find({
             relations: {
                 user: true,
                 author: true
             },
-            where: {
-                 author: {
-                    id: authorId
-                 },
-            },
+            where: [
+                { author: { id: authorId } },
+                { user: {id: authorId } },
+            ],
             order: {
                 CreatedAt: 'DESC'
             },
@@ -87,4 +90,23 @@ export class InboxService {
             }
         })
     }
+
+    async updateInbox(inbox: Inbox_user)
+    {
+        await this.inboxRepository.save(inbox) // todo : if failed to save the inbox ??
+    }
+
+
+    // async getUserPeers(user: User) {
+    //     await this.inboxRepository.find({
+    //         where: [
+    //             { author: { id: user.id } },
+    //             { user: {id: user.id } },
+    //         ],
+    //     })
+    // }
+    //
+    // async listFriends() {
+    //
+    // }
 }

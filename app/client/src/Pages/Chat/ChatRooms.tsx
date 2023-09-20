@@ -1,16 +1,16 @@
-import React, {createContext, useState, useEffect, useRef, useContext, SetStateAction} from 'react'
+import React, {createContext, useState, useEffect, useContext, SetStateAction} from 'react'
 import ChatOverview from './ChatOverview';
 import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
 import axios from 'axios'
 import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
-import {roomData, Message} from "../../../../global/Interfaces"
+import {roomData, Message} from "../../../global/Interfaces"
 import MessageBox from "../../Components/MessageBox"
 import io, {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import AddUser from "./addUser"
-import ChatRoomWindow from "./ChatRoomWindow"
+import ChatWindow from "./ChatWindow"
 import ChatInput from "./chatInput"
 import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
 import {scrollLogic} from "./scrollLogic"
@@ -18,23 +18,22 @@ import {listener} from "./listener"
 import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
-import Notification from "../../Components/Notification"
+import InboxContext from '../../Context/InboxContext';
+// import ErrorPage from '../Errors/errorPages';
 
 type typeProps = {
     socket: Socket | undefined;
     id: string | undefined;
     myGrade: string;
-    isBanned: boolean;
     isClick: boolean;
     update: number;
     setUpdate: React.Dispatch<SetStateAction<number>>;
     setIsClick: React.Dispatch<SetStateAction<boolean>>;
     setAction: React.Dispatch<SetStateAction<"create" | "update">>;
-    outerDiv: React.RefObject<HTMLDivElement>;
-    innerDiv: React.RefObject<HTMLDivElement>;
     roomData: roomData;
     showSearch: boolean;
     setShowSearch: React.Dispatch<SetStateAction<boolean>>;
+    setDefaultRoomType: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const SocketContext = createContext<typeProps>({} as typeProps);
@@ -42,25 +41,20 @@ export const SocketContext = createContext<typeProps>({} as typeProps);
 
 export default function ChatRooms () {
 
-    const [socket, setSocket] = useState<Socket>()
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Message[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const {user, isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
-    const outerDiv = useRef<HTMLDivElement>(null);
-    const innerDiv = useRef<HTMLDivElement>(null);
+    const {socket, setSocket, user, show, navigate} = useContext(UserContext)
     const [roomData, setRoomData] = useState<roomData>({} as roomData)
-    const [isBanned, setBanned] = useState<boolean>(false)
-    const prevInnerDivHeight = useRef<number>(0);
     const [myGrade, setMyGrade] = useState<string>("")
     const [isClick, setIsClick] = useState<boolean>(false)
     const [action, setAction] = useState<"create" | "update">("create")
     const [update, setUpdate] = useState<number>(0);
     const [blockedUsers, setBlockedUsers] = useState<{id: number}[]>([])
-    const [notif, setNotif] = useState<string>("")
-
-
     const {id} = useParams()
+    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
+    const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
+
 
     //set myGrade and room data
     useEffectOnUpdate(() => {
@@ -68,6 +62,7 @@ export default function ChatRooms () {
             try {
                 const res = await axios.get<string>(`/api/channel/channelName/${String(id)}`);
                 setRoomData({
+                    channelId: Number(id),
                     channelName: res.data,
                     userId: user?.id,
                 })
@@ -78,8 +73,8 @@ export default function ChatRooms () {
                         const res = await axios.get<{id: number}[]>(`/api/user/blockedUsers/${user?.id}`);
                         setBlockedUsers(res.data)
                     }
-                    catch (err) {
-                        // console.error(err)
+                    catch (err: any) {
+                        navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                     }
                 }
                 catch (err) {
@@ -90,13 +85,27 @@ export default function ChatRooms () {
                 // console.log(error)
             }
         }
-        if (user && id)
+        viewIdRef.current = NaN;
+        if (user.id && id)
             void getInfo()
     }, [id, user])
 
+    // create socket
+    useEffect(() => {
+        const fd = io("ws://localhost:1212", {
+            withCredentials: true,
+        })
+        setSocket(fd)
+
+        return  () => {
+                fd.disconnect();
+            }
+    }, [])
+
     const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();
-
+        console.log("sendMessage is called");
+        
         if (message !== "") {
             const messageData: Message = {
                 message: message,
@@ -105,7 +114,8 @@ export default function ChatRooms () {
                 username: user?.username,
                 isBlocked: false,
             }
-
+            console.log(messageData);
+            
             socket?.emit("channelMessage", messageData);
             setMessage("");
             const outerDivHeight = outerDiv?.current?.clientHeight ?? 0;
@@ -120,21 +130,7 @@ export default function ChatRooms () {
         }
     }
 
-    // create socket
-    useEffect(() => {
-        const fd = io("ws://localhost:1212", {
-            withCredentials: true,
-        })
-        setSocket(fd)
-
-        return  () => {
-            if (socket) {
-                socket.disconnect();
-            }
-        }
-    }, [])
-
-    const messagesElements = messageList.map((mess) => {
+    const messagesElements = messageList.map((mess, index) => {
         if (binarySearch(blockedUsers, mess.fromUser)) {
             mess.message = 'Message from blocked user'
             mess.image = ""
@@ -142,7 +138,7 @@ export default function ChatRooms () {
             mess.isBlocked = true
         }
         return (
-            <MessageBox key={mess.id} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} isBlocked={mess.isBlocked} >
+            <MessageBox key={index} id={mess.fromUser !== user.id} username={mess.username} avatar={mess.image} isBlocked={mess.isBlocked} >
                 {mess.message}
             </MessageBox>
         )
@@ -151,36 +147,37 @@ export default function ChatRooms () {
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messageList]);
 
     // access channel after click
-    useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user, setMessageList, blockedUsers), [roomData, blockedUsers])
+    useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user.id, setMessageList, blockedUsers), [roomData, blockedUsers])
 
     // listener
-    useEffectOnUpdate(listener(socket, user, setMessageList, setBanned), [socket]);
+    useEffectOnUpdate(listener(socket, user.id, setMessageList, setBanned), [socket]);
 
-    useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
+    // useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
 
     if (!socket && !roomData)
         return null;
 
     return (
-        <SocketContext.Provider value={{socket, id, myGrade, isBanned, isClick, update, setUpdate, setIsClick, setAction, outerDiv, innerDiv, roomData, showSearch, setShowSearch}}>
+        <SocketContext.Provider value={{socket, setDefaultRoomType, id, myGrade, isClick, update, setUpdate, setIsClick, setAction, roomData, showSearch, setShowSearch}}>
             {
                 showSearch &&
-                <div className="bg-violet-700 bg-opacity-90 z-50 addUser absolute flex items-center justify-center top-0 left-0 w-full h-full">
+                <div className="addUser z-50 absolute flex items-center justify-center top-0 left-0 w-full h-full">
                     <AddUser/>
                 </div>
             }
             {
                 isClick &&
                 <div className="popUp absolute flex items-center justify-center">
-                    <CreateRoom action={action} />
+                    <CreateRoom action={action} defaultValue={defaultRoomType}/>
                 </div>
             }
-            {notif && <Notification message={notif} />}
             <InboxRooms />
-            <div className="chat_main">
-            <RoomHeader />
-                <ChatRoomWindow messagesElements={messagesElements} setNotif={setNotif} />
-                <ChatInput message={message} setMessage={setMessage} sender={sendMessage} />
+            <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
+                <RoomHeader />
+                <ChatWindow id={id} >
+                    {messagesElements.length ? messagesElements : <p>No messages yet</p>}
+                </ChatWindow>
+                <ChatInput message={message} setMessage={setMessage} sender={sendMessage} id={id}/>
             </div>
             <ChatOverview id={id}/>
         </SocketContext.Provider>

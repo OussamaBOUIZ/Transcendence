@@ -11,7 +11,6 @@ import {
 } from "typeorm"
 import {Inbox_user} from "./inbox_user.entity";
 import {User_chat} from "./userchat.entity";
-import { Match_history } from "./match_history.entity";
 import { Stats } from "./stats.entity";
 import {Exclude} from "class-transformer";
 import { Channel } from "./channel.entity";
@@ -80,13 +79,11 @@ export class User extends BaseEntity {
     @JoinColumn()
     stat: Stats
 
-    @OneToMany(() => Match_history, (Match_history) => Match_history.user, {nullable: true})
-    match_history: Match_history[]
-
     @OneToMany(() => User_chat, (user_char) => user_char.author)
     user_chat: User_chat[]
 
     @OneToMany(() => Inbox_user, (inbox_user) => inbox_user.user)
+    @JoinColumn()
     inbox_users: Inbox_user[]
 
     @ManyToMany(() => Channel, (channel) => channel.channelUsers , {nullable: true})

@@ -1,29 +1,33 @@
 import React, { useContext } from 'react';
-import { SocketContext } from './ChatRooms';
+import InboxContext from '../../Context/InboxContext';
 
 
-export default function ChatInput({message, setMessage, sender}: {message: string, setMessage: React.Dispatch<React.SetStateAction<string>>, sender: React.FormEventHandler<HTMLElement>}) {
-    const {id, isBanned} = useContext(SocketContext)
+export default function ChatInput({message, setMessage, sender, id}: {message: string, setMessage: React.Dispatch<React.SetStateAction<string>>, sender: React.FormEventHandler<HTMLElement>, id:string | undefined}) {
+    const {isBanned} = useContext(InboxContext)
     const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.key === 'Enter') sender(event)
     }
 
-    if (!id) {
-        return (
-            <form className="chat_input" onSubmit={sender}></form>
-        )
-    }
+    if (!id)
+        return null
 
     return (
-        <form className="chat_input" onSubmit={sender}>
+        <form className="chat_input px-4" onSubmit={sender}>
             <textarea
+                autoFocus
                 placeholder={`${isBanned ? 'You have been banned from this channel' : 'Type something'}`}
                 className={`overflow-hidden resize-none ${isBanned ? 'cursor-not-allowed pointer-events-none' : ''}`}
                 onKeyDown={handleEnter}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
             />
-            <button className={`bg-primary-pink ${isBanned ? 'cursor-not-allowed pointer-events-none' : ''}`} type="submit">Send</button>
+            <button
+                className={`bg-primary-pink ${isBanned ? 'cursor-not-allowed pointer-events-none' : ''}`}
+                type="submit"
+                disabled={isBanned || !message.trim()}
+            >
+                Send
+            </button>
         </form>
     )
 }

@@ -1,21 +1,60 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ChannelInfo from './ChannelInfo';
+import { useLocation } from 'react-router';
+import ContactDetail from './ContactDetail';
+import { User } from '../../../global/Interfaces';
+import UserContext from '../../Context/UserContext';
 
-export default function ChatOverview({id}: {id: string | undefined}) {
+function CustomField ({content}: {content: string}) {
+    return (
+        <div className='flex justify-center items-center w-full h-full px-2 text-center'>
+        <p className='text-neutral-400 w-2/3'>
+            {content}
+        </p>
+    </div>
+    )
+}
 
-    const guidingText = "As channels come alive this box will \
+export default function ChatOverview({oview, id}: {oview?: User, id: string | undefined}) {
+
+    const {show} = useContext(UserContext)
+
+    const roomGuideText = "As channels come alive this box will \
     soon be filled with fellow members. Engage in captivating conversations, share\
     experiences, and foster \
     connections with\
     like-minded individuals\
     ";
 
-    const customField = <div className='flex justify-center items-center w-full h-full px-2 text-center'><p>{guidingText}</p></div>
+    const dmGuideText = "As Chat come alive this box will \
+    soon be filled with fellow members. Engage in captivating conversations, share\
+    experiences, and foster \
+    connections with\
+    like-minded individuals\
+    ";
+
+       
+    const {pathname} = useLocation();
+
+    let val;
+
+    const chatRegex = /^\/chat(\/)?(\d+)?$/;
+    const chatRoomsRegex = /^\/chat\/rooms(\/)?(\d+)?$/; 
+    
+    switch (true) {
+      case chatRegex.test(pathname):
+        val = (id) ? <ContactDetail title="Contact details" oview={oview} /> : <CustomField content={dmGuideText}/>;
+        break;
+      case chatRoomsRegex.test(pathname):
+        val = (id) ? <ChannelInfo /> : <CustomField content={roomGuideText}/>;
+        break;
+    }
+    
+
 
     return (
-        <div className="chat_overview overflow-hidden">
-            {!id && customField}
-            {id && <ChannelInfo />}
+        <div className={`chat_overview overflow-hidden ${show === 'overview' ? 'on' : 'off'}`}>
+            {val}
         </div>
     );
 }

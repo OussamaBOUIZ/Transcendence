@@ -1,0 +1,158 @@
+[
+  {
+  "id": 1,
+  "user": {
+  "id": 1,
+  "username": "john"
+  },
+  "lastMessage": "Hello!",
+  "CreatedAt": "2022-01-01T12:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/1.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 2,
+  "user": {
+  "id": 2,
+  "username": "jane"
+  },
+  "lastMessage": "Hi!",
+  "unseenMessages": 3,
+  "CreatedAt": "2022-01-02T10:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/2.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 3,
+  "user": {
+  "id": 3,
+  "username": "mike"
+  },
+  "lastMessage": "What's up?",
+  "userName": "michael",
+  "CreatedAt": "2022-01-03T08:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/3.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 4,
+  "user": {
+  "id": 4,
+  "username": "lisa"
+  },
+  "lastMessage": "How are you?",
+  "CreatedAt": "2022-01-04T16:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/4.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 5,
+  "user": {
+  "id": 5,
+  "username": "sarah"
+  },
+  "lastMessage": "Hello there!",
+  "CreatedAt": "2022-01-05T14:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/women/5.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 6,
+  "user": {
+  "id": 6,
+  "username": "jack"
+  },
+  "lastMessage": "What's new?",
+  "CreatedAt": "2022-01-06T20:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/men/6.jpg"
+  },
+  {
+  "id": 7,
+  "user": {
+  "id": 7,
+  "username": "anna"
+  },
+  "lastMessage": "Good morning!",
+  "CreatedAt": "2022-01-07T08:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/women/7.jpg"
+  },
+  {
+  "id": 8,
+  "user": {
+  "id": 8,
+  "username": "daniel"
+  },
+  "lastMessage": "Talk soon!",
+  "CreatedAt": "2022-01-08T18:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/men/8.jpg"
+  },
+  {
+  "id": 9,
+  "user": {
+  "id": 9,
+  "username": "william"
+  },
+  "lastMessage": "Catch up later!",
+  "CreatedAt": "2022-01-09T22:00:00Z",
+  "online": false,
+  "image": "https://randomuser.me/api/portraits/men/9.jpg",
+  "unseenMessages": 1
+  },
+  {
+  "id": 10,
+  "user": {
+  "id": 10,
+  "username": "emma"
+  },
+  "lastMessage": "Have a good day!",
+  "CreatedAt": "2022-01-10T12:00:00Z",
+  "online": true,
+  "image": "https://randomuser.me/api/portraits/women/10.jpg",
+  "unseenMessages": 1
+  },
+      {
+        "id": 13,
+        "user": {
+          "id": 13,
+          "username": "mary"
+        },
+        "lastMessage": "See you later!",
+        "CreatedAt": "2022-01-13T18:00:00Z",
+        "online": true,
+        "image": "https://randomuser.me/api/portraits/women/13.jpg",  
+        "unseenMessages": 1
+      },
+      {
+        "id": 14,
+        "user": {
+          "id": 14,
+          "username": "jack"
+        },
+        "lastMessage": "Don't forget about our meeting",
+        "CreatedAt": "2022-01-14T16:00:00Z",
+        "online": false,
+        "image": "https://randomuser.me/api/portraits/men/14.jpg",
+        "unseenMessages": 7    
+      },
+      {
+        "id": 15,
+        "user": {
+          "id": 15,
+          "username": "jessica"
+        },
+        "lastMessage": "Are we still on for dinner?",
+        "CreatedAt": "2022-01-15T20:00:00Z",
+        "online": true,
+        "image": "https://randomuser.me/api/portraits/women/15.jpg",
+        "unseenMessages": 10
+      }
+]
+

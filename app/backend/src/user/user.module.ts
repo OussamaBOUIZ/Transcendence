@@ -8,10 +8,10 @@ import { Achievement } from 'src/databases/achievement/achievement.entity';
 import {Stats} from "../databases/stats.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import { BlockedTokenList } from 'src/databases/BlockedTokenList/BlockedTokenList.entity';
-import {Match_history} from "../databases/match_history.entity";
+import { Game } from 'src/databases/game.entity';
  
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Achievement, Stats, Match_history, BlockedTokenList])],
+  imports: [TypeOrmModule.forFeature([User, Achievement, Stats, BlockedTokenList, Game])],
   controllers: [UserController],
   providers: [UserService, JwtService, BlockedTokenlistService]
 })

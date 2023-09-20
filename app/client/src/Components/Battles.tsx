@@ -1,26 +1,32 @@
-import Character from "../Assets/character.png"
+import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default function Battles() {
+
+    const battles = [
+        {id: 'BlazingPong', link: '/game/BlazingPong', style: 'text-2xl sm:text-3xl md:text-2xl lg:text-3xl', value: 'Blazing Pong'},
+        {id: 'ArcticPong', link: '/game/ArcticPong', style: 'text-2xl sm:text-3xl md:text-2xl lg:text-3xl', value: 'Arctic Pong'},
+        {id: 'RetroPong', link: '/game/RetroPong', style: 'text-2xl sm:text-3xl md:text-2xl lg:text-3xl', value: 'Retro Pong'},
+    ]
+
+    const battlesElements = battles.map(battle => {
+        return (
+            <NavLink key={battle.id} to={battle.link} className={`item ${battle.id}`}>
+                <span className={battle.style}>{battle.value}</span>
+            </NavLink>
+        )
+    })
     return (
         <>
             <div className="item battleRoyal">
-                <div className="cover"></div>
-                <img src={Character} alt="" />
-                <div className="BattleRoyalCover" >
-                    <span>Battle Royal</span>
-                    <p>Play the game and get extra coins in our Battle Royal</p>
-                    <button className='PlayButton' ><span>Play</span></button>
+                <div className='box absolute top-0 w-1/2 h-full'></div>
+                <div className="BattleRoyalCover w-3/4" >
+                    <span className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl">Battle Royal</span>
+                    <p className="mt-0 font-light sm:text-xs md:text-base lg:text-lg">Play the game and get extra coins in our Battle Royal</p>
+                    <NavLink to="/game/BattleRoyal"><button className='PlayButton px-14 py-2 lg:px-16 lg:py-2 md:px-14 md:py-2' ><span>Play</span></button></NavLink>
                 </div>
             </div>
-            <div className="item theBeast">
-                <span>TheBeast</span>
-            </div>
-            <div className="item SpiderGround">
-                <span>SpiderGround</span>
-            </div>
-            <div className="item BrightGround">
-                <span>BrightGround</span>
-            </div>
+            {battlesElements}
         </>
     )
 }

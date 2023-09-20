@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString} from 'class-validator';
+import { IsNotEmpty, IsString, isNumber} from 'class-validator';
 
 export class newUserDto {
     
@@ -9,6 +9,7 @@ export class newUserDto {
     @IsNotEmpty()
     public channelNewUser: number
     
+    @IsNotEmpty()
     @IsString()
     public providedPass: string
 }

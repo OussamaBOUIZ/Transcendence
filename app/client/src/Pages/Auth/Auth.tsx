@@ -1,8 +1,9 @@
 import "../../scss/auth.scss";
 import axios from "axios"
-import React, {useState} from "react"
+import React, {useContext, useState} from "react"
 import Notification from "../../Components/Notification"
 import { useFetchQRcode } from "../../Hooks/useFetchQRcode"
+import UserContext from "../../Context/UserContext";
 
 interface Inputs {
     [id: number]: string;
@@ -18,9 +19,7 @@ interface Inputs {
 export default function Auth() {
 
     const [notif, setNotif] = useState<string>("")
-
     const QRcode = useFetchQRcode();
-
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
 
@@ -44,8 +43,11 @@ export default function Auth() {
                     const collected = {
                         token: collectedCode,
                     }
+                    console.log('token: ', collected);
                     await axios.post("/api/user/2fa/login", collected);
-                    window.location.replace('/home');
+                    console.log('here bro');
+                    
+                    window.location.replace('/');
                 } catch (error) {
                     console.log(error);
                 }
@@ -89,15 +91,14 @@ export default function Auth() {
     <>
         {notif && <Notification message={notif} />}
         <div className="verify-container" >
-            <div className="verification">
-                <div className="title">
-                    <p>Authenticate your account</p>
-                    <p><span>To get the token, scan the QR code below</span></p>
-                    <p><span>or submit a token if you already have one</span></p>
+            <div className="verification p-10 lg:p-14">
+                <div className="title text-center">
+                    <p className="text- text-base sm:text-xl md:text-2xl xl:text-3xl">Authenticate your account</p>
+                    <p><span className="text-xs sm:text-xs md:text-sm">To get the token, you must scan the QR code below</span></p>
                 </div>
                 <div className="qr-code-container">
                     <img src={QRcode} alt="qr-code" />
-                    <div className="inputs">
+                    <div className="inputs flex justify-center flex-wrap">
                         {inputs}
                     </div>
                 </div>

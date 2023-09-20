@@ -1,14 +1,20 @@
 
+import { Transform, Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { trim } from 'src/interfaces/interfaces';
 
 export class channelMessageDto {
     
-    @IsNotEmpty()
     @IsString()
-    public message: string
+	@IsNotEmpty()
+	@Type(() => String)
+	@Transform(({value}) => trim(value))
+    message: string
 
-    @IsNotEmpty()
     @IsString()
+	@IsNotEmpty()
+	@Type(() => String)
+	@Transform(({value}) => trim(value))
     public channelName: string
 
     @IsNotEmpty()
@@ -18,8 +24,4 @@ export class channelMessageDto {
     @IsNotEmpty()
     @IsString()
     public username: string
-
-    @IsNotEmpty()
-    @IsString()
-    public image: string
 }

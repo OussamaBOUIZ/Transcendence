@@ -1,6 +1,6 @@
 import RankContent from "./rankContent";
 import {nanoid} from 'nanoid'
-import {Leaders} from "../../../global/Interfaces"
+import {Leaders} from "../../global/Interfaces"
 import React from "react"
 import bg from "../Assets/ice-bg.jpg"
 
@@ -10,7 +10,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
         return (
             <div className="item Leaderboard">
                 <img src={bg} alt="" />
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center text-center">
                     <p>There is not currently enough data</p>
                 </div>
             </div>
@@ -25,7 +25,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
 
     const ThreeUsers = users.map(user => {
         return (
-            <div className={`rank rank${user.rank}`} >
+            <div key={user.id} className={`rank rank${user.rank}`} >
                 <RankContent
                 key={user.id}
                 userData={user.userData}
@@ -38,7 +38,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
     return (
         <div className="item Leaderboard">
             <img src={bg} alt="" />
-            <div className="w-full h-full">
+            <div className="w-full h-full flex flex-col justify-between">
                 <p>Leaderboard</p>
                 <div className="board">
                     {ThreeUsers}

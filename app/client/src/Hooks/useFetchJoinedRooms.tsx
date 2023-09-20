@@ -1,7 +1,7 @@
 import {useContext, useState, useEffect} from "react"
 import axios, {AxiosResponse} from "axios"
 import UserContext from "../Context/UserContext"
-import {rooms} from "../../../global/Interfaces"
+import {rooms} from "../../global/Interfaces"
 import { SocketContext } from "../Pages/Chat/ChatRooms"
 
 export function useFetchJoinedRooms() {
@@ -13,10 +13,10 @@ export function useFetchJoinedRooms() {
 
     useEffect(() => {
         try {
-            if (user) {
+            if (user.id) {
                 setTimeout( () => {
                     const getInfo = async () => {
-                        const res: AxiosResponse<rooms[]> = await axios.get(`/api/channel/AllChannels/${user?.id}`);
+                        const res: AxiosResponse<rooms[]> = await axios.get(`/api/channel/AllChannels/${user.id}`);
                         setPublicRooms(res.data.filter((room) => room.channel_type === 'public'));
                         setProtectedRooms(res.data.filter((room) => room.channel_type === 'protected'));
                         setPrivateRooms(res.data.filter((room) => room.channel_type === 'private'));
@@ -29,7 +29,7 @@ export function useFetchJoinedRooms() {
         catch (err) {
             // console.log(err)
         }
-    }, [user, update])
+    }, [user.id, update])
 
     return {publicRooms, protectedRooms, privateRooms};
 }

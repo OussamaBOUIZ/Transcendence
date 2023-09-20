@@ -27,10 +27,10 @@ export class AchievementService {
         map['hot shooter'] = '5 wins in a row';
         map['master shooter'] = '10 wins in a row';
         map['underdog'] = 'beat a player 2 levels higher than you';
-        map['Battle royal winner'] = 'won battle royal ground';
-        map['The beast winner'] = 'won the beast ground';
-        map['spider winner'] = 'won the spider ground';
-        map['bright winner'] = 'won the bright ground';
+        map['Battle Royal winner'] = 'won Battle Royal ground';
+        map['Blazing Pong winner'] = 'won Blazing Pong ground';
+        map['Arctic Pong winner'] = 'won the Arctic Pong ground';
+        map['Retro Pong winner'] = 'won the Retro Pong ground';
         map['the goat'] = 'the best player in the world';
     }
     async createAchievements(user: User)
@@ -55,39 +55,64 @@ export class AchievementService {
             await this.achieveRepo.save(newAchievement);       
         }
     }
-    async unlockAchievement(badge_name: string)
+    async unlockAchievement(badge_name: string, userId: number)
     {
         const achievement = await this.achieveRepo.findOne({
             where: {
                 badge_name: badge_name,
+                user_id: userId
             }
         });
-        achievement.is_achieved === true;
+        achievement.is_achieved = true;
         await this.achieveRepo.save(achievement);
     }
-    async setUnderdogAchievement()
+    async setUnderdogAchievement(userId: number)
     {
-        await this.unlockAchievement('underdog');
+        await this.unlockAchievement('underdog', userId);
     }
-    async setLevelAchievement(oldlevel: number, level: number)
+    async setShooterAchievement(consecutive_wins: number, userId: number)
+    {
+        switch (consecutive_wins) {
+            case 5:
+                await this.unlockAchievement('hot shooter', userId);
+                break;
+            case 10:
+                await this.unlockAchievement('master shooter', userId);
+                break;
+        }
+    }
+    async setLevelAchievement(oldlevel: number, level: number, userId: number)
     {
         if(oldlevel === level) return ;
-        if(level === 5)
-            await this.unlockAchievement('Pong veteran');
-        else if(level === 15)
-            await this.unlockAchievement('Pong pro');
-        else if(level === 25)
-            await this.unlockAchievement('Pong master');
+        switch (level) {
+            case 5:
+                await this.unlockAchievement('Pong veteran', userId);
+                break;
+            case 15:
+                await this.unlockAchievement('Pong pro', userId);
+                break;
+            case 25:
+                await this.unlockAchievement('Pong master', userId);
+                break;
+        }
     }
-    async setGameAchievement(gameType: string)
-    {
-        if(gameType === 'Battle royal')
-            await this.unlockAchievement('Battle royal winner');
-        else if(gameType === 'The beast')
-            await this.unlockAchievement('The beast winner');
-        else if(gameType === 'bright')
-            await this.unlockAchievement('bright winner');
-        else if(gameType === 'spider')
-            await this.unlockAchievement('spider winner');
+    async setGameAchievement(gameType: string, userId: number, wins: number)
+    {        
+        if(wins == 0)
+            await this.unlockAchievement('Pong win', userId);
+        switch (gameType) {
+            case 'Battle royal':
+                await this.unlockAchievement('Battle royal winner', userId);
+                break;
+            case 'Blazing Pong':
+                await this.unlockAchievement('Blazing Pong winner', userId);
+                break;
+            case 'Arctic Pong':
+                await this.unlockAchievement('Arctic Pong winner', userId);
+                break;
+            case 'Retro Pong':
+                await this.unlockAchievement('Retro Pong winner', userId);
+                break;
+        }
     }
 }

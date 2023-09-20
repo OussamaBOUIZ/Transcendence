@@ -7,8 +7,7 @@ export class Inbox_user extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
-    @OneToOne(type => User)
-    @JoinColumn()
+    @ManyToOne(() => User, (user) => user.inbox_users)
     author: User
 
     @Column()
@@ -24,3 +23,9 @@ export class Inbox_user extends BaseEntity {
     user: User
 }
 
+
+/*
+    const inboxes = await this.InboxRepo.find({
+        where: {userId: 3}
+    })
+*/

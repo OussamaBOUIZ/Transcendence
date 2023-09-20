@@ -1,31 +1,24 @@
-import React, {useEffect, useContext} from 'react'
-import {Outlet} from 'react-router-dom'
-import axios from 'axios'
+import React, {useContext} from 'react'
+import {Navigate, Outlet} from 'react-router-dom'
 import UserContext from '../Context/UserContext'
+import Loading from '../Pages/Loading'
+import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
+import Notification from '../Components/Notification'
 
 export default function AuthRequired () {
+
+    const {authenticated, isLoading, isAnimationFinished, setIsAnimationFinished, notif, setNotif, invitation, setInvitation} = useContext(UserContext)
+    console.log('here');
+    useEffectOnUpdate(() => {setNotif(""); setInvitation(undefined); setIsAnimationFinished(false); console.log('again');}, [isAnimationFinished])
     
-    const {authenticated, setAuthenticated} = useContext(UserContext)
-
-    useEffect(() => { 
-        
-        const verifyAuthentication = async () => {
-            
-            try {
-                const response = await axios.get<boolean>("/api/auth/tokenValidity");
-                setAuthenticated(response.data)
-            }
-            catch (error) {
-                console.log(error)
-                setAuthenticated(error.response.data)
-            }
-
-        }
-        void verifyAuthentication();
-    }, [authenticated])
-
-    
-    // if (!authenticated)
-    //     return <Navigate to="/sign" />
-    return <Outlet />
+    if (isLoading)
+        return <Loading />
+    if (!authenticated)
+        return <Navigate to="/sign" />
+    return (
+        <>
+            {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />}
+            <Outlet />
+        </>
+    )
 }

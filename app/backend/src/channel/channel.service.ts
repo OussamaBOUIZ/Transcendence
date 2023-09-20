@@ -56,62 +56,55 @@ export class ChannelService {
         if(!channelFound)
         {
             const newChannel = new Channel();
+            if(channelData.channelName.length === 0)
+                return 'channel name must be set';
+            if(channelData.channelName.length > 12)
+                return 'channel name is too large';
             newChannel.channel_name = channelData.channelName;
+            if(channelData.channelType.length === 0)
+                return 'channel type must be set';
             newChannel.channel_type = channelData.channelType;
+            if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
+                return 'password must be set';
+            if(channelData.channelType === 'protected' && channelData.channelPassword.length > 16)
+                return 'channel password is too large';
             if(newChannel.channel_type === 'protected')
                 newChannel.channel_password = await argon.hash(channelData.channelPassword);
             const userFound = await this.userService.findUserById(channelData.channelOwner);
             newChannel.channelOwners = [userFound];
             await this.channelRepo.save(newChannel);
         }
+        else
+            return 'channel already created';
     }
     async channelUpdate(channelData: channelDto)
     {
+        console.log('channel data: ', channelData);
         const channelFound = await this.channelRepo.findOne({
-            where: {channel_name: channelData.prevChannelName},
+            where: {id: channelData.channelId},
             relations: {
                 channelOwners: true,
             }
         });
+        if(channelData.channelName.length === 0)
+            return 'channel name must be set';
+        if(channelData.channelName.length > 12)
+            return 'channel name is too large';
         channelFound.channel_name = channelData.channelName;
+        if(channelData.channelType.length === 0)
+            return 'channel type must be set';
         channelFound.channel_type = channelData.channelType;
+        if(channelData.channelType === 'protected' && channelData.channelPassword.length === 0)
+            return 'password must be set';
+        if(channelData.channelType === 'protected' && channelData.channelPassword.length > 16)
+            return 'channel password is too large';
         if(channelFound.channel_type === 'protected')
             channelFound.channel_password = await argon.hash(channelData.channelPassword);
         await this.channelRepo.save(channelFound);
     }
 
-    async addToChannel(newUser: newUserDto)
-    {
-        const channelFound = await this.channelRepo.findOneBy({channel_name: newUser.channelName});
-        if(channelFound.channel_type === 'public')
-        {
-            const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
-            [...channelFound.channelUsers, user] : [user];
-        }
-        if(channelFound.channel_type === 'protected')
-        {
-            if(!(await argon.verify(channelFound.channel_password, newUser.providedPass)))
-                return 'provided password is incorrect'
-            const user = await this.userService.findUserById(newUser.channelNewUser);
-            channelFound.channelUsers = channelFound.channelUsers !== null && channelFound.channelUsers !== undefined ?
-            [...channelFound.channelUsers, user] : [user];
-        }
-        await this.channelRepo.save(channelFound);
-        return await this.channelRepo.find({
-            relations: {
-                messages: true
-            },
-            where: {
-                channel_name: newUser.channelName
-            },
-            take: 30
-        });
-    }
-
     async getLatestMessages(channelId: number, userId: number)
     {
-        console.log(userId)
         const user = await this.userService.findUserWithBanned(userId);
         if(user.userBannedChannels.some(channel => channel.id === channelId))
             return [];
@@ -147,6 +140,8 @@ export class ChannelService {
     {
         const channelFound = await this.findChannelBannedMembers(banUser.channelName);
         const user = await this.userService.findUserById(banUser.userId);
+        if(channelFound.BannedUsers !== null && channelFound.BannedUsers.some(user => user.id === user.id))
+            return ;
         channelFound.BannedUsers = channelFound.BannedUsers !== null ? [...channelFound.BannedUsers, user] : [user];
         await this.channelRepo.save(channelFound);
     }
@@ -159,15 +154,18 @@ export class ChannelService {
                 channelAdmins: true,
                 channelOwners: true,
                 channelUsers: true,
+                BannedUsers: true
             },
         });
-        if(channel.channelUsers && channel.channelUsers.some(user => user.id === userId))
+        if(channel.BannedUsers !== null && channel.BannedUsers.some(user => user.id === userId))
+            return 'user is banned';
+        if(channel.channelUsers !== null && channel.channelUsers.some(user => user.id === userId))
         {
             channel.channelUsers = channel.channelUsers.filter((currentUser) => currentUser.id !== user.id);
             channel.channelAdmins = channel.channelAdmins !== null && channel.channelAdmins !== undefined ?
                                     [...channel.channelAdmins, user] : [user]; 
         }
-        else if(channel.channelAdmins && channel.channelAdmins.some(user => user.id === userId))
+        else if(channel.channelAdmins !== null && channel.channelAdmins.some(user => user.id === userId))
         {
             channel.channelAdmins = channel.channelAdmins.filter((currentUser) => currentUser.id !== user.id);
             channel.channelOwners = channel.channelOwners !== null && channel.channelOwners !== undefined ?
@@ -286,6 +284,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -295,6 +294,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -304,6 +304,7 @@ export class ChannelService {
                     id: true,
                     firstname: true,
                     lastname: true,
+                    username: true,
                     stat: {
                         wins: true,
                         losses: true,
@@ -373,7 +374,6 @@ export class ChannelService {
             where: {channel_name: channelData.channelName},
         });
         const checkPassword = await argon.verify(channel.channel_password, channelData.channelPassword);
-        console.log(checkPassword);
         if(!checkPassword)
             return false;
         return true;

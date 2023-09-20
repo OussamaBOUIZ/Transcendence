@@ -16,6 +16,7 @@ export default function userName({username, handleChange, handleSubmit} : typePr
         <p className="text-3xl lg:text-5xl md:text-4xl">Enter User Name</p>
         <div className="inputs">
             <input
+              autoFocus
               placeholder="User Name"
               type="text"
               name="username"

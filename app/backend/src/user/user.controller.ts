@@ -12,13 +12,12 @@ import {
 	UseInterceptors,
 	Post, Req, Res, HttpStatus,
 	UploadedFile, Body, Patch, HttpCode, Query,
-	HttpException, ParseFilePipe, 
-    UseFilters,
-    Logger,
-    UsePipes,
-    ValidationPipe,
-    NotFoundException,
-    Put,
+	HttpException, ParseFilePipe,
+	UseFilters,
+	Logger,
+	UsePipes,
+	ValidationPipe,
+	NotFoundException, Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -27,7 +26,6 @@ import { createReadStream, promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { JwtGuard } from "../auth/jwt/jwtGuard";
 import { JwtService } from '@nestjs/jwt';
-import { Match_history } from "../databases/match_history.entity";
 import { BlockedTokenlistService } from 'src/databases/BlockedTokenList/BlockedTokenList.service';
 import { StatsDto } from './dto/stats-dto';
 import { GameHistoryDto } from './game-history-dto/game-history-dto';
@@ -36,11 +34,13 @@ import { diskStorage } from 'multer'
 import { extname } from 'path';
 import { access, unlink } from 'fs/promises';
 
-import { userDataDto } from './dto/userDataDto';
+import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
 import { promises } from 'dns';
 import { plainToClass, plainToInstance } from 'class-transformer';
-// import { PlayerData} from "../../../global/Interfaces"
+import { log } from 'console';
+import { Game } from 'src/databases/game.entity';
+// import { User} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
@@ -73,30 +73,30 @@ const multerConfig = () => ({
 	})
 })
 
-// const updateMuliterConfig = () => ({
-// 	storage: diskStorage({
-// 		destination: DirUpload,
-// 		filename: async (req: any, file: any, cb: any) => {
-//             console.log('111');
+const updateMuliterConfig = () => ({
+	storage: diskStorage({
+		destination: DirUpload,
+		filename: async (req: any, file: any, cb: any) => {
+            console.log('111');
             
-// 			const supportedExt = ['.png', '.jpeg', '.jpg']
-// 			if (isNaN(parseInt(req.params['userId'], 10)))
-// 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
+			const supportedExt = ['.png', '.jpeg', '.jpg']
+			if (isNaN(parseInt(req.params['userId'], 10)))
+				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
-// 			if (!supportedExt.includes(extname(file.originalname)))
-// 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
-// 			const extention = path.parse(file.originalname).ext
-// 			const filename = req.params['userId'] + extention
-// 			// try {
-// 				cb(null, filename)
-// 			// }
-// 			// catch (e) {
-// 				// cb(null, filename)
-// 			// }
-// 		}
-// 	})
-// })
-
+			if (!supportedExt.includes(extname(file.originalname)))
+				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
+			const extention = path.parse(file.originalname).ext
+			const filename = req.params['userId'] + extention
+			// try {
+				cb(null, filename)
+			// }
+			// catch (e) {
+				// cb(null, filename)
+			// }
+		}
+	})
+})
+ 
 @Controller('user')
 @UseGuards(JwtGuard)
 export class UserController {
@@ -104,19 +104,36 @@ export class UserController {
         , private readonly jwt: JwtService
         , private readonly BlockedTokenService: BlockedTokenlistService) {}
 
+    @Put('updateStatus')
+    async updateUserStatus(@Req() req, @Body() body: statusDto) {
+        console.log(body.status);
+        
+        const userEmail = req.user.email
+        const user = await this.userService.findUserByEmail(userEmail)
+        if (!user)
+            throw new NotFoundException('user not exist')
+        user.status = body.status
+        await this.userService.saveUser(user)
+    }
+    
     @Get()
     @UseGuards(JwtGuard)
     // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
-        const userData = {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            username: user.username,
-        };
-        return userData;
+        if (!user)
+            throw new NotFoundException('User not Found')
+        return await this.getUserDetails(user.id)
+    }   
+
+    @Get('online/users')
+    async getOnlineUsers(@Req() req) {
+
+        const user = await this.userService.findUserByEmail(req.user.email)
+        if (!user)
+            throw new NotFoundException('user not found')
+        return await this.userService.onlineUsers(user.id)
     }
 
     @Post('/:userId/upload')
@@ -129,26 +146,29 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	) {
+        
+        
 	    await this.userService.saveUserAvatarPath(id, image.path)
         return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
 	}
 
-    // @Put('/:userId/avatar/')
-	// @UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
-	// async updateAvatar(
-	// 	@Param('userId', ParseIntPipe) id: number,
-	// 	@UploadedFile(new ParseFilePipe({
-	// 		fileIsRequired: true
-	// 	})) image: Express.Multer.File,
-	// 	@Res() res: Response
-	// ) {
-	// 	const user = await this.userService.saveUserAvatarPath(id, image.path)
-	// 	if (!user) {
-	// 		await unlink(image.path)
-	// 		throw new NotFoundException('The User Not Found')
-	// 	}
-	// 	return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
-	// }
+    @Put('/:userId/avatar/')
+	@UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
+	async updateAvatar(
+		@Param('userId', ParseIntPipe) id: number,
+		@UploadedFile(new ParseFilePipe({
+			fileIsRequired: false
+		})) image: Express.Multer.File,
+		@Res() res: Response
+	) {
+        console.log('inside upload');
+		const user = await this.userService.saveUserAvatarPath(id, image.path)
+		if (!user) {
+			await unlink(image.path)
+			throw new NotFoundException('The User Not Found')
+		}
+		return res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+	}
 
     @Delete('delete/:id')
     async deleteUser(@Param('id') userId: number) // return success
@@ -192,40 +212,20 @@ export class UserController {
     @Post('block/:userId')
     async blockUser(
         @Param('userId', ParseIntPipe) userId: number,
-        @Req() req: Request,
+        @Req() req,
         @Res() res: Response
     ) {
-        console.log('aaa');
         
-        await this.userService.blockUser(userId, req.user['email'])
-        return res.status(HttpStatus.OK).send('the user blocked ')
+        const ret = await this.userService.blockUser(userId, req.user.email)
+        if(typeof ret === 'string')
+            return res.status(HttpStatus.OK).send(ret); 
+        return res.status(HttpStatus.OK).send('');
     }
 
-    @Get()
-    async getUserFromJwt(@Req() req: Request)
-    {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token'] || req.headers.authorization)
-        if (!user)
-            throw new UnauthorizedException()
-        return {
-            id: user.id,
-            username: user.username,
-        }
-    }
-
-
-    // @Post('/:userId/uploadImage')
-    // uploadImage(
-    //     @Param('userId', ParseIntPipe) id: number,
-    //     @UploadedFile() image
-    // ) {
-    //
-    // }
 	@Get('avatar/:id')
 	@Header('Content-Type', 'image/jpg')
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
-
 		if (!user)
 			throw new HttpException('User Not Found !!', HttpStatus.NOT_FOUND)
 		const imagePath = user.avatar
@@ -240,7 +240,6 @@ export class UserController {
 			const fileContent = createReadStream(defaultPath)
 			return new StreamableFile(fileContent);
 		}
-
 	}
     @Get('stats/:userId')
     async getStatsById( @Param('userId', ParseIntPipe) id: number) {
@@ -256,6 +255,7 @@ export class UserController {
     @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
+        // HAHAHAHAHAHAHA
         const filename = id % 14 !== 0 ? (id % 14) + '.jpg' : 14 + '.jpg'
         const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
@@ -285,8 +285,8 @@ export class UserController {
     }
 
     @Get('game/history/:userId')
-    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) : Promise<Match_history[]> {
-        return await this.userService.getMatchHistory(userId)
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) {
+        return await this.userService.getGameHistory(userId)
     }
 
     @Get('2fa/turn-on/:id')
@@ -313,6 +313,17 @@ export class UserController {
         return res.status(200).send('two factor was turned off')
     }
 
+    @Get('2fa/isTurnedOn/:id')
+    @UseGuards(JwtGuard)
+    async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
+    {
+        const user = await this.userService.findUserById(id);
+        if(await this.userService.userHasAuth(user) === true)
+            return res.status(200).send(true);
+        else
+            return res.status(200).send(false);
+    }
+    
     @Post('2fa/login/')
     @UseGuards(JwtGuard)
     async login2fa(@Req() req: Request, @Res() res: Response)
@@ -326,6 +337,25 @@ export class UserController {
         if(!isCodeValid)
             return res.status(400).send('two factor token is invalid');
         return res.status(200).send('correct two factor token');
+    }
+
+    @Put('setUserNames/:id')
+    @UseGuards(JwtGuard)
+    async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
+    @Param('id', ParseIntPipe) id: number)
+    {
+        console.log('data is: ', userData);
+            const user = await this.userService.findUserById(id);
+            user.firstname = userData.firstname;
+            user.lastname = userData.lastname;
+            try {
+                user.username = userData.username;
+                await this.userService.saveUser(user);
+            }
+            catch {
+                return res.status(200).send('nickname already exists');
+            }
+            return res.status(200).send('');
     }
 
     @Post('setUserData/:id')
@@ -352,6 +382,7 @@ export class UserController {
                 return res.status(400).send('nickname is already used');
             }
         }
+        console.log('user is: ', user);
         return res.status(201).send('data was set succesfully');
     }
     @Get('isFirstLog')
@@ -368,7 +399,7 @@ export class UserController {
         const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
-        const till = payload.iat + 86400;
+        const till = payload.iat + 259200;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
@@ -376,19 +407,19 @@ export class UserController {
     }
 
     @Patch('stat/add')
-	async addUserStat(@Query() statDto: StatsDto, @Req() req: Request) {
-		await this.userService.addUserStat(statDto, req.user)
+	async addUserStat(@Query() statDto: StatsDto, @Req() req) {
+		await this.userService.addUserStat(statDto, req.user) 
 	}
 
-	@Post('gameHistory/add')
-	@HttpCode(HttpStatus.CREATED)
-	async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
-		console.log(gameHistoryDto)
-		await this.userService.addGameHistory(gameHistoryDto)
-		return {
-			Message: "The content is created"
-		}
-	}
+	// @Post('gameHistory/add')
+	// @HttpCode(HttpStatus.CREATED)
+	// async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
+	// 	console.log(gameHistoryDto)
+	// 	await this.userService.addGameHistory(gameHistoryDto)
+	// 	return {
+	// 		Message: "The content is created"
+	// 	}
+	// }
 
     // @UsePipes(new ValidationPipe({
 	// 	transform: true,
@@ -398,8 +429,10 @@ export class UserController {
 		@Query() dto: searchDto,
 	) {
 		const { username } = dto
-		Logger.log(username)
-		return this.userService.searchUser(username)
+		const user = await this.userService.searchUser(username)
+        if (!user)
+            throw new NotFoundException('User not found')
+        return user
 	}
 
     @Get('user/details/:id')
@@ -409,6 +442,7 @@ export class UserController {
 
     @Get('user/profile/:username')
     async getUserProfile(@Param('username') username: string) {
-        return this.userService.getUserProfile(username)
+        const user = await this.userService.getUserProfile(username)
+        return user
     }
 }

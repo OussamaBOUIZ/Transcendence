@@ -1,6 +1,6 @@
+import React from "react"
 
-
-export default function StarRank( { RankNumber, color }) {
+export default function StarRank( { RankNumber, color }: {RankNumber: number, color: string}) {
 
     const Star = <svg xmlns="http://www.w3.org/2000/svg" width="43" height="42" viewBox="0 0 43 42" fill="none">
     <g filter="url(#filter0_d_240_120)">

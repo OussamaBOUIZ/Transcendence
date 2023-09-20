@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
     
-export default function useEffectOnUpdate (effectFunc, deps:any[]) {
+export default function useEffectOnUpdate (effectFunc: any, deps:any[]) {
     const initialRender = useRef(true);
     useEffect(() => {
         if (initialRender.current) {
@@ -8,6 +8,6 @@ export default function useEffectOnUpdate (effectFunc, deps:any[]) {
             return ;
         }
         deps.map(attribute => {if (!attribute) return ;})
-        effectFunc()
-    }, deps)
+        return effectFunc();
+    }, deps);
 }

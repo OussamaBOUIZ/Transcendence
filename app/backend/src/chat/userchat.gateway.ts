@@ -37,7 +37,7 @@ import { WsExceptionFilter } from "src/Filter/ws.filter";
  */
 
 @UseFilters(WsExceptionFilter)
- @WebSocketGateway(4000, {cors: {
+@WebSocketGateway(4000, {cors: {
 	origin: "http://localhost:5173",
 		credentials: true
 }})
@@ -54,6 +54,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		private readonly configService: ConfigService
 	) {
 		this.logger = new Logger(ChatGateway.name);
+		
 	}
 	
 	@UsePipes(new ValidationPipe({ 
@@ -61,39 +62,91 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}))
 	@SubscribeMessage('SendMessage')
 	async sendMessage(socket: Socket, messageDto: MessageDto) {
-		console.log('onSendMessage')
-		console.log(messageDto)
 		var data: sentMsg
 		try {
 			data = await this.chatGatewayService.processMessage(socket, messageDto)
-			const message: MessageData = {
-				authorId: data.authorId,
-				message: messageDto.message,
-				creationTime: new Date(messageDto?.creationTime)
-			}
-			this.server.to(data.socketId).emit("message", message)
+			// const message: MessageData = {
+			// 	authorId: data.authorId,
+			// 	username: data.username,
+			// 	message: messageDto.message,
+			// 	creationTime: new Date(messageDto?.creationTime),
+			// }
+			this.server.to(data.socketId).emit("message", messageDto)
+			
 		}
 		catch (e) {
-			console.log(e)
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
 		
 	}
+
+	@SubscribeMessage('updateUnseenMessage')
+	async updateUnseenMessage(socket: Socket, peerDto) {
+		const userEmail = socket.data.user.email
+
+		const user = await this.userService.findUserByEmail(userEmail);
+		const peer = await this.userService.findUserById(peerDto)
+
+		if (!user || !peer)
+		{
+			const message = !user ? 'The user not exist' : 'The Peer not exist'
+			throw new WsException(message)
+		}
+
+		const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
+		this.logger.log({inbox})
+		if (!inbox)
+			throw new WsException('there is no prior conversation !')
+		inbox.unseenMessages += 1
+		this.logger.log('here in update', inbox.unseenMessages)
+		
+		await this.inboxService.updateInbox(inbox)
+	}
+
+	@SubscribeMessage('messageSeen')
+	async  resetUnseenMessage(socket: Socket, peerDto: number) {
+		const userEmail = socket.data.user.email
+
+		const user = await this.userService.findUserByEmail(userEmail);
+		const peer = await this.userService.findUserById(peerDto)
+
+		if (!user || !peer)
+		{
+			const message = !user ? 'The user not exist' : 'The Peer not exist'
+			throw new WsException(message)
+		}
+
+		 const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
+		if (!inbox)
+			throw new WsException('there is no prior conversation !')
+		inbox.unseenMessages = 0
+		await this.inboxService.updateInbox(inbox)
+	}
  
+	@SubscribeMessage('updateInbox')
+	async onUpdateInbox(socket: Socket, payload: number) {
+
+		// the author is the payload the receiver is who is connected to socket 
+		const author = await this.userService.findUserById(payload)
+		const receiver = socket.data.user.email;
+
+		// check if Two users are in database otherwise emit error
+		
+		const inbox = await this.inboxService.getInboxBySenderId(author, receiver)
+		this.server.to(socket.id).emit('updateInbox', inbox)
+	}
+
 
 	async afterInit(client: Socket) {
-		await client.use(SocketAuthMiddleware(this.userService) as any)
-		console.log('after init called')
+		client.use(SocketAuthMiddleware(this.userService) as any)
 	}
 
 	async handleConnection(client: Socket) {
-		console.log('On Connection');
-		this.logger.log(client.data.user.email) 
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)
-		throw new WsException("the user not found")
+			throw new WsException("the user not found")
 		user.socketId = client.id
 		user.isActive = true
 		await this.userRepository.save(user)
@@ -107,7 +160,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		user.isActive = false
 		await this.userRepository.save(user)
-		this.logger.log('On Disconnect')
 	}
 }
 

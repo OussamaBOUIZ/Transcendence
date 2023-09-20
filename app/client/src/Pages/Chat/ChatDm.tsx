@@ -1,163 +1,111 @@
-import React, {useEffect, useRef, useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import ChatHeader from './ChatHeader';
-import ChatOverview from './ChatOverview';
-import io, {Socket} from 'socket.io-client'
 import UserContext from '../../Context/UserContext';
-import { PlayerData, MessageData } from '../../../../global/Interfaces';
+import { User, MessageData } from '../../../global/Interfaces';
 import MessageBox from '../../Components/MessageBox';
-import axios, {AxiosResponse} from 'axios'
+import axios from 'axios'
 import InboxDm from './InboxDm';
-import ChatDmInit from './ChatDmInit';
+import InboxContext from '../../Context/InboxContext';
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+import { updateInboxBySending, resetUnseenMsgs} from '../../Helpers/chatdm.utils';
+import { fetchChatOverview } from '../../Hooks/useChatOverview';
+import ChatWindow from "./ChatWindow"
+import ChatOverview from './ChatOverview';
+import {scrollLogic} from "./scrollLogic"
+import ChatInput from './chatInput';
 
 export default function ChatDm () {
-    const initialRender = useRef(true)
-    const {id} = useParams()
-    const {user} = useContext(UserContext)
-    const [socket, setSocket] = React.useState<Socket | null>(null)
-    const [messageToSendValue, setMessageToSendValue] = React.useState<string>("");
-    const [messageToSendData, setMessageToSendData] = React.useState<MessageData> ({} as MessageData);
-    const [receivedMessageData, setReceivedMessageData] = React.useState<MessageData>({} as MessageData);
-    const [messagesList, setMessagesList] = React.useState<MessageData[]>([]);
 
-    
-    function handleChange (e: {target: {value: string}} ) {
-        setMessageToSendValue(e.target.value)
-    }
+    const {user, show} = useContext(UserContext)
+    const { id } = useParams();
+    const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
+    const [userOverview, setUserOverview] = React.useState<User>({} as User);
+    const [messageToSendValue, setMessageToSendValue] = useState<string>("");
+    const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
+
+    const messagesElements = messagesList.map((msg, index) => {
+        if (msg.message !== "") {
+            return (
+                <MessageBox key={index}
+                id={msg.authorId !== user?.id}
+                >
+                {msg.message}
+            </MessageBox>
+           )
+        } 
+        return null
+    })
 
     function handleSubmit (e: React.FormEvent<HTMLElement>) {
         e.preventDefault()
-        if (messageToSendValue !== "") {
-            setMessageToSendData({
-                receiverId: Number(id),
+        if (messageToSendValue.trim() !== "") {
+            const sendMsg: MessageData = {
+                receiverId: viewIdRef.current,
+                authorId: user.id,
+                username: user.username,
                 message: messageToSendValue,
-                creationTime : new Date()
-            })
+                creationTime : new Date().toString()
+            }
             setMessageToSendValue("")
-            console.log(messageToSendData);
-            
+            setMessagesList((prevList) => {
+                return [...prevList, sendMsg]
+            })
+            setUpdate(prev => prev + 1)
+            dmSocket?.emit('SendMessage', sendMsg)
+            updateInboxBySending(sendMsg, inboxList, userOverview.image, userOverview.username);
         }
     }
     
+    
     const loadConversation = async ()  => {
         try {
-            const res = await axios.get(`../api/chat/${id}`)
-            console.log('res data', res.data);
-            
+            const res = await axios.get(`/api/chat/${id}`)
             setMessagesList(res.data)
-            
         } catch (error) {
             console.log(error);
         }
     }
 
-
-    
-    /**EFFECTS     */
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
+    useEffectOnUpdate(() => {
+        viewIdRef.current = Number(id)
+        if (id !== undefined) {
+            fetchChatOverview(Number(id), setUserOverview)
+            loadConversation();
+            resetUnseenMsgs(dmSocket, inboxList, setUpdate, Number(id));
         }
-        const value = document.cookie.split('=')[1]
-        const newSocket = io('ws://localhost:4000', {
-            auth: {
-              token: value
-            }}) 
-        
-        setSocket(newSocket)
-
-        // Getting the conversation 
-        loadConversation();
-        // getUserOverview();
-
-        
-        //cleanup function
-        return  () => {
-            if (socket)
-                socket.disconnect();
-        }
-    } 
-    , []) 
-
-    
-    useEffect(() => {
-        if (initialRender.current) {    
-            initialRender.current = false 
-            return
-        }
-        if (messageToSendData.message !== "") {
-            socket?.emit('SendMessage', messageToSendData)
-            setMessagesList((prevList) => [...prevList, {...messageToSendData, authorId: Number(id)}])
-            console.log('emit message', messageToSendData);
-        }
-        
     }
-    , [socket, messageToSendData])
-    
+    , [id])
 
-    useEffect(() => {
-        if (initialRender.current) {    
-            initialRender.current = false 
-            return
-        }
-        
-        socket?.on('message', (recMsg: MessageData) => setReceivedMessageData(recMsg))
-        // console.log('on message', receivedMessageData);
-        
-        setMessagesList((prevList) => [...prevList, receivedMessageData])
+    useEffectOnUpdate(() => {
+        scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
+    }, [messagesList])
 
-    }, [socket, receivedMessageData])
-
-    
-    // useEffect(() => {
-    //     if (initialRender.current) {
-    //         initialRender.current = false
-    //         return
-    //     }
-    //     console.log(messagesList)
-    // }, [messagesList])
-
-    const messagesElements = messagesList.map((msg:MessageData) => {
-        console.log(msg.authorId);
-        
-        if (msg.message !== "") {
-            return (
-                <MessageBox
-                    id={msg.authorId === user?.id}>
-                    {msg.message}
-                </MessageBox>
-           )
-        } 
-        return null
-    })
-    
+    useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
     
     return (
         <>
-        <InboxDm />
-        <div className="chat_main">
-            <ChatHeader 
-             username={`user id: ${id}`}
-             online={true}
-             />
-
-             <section className="chat_window bg-chat-body">
-                {id && messagesElements}
-                {!id && <ChatDmInit />}           
-             </section>
-
-
-             <form className="chat_input" onSubmit={handleSubmit}>
-                <textarea 
-                placeholder="Type something"
-                onChange={handleChange}
-                value={messageToSendValue}
+            <InboxDm/>
+            <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
+                <ChatHeader
+                id={id}
+                avatar={userOverview.image}
+                username={userOverview.username}
+                status={userOverview.status}
                 />
-                <button className='bg-primary-pink' type="submit">Send</button>
-            </form>
-        </div>
-        <ChatOverview />
-        </>
+
+                <ChatWindow id={id}>
+                    {messagesElements.length ? messagesElements : <p>No messages yet</p>}
+                </ChatWindow>
+
+                <ChatInput 
+                message={messageToSendValue} 
+                setMessage={setMessageToSendValue} 
+                sender={handleSubmit} 
+                id={id} 
+                />
+            </div>
+            <ChatOverview oview={userOverview} id={id}/>
+    </>
     );
 }

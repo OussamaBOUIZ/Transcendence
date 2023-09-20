@@ -1,22 +1,24 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, IsNumber, IsString, Length} from 'class-validator';
+import { trim } from 'src/interfaces/interfaces';
 
 export class channelDto {
-    
-    @IsString()
-    public prevChannelName: string
 
-    @IsNotEmpty()
+    @IsNumber()
+    public channelId: number
+
     @IsString()
+	@Type(() => String)
+	@Transform(({value}) => trim(value))
     public channelName: string
 
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     public channelType: string
 
     @IsString()
     public channelPassword: string
 
     @IsNumber()
-    @IsNotEmpty()
-    public channelOwner: number
+    public channelOwner?: number
 }
