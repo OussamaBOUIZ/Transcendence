@@ -45,7 +45,7 @@ const gameModes = new Map<string, GameMode>([
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 3,
+        maxScore: 21,
         ability: "none"
     }],
     ["BlazingPong", {
