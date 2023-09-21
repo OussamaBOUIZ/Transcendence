@@ -39,6 +39,14 @@ import { invitationDto } from "src/channel/dto/invitationDto";
  *
  */
 
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+
+export class pandingMessageDto {
+    @IsNotEmpty()
+    @IsString()
+    public userId: number
+}
+
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(4000, {cors: {
 	origin: "http://localhost:5173",
@@ -81,7 +89,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
-		
 	}
 
 	@SubscribeMessage('updateUnseenMessage')
@@ -152,6 +159,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	async handleConnection(client: Socket) {
+		console.log(client.id);
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)

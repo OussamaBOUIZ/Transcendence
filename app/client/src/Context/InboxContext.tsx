@@ -13,6 +13,8 @@ interface InboxContextType {
     setUpdate: React.Dispatch<React.SetStateAction<number>>;
     isBanned: boolean;
     setBanned: React.Dispatch<React.SetStateAction<boolean>>;
+    isTyping: boolean;
+    setIsTyping: React.Dispatch<React.SetStateAction<boolean>>;
     viewIdRef: React.MutableRefObject<number>,
     messagesList: MessageData[],
     setMessagesList: React.Dispatch<React.SetStateAction<MessageData[]>>
@@ -37,6 +39,8 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [isTyping, setIsTyping] = useState<boolean>(false);
+
 
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
@@ -96,6 +100,15 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             }
             void fetch();
         });
+        dmSocket?.on('isTyping', () => {
+            setIsTyping(true)
+            console.log("is typing");
+            
+        })
+        dmSocket?.on('noMessage', () => {
+            setIsTyping(false)
+            
+        })
     }, [dmSocket]);
 
     return (
@@ -107,6 +120,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             messagesList, setMessagesList,
             update, setUpdate,
             dmSocket, setDmSocket,
+            isTyping, setIsTyping,
         }}>
         {children}
         </InboxContext.Provider>
