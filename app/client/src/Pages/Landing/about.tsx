@@ -44,7 +44,7 @@ export default function About() {
     return (
         <div id="about" className="tech h-screen bg-black">
             <section className="h-full flex flex-col justify-evenly items-center">
-                <header className="font font-semibold text-3xl">Diam urna tincidunt et semper mi suspendisse</header>
+                <header className="font font-semibold text-3xl">Revolutionary Technologies Powering Our Game Web Application</header>
                 <figure className="flex flex-col gap-16 w-full items-center">
                     <div className="flex flex-wrap gap-4 w-full justify-between">{tech}</div>
                     <div className="flex flex-wrap gap-4 w-full justify-evenly">{tech2}</div>
