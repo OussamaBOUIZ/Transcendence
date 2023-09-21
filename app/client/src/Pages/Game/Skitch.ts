@@ -5,7 +5,6 @@ import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
 import Net from "./Net";
-
 const prevPos: Array<Ball> = [];
 
 let leftPad: Pad;
@@ -138,9 +137,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         gameMode: null,
         score: {myScore: 0, oppScore: 0},
         setScore: () => {},
-        isGameEnd: false,
-        setIsGameEnd: () => {},
-        isWin: false,
+        isGameEnd: {current: false},
+        isWin: {current: false},
         isEffect: null,
         setPersentage: () => {},
         firstTime: true,
@@ -196,8 +194,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (gameEnd)
             return;
 
-        if (props.isGameEnd) {
-            if (props.isWin)
+        if (props.isGameEnd.current) {
+
+
+            console.log('is win: ', props.isWin);
+            if (props.isWin.current)
                 p5.image(winImg, 0, 0, p5.width, p5.height);
             else
                 p5.image(loseImg, 0, 0, p5.width, p5.height);

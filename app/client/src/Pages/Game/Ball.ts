@@ -53,6 +53,8 @@ export default class Ball {
             if (props.isHost) {
                 reset(p5, props.isHost);
 
+                console.log("Heeeeere");
+
                 if (this.x < 0) {
                     props.setScore((prevState: Score) => {
                         const newScore: Score = {...prevState, myScore: prevState.myScore++}
