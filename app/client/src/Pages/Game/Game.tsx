@@ -31,13 +31,13 @@ let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
 */}
 
-let abilityImgs = new Map< String, String>([
+let abilityImgs = new Map<string, string>([
     ["reverse", ReverseAbility],
     ["speed", SpeedAbility],
     ["hide", HideAbility],
 ])
 
-const gameModes = new Map<String, GameMode>([
+const gameModes = new Map<string, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
@@ -268,7 +268,7 @@ export default function Game () {
                     style={iconStyle}
                     id="ability-icon"
                     src={abilityImgs.get(ability)}
-                    className={`bg-red-400 ${isHost && "ability-position-modifier"}`} />
+                    className={`bg-purple-400 rounded-full ${isHost && "ability-position-modifier"}`} />
                 }
                 {!isMatching && <Board
                     score={score}
