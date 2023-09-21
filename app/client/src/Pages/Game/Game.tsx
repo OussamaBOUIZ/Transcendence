@@ -194,10 +194,13 @@ export default function Game () {
     useEffect(() => {
         console.log(score);
 
+
         if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
             
             isGameEnd.current = true;
+
+            console.log('score res is: ', score.myScore === mode?.maxScore);
 
             if (score.myScore === mode?.maxScore) {
                 isWin.current = true;
@@ -300,7 +303,7 @@ export default function Game () {
                     score={score}
                     setScore={setScore}
                     isGameEnd={isGameEnd}
-                    isWin={isWin.current}
+                    isWin={isWin}
                     isEffect={isEffect}
                     setPersentage={setPersentage}
                     firstTime={firstTime}
