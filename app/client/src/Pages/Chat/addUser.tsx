@@ -1,17 +1,19 @@
 import React, {useRef, useState, useEffect, useContext} from 'react'
-import axios, {AxiosResponse} from "axios"
+import axios from "axios"
 import {User} from '../../../global/Interfaces'
 import {getUserImage} from '../../Hooks/getUserImage'
 import UserCard from './UserCard'
 import { SocketContext } from './ChatRooms'
 import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import {handleClickOutside} from "../../Helpers/utils"
+import UserContext from '../../Context/UserContext'
 
 export default function AddUser() {
     const [currentSearch, setCurrentSearch] = useState<string>("")
     const [submittedName, setSubmittedName] = useState<string>("")
     const [searchedUser, setSearchedUser] = useState<User>({} as User);
     const initialRender = useRef(true)
+    const {navigate} = useContext(UserContext)
     const {setShowSearch} = useContext(SocketContext)
     const wrapperRef = handleClickOutside(setShowSearch)
 
@@ -32,18 +34,15 @@ export default function AddUser() {
         }
         async function getUserCard () {
             try {
-                const response: AxiosResponse<User> = await axios(`/api/user/search/user/?username=${submittedName}`)
+                const response = await axios.get<User>(`/api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
-            } catch (err) {
-                // console.log(err.message)
+            } catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         if (submittedName !== "")
-        {
-            console.log(submittedName)
             void getUserCard()
-        }
     }, [submittedName])
 
     return (

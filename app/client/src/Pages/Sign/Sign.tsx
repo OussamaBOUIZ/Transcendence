@@ -13,7 +13,6 @@ export default function Sign() {
     const [signInImage, setSignInImage] = useState<string>("");
     const {authenticated, isLoading} = useContext(UserContext);
 
-    console.log("authenticated : ", authenticated);
     if (authenticated)
         window.location.replace('/')
 
@@ -24,9 +23,7 @@ export default function Sign() {
                   const imageModule = await import(`../../Assets/${random}file.jpg`);
                   setSignInImage(imageModule.default);
               }
-              catch (error) {
-                  console.error("Error loading image:", error);
-              }
+              catch (error) {}
         }
         void getImage();
     }, []);

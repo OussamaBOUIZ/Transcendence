@@ -25,8 +25,6 @@ export class InboxService {
         inbox = await this.getInboxBySenderId(author, receiver)
 
         if (!inbox) {
-            console.log('new inbox');
-            
             inbox = new Inbox_user()
             inbox.author = author; // id of the receiver
             inbox.lastMessage = msgDto.message;
@@ -40,8 +38,6 @@ export class InboxService {
         // I assume that the receiver is on chat page
         if (receiver.isActive !== true)
             inbox.unseenMessages += 1
-        console.log(inbox);
-        
         await this.inboxRepository.save(inbox)
     }
 
@@ -64,8 +60,6 @@ export class InboxService {
 
     async getAllInboxOfUser(authorId: number) {
 
-        console.log(authorId);
-        
         return await this.inboxRepository.find({
             relations: {
                 user: true,

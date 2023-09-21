@@ -19,7 +19,6 @@ import {accessChannel} from "./accessChannel"
 import CreateRoom from './createRoom';
 import {binarySearch} from "../../Hooks/binarySearch"
 import InboxContext from '../../Context/InboxContext';
-// import ErrorPage from '../Errors/errorPages';
 
 type typeProps = {
     socket: Socket | undefined;
@@ -55,7 +54,6 @@ export default function ChatRooms () {
     const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
     const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
 
-
     //set myGrade and room data
     useEffectOnUpdate(() => {
         const getInfo = async () => {
@@ -77,12 +75,12 @@ export default function ChatRooms () {
                         navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                     }
                 }
-                catch (err) {
-                    // console.log(err)
+                catch (err: any) {
+                    navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
             }
-            catch(error) {
-                // console.log(error)
+            catch(err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         viewIdRef.current = NaN;
@@ -90,22 +88,8 @@ export default function ChatRooms () {
             void getInfo()
     }, [id, user])
 
-    // create socket
-    // useEffect(() => {
-    //     const fd = io("ws://localhost:1212", {
-    //         withCredentials: true,
-    //     })
-    //     setSocket(fd)
-
-    //     return  () => {
-    //             fd.disconnect();
-    //         }
-    // }, [])
-
     const sendMessage: React.FormEventHandler<HTMLElement> = (event) => {
         event.preventDefault();
-        console.log("sendMessage is called");
-        
         if (message !== "") {
             const messageData: Message = {
                 message: message,
@@ -114,8 +98,6 @@ export default function ChatRooms () {
                 username: user?.username,
                 isBlocked: false,
             }
-            console.log(messageData);
-            
             socket?.emit("channelMessage", messageData);
             setMessage("");
             const outerDivHeight = outerDiv?.current?.clientHeight ?? 0;

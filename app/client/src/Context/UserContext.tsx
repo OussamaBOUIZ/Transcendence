@@ -35,53 +35,46 @@ type typeProps = {
 const UserContext = createContext<typeProps>({} as typeProps);
 
 export function UserProvider ({children}: {children: React.ReactNode}) {
-    const [user, setUser] = useState<User>({} as User);
-    const [notif, setNotif] = useState<string>("");
-    const [socket, setSocket] = useState<Socket>();
-    const [authenticated, setAuthenticated] = useState<boolean>(false);
-    const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
-    const [update, setUpdate] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
-    const [statusCode, setStatusCode] = useState<string>("")
-    const [statusText, setStatusText] = useState<string>("")
-    const [invitation, setInvitation] = useState<{hostId: number, image: string, username: string, gameName: string}>()
-    const navigate = useNavigate()
+  const [user, setUser] = useState<User>({} as User);
+  const [notif, setNotif] = useState<string>("");
+  const [socket, setSocket] = useState<Socket>();
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
+  const [statusCode, setStatusCode] = useState<string>("")
+  const [statusText, setStatusText] = useState<string>("")
+  const [invitation, setInvitation] = useState<{hostId: number, image: string, username: string, gameName: string}>()
+  const navigate = useNavigate()
 
-  
-
-    const fetchUserData = async () => {
-        setIsLoading(true);
-        try {
-        
-          const response = await axios.get<User>("/api/user"); 
-          const image = await getUserImage(response.data.id)
-          
-          setUser({...response.data, image});
-          
-        } catch (error) {
-          // console.log(error);
-        }
-        setIsLoading(false);        
-      };
+  const fetchUserData = async () => {
+      setIsLoading(true);
+      try {
       
-      // console.log('USER HERE: ', user);
+        const response = await axios.get<User>("/api/user"); 
+        const image = await getUserImage(response.data.id)
+        setUser({...response.data, image});
+        
+      } catch (err: any) {}
+      setIsLoading(false);        
+    };
+    
+    const verifyAuthentication = async () => {
+      setIsLoading(true);
+        try {
+            const response = await axios.get("/api/auth/tokenValidity");    
+            setAuthenticated(response.data)
+        }
+        catch (error) {
+            setAuthenticated(false)
+        }
+        setIsLoading(false)
+    }
 
-      const verifyAuthentication = async () => {
-        setIsLoading(true);
-          try {
-              const response = await axios.get("/api/auth/tokenValidity");    
-              setAuthenticated(response.data)
-          }
-          catch (error) {
-              setAuthenticated(false)
-          }
-          setIsLoading(false)
-      }
-
-    useEffect(() => { 
-        void verifyAuthentication();
-    }, [])
+  useEffect(() => { 
+      void verifyAuthentication();
+  }, [])
 
     
     useEffect(() => {

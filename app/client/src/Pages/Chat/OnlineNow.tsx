@@ -23,8 +23,6 @@ export default function OnlineNow () {
         const fetchOnlineUsers =async () => {
             try {
                 const res = await axios.get<OnlineUsers[]>('/api/user/online/users');
-                console.log(res.data);
-                
                 const data = await Promise.all(
                     res.data.map(async (item) => {
                         const image = await getUserImage(item.id)
@@ -32,9 +30,7 @@ export default function OnlineNow () {
                     }))
                 setUsers(data)
             }
-            catch (err) {
-                // console.log(err)
-            }
+            catch (err) {}
         }
         void fetchOnlineUsers();
     }, [])

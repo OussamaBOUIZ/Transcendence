@@ -33,12 +33,12 @@ export default function ChatSearchBox () {
         }
         async function getUserCard () {
             try {
-                const response: AxiosResponse<User> = await axios(`/api/user/search/user/?username=${submittedName}`)
+                const response: AxiosResponse<User> = await axios.get(`/api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
-            } catch (err) {
+            }
+            catch (err) {
                 setNotif("User not Found");
-                // console.log(err);
             }
         }
         void getUserCard()

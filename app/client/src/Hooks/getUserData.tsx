@@ -9,8 +9,8 @@ export const getUserData = async (user: number | string, type: "username" | "id"
     const response = await axios.get<User>(path);
     const image = await getUserImage(response.data.id)
     return {...response.data, image};
-  } catch (error) {
-    console.log(error)
+  }
+  catch (error) {
     return ({} as User);
   }
 };

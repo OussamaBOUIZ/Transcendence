@@ -5,7 +5,7 @@ import {rooms} from "../../global/Interfaces"
 import { SocketContext } from "../Pages/Chat/ChatRooms"
 
 export function useFetchJoinedRooms() {
-    const {user} = useContext(UserContext)
+    const {user,navigate} = useContext(UserContext)
     const {update} = useContext(SocketContext)
     const [publicRooms, setPublicRooms] = useState<rooms[]>([]);
     const [protectedRooms, setProtectedRooms] = useState<rooms[]>([]);
@@ -23,11 +23,10 @@ export function useFetchJoinedRooms() {
                     }
                     void getInfo();
                 }, 500)
-                
             }
         }
-        catch (err) {
-            // console.log(err)
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }, [user.id, update])
 

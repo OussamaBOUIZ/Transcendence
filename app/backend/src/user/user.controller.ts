@@ -17,7 +17,7 @@ import {
 	Logger,
 	UsePipes,
 	ValidationPipe,
-	NotFoundException, Put,
+	NotFoundException, Put, InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -45,7 +45,6 @@ const multerConfig = () => ({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
 			const supportedExt = ['.png', '.jpeg', '.jpg']
-            console.log('interceptor')
 			if (isNaN(parseInt(req.params['userId'], 10)))
 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
 
@@ -53,15 +52,11 @@ const multerConfig = () => ({
 				return cb(new HttpException(`Unsupported file type ${file.originalname.ext}`, HttpStatus.BAD_REQUEST), false)
 			const extention = path.parse(file.originalname).ext
 			const filename = req.params['userId'] + extention
-            console.log('filname1'); 
-            
-            console.log(filename);
 			try {
 				await fsPromises.access(DirUpload + filename)
 				cb(new HttpException(`Wrong Http Method`, HttpStatus.METHOD_NOT_ALLOWED))
 			}
 			catch (e) {
-                console.log('filename', filename);
 				cb(null, filename)
 			}
 		}
@@ -72,8 +67,6 @@ const updateMuliterConfig = () => ({
 	storage: diskStorage({
 		destination: DirUpload,
 		filename: async (req: any, file: any, cb: any) => {
-            console.log('111');
-            
 			const supportedExt = ['.png', '.jpeg', '.jpg']
 			if (isNaN(parseInt(req.params['userId'], 10)))
 				return cb(new HttpException('userId Must be a number', HttpStatus.BAD_REQUEST), false)
@@ -101,8 +94,6 @@ export class UserController {
 
     @Put('updateStatus')
     async updateUserStatus(@Req() req, @Body() body: statusDto) {
-        console.log(body.status);
-        
         const userEmail = req.user.email
         const user = await this.userService.findUserByEmail(userEmail)
         if (!user)
@@ -156,7 +147,6 @@ export class UserController {
 		})) image: Express.Multer.File,
 		@Res() res: Response
 	) {
-        console.log('inside upload');
 		const user = await this.userService.saveUserAvatarPath(id, image.path)
 		if (!user) {
 			await unlink(image.path)
@@ -250,7 +240,6 @@ export class UserController {
     @Header('Content-Type', 'image/jpg')
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
-        // HAHAHAHAHAHAHA
         const filename = id % 14 !== 0 ? (id % 14) + '.jpg' : 14 + '.jpg'
         const imagePath = path.join(process.cwd(), 'src/achievementImages', filename);
         const fileContent = createReadStream(imagePath);
@@ -332,7 +321,6 @@ export class UserController {
             req.body.token,
             user
         );
-        console.log('code is: ', isCodeValid);
         if(!isCodeValid)
             return res.status(200).send('two factor token is invalid');
         return res.status(200).send('');
@@ -367,18 +355,13 @@ export class UserController {
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
-        console.log(userData);
         const user = await this.userService.findUserById(id);
         if(userData.username.length === 0)
         {
-            console.log(userData.lastname.length);
             if(userData.firstname.length > 12)
                 return res.status(201).send('firstname is too large');
             if(userData.lastname.length > 12)
-            {
-                console.log('YES BRROO')
                 return res.status(201).send('lastname is too large');
-            }
             user.firstname = userData.firstname;
             user.lastname = userData.lastname;
             await this.userService.saveUser(user);
@@ -424,19 +407,6 @@ export class UserController {
 		await this.userService.addUserStat(statDto, req.user) 
 	}
 
-	// @Post('gameHistory/add')
-	// @HttpCode(HttpStatus.CREATED)
-	// async createGameHistory(@Body() gameHistoryDto: GameHistoryDto) {
-	// 	console.log(gameHistoryDto)
-	// 	await this.userService.addGameHistory(gameHistoryDto)
-	// 	return {
-	// 		Message: "The content is created"
-	// 	}
-	// }
-
-    // @UsePipes(new ValidationPipe({
-	// 	transform: true,
-	// }))
 	@Get('search/user')
 	async searchForUser(
 		@Query() dto: searchDto,

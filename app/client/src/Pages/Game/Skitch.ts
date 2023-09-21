@@ -222,7 +222,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
                     setTimeout(() => {
                         props.setFirstTime(false);
-                        console.log("Set first time to false")
                     }, 2000)
 
                     p5.image(readyImg, 0, 0, p5.width, p5.height);

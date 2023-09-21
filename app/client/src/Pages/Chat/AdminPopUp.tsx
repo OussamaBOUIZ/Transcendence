@@ -11,7 +11,7 @@ import UserContext from '../../Context/UserContext'
 export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, setIsClicked: React.Dispatch<React.SetStateAction<boolean>>}) {
 
     const {id, socket, roomData, setUpdate} = useContext(SocketContext)
-    const {setNotif} = useContext(UserContext)
+    const {setNotif, navigate} = useContext(UserContext)
 
 
     async function promoteMember() {
@@ -21,8 +21,8 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
                 setNotif(res.data)
             setUpdate(prev => prev + 1)
         }
-        catch (err) {
-            console.log(err)
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 
@@ -34,7 +34,6 @@ export default function AdminPopUp({ Userid, setIsClicked}: {Userid: number, set
 
     function banMember() {
         const data ={userId: Userid, channelName: roomData.channelName}
-        console.log(data)
         socket?.emit('banuser', data)
     }
 

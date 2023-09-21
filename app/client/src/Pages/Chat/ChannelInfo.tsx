@@ -19,9 +19,7 @@ export default function ChannelInfo() {
                 const res: AxiosResponse<channelData> = await axios.get(`/api/channel/channelData/${id}`)
                 setChannelData(res.data)
             }
-            catch (e) {
-                // console.log(e)
-            }
+            catch (e) {}
         }
         void getChannelData()
     }, [update, id, showSearch])

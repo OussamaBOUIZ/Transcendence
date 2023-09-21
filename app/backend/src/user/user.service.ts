@@ -52,9 +52,6 @@ export class UserService {
         if(user.blocked_users.some((user) => user.id === blockedUser.id))
             return 'user is already blocked';
 
-        console.log('b user', user.blocked_users);
-        console.log('b user', user);
-        
         if (!user.blocked_users)
             user.blocked_users = []
 
@@ -346,8 +343,6 @@ export class UserService {
 
     }
     async AllFriends(id: number) {
-        console.log('idnumner', id);
-        
         const user = await this.userRepo.findOne({
             relations: {
                 friends: {

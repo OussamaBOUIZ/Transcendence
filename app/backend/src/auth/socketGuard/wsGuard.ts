@@ -6,7 +6,6 @@ import {ConfigService} from "@nestjs/config";
 @Injectable()
 export class WsGuard implements CanActivate {
     constructor(private jwtService: JwtService, private  configService: ConfigService) {
-        console.log('CanActivate')
     }
 
     canActivate(context: ExecutionContext): boolean | any | Promise<boolean> {
@@ -19,7 +18,6 @@ export class WsGuard implements CanActivate {
             })
             return true
         } catch (e) {
-            console.log(`not authorized\n${e}`)
             throw new WsException(e.message);
         }
    }

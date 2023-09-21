@@ -17,7 +17,7 @@ export default function ChannelInitAction () {
     const [channelPassword, setChannelPassword] = useState<string>("")
     const [selectedChannel, setSelectedChannel] = useState<channel>({} as channel)
     const [channels, setChannels] = useState<channel[]>([])
-    const {user, setNotif} = useContext(UserContext)
+    const {user, setNotif, navigate} = useContext(UserContext)
     const {setUpdate, setIsClick} = useContext(SocketContext)
 
     const passwordDiv = <input
@@ -35,9 +35,7 @@ export default function ChannelInitAction () {
                 const res: AxiosResponse<channel[]> = await axios.get("/api/channel/AccessibleChannels");
                 setChannels(res.data.map(channel => ({...channel, isClick: false})));
             }
-            catch (err) {
-                // console.log(err);
-            }
+            catch (err) {}
         }
         void getChannels()
     }, [])
@@ -53,16 +51,16 @@ export default function ChannelInitAction () {
                 else
                     res.data ? setUpdate(prev => prev + 1) : setNotif("Wrong password")
             }
-            catch (err) {
-                // console.log(err)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         } else {
             try {
                 const res: AxiosResponse<string> = await axios.get(`/api/channel/addToChannel/${user?.id}?channelName=${selectedChannel.channel_name}`)
                 res.data ? setNotif(res.data) : setUpdate(prev => prev + 1) 
             }
-            catch (err) {
-                // console.log(err)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
     }

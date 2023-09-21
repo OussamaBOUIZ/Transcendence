@@ -82,7 +82,6 @@ export function ActivateEffect(p5: any, props: MySketchProps) {
     props.isEffect.current = false;
     props.setIsClicked(false);
 
-    console.log("setIsClicked");
     vars.isEffect = true;
     vars.effect = props.gameMode?.ability || "";
 

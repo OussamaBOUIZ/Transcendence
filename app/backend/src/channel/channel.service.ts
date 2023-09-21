@@ -79,7 +79,6 @@ export class ChannelService {
     }
     async channelUpdate(channelData: channelDto)
     {
-        console.log('channel data: ', channelData);
         const channelFound = await this.channelRepo.findOne({
             where: {id: channelData.channelId},
             relations: {

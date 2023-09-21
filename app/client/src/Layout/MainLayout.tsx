@@ -12,18 +12,18 @@ import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
 import { getUserData } from '../Hooks/getUserData'
 import Loading from '../Pages/Loading'
 
-const UpdateStatus = async () => {
-  try {
-    void axios.put('/api/user/updateStatus', {status: "offline"})
-  }
-  catch (error) {
-    // console.log(error)
-  }
-}
-
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
     const {user, socket, setSocket, navigate, notif, invitation, setInvitation} = useContext(UserContext)
+
+    const UpdateStatus = async () => {
+      try {
+        void axios.put('/api/user/updateStatus', {status: "offline"})
+      }
+      catch (err: any) {
+        navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
+      }
+    }
 
     useEffectOnUpdate(() => {
       if (user.id) {
@@ -61,8 +61,8 @@ export default function MainLayout () {
               gameName: gameInfo.gameName.replace(/\s/g, '')
             })
           }
-          catch (err) {
-            // console.log(err)
+          catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
           }
         }
         void fetchUserData()

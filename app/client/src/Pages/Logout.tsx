@@ -5,22 +5,22 @@ import Loading from './Loading'
 
 export default function Logout () {
 
-    const {user} = useContext(UserContext)
+    const {user, navigate} = useContext(UserContext)
 
     const logout = async () => {
         try {
             const res = await axios.post(`/api/user/logout/${user.id}`)
             if (res.data.length === 0)
                 window.location.replace('/sign');
-        } catch (error) {
-            console.log(error);
+        }
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 
     useEffect( () => {
         logout();
     }, [user])
-    return (
-        <Loading />
-    );
+
+    return <Loading />
 }

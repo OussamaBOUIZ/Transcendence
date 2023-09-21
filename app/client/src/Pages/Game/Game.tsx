@@ -128,12 +128,9 @@ export default function Game () {
 
     const UpdateStatus = async () => {
         try {
-            void axios.put('/api/user/updateStatus', {status: "InGame"})
+            void axios.put('/api/user/updateStatus', {status: "In A Game"})
         }
-        catch (error) {
-            
-            // console.log(error)
-        }
+        catch (error) {}
     }
 
     useEffect(() => {
@@ -230,7 +227,6 @@ export default function Game () {
             });
 
             newSocket.on("matched", (data: any) => {
-                console.log("matched room key: ", data.roomKey);
                 setGameKey(data.roomKey);
                 roomKey = data.roomKey;
                 newSocket.emit("joinGame", data.roomKey);
