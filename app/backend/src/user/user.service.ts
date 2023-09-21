@@ -223,7 +223,6 @@ export class UserService {
                 opponentUserName: user2.username
             }
         }))
-        console.log(retData);   
         return retData;
     }
 

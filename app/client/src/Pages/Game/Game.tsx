@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext, useRef} from 'react'
 import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom"
 import { GameMode, Persentage, Score } from './Interfaces';
@@ -97,7 +97,7 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const { user } = useContext(UserContext);
+    const { user, navigate } = useContext(UserContext);
     const [ability, setAbility] = useState<string>("");
     const [isClicked, setIsClicked] = useState<boolean>(false);
     const modeName = String(mode?.modeName)
@@ -105,6 +105,8 @@ export default function Game () {
     const [iconStyle, setIconStyle] = React.useState({animationName: "none"});
 
     const {key, gameMode} = useParams();
+
+    // if (!user.id) navigate("/error")
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
@@ -194,8 +196,6 @@ export default function Game () {
         }
     }, [score])
 
-
-
     useEffectOnUpdate( () => {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
@@ -214,13 +214,9 @@ export default function Game () {
 
             newSocket.on("startGame", () => {
                 setIsMatching(false);
-                
-                console.log("my user: ", user);
                 newSocket.emit("sendUser", {roomKey: key, user});
                 newSocket.on("recvOppUser", (opUser: User) => {
                     oppUser.current = opUser;
-
-                    console.log("user", opUser)
                 })
 
             })
