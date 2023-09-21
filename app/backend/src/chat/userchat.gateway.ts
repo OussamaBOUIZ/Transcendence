@@ -1,4 +1,6 @@
 import {
+	ConnectedSocket,
+	MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 	OnGatewayInit,
@@ -21,6 +23,7 @@ import {InboxService} from "../inbox/inbox.service";
 import {UserService} from "../user/user.service";   
 import {MessageData} from "../interfaces/interfaces"
 import { WsExceptionFilter } from "src/Filter/ws.filter";
+import { invitationDto } from "src/channel/dto/invitationDto";
 /**
  * RxJS :
  *
@@ -35,6 +38,14 @@ import { WsExceptionFilter } from "src/Filter/ws.filter";
  *        -
  *
  */
+
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+
+export class pandingMessageDto {
+    @IsNotEmpty()
+    @IsString()
+    public userId: number
+}
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(4000, {cors: {
@@ -78,7 +89,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.server.to(e.socket).emit('error', e.msg)
 			return
 		}
-		
 	}
 
 	@SubscribeMessage('updateUnseenMessage')
@@ -95,14 +105,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 
 		const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
-		this.logger.log({inbox})
 		if (!inbox)
 			throw new WsException('there is no prior conversation !')
 		inbox.unseenMessages += 1
-		this.logger.log('here in update', inbox.unseenMessages)
 		
 		await this.inboxService.updateInbox(inbox)
 	}
+
+	// @SubscribeMessage('sendInvitation')
+    // async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    // {
+    //     const guest = await this.userService.findUserById(invData.guestId);
+    //     client.to(guest.chatId).emit('invitation', invData);
+    //     console.log(guest.chatId);
+    // }
 
 	@SubscribeMessage('messageSeen')
 	async  resetUnseenMessage(socket: Socket, peerDto: number) {
@@ -116,11 +132,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const message = !user ? 'The user not exist' : 'The Peer not exist'
 			throw new WsException(message)
 		}
-
 		 const inbox = await  this.inboxService.getInboxBySenderId(peer, user);
 		if (!inbox)
 			throw new WsException('there is no prior conversation !')
 		inbox.unseenMessages = 0
+		
 		await this.inboxService.updateInbox(inbox)
 	}
  
@@ -143,11 +159,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	async handleConnection(client: Socket) {
+		console.log(client.id);
 		let user: User
 		user = await this.userRepository.findOneBy({email: client.data.user.email})
 		if (!user)
 			throw new WsException("the user not found")
-		user.socketId = client.id
+		user.chatId = client.id
 		user.isActive = true
 		await this.userRepository.save(user)
 	}

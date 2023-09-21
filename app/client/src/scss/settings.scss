@@ -1,5 +1,6 @@
 @import "./var.scss";
 @import "./mixins.scss";
+@import "./animations.scss";
 
 section.settings_grid {
     width: 80%;
@@ -18,17 +19,7 @@ section.settings_grid {
     "s s s s s s s s s p p p"
     "s s s s s s s s s p p p"
     ;
-    // @media (max-width: 1752px) { 
-    //     width: 100%;
-    //     grid-template: repeat(2, 1fr) 4em repeat(2, 1fr) / repeat(6, 1fr) repeat(2, 10rem);
-    //     grid-template-areas: 
-    //     "e e e e e p p p"
-    //     "e e e e e p p p"
-    //     "h h h h h p p p"
-    //     "s s s s s p p p"
-    //     "s s s s s p p p"
-    //     ;
-    // }
+
     @media (max-width: 1366px) { 
         width: 100%;
         grid-template: 40% 10% 50% / repeat(8, 1fr);
@@ -64,10 +55,7 @@ section.settings_grid {
 }
 
 
-@keyframes brilliance {
-    from { box-shadow: 1px 1px 25px 0px  rgb(168 85 247); }
-    to { box-shadow: 0px 0px 5px 0px  rgb(168 85 247);}
-}
+
 
 
 #twof-poster {

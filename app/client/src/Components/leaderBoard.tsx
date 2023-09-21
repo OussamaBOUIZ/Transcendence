@@ -10,7 +10,7 @@ export default function LeaderBoard({leaders} : {leaders: Leaders[]}) {
         return (
             <div className="item Leaderboard">
                 <img src={bg} alt="" />
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center text-center">
                     <p>There is not currently enough data</p>
                 </div>
             </div>

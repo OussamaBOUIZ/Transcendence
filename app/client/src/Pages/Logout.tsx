@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import axios from 'axios'
 import UserContext from '../Context/UserContext'
+import Loading from './Loading'
 
 export default function Logout () {
 
@@ -20,6 +21,6 @@ export default function Logout () {
         logout();
     }, [user])
     return (
-        <h2>LOGGING OUT...</h2>
+        <Loading />
     );
 }

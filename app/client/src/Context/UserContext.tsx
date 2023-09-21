@@ -27,8 +27,8 @@ type typeProps = {
   setStatusCode: React.Dispatch<React.SetStateAction<string>>;
   statusText: string;
   setStatusText: React.Dispatch<React.SetStateAction<string>>;
-  invitation: {image: string;username: string; gameName: string} | undefined;
-  setInvitation: React.Dispatch<React.SetStateAction<{image: string;username: string; gameName: string} | undefined>>;
+  invitation: {hostId: number, image: string;username: string; gameName: string} | undefined;
+  setInvitation: React.Dispatch<React.SetStateAction<{hostId: number, image: string;username: string; gameName: string} | undefined>>;
   navigate: NavigateFunction
 }
 
@@ -45,7 +45,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const [show, setShow] = useState<"inbox" | "main" | "overview">("main");
     const [statusCode, setStatusCode] = useState<string>("")
     const [statusText, setStatusText] = useState<string>("")
-    const [invitation, setInvitation] = useState<{image: string, username: string, gameName: string}>()
+    const [invitation, setInvitation] = useState<{hostId: number, image: string, username: string, gameName: string}>()
     const navigate = useNavigate()
 
   
@@ -87,7 +87,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     useEffect(() => {
         if (user)
           void fetchUserData();
-      }, [])
+      }, [update])
 
     return (
         <UserContext.Provider value={{

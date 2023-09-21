@@ -57,13 +57,14 @@ export default function ChatDm () {
         }
     }
     
-    
+    console.log(dmSocket?.id);
+
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`/api/chat/${id}`)
             setMessagesList(res.data)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -102,7 +103,7 @@ export default function ChatDm () {
                 message={messageToSendValue} 
                 setMessage={setMessageToSendValue} 
                 sender={handleSubmit} 
-                id={id} 
+                id={id}
                 />
             </div>
             <ChatOverview oview={userOverview} id={id}/>

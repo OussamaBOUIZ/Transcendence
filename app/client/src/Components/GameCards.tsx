@@ -9,20 +9,21 @@ import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import UserContext from '../Context/UserContext';
 import {handleClickOutside} from "../Helpers/utils"
+import InboxContext from '../Context/InboxContext';
 
 
 const data = [
   {
     "name": "Battle Royal",
-    "image": "/src/Assets/GameArea/galaxy.jpg",
+    "image": "/src/Assets/GameArea/BattleRoyal.jpg",
   },
   {
     "name": "Blazing Pong", 
-    "image": "/src/Assets/GameArea/snowy-mount.jpg",
+    "image": "/src/Assets/GameArea/BlazingPong.jpg",
   },
   {
     "name": "Arctic Pong",
-    "image": "/src/Assets/GameArea/arcticarea.jpg", 
+    "image": "/src/Assets/GameArea/ArcticPong.jpg", 
   },
   {
      "name": "Retro Pong",
@@ -39,7 +40,7 @@ export default function GameCards ({hostId, guestId, setPopupOpen}: {hostId: num
     const sliderActive = document.querySelector('.swiper-slide-active')
     const imgElement = sliderActive?.querySelector('img');
     const gameName = imgElement?.getAttribute('alt');
-    socket?.emit('receiveInvitation', {userId: hostId, guestId: guestId, gameName: gameName})
+    socket?.emit('sendInvitation', {userId: hostId, guestId: guestId, gameName: gameName})
   }
   
   return (
@@ -74,9 +75,9 @@ export default function GameCards ({hostId, guestId, setPopupOpen}: {hostId: num
             modules={[EffectCoverflow, Pagination, Navigation]}
             className='swiper-container'
           >
-            {data.map((item) => {
+            {data.map((item, idx) => {
               return (
-              <SwiperSlide>
+              <SwiperSlide key={idx} >
                 <img src={item.image} alt={item.name} />
                   <figure className='absolute bottom-0 pb-4 w-full h-1/3 bg-gradient-to-t from-black to-transparent flex justify-center items-end'>
                       <h2 className="mb-1 text-xl font-bold">{item.name}</h2>

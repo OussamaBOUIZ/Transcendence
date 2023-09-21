@@ -4,8 +4,11 @@ import { BsFillInfoCircleFill } from "react-icons/bs"
 import UserContext from "../Context/UserContext";
 import ProfileImage from "./profileImage";
 import { Link } from "react-router-dom";
+import { Socket } from "socket.io-client";
+import {nanoid} from 'nanoid'
 
 interface userType {
+	hostId: number,
 	username: string;
 	image: string;
 	gameName: string;
@@ -13,7 +16,7 @@ interface userType {
 
 export default function Notification({ message, playNow }: {message?: string, playNow?: userType}) {
 
-	const {isAnimationFinished, setIsAnimationFinished} = useContext(UserContext)
+	const {isAnimationFinished, setIsAnimationFinished, socket, navigate} = useContext(UserContext)
 	const outerDivRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -26,6 +29,14 @@ export default function Notification({ message, playNow }: {message?: string, pl
 			roundTimeBarDiv?.removeEventListener('animationend', () => setIsAnimationFinished(true))
 		};
 	}, []);
+
+	function acceptChallenge() {
+		const key = nanoid();
+		const data = {hostId: playNow?.hostId, key: key, gameName: playNow?.gameName}
+		setIsAnimationFinished(true)
+		socket?.emit('CreateGameRoom', data)
+		navigate(`/game/${data.gameName}/${key}`)
+	}
 
 	const popUp = <div className="notification-text">
 					<BsFillInfoCircleFill />
@@ -40,7 +51,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 				<p className="text-xs opacity-80 font-normal">{`${playNow?.gameName} challenge!`}</p>
 			</div>
 		</figure>
-		<Link to="/game/BattleRoyal"><button className='PlayButton shadow-md px-4 py-1'><span>Play</span></button></Link>
+		<button className='PlayButton shadow-md px-4 py-1' onClick={acceptChallenge}><span>Play</span></button>
 	</div>;
 	const Content = (message) ? popUp : invitation
 

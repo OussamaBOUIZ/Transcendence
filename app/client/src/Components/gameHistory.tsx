@@ -4,10 +4,7 @@ import {User, gameHistory} from "../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import { useLocation } from "react-router"
-import dataFour from "./dataThree.json"
-import allData from "./allData.json"
 import axios from "axios";
-import Loading from "../Pages/Loading";
 import { getUserImage } from "../Hooks/getUserImage";
 import useEffectOnUpdate from "../Hooks/useEffectOnUpdate";
 
@@ -19,7 +16,9 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
         const fetchGames = async () => {
             try {
                 console.log('fetching.......');
-                const res = await axios.get<gameHistory[]>(`/api/user/game/history/${UserData.id}`)
+                const res = await axios.get<gameHistory[]>(`/api/user/game/history/${UserData.id}/${NBgames}`)
+                console.log('DATA is: ', res.data);
+                
                 const datawithImage = await Promise.all(res.data.map(async (game) => {
                     let imageId = (game.opponentId === UserData.id) ? game.userId : game.opponentId
                     game.opponentImage = await getUserImage(imageId)
@@ -51,7 +50,7 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
             </div>
         </header>
     }
-    let data = (NBgames === 4) ? dataFetch : allData.allData
+    let data = dataFetch
     console.log(data);
     
     games.current = data?.map((game, index) => {

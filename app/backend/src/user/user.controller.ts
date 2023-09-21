@@ -36,11 +36,6 @@ import { access, unlink } from 'fs/promises';
 
 import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
-import { promises } from 'dns';
-import { plainToClass, plainToInstance } from 'class-transformer';
-import { log } from 'console';
-import { Game } from 'src/databases/game.entity';
-// import { User} from "../../../global/Interfaces"
 
 
 const DirUpload = './uploads/usersImage/'
@@ -284,9 +279,9 @@ export class UserController {
         return await this.userService.getFriendLastGame(friendId, userId);
     }
 
-    @Get('game/history/:userId')
-    async getGameHistory(@Param('userId', ParseIntPipe) userId: number) {
-        return await this.userService.getGameHistory(userId)
+    @Get('game/history/:userId/:toTake')
+    async getGameHistory(@Param('userId', ParseIntPipe) userId: number, @Param('toTake', ParseIntPipe) toTake: number) {
+        return await this.userService.getGameHistory(userId, toTake)
     }
 
     @Get('2fa/turn-on/:id')
@@ -294,23 +289,27 @@ export class UserController {
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
-        const data2fa = this.userService.otpsetup(user);
-        user.two_factor_secret = data2fa.secret;
-        user.otpPathUrl = data2fa.otpPathUrl;
         user.is_two_factor = true;
         await this.userService.saveUser(user);
         return res.status(200).send('two factor was turned on')
     }
-    @Get('2fa/turn-off/:id')
+
+    @Post('2fa/turn-off/:id')
     @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
+        const isCodeValid = this.userService.isUserAuthValid(
+            req.body.token,
+            user
+        );
+        if(!isCodeValid)
+            return res.status(200).send('two factor token is invalid');
         user.two_factor_secret = null;
         user.otpPathUrl = null;
         user.is_two_factor = false;
         await this.userService.saveUser(user);
-        return res.status(200).send('two factor was turned off')
+        return res.status(200).send('');
     }
 
     @Get('2fa/isTurnedOn/:id')
@@ -333,10 +332,10 @@ export class UserController {
             req.body.token,
             user
         );
-        console.log(isCodeValid);
+        console.log('code is: ', isCodeValid);
         if(!isCodeValid)
-            return res.status(400).send('two factor token is invalid');
-        return res.status(200).send('correct two factor token');
+            return res.status(200).send('two factor token is invalid');
+        return res.status(200).send('');
     }
 
     @Put('setUserNames/:id')
@@ -344,18 +343,23 @@ export class UserController {
     async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
-        console.log('data is: ', userData);
-            const user = await this.userService.findUserById(id);
-            user.firstname = userData.firstname;
-            user.lastname = userData.lastname;
-            try {
-                user.username = userData.username;
-                await this.userService.saveUser(user);
-            }
-            catch {
-                return res.status(200).send('nickname already exists');
-            }
-            return res.status(200).send('');
+        if(userData.firstname.length > 12)
+            return res.status(200).send('firstname is too large');
+        else if (userData.lastname.length > 12)
+            return res.status(200).send('lastname is too large');
+        else if (userData.username.length > 12)
+            return res.status(200).send('username is too large');
+        const user = await this.userService.findUserById(id);
+        user.firstname = userData.firstname;
+        user.lastname = userData.lastname;
+        try {
+            user.username = userData.username;
+            await this.userService.saveUser(user);
+        }
+        catch {
+            return res.status(200).send('nickname already exists');
+        }
+        return res.status(200).send('');
     }
 
     @Post('setUserData/:id')
@@ -363,27 +367,36 @@ export class UserController {
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
-        
+        console.log(userData);
         const user = await this.userService.findUserById(id);
         if(userData.username.length === 0)
         {
+            console.log(userData.lastname.length);
+            if(userData.firstname.length > 12)
+                return res.status(201).send('firstname is too large');
+            if(userData.lastname.length > 12)
+            {
+                console.log('YES BRROO')
+                return res.status(201).send('lastname is too large');
+            }
             user.firstname = userData.firstname;
             user.lastname = userData.lastname;
             await this.userService.saveUser(user);
         }
         else
         {
+            if(userData.username.length > 12)
+                return res.status(201).send('username is too large');
             try {
                 user.username = userData.username;
                 await this.userService.saveUser(user);
             }
             catch (error)
             {
-                return res.status(400).send('nickname is already used');
+                return res.status(201).send('nickname is already used');
             }
         }
-        console.log('user is: ', user);
-        return res.status(201).send('data was set succesfully');
+        return res.status(201).send('');
     }
     @Get('isFirstLog')
     @UseGuards(JwtGuard)

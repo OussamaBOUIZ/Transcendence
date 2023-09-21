@@ -41,3 +41,12 @@ export interface MessageData {
     message: string,
     creationTime: Date,
 }
+
+export interface gameData {
+	userId: number,
+	userName: string,
+	userScore: number,
+	opponentScore: number,
+	opponentId: number,
+	opponentUserName: string
+}

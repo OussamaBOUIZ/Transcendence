@@ -49,7 +49,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
             statusIcon = "bg-slate-600";
             break;
         default:
-            statusIcon = "bg-pink-500";
+            statusIcon = "bg-green-500 border-2 border-pink-400";
             break;
     }
 
@@ -94,7 +94,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                     </div>
                 }
             </div>
-            <GameHistory UserData={UserData} NBgames={NaN} />
+            <GameHistory UserData={UserData} NBgames={100} />
             <FriendsCard id={UserData.id} update={update} setIsMyFriend={setIsMyFriend} />
             <AchievementCard achievements={UserData.stat?.achievements} />
         </div>

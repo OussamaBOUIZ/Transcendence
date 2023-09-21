@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext, useRef} from 'react'
 import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom"
 import { GameMode, Persentage, Score } from './Interfaces';
@@ -15,10 +15,29 @@ import BattleRoyal from "../../Assets/GameArea/BattleRoyal.jpg"
 import BlazingPong from "../../Assets/GameArea/BlazingPong.jpg"
 import ArcticPong from "../../Assets/GameArea/ArcticPong.jpg"
 import RetroPong from "../../Assets/GameArea/RetroPong.jpg"
+import HideAbility from "../../Assets/GameArea/HideAbility.png"
+import ReverseAbility from "../../Assets/GameArea/ReverseAbility.png"
+import SpeedAbility from "../../Assets/GameArea/SpeedAbility.png"
+import axios from 'axios';
 
 let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
-let gameModes = new Map<String, GameMode>([
+
+{/* 
+    app/client/src/Assets/GameArea/HideAbility.png       | Bin 0 -> 355371 bytes
+    app/client/src/Assets/GameArea/RetroPaddle.png       | Bin 0 -> 144330 bytes
+    app/client/src/Assets/GameArea/ReverseAbility.png    | Bin 0 -> 272902 bytes
+    app/client/src/Assets/GameArea/SpeedAbility.png      | Bin 0 -> 252708 bytes
+
+*/}
+
+let abilityImgs = new Map<string, string>([
+    ["reverse", ReverseAbility],
+    ["speed", SpeedAbility],
+    ["hide", HideAbility],
+])
+
+const gameModes = new Map<string, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
         ball: "fireBall.png",
@@ -27,7 +46,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
         maxScore: 14,
-        ability: ""
+        ability: "none"
     }],
     ["BlazingPong", {
         modeName: "BlazingPong",
@@ -37,7 +56,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 5000,
         maxScore: 11,
-        ability: "speed"
+        ability: "reverse"
     }],
     ["ArcticPong", {
         modeName: "ArcticPong",
@@ -57,7 +76,7 @@ let gameModes = new Map<String, GameMode>([
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 3000,
         maxScore: 5,
-        ability: "reverse"
+        ability: "hide"
     }],
 ]);
 
@@ -78,11 +97,16 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const {user} = useContext(UserContext);
-    const [ability, setAbility] = useState<string>(mode?.ability || "");
+    const { user, navigate } = useContext(UserContext);
+    const [ability, setAbility] = useState<string>("");
     const [isClicked, setIsClicked] = useState<boolean>(false);
+    const modeName = String(mode?.modeName)
+    const backgroundImage = ModeImages.find(mode => mode.includes(modeName))
+    const [iconStyle, setIconStyle] = React.useState({animationName: "none"});
 
     const {key, gameMode} = useParams();
+
+    // if (!user.id) navigate("/error")
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
@@ -101,23 +125,36 @@ export default function Game () {
             })
         }
     }
+
+    const UpdateStatus = async () => {
+        try {
+            void axios.put('/api/user/updateStatus', {status: "InGame"})
+        }
+        catch (error) {
+            
+            // console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        setAbility(mode?.ability || "")
+    }, [mode])
     
     useEffectOnUpdate(()  => {
-    // console.log(firstTime);
-        
+
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
-                    return  {...prevState, myPersentage: prevState.myPersentage + 5}
+                    return  {...prevState, myPersentage: prevState.myPersentage + 1}
                 });
             }, 100)
         }
     }, [firstTime])
 
-
     useEffect(() => {
         if (persentage.myPersentage >= 100 && !isEffect.current) {
             isEffect.current = true;
+            setIconStyle({animationName: "brilliance"})
             if (mode && mode.modeName === "BattleRoyal") {
                 mode.ability = abilities[Math.floor(Math.random() * 3)];
                 setAbility(mode.ability);
@@ -135,28 +172,23 @@ export default function Game () {
     useEffect(() => {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
-        })
-
-            socket?.on("leaveGame", () => {
-                setIsGameEnd(true);
-                isWin.current = true;
-                if (gameMode && !isGameEnd)
-                    updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
-                socket?.emit("gameEnd", key);   
-                socket?.disconnect();
-            })
-
+        });
+        socket?.on("leaveGame", () => {
+            setIsGameEnd(true);
+            isWin.current = true;
+            if (gameMode && !isGameEnd)
+                updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
+            socket?.emit("gameEnd", key);
+            socket?.disconnect();
+        });
     }, [socket])
 
     useEffect(() => {
-        if (gameMode && (score.myScore === mode?.maxScore 
+        if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
             setIsGameEnd(true);
             socket?.emit("gameEnd", gameKey);
-            // console.log("game end");
         }
-
-        // console.log(score.myScore, mode?.msetIsClickedaxScore);
 
         if (gameMode && score.myScore === mode?.maxScore) {
             isWin.current = true;
@@ -168,16 +200,33 @@ export default function Game () {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
+      
+        void UpdateStatus() 
 
-        if (key && gameMode) {setIsClicked
+
+        if (key && gameMode) {
+            setIsMatching(true);
             setGameKey(key);
+            roomKey = key;
+
             newSocket.emit("joinGame", key);
+            newSocket.emit("waiting", key);
+
+            newSocket.on("startGame", () => {
+                setIsMatching(false);
+                newSocket.emit("sendUser", {roomKey: key, user});
+                newSocket.on("recvOppUser", (opUser: User) => {
+                    oppUser.current = opUser;
+                })
+
+            })
+
         } else if (gameMode) {
             setIsMatching(true);
             newSocket.emit("gameMatching", {
                 modeName: gameModes.get(gameMode)?.modeName,
                 xp: mode?.xp,
-                user: user,setIsClicked
+                user: user,
             });
 
             newSocket.on("matched", (data: any) => {
@@ -190,25 +239,40 @@ export default function Game () {
             });
         }
 
-        return () => {;
+        return () => {
             newSocket.emit("gameEnd", roomKey);
             newSocket.disconnect();
         };
     }, [])
 
-    const modeName = String(mode?.modeName)
-    const backgroundImage = ModeImages.find(mode => mode.includes(modeName))
+    const  handleClick = () => {
+        if (isEffect.current) {
+            setIsClicked(true);
+            setIconStyle({animationName: "none"});
+        }
+    }
 
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
             <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
-            
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
             <div className='main-container flex flex-col justify-center gap-1'>
-                <div onClick={() => setIsClicked(true)} className='w w-12 h-12 bg-red-400 absolute top-20 left-20 uppercase text-center '>{ability[0]}</div>
-                {!isMatching && <Board score={score} oppUser={oppUser.current} isHost={isHost} persentage={persentage}/>}
+                {!isMatching && <img
+                    onClick={handleClick}
+                    style={iconStyle}
+                    id="ability-icon"
+                    src={abilityImgs.get(ability)}
+                    className={`bg-purple-400 rounded-full ${isHost && "ability-position-modifier"}`} />
+                }
+                {!isMatching && <Board
+                    score={score}
+                    oppUser={oppUser.current}
+                    isHost={isHost}
+                    persentage={persentage}/>
+                }
+
                 <ReactP5Wrapper 
                     sketch={sketch}
                     socket={socket}

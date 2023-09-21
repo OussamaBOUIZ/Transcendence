@@ -23,10 +23,7 @@ const UpdateStatus = async () => {
 
 export default function MainLayout () {
     const userStatus = useOnlineStatus();
-    const {user, socket, setSocket, notif, invitation, setInvitation} = useContext(UserContext)
-
-    console.log(user);
-    
+    const {user, socket, setSocket, navigate, notif, invitation, setInvitation} = useContext(UserContext)
 
     useEffectOnUpdate(() => {
       if (user.id) {
@@ -40,7 +37,6 @@ export default function MainLayout () {
       const fd = io("ws://localhost:1212", {
           withCredentials: true,
       })
-      // setInvitation({image: '', username: 'oouazize'})
       setSocket(fd)
 
       return  () => {
@@ -49,16 +45,26 @@ export default function MainLayout () {
     }, [])
 
     useEffectOnUpdate(() => {
+      socket?.on('challengeAccepted', (data: {key: number, gameName: string}) => {
+        navigate(`/game/${data.gameName}/${data.key}`)
+      })
+
       socket?.on('invitation', (gameInfo: gameInvInfo) => {
         const fetchUserData = async () => {
           try {
+            
             const user = await getUserData(gameInfo.userId, "id")
-            setInvitation({image: String(user.image), username: user.username, gameName: gameInfo.gameName})
+            setInvitation({
+              hostId: gameInfo.userId,
+              image: String(user.image),
+              username: user.username,
+              gameName: gameInfo.gameName.replace(/\s/g, '')
+            })
           }
           catch (err) {
             // console.log(err)
           }
-      }
+        }
         void fetchUserData()
       })
     }, [socket])

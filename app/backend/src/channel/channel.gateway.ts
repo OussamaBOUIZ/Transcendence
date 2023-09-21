@@ -7,10 +7,12 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { invitationDto } from "./dto/invitationDto";
+import { gameRoomDto } from "./dto/gameRoomDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { WsExceptionFilter } from "src/Filter/ws.filter";
+import { log } from "console";
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(1212, {cors: {
@@ -49,7 +51,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 
     async handleDisconnect(client: Socket) {
-        
         const AllCookies = client.handshake.headers.cookie;
         if (AllCookies == undefined)
             return ;
@@ -58,15 +59,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         end = end !== -1 ? end : AllCookies.length;
         const accessToken = AllCookies.substring(start, end);
         const user = await this.userService.getUserFromJwt(accessToken);
-        if(!user) 
+        if(!user)
         {
-
             client.emit('exception', 'user not authenticated');
             client.disconnect();
             return ;
             // throw new WsException('user is not authenticated');
         }
-        user.socketId = client.id;
+        user.socketId = "empty";
         user.status = 'Offline'
         await this.userService.saveUser(user);
     }
@@ -77,13 +77,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     {
         channelservice.unmuteUser(userId);
         server.emit('Unmuted', 'user was unmuted');
-    }
-
-    @SubscribeMessage('receiveInvitation')
-    async receiveInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
-    {
-        const guest = await this.userService.findUserById(invData.guestId);
-        client.to(guest.socketId).emit('invitation', invData);
     }
 
     @SubscribeMessage('muteuser')
@@ -185,6 +178,21 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }
+    }
+
+
+    @SubscribeMessage('sendInvitation')
+    async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    {
+        const guest = await this.userService.findUserById(invData.guestId);
+        client.to(guest.socketId).emit('invitation', invData);
+    }
+
+    @SubscribeMessage('CreateGameRoom')
+    async challengeAccepted(@MessageBody() gameRoomData: gameRoomDto, @ConnectedSocket() client: Socket)
+    {
+        const host = await this.userService.findUserById(gameRoomData.hostId);
+        client.to(host.socketId).emit('challengeAccepted', gameRoomData);
     }
 
 }
