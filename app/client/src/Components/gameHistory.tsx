@@ -55,6 +55,16 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
         )
     })
 
+    if (!games.current.length) {
+        return (
+            <div className="item GameHistory">
+                <div className="w-full h-full flex items-center justify-center text-center">
+                    <p>There are no games yet</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="item GameHistory">
             {header}
