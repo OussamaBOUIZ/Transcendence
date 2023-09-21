@@ -267,7 +267,7 @@ export default function Game () {
                     onClick={handleClick}
                     style={iconStyle}
                     id="ability-icon"
-                    src={abilityImgs.get(ability)}
+                    src={String(abilityImgs.get(ability))}
                     className={`bg-red-400 ${isHost && "ability-position-modifier"}`} />
                 }
                 {!isMatching && <Board

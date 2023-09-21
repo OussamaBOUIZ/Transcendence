@@ -33,8 +33,9 @@ export default function Notification({ message, playNow }: {message?: string, pl
 	function acceptChallenge() {
 		const key = nanoid();
 		const data = {hotsId: playNow?.hostId, key: key, gameName: playNow?.gameName}
+		setIsAnimationFinished(true)
 		socket?.emit('CreateGameRoom', data)
-		navigate(`/game/${playNow?.gameName}/${key}`)
+		navigate(`/game/${data.gameName}/${key}`)
 	}
 
 	const popUp = <div className="notification-text">

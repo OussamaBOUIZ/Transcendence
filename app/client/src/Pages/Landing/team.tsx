@@ -10,9 +10,9 @@ import dib from "../../Assets/dib.jpeg";
 
 export default function Team() {
     const navLinks = [
-        {linkedin: 'https://react.dev/', github: 'https://react.dev/', image: ouazize},
         {linkedin: 'https://react.dev/', github: 'https://www.docker.com/', image: obouizga},
         {linkedin: 'https://react.dev/', github: 'https://nestjs.com/', image: abde},
+        {linkedin: 'https://react.dev/', github: 'https://react.dev/', image: ouazize},
         {linkedin: 'https://react.dev/', github: 'https://www.postgresql.org/', image: photo},
         {linkedin: 'https://react.dev/', github: 'https://www.typescriptlang.org/', image: dib},
     ]

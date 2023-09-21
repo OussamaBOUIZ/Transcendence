@@ -48,19 +48,17 @@ export default function MainLayout () {
       socket?.on('challengeAccepted', (data: {key: number, gameName: string}) => {
         navigate(`/game/${data.gameName}/${data.key}`)
       })
-      socket?.on('invitation', (gameInfo: gameInvInfo) => {
 
+      socket?.on('invitation', (gameInfo: gameInvInfo) => {
         const fetchUserData = async () => {
           try {
-            console.log(gameInfo);
-            
             const user = await getUserData(gameInfo.userId, "id")
-            setInvitation({hostId: gameInfo.userId, image: String(user.image), username: user.username, gameName: gameInfo.gameName})
+            setInvitation({hostId: gameInfo.userId, image: String(user.image), username: user.username, gameName: gameInfo.gameName.replace(/\s/g, '')})
           }
           catch (err) {
             // console.log(err)
           }
-      }
+        }
         void fetchUserData()
       })
     }, [socket])
