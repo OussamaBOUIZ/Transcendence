@@ -1,20 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import photo from "../../Assets/0file.jpg";
 import github from "../../Assets/Icons/github.png";
 import linkedin from "../../Assets/Icons/linkedin.png";
 import ouazize from "../../Assets/ouazize.jpeg";
 import obouizga from "../../Assets/obouizga.jpeg";
 import abde from "../../Assets/abde.jpeg";
 import dib from "../../Assets/dib.jpeg";
+import ijmari from "../../Assets/ijmari.jpg";
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
+ */
 
 export default function Team() {
     const navLinks = [
-        {linkedin: 'https://react.dev/', github: 'https://react.dev/', image: ouazize},
-        {linkedin: 'https://react.dev/', github: 'https://www.docker.com/', image: obouizga},
-        {linkedin: 'https://react.dev/', github: 'https://nestjs.com/', image: abde},
-        {linkedin: 'https://react.dev/', github: 'https://www.postgresql.org/', image: photo},
-        {linkedin: 'https://react.dev/', github: 'https://www.typescriptlang.org/', image: dib},
+        {linkedin: 'https://www.linkedin.com/in/oussama-ouazize/', github: 'https://github.com/oouazize', image: ouazize},
+        {linkedin: 'https://www.linkedin.com/in/obouizga/', github: 'https://github.com/OussamaBOUIZ', image: obouizga},
+        {linkedin: 'https://www.linkedin.com/in/abdelhak-el-moussaoui-b7956b194/', github: 'https://github.com/abdelhak4', image: abde},
+        {linkedin: 'https://www.linkedin.com/in/issam-jmari-95a217258/', github: 'https://github.com/issamjmari', image: ijmari},
+        {linkedin: 'https://www.linkedin.com/in/yassineeddyb/', github: 'https://github.com/YassineEddyb', image: dib},
     ]
 
     const team = navLinks.map(item => {
