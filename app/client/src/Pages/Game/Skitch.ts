@@ -19,7 +19,7 @@ export function reset(p5: any, isHost: boolean): void {
     vars.effect = "";
     vars.isEffect = false;
 
-    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
+    // vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
     leftPad = new Pad(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
