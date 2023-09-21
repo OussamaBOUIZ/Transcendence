@@ -7,6 +7,7 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { invitationDto } from "./dto/invitationDto";
+import { gameRoomDto } from "./dto/gameRoomDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
@@ -75,15 +76,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     {
         channelservice.unmuteUser(userId);
         server.emit('Unmuted', 'user was unmuted');
-    }
-
-    @SubscribeMessage('sendInvitation')
-    async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
-    {
-        const guest = await this.userService.findUserById(invData.guestId);
-        client.to(guest.socketId).emit('invitation', invData);
-        console.log("invitation data: ", invData);
-        console.log("guest socket: ", guest.socketId);
     }
 
     @SubscribeMessage('muteuser')
@@ -185,6 +177,21 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             
             this.server.to(newMessage.channelName).emit('sendChannelMessage', newMessage);
         }
+    }
+
+
+    @SubscribeMessage('sendInvitation')
+    async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)
+    {
+        const guest = await this.userService.findUserById(invData.guestId);
+        client.to(guest.socketId).emit('invitation', invData);
+    }
+
+    @SubscribeMessage('CreateGameRoom')
+    async challengeAccepted(@MessageBody() gameRoomData: gameRoomDto, @ConnectedSocket() client: Socket)
+    {
+        const host = await this.userService.findUserById(gameRoomData.hostId);
+        client.to(host.socketId).emit('challengeAccepted', gameRoomData);
     }
 
 }

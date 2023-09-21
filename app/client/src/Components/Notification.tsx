@@ -8,6 +8,7 @@ import { Socket } from "socket.io-client";
 import {nanoid} from 'nanoid'
 
 interface userType {
+	hostId: number,
 	username: string;
 	image: string;
 	gameName: string;
@@ -31,7 +32,8 @@ export default function Notification({ message, playNow }: {message?: string, pl
 
 	function acceptChallenge() {
 		const key = nanoid();
-		socket?.emit('challengeAccepted', key)
+		const data = {hotsId: playNow?.hostId, key: key, gameName: playNow?.gameName}
+		socket?.emit('CreateGameRoom', data)
 		navigate(`/game/${playNow?.gameName}/${key}`)
 	}
 
