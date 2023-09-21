@@ -27,6 +27,15 @@ const waitingUsers = new Map<String, User[]>([
     ["RetroPong", []]
 ]);
 
+function cleanWaitingSockets (socket: Socket) {
+	gameModes.forEach((mode: string) => {
+		waitingUsers?.set(mode, 
+			waitingUsers.get(mode)?.filter(
+				(u: User) => u.socket.id !== socket.id)
+			);
+	});
+}
+
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
 	credentials: true
@@ -47,17 +56,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     handleDisconnect(@ConnectedSocket() socket: Socket) {
         console.log('handle disconnect');
 
-		for (const [key, _value] of this.server.sockets.adapter.rooms) {
-			if (key.includes(socket.id))
+		for (const [key, value] of this.server.sockets.adapter.rooms) {
+			if (key.includes(socket.id) && value.size > 0) {
+				console.log("leave game");
 				this.server.to(key).emit("leaveGame")
+			}
 		}
 
-		gameModes.forEach((mode: string) => {
-			waitingUsers?.set(mode, 
-				waitingUsers.get(mode)?.filter(
-					(u: User) => u.socket.id !== socket.id)
-				);
-		});
+		cleanWaitingSockets(socket);
     }
 
 	@SubscribeMessage('waiting')
@@ -75,16 +81,25 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		console.log('join game');
-		// if (this.server.sockets.adapter.rooms.get(roomKey)?.size < 2)
+		if (!(this.server.sockets.adapter.rooms.get(roomKey)?.size > 2))
 			socket.join(roomKey);
 	}
   
 	@SubscribeMessage('gameEnd')
 	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		socket.to(roomKey).emit("leaveGame");
-		console.log("leave game");
+		console.log("game End");
 
 		socket.leave(roomKey);
+		cleanWaitingSockets(socket);
+	}
+
+	@SubscribeMessage('quitGame')
+	async onQuitGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
+		socket.to(roomKey).emit("leaveGame");
+		console.log("quit game");
+
+		socket.leave(roomKey);
+		cleanWaitingSockets(socket);
 	}
 
 	@SubscribeMessage('achievement')
@@ -92,12 +107,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		console.log('here achievement: ', gameData)
 		await this.gameservice.userGameDataUpdate(gameData);
 		await this.gameservice.addLoserStat(gameData.opponentId)
+		
 	}
 	
 
 	@SubscribeMessage('saveScore') 
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
+		console.log("score: ", score);
 		await this.gameservice.saveScore(score);
+
 	}
 
 	@SubscribeMessage('gameScore')

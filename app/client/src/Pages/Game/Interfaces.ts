@@ -13,8 +13,7 @@ export interface MySketchProps extends SketchProps {
     gameMode: GameMode | null;
     score: Score;
     setScore:  React.Dispatch<React.SetStateAction<Score>>;
-    isGameEnd: boolean;
-    setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
+    isGameEnd:  React.MutableRefObject<boolean>;
     isWin: boolean;
     isEffect: React.MutableRefObject<boolean> | null;
     setPersentage: React.Dispatch<React.SetStateAction<Persentage>>;
