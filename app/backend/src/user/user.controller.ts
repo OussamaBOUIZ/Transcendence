@@ -246,11 +246,11 @@ export class UserController {
         return new StreamableFile(fileContent);
     }
 
-    @Get('onlinefriends/:id')
-    async getOnlineFriends(@Param('id') id: number)
-    {
-        return await this.userService.onlineFriends(id);
-    }
+    // @Get('onlinefriends/:id')
+    // async getOnlineFriends(@Param('id') id: number)
+    // {
+    //     return await this.userService.onlineFriends(id);
+    // }
     @Post('addfriend/:id')
     async addFriend(@Param('id') id: number, @Query('friendId') friendId: number, @Res() res: Response)
     {
