@@ -1,20 +1,22 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import axios from 'axios';
+import UserContext from "../Context/UserContext";
 
 export const useFetchQRcode = (): string => {
-    const [QRcode, setQRcode] = useState<string>("");
-    
-    useEffect(() => {
-        const getInfo = async () => {
-          try {
-            const response = await axios.get<string>("/api/auth/qrcode");
-            setQRcode(response.data);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        void getInfo();
-      }, []);
+  const [QRcode, setQRcode] = useState<string>("");
+  const {navigate} = useContext(UserContext)
 
-    return QRcode;
+  useEffect(() => {
+      const getInfo = async () => {
+        try {
+          const response = await axios.get<string>("/api/auth/qrcode");
+          setQRcode(response.data);
+        } catch (err: any) {
+          navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
+        }
+      };
+      void getInfo();
+    }, []);
+
+  return QRcode;
 }

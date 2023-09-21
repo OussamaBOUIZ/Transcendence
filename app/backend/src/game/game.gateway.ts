@@ -46,15 +46,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	constructor(private readonly gameservice: gameService) {}
 
     afterInit(server: any) {
-        console.log('after init');
     }
 
     handleConnection(@ConnectedSocket() socket: Socket, ...args: any[]) {
-        console.log('handle connect');
     }
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
-        console.log('handle disconnect');
 
 		for (const [key, value] of this.server.sockets.adapter.rooms) {
 			if (key.includes(socket.id) && value.size > 0) {
@@ -104,7 +101,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('achievement')
 	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
-		console.log('here achievement: ', gameData)
 		await this.gameservice.userGameDataUpdate(gameData);
 		await this.gameservice.addLoserStat(gameData.opponentId)
 		

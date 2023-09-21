@@ -52,9 +52,7 @@ export default function ChannelProperty({ channel, propertyName, isUnderMyGrade 
           })
         );
         setComponents(ComponentsList);
-      } catch (error) {
-        console.error("Error fetching admin data:", error);
-      }
+      } catch (error) {}
     };
     void getInfo();
   }, [channel, propertyName, isUnderMyGrade]);

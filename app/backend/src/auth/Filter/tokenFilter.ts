@@ -13,7 +13,6 @@ import {
        const ctx = host.switchToHttp();
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();
-       console.log('response is isis: ', exception.getStatus())
        return response.status(status).send(false);
      }
    }

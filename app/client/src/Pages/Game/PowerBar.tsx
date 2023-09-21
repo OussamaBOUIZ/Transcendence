@@ -15,9 +15,7 @@ export default function PowerBar({ right, isHost, oppUser, persentage}: {right: 
             try {
                 const image = await getUserImage(oppUser.id);
                 oppUser.image = image;
-            } catch (err) {
-                console.log(err);
-            }
+            } catch (err) {}
         }
         void fetchOppImage();
     }, [])

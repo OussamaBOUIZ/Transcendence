@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {User} from "../../../global/Interfaces"
 import { SocketContext } from './ChatRooms'
 import axios from "axios"
+import UserContext from '../../Context/UserContext'
 
 interface PropType {
     userData: User,
@@ -13,15 +14,16 @@ interface PropType {
 }
 export default function UserCard ({userData, message, friend, add}: PropType ) {
     const {roomData, setShowSearch} = useContext(SocketContext)
-    
+    const {navigate} = useContext(UserContext)
+
     const handleAddUser = () => {
         const fetch = async () => {
             try {
                 await axios.get(`/api/channel/addToChannel/${userData.id}?channelName=${roomData.channelName}`)
                 setShowSearch(prev => !prev)
             }
-            catch (err) {
-                // console.log(err)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }      
         }
         void fetch();

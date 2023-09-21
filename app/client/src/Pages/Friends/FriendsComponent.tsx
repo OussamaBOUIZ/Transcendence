@@ -17,8 +17,6 @@ export default function FriendsComponent() {
 
     const FriendsToggle = allFriends.map((friend) => {
         let result: React.JSX.Element;
-        console.log(friend.lastGame);
-        
         if (typeof friend.lastGame === 'string') {
             result = (
                 <main>
@@ -48,7 +46,7 @@ export default function FriendsComponent() {
                 statusIcon = "bg-slate-600";
                 break;
             default:
-                statusIcon = "bg-pink-500";
+                statusIcon = "bg-green-500 border-2 border-pink-400";
                 break;
         }
 

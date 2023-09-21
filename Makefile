@@ -1,5 +1,5 @@
 all: 
-	rm -rf dist/* 
+	# rm -rf dist/* 
 	docker compose up --build -d
 
 down:

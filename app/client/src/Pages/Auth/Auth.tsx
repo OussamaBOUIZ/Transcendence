@@ -17,20 +17,10 @@ interface Inputs {
 
 
 export default function Auth() {
-    const {user} = useContext(UserContext)
+    const {user, navigate} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
     const QRcode = useFetchQRcode();
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
-
-
-    // function handleInput() {
-    //     input.forEach(element => {
-    //         if (isNaN(+element)) {
-    //             console.log("error");
-    //             return;
-    //         }
-    //     });
-    // }
 
     const collectedCode = Object.values(codeNumber).join('');
 
@@ -40,23 +30,18 @@ export default function Auth() {
         const sendCode = async () => {
             if (isNumeric && collectedCode.length === 6) {
                 try {
-                    const collected = {
-                        token: collectedCode,
-                    }
+                    const collected = { token: collectedCode }
                     const res = await axios.post("/api/user/2fa/login", collected);
-                    console.log('res is: ', res);
-                    if(res.data.length == 0)
-                    {
+                    if(res.data.length == 0) {
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                         window.location.replace('/');
                     }
                     else
                         setNotif('token is not valid');
-                } catch (error) {
-                    console.log(error);
+                } catch (err: any) {
+                    navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
             } else {
-                console.log("error");
                 setNotif("The code is not numeric");
             }
         }

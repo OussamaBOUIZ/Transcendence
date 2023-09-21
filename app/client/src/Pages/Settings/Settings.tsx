@@ -12,13 +12,12 @@ import Loading from '../Loading';
 
 export default function Settings () {
 
-    const {user, setUpdate, setNotif} = useContext(UserContext)
+    const {user, setUpdate, setNotif, navigate} = useContext(UserContext)
     const [imgPrev, setimgPrev] = useState<File | null>(null);
     const [image, setImage] = useState<string>("")
     const [data, setData] = useState<Data>({firstname: "", lastname: "", username: ""})
     const [tfaStatus, setTfaStatus] = useState<boolean>(false);
 
-        console.log(user)
     const updateUserNames = setFullName(setData);
     
     function checkInput(): boolean {
@@ -51,8 +50,8 @@ export default function Settings () {
                     if (res.data.length)
                         setNotif(res.data)
                 }
-            } catch (error: any) {
-                console.log(error);
+            } catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         let headers = {};
@@ -72,8 +71,8 @@ export default function Settings () {
                     setUpdate(prevVal => !prevVal)
                 }
             }
-            catch (error: any) {
-                console.log(error)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         let headers = {};
@@ -87,34 +86,21 @@ export default function Settings () {
 
 
     const handleEnable2FA = () => {
-        
-        const sendEnable = async () => {
-            try {
-                window.location.replace('/auth')
-            } catch (error) {
-                // console.log(error);
-            }
-        }
         if (tfaStatus)
             window.location.replace('/disabletfa')
-        else
-            sendEnable(); 
+        window.location.replace('/auth')
     }
-    
+
     const get2FAStatus =async () => {
         try {
-            console.log("user", user)
             const res = await axios.get(`/api/user/2fa/isTurnedOn/${user?.id}`)
-            console.log("res.data", res.data)
             setTfaStatus(res.data)
-        } catch (error) {
-            console.log(error);
+        } catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 
     useEffectOnUpdate(() => {
-        console.log("getting status")
-        
         get2FAStatus();
     } , [user])
     

@@ -16,7 +16,7 @@ interface Inputs {
 
 
 export default function InputAuth() {
-    const {user} = useContext(UserContext)
+    const {user, navigate} = useContext(UserContext)
     const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -34,8 +34,8 @@ export default function InputAuth() {
                     if(res.data.length !== 0)
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                     window.location.replace('/');
-                } catch (error) {
-                    console.log(error);
+                } catch (err: any) {
+                    navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
             } else {
                 setNotif("The code is not numeric");

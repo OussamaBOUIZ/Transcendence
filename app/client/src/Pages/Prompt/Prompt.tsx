@@ -62,8 +62,8 @@ export default function Prompt() {
                 if (val === 2)
                     window.location.replace('/')
             }
-            catch (error: any) {
-                setNotif(error.response.data)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         if (checkInput())
