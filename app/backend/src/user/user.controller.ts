@@ -392,7 +392,7 @@ export class UserController {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         return user.firstLog;
     }
-    @Get('logout/:id')
+    @Post('logout/:id')
     @UseGuards(JwtGuard)
     async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
@@ -403,7 +403,7 @@ export class UserController {
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
-        return res.redirect('http://localhost:5137/');
+        return res.status(200).send('');
     }
 
     @Patch('stat/add')
