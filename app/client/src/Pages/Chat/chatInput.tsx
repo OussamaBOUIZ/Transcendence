@@ -1,34 +1,16 @@
 import React, { useContext } from 'react';
 import InboxContext from '../../Context/InboxContext';
-import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
-
 
 export default function ChatInput({message, setMessage, sender, id}: {message: string, setMessage: React.Dispatch<React.SetStateAction<string>>, sender: React.FormEventHandler<HTMLElement>, id:string | undefined}) {
-    const {dmSocket, isBanned, isTyping} = useContext(InboxContext)
+    const {isBanned} = useContext(InboxContext)
     const handleEnter:React.KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.key === 'Enter') sender(event)
     }
 
-    useEffectOnUpdate(() => {
-        if (message.length)
-            dmSocket?.emit('pandingMessage', id)
-        else
-            dmSocket?.emit('noMessage', id)
-    }, [message])
-
-    if (!id)
-        return null
-
-    console.log(isTyping);
+    if (!id) return null
 
     return (
         <form className="chat_input px-4 flex flex-col" onSubmit={sender}>
-            {isTyping && <div className="loader flex gap-4">
-                <p>is typing</p>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>}
             <div className='flex items-center justify-center'>
                 <textarea
                     autoFocus

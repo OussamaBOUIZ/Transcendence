@@ -1,10 +1,11 @@
-import React, {createContext, useState, useRef} from 'react'
+import React, {createContext, useState, useRef, useContext} from 'react'
 import { InboxItem, MessageData } from '../../global/Interfaces';
 import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import io, {Socket} from 'socket.io-client'
 import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
 import {updateInboxByReceiving} from "../Helpers/chatdm.utils"
+import UserContext from './UserContext';
 
 
 interface InboxContextType {
@@ -13,8 +14,6 @@ interface InboxContextType {
     setUpdate: React.Dispatch<React.SetStateAction<number>>;
     isBanned: boolean;
     setBanned: React.Dispatch<React.SetStateAction<boolean>>;
-    isTyping: boolean;
-    setIsTyping: React.Dispatch<React.SetStateAction<boolean>>;
     viewIdRef: React.MutableRefObject<number>,
     messagesList: MessageData[],
     setMessagesList: React.Dispatch<React.SetStateAction<MessageData[]>>
@@ -39,9 +38,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const [isBanned, setBanned] = useState<boolean>(false)
     const prevInnerDivHeight = useRef<number>(0);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    const [isTyping, setIsTyping] = useState<boolean>(false);
-
-
+    const {navigate} = useContext(UserContext)
     const mapInbxImg = async (item:InboxItem) => {
         const image = await getUserImage(item.author.id) 
         return {...item, image}
@@ -55,15 +52,14 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
     const fetchInbox = async () => {
         try {
             const res = await axios.get<InboxItem[]>('/api/inbox/all');
-            console.log(res.data);
-            if (res.data.length !== 0) 
-            {
+            if (res.data.length !== 0)  {
                 const newData = await fetchInboxAvatars(res.data)
                 inboxList.current = newData;
                 setIsLoaded(true);
             }
-            } catch (error) {
-                console.error();
+        }
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
     
@@ -84,31 +80,19 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
     useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
-            console.log('new message')
             const inView: boolean = recMsg.authorId === viewIdRef.current;
             if (inView)
                 setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
-            const fetch =async () => {
+            const fetch = async () => {
                 try {
                     const newInboxList = await updateInboxByReceiving(recMsg, inboxList, inView);
                     inboxList.current = newInboxList;
                     setUpdate(prev => prev + 1)
                 }
-                catch (error) {
-                    // console.log(error);
-                }
+                catch (error) {}
             }
             void fetch();
         });
-        dmSocket?.on('isTyping', () => {
-            setIsTyping(true)
-            console.log("is typing");
-            
-        })
-        dmSocket?.on('noMessage', () => {
-            setIsTyping(false)
-            
-        })
     }, [dmSocket]);
 
     return (
@@ -120,7 +104,6 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
             messagesList, setMessagesList,
             update, setUpdate,
             dmSocket, setDmSocket,
-            isTyping, setIsTyping,
         }}>
         {children}
         </InboxContext.Provider>

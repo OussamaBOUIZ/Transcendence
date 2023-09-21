@@ -52,8 +52,8 @@ export default function CreateRoom({action, defaultValue}: {action: string, defa
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }
-        catch (err) {
-            console.log(err)
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 

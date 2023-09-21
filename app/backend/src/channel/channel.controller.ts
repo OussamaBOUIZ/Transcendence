@@ -35,7 +35,6 @@ export class ChannelController {
         const ret = await this.channelservice.promoteMember(userId, channelId);
         if(typeof ret === 'string')
         {
-            console.log('HERE BANNNED');
             return res.status(HttpStatus.OK).send('user is banned');
         }
         return res.status(HttpStatus.CREATED).send('');
@@ -85,7 +84,6 @@ export class ChannelController {
     {
         if(channelName == 'undefined')
             throw new BadRequestException('channel was not specified');
-        console.log('HERE')
         const ret = await this.channelservice.addUserToChannel(id, channelName);
         return ret;
     }

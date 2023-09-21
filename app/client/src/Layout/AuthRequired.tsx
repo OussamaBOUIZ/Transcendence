@@ -8,8 +8,7 @@ import Notification from '../Components/Notification'
 export default function AuthRequired () {
 
     const {authenticated, isLoading, isAnimationFinished, setIsAnimationFinished, notif, setNotif, invitation, setInvitation} = useContext(UserContext)
-    console.log('here');
-    useEffectOnUpdate(() => {setNotif(""); setInvitation(undefined); setIsAnimationFinished(false); console.log('again');}, [isAnimationFinished])
+    useEffectOnUpdate(() => {setNotif(""); setInvitation(undefined); setIsAnimationFinished(false)}, [isAnimationFinished])
     
     if (isLoading)
         return <Loading />

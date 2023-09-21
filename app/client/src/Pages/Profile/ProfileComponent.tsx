@@ -13,7 +13,7 @@ import {NavLink} from "react-router-dom"
 
 export default function ProfileComponent({UserData}: {UserData: User}) {
 
-    const {user, setNotif} = useContext(UserContext)
+    const {user, setNotif, navigate} = useContext(UserContext)
     const [isMyFriend, setIsMyFriend] = useState<boolean>(false)
     const [update, setUpdate] = useState<number>(0)
 
@@ -23,8 +23,8 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
             if (res.data.length)
                 setNotif(res.data)
         }
-        catch (err) {
-            // console.log(err)
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 
@@ -33,9 +33,8 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
             await axios.post(`/api/user/addfriend/${user.id}?friendId=${UserData.id}`, null)
             setUpdate(prev => prev + 1)
         }
-        catch (err) {
-            console.log("error : adding an existing friend")
-            console.log(err)
+        catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
         }
     }
 
@@ -84,7 +83,7 @@ export default function ProfileComponent({UserData}: {UserData: User}) {
                 {
                     user.id !== UserData.id &&
                     <div className="footer">
-                        <button className="friend-request" onClick={handleFriend}>
+                        <button className="friend-request" onClick={handleFriend} disabled={isMyFriend} >
                             <div className="flex justify-center items-center gap-2">
                                 <img src={IconFriend} />
                                 {TextFriend}

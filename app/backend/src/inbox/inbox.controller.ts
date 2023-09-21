@@ -56,7 +56,6 @@ export class InboxController {
         var arrayOfInbox: InboxItem[] = []; // size 1;
         inboxes.forEach((inbox) => {
             let result: InboxItem;
-            // console.log('DATA IS ', inbox.user.id, inbox.author.id);
             const findThePeer = inboxes.filter((friend) => {
                 return (inbox.user.id === friend.author.id && inbox.author.id === friend.user.id);
             });
@@ -83,8 +82,6 @@ export class InboxController {
                    result = this.storeResult(inbox.author, latestTimeObj.lastMessage, inbox.unseenMessages, latestTimeObj.CreatedAt);
                 arrayOfInbox.push(result);
             } else {
-                // console.log('inbox unseen are: ', inbox.unseenMessages);
-
                 if (inbox.author.id === user.id) {
                     result = {
                         author: inbox.user,
@@ -104,10 +101,7 @@ export class InboxController {
             }
 
         });
-        // let inb = await this.inboxService.getAllInboxOfUser(user.id)
 
-        // console.log(inb);
-        // return inb
         return arrayOfInbox
     }
 }

@@ -10,18 +10,18 @@ export const useFetchAllFriends = (id: number, update?: number, setIsMyFriend?: 
   const {user} = useContext(UserContext)
   const [allFriends, setAllFriends] = useState<FriendUser[]>([]);
 
-    const getData = async (id: number): Promise<FriendUser[] | []> => {
-        try {
-          if (id) {
-            const res = await axios.get(`/api/user/allfriends/${id}`);
-            return res.data.friends;
-          }
-        } catch (err) {
-            console.log("Error: Failed to fetch all friends.");
-            console.log(err);
-          }
-        return [];
-    };
+  const getData = async (id: number): Promise<FriendUser[]> => {
+    try {
+      if (id) {
+        const res = await axios.get<{friends: FriendUser[]}>(`/api/user/allfriends/${id}`);
+        return res.data.friends;
+      }
+    }
+    catch (err) {
+      return [] as FriendUser[];
+    }
+    return [] as FriendUser[];
+  };
 
     useEffectOnUpdate(() => {
         const fetchFriends = async () => {
@@ -31,17 +31,15 @@ export const useFetchAllFriends = (id: number, update?: number, setIsMyFriend?: 
               let lastGame: lastGame | string = {} as lastGame
               if (setIsMyFriend && friend.id === user.id)
                 setIsMyFriend(true)
-              else {
+              else
+              {
                 const res = await axios.get<lastGame | string>(`/api/user/friendLastGame/${friend.id}?userId=${user.id}`)
                 lastGame = res.data;
-                console.log(res.data);
-                
               }
               const image = await getUserImage(friend.id);
               return { ...friend, lastGame, image };
             })
           );
-    
           setAllFriends(friendswithImage);
         };
     

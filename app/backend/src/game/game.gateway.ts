@@ -37,15 +37,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	constructor(private readonly gameservice: gameService) {}
 
     afterInit(server: any) {
-        console.log('after init');
     }
 
     handleConnection(@ConnectedSocket() socket: Socket, ...args: any[]) {
-        console.log('handle connect');
     }
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
-        console.log('handle disconnect');
 
 		for (const [key, _value] of this.server.sockets.adapter.rooms) {
 			if (key.includes(socket.id))
@@ -74,7 +71,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log('join game');
 		// if (this.server.sockets.adapter.rooms.get(roomKey)?.size < 2)
 			socket.join(roomKey);
 	}
@@ -82,14 +78,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('gameEnd')
 	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		socket.to(roomKey).emit("leaveGame");
-		console.log("leave game");
 
 		socket.leave(roomKey);
 	}
 
 	@SubscribeMessage('achievement')
 	async onAchievement(@MessageBody() gameData: userWinDto, @ConnectedSocket() socket: Socket) {
-		console.log('here achievement: ', gameData)
 		await this.gameservice.userGameDataUpdate(gameData);
 		await this.gameservice.addLoserStat(gameData.opponentId)
 	}

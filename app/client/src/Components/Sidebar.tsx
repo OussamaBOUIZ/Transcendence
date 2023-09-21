@@ -19,10 +19,7 @@ export default function Sidebar () {
 
     const sidebarButtons = allIcons.map(icon => {
         return (
-            <SidebarButton
-            key={icon.id} 
-            to={icon.to}
-            >
+            <SidebarButton key={icon.id} to={icon.to} >
                 {icon.value}
             </SidebarButton>
         )

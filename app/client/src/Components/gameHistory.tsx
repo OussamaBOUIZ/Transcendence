@@ -1,5 +1,5 @@
 import History from "./history";
-import React, {useEffect, useRef, useState} from "react"
+import React, {useContext, useRef, useState} from "react"
 import {User, gameHistory} from "../../global/Interfaces"
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
@@ -7,18 +7,17 @@ import { useLocation } from "react-router"
 import axios from "axios";
 import { getUserImage } from "../Hooks/getUserImage";
 import useEffectOnUpdate from "../Hooks/useEffectOnUpdate";
+import UserContext from "../Context/UserContext";
 
 export default function GameHistory({UserData, NBgames}: {UserData: User, NBgames: number}) {
 
     const [dataFetch, setDataFetch] = useState<gameHistory[]>([])
+    const {navigate} = useContext(UserContext)
 
     useEffectOnUpdate(() => {
         const fetchGames = async () => {
             try {
-                console.log('fetching.......');
                 const res = await axios.get<gameHistory[]>(`/api/user/game/history/${UserData.id}/${NBgames}`)
-                console.log('DATA is: ', res.data);
-                
                 const datawithImage = await Promise.all(res.data.map(async (game) => {
                     let imageId = (game.opponentId === UserData.id) ? game.userId : game.opponentId
                     game.opponentImage = await getUserImage(imageId)
@@ -26,8 +25,8 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
                 }))
                 setDataFetch(datawithImage)
             }
-            catch (error) {
-                // console.log(error)
+            catch (err: any) {
+                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
             }
         }
         if (UserData.id)
@@ -50,14 +49,21 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
             </div>
         </header>
     }
-    let data = dataFetch
-    console.log(data);
-    
-    games.current = data?.map((game, index) => {
+    games.current = dataFetch?.map((game, index) => {
         return (
             <History key={index} userData={UserData} gameData={game} />
         )
     })
+
+    if (!games.current.length) {
+        return (
+            <div className="item GameHistory">
+                <div className="w-full h-full flex items-center justify-center text-center">
+                    <p>There are no games yet</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="item GameHistory">
