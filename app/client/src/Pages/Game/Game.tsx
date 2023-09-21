@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext, useRef} from 'react'
 import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
-import { NavLink, Navigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom"
 import { GameMode, Persentage, Score } from './Interfaces';
@@ -21,15 +21,6 @@ import SpeedAbility from "../../Assets/GameArea/SpeedAbility.png"
 import axios from 'axios';
 
 let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
-
-
-{/* 
-    app/client/src/Assets/GameArea/HideAbility.png       | Bin 0 -> 355371 bytes
-    app/client/src/Assets/GameArea/RetroPaddle.png       | Bin 0 -> 144330 bytes
-    app/client/src/Assets/GameArea/ReverseAbility.png    | Bin 0 -> 272902 bytes
-    app/client/src/Assets/GameArea/SpeedAbility.png      | Bin 0 -> 252708 bytes
-
-*/}
 
 let abilityImgs = new Map<string, string>([
     ["reverse", ReverseAbility],
@@ -97,7 +88,7 @@ export default function Game () {
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const { user, navigate } = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const [ability, setAbility] = useState<string>("");
     const [isClicked, setIsClicked] = useState<boolean>(false);
     const modeName = String(mode?.modeName)

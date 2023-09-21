@@ -33,7 +33,7 @@ export default function InputAuth() {
                     const res = await axios.post("/api/user/2fa/login", collected);
                     if(res.data.length !== 0)
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
-                    window.location.replace('/');
+                    window.location.href = '/'
                 } catch (err: any) {
                     navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }

@@ -7,7 +7,7 @@ export const setFullName = (setData: React.Dispatch<React.SetStateAction<Data>>)
         const { name, value } = event.target;
         setData(prev => ({
             ...prev,
-            [name] : value,
+            [name] : value.trim(),
         }))
     };
 

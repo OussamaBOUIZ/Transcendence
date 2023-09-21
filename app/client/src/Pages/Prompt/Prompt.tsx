@@ -60,7 +60,7 @@ export default function Prompt() {
                     clearFields()
                 }
                 if (val === 2)
-                    window.location.replace('/')
+                    window.location.href = '/'
             }
             catch (err: any) {
                 navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });

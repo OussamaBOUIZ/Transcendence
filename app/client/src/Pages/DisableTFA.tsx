@@ -31,7 +31,7 @@ export default function DisableTFA() {
                     }
                     const res  = await axios.post(`/api/user/2fa/turn-off/${user?.id}`, collected);
                     if (res.data.length === 0)
-                        window.location.replace('/')
+                        window.location.href = '/'
                     setNotif(res.data);
                 }
                 catch (err: any) {

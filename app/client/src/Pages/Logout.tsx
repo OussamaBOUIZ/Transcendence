@@ -11,7 +11,7 @@ export default function Logout () {
         try {
             const res = await axios.post(`/api/user/logout/${user.id}`)
             if (res.data.length === 0)
-                window.location.replace('/sign');
+                window.location.href = '/sign'
         }
         catch (err: any) {
             navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });

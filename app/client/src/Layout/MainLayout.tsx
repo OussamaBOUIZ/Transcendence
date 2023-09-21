@@ -28,7 +28,7 @@ export default function MainLayout () {
     useEffectOnUpdate(() => {
       if (user.id) {
         if (!user.firstname || !user.lastname || !user.username)
-          window.location.replace('/info')
+          window.location.href = '/info'
       }
     }, [user])
     
