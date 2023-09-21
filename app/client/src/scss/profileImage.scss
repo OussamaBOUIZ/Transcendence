@@ -34,6 +34,6 @@
 }
   
 .big {
-    width: $profileWidthBig;
+    min-width: $profileWidthBig;
     height: $profileHeightBig;
 }

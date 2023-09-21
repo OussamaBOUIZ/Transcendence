@@ -4,6 +4,8 @@ import {useFetchJoinedRooms} from "../../Hooks/useFetchJoinedRooms"
 import Rooms from './Rooms';
 import {rooms} from "../../../global/Interfaces"
 import UserContext from '../../Context/UserContext';
+// import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate';
+// import { SocketContext } from './ChatRooms';
 
 interface Elements {
     key: string;
@@ -18,7 +20,8 @@ export default function InboxRooms() {
     const [ProtectedMode, setProtectedMode] = useState<boolean>(true);
     const [PrivateMode, setPrivateMode] = useState<boolean>(true);
     const [JoinedRooms, setJoinedRooms] = useState<JSX.Element[] | null>(null);
-    const {show} = useContext(UserContext);
+    const {show, navigate} = useContext(UserContext);
+    // const {id} = useContext(SocketContext)
     const {publicRooms, protectedRooms, privateRooms} = useFetchJoinedRooms();
 
     const array = useMemo<Elements[]>(() => [
@@ -26,6 +29,21 @@ export default function InboxRooms() {
         { key: "protected", value: "Protected Channels", mode: ProtectedMode, setter: setProtectedMode, rooms: protectedRooms },
         { key: "private", value: "Private Channels", mode: PrivateMode, setter: setPrivateMode, rooms: privateRooms }
     ], [PublicMode, publicRooms, ProtectedMode, protectedRooms, PrivateMode, privateRooms])
+
+
+    // useEffectOnUpdate(() => {
+    //     console.log(publicRooms);
+    //     console.log(protectedRooms);
+    //     console.log(privateRooms);
+
+        
+    //     if (!publicRooms.some((room) => room.id === Number(id)) &&
+    //         !protectedRooms.some((room) => room.id === Number(id)) &&
+    //         !privateRooms.some((room) => room.id === Number(id)) && !id
+    //         )
+    //         navigate('/error', { state: { statusCode: 403, statusText: "Forbidden" } });
+            
+    // }, [publicRooms, protectedRooms, privateRooms])
 
     useMemo(() => {
         const updatedRooms = array.map((element) => (

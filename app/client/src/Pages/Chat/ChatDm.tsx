@@ -17,7 +17,7 @@ import ChatInput from './chatInput';
 
 export default function ChatDm () {
 
-    const {user, show} = useContext(UserContext)
+    const {user, show, navigate} = useContext(UserContext)
     const { id } = useParams();
     const {inboxList, setUpdate, dmSocket} = useContext(InboxContext)
     const [userOverview, setUserOverview] = React.useState<User>({} as User);
@@ -61,7 +61,9 @@ export default function ChatDm () {
         try {
             const res = await axios.get(`/api/chat/${id}`)
             setMessagesList(res.data)
-        } catch (error) {}
+        } catch (err: any) {
+            navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
+        }
     }
 
     useEffectOnUpdate(() => {

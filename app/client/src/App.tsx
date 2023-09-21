@@ -34,7 +34,7 @@ export default function App () {
             <Route path="/home" element={<Landing />} />
           </Route>
           
-          <Route path="/sPageNotFoundign" element={<Sign />} />
+          <Route path="/sign" element={<Sign />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route element={<AuthRequired/>}>
             <Route path="/info" element={<Prompt />} />

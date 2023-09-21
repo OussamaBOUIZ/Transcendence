@@ -181,7 +181,6 @@ export class UserController {
     @Get('blockedUsers/:userId')
     async getBlockedUser(
         @Param('userId', ParseIntPipe) userId: number,
-        @Req() req: Request
     )
     {
         const user = await this.userService.findUserById(userId)
@@ -420,12 +419,19 @@ export class UserController {
 
     @Get('user/details/:id')
     async getUserDetails(@Param('id', ParseIntPipe) id: number) {
-        return this.userService.getUserDetails(id)
+        const user = await this.userService.getUserDetails(id)
+        console.log(user);
+        
+        if (!user )
+            throw new NotFoundException('user not found')
+        return user
     }
 
     @Get('user/profile/:username')
     async getUserProfile(@Param('username') username: string) {
         const user = await this.userService.getUserProfile(username)
+        if (!user )
+            throw new NotFoundException('user not found')
         return user
     }
 }

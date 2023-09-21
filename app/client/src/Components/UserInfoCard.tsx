@@ -23,7 +23,7 @@ export default function UserInfoCard(props: userInfoCard) {
     };
 
     function handleProfileClick() {
-        navigate(`/profile/${String(props.username)}`)
+        window.location.href = `/profile/${String(props.username)}`
     }
 
     let statusIcon: string;

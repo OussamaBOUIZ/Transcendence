@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, useContext, SetStateAction} from 'react'
+import React, {createContext, useState, useContext, SetStateAction} from 'react'
 import ChatOverview from './ChatOverview';
 import { useParams } from 'react-router-dom'
 import RoomHeader from "./RoomHeader"
@@ -7,7 +7,7 @@ import "../../scss/chat.scss"
 import InboxRooms from './InboxRooms';
 import {roomData, Message} from "../../../global/Interfaces"
 import MessageBox from "../../Components/MessageBox"
-import io, {Socket} from "socket.io-client"
+import {Socket} from "socket.io-client"
 import UserContext from "../../Context/UserContext"
 import AddUser from "./addUser"
 import ChatWindow from "./ChatWindow"
