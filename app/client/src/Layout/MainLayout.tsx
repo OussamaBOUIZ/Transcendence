@@ -52,8 +52,14 @@ export default function MainLayout () {
       socket?.on('invitation', (gameInfo: gameInvInfo) => {
         const fetchUserData = async () => {
           try {
+            
             const user = await getUserData(gameInfo.userId, "id")
-            setInvitation({hostId: gameInfo.userId, image: String(user.image), username: user.username, gameName: gameInfo.gameName.replace(/\s/g, '')})
+            setInvitation({
+              hostId: gameInfo.userId,
+              image: String(user.image),
+              username: user.username,
+              gameName: gameInfo.gameName.replace(/\s/g, '')
+            })
           }
           catch (err) {
             // console.log(err)

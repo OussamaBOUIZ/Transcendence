@@ -39,7 +39,7 @@ export default function GameCards ({hostId, guestId, setPopupOpen}: {hostId: num
   function handleInv() {
     const sliderActive = document.querySelector('.swiper-slide-active')
     const imgElement = sliderActive?.querySelector('img');
-    const gameName = imgElement?.getAttribute('alt');    
+    const gameName = imgElement?.getAttribute('alt');
     socket?.emit('sendInvitation', {userId: hostId, guestId: guestId, gameName: gameName})
   }
   

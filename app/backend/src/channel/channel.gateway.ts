@@ -12,6 +12,7 @@ import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { WsExceptionFilter } from "src/Filter/ws.filter";
+import { log } from "console";
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(1212, {cors: {
@@ -65,7 +66,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             return ;
             // throw new WsException('user is not authenticated');
         }
-        user.socketId = "";
+        user.socketId = "empty";
         user.status = 'Offline'
         await this.userService.saveUser(user);
     }
