@@ -103,7 +103,7 @@ export default function ChatDm () {
                 message={messageToSendValue} 
                 setMessage={setMessageToSendValue} 
                 sender={handleSubmit} 
-                id={id} 
+                id={id}
                 />
             </div>
             <ChatOverview oview={userOverview} id={id}/>
