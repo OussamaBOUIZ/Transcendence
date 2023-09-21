@@ -108,6 +108,17 @@ function drawBallEffect(props: MySketchProps, p5: P5CanvasInstance<MySketchProps
     prevPos.push(ball.clone(props.gameMode?.color));
 }
 
+function getCanvasWidth(p5: P5CanvasInstance<MySketchProps>) {
+    let canvasWidth;
+
+    if (p5.windowWidth <= 640)
+        canvasWidth = clipCanvas(p5.windowHeight / 1.5);
+    else
+        canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+
+    return canvasWidth;
+}
+
 function specialAbilities(props: MySketchProps) {
     if (vars.effect === "reverse") {
         if (vars.isEffect && props.isHost) {
@@ -156,12 +167,13 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let readyImg : string;
 
 
+
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Assets/GameArea/BattleRoyal.jpg");
     }
 
     p5.windowResized = (): void => {
-        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        let canvasWidth = getCanvasWidth(p5);;
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
     }
@@ -172,7 +184,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
     
     p5.setup = (): void => {
-        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        let canvasWidth = getCanvasWidth(p5);
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         p5.frameRate(602)
         adjustGame(p5);
