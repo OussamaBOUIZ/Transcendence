@@ -57,6 +57,8 @@ export class ChannelService {
         if(!channelFound)
         {
             const newChannel = new Channel();
+            if(/^\d+$/.test(channelData.channelName))
+                return 'input lacks alphabet character';
             if(channelData.channelName.length === 0)
                 return 'channel name must be set';
             if(channelData.channelName.length > 12)
@@ -86,6 +88,8 @@ export class ChannelService {
                 channelOwners: true,
             }
         });
+        if(/^\d+$/.test(channelData.channelName))
+            return 'input lacks alphabet character';
         if(channelData.channelName.length === 0)
             return 'channel name must be set';
         if(channelData.channelName.length > 12)

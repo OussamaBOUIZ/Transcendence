@@ -132,9 +132,7 @@ export default function ChatRooms () {
     useEffectOnUpdate(accessChannel(Number(id), socket, roomData, setBanned, user.id, setMessageList, blockedUsers), [roomData, blockedUsers])
 
     // listener
-    useEffectOnUpdate(listener(socket, user.id, setMessageList, setBanned), [socket]);
-
-    // useEffectOnUpdate(() => {setNotif(""); setIsAnimationFinished(false)}, [isAnimationFinished])
+    useEffectOnUpdate(listener(socket, setUpdate, user.id, setMessageList, setBanned), [socket]);
 
     if (!socket && !roomData)
         return null;

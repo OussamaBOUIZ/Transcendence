@@ -7,12 +7,13 @@ import { channelMessageDto } from "./dto/channelMessageDto";
 import { UserOperationDto } from "./dto/operateUserDto";
 import { muteUserDto } from "./dto/muteUserDto";
 import { invitationDto } from "./dto/invitationDto";
+import { notifUpdateChannelNameDto } from "./dto/NotifUpdateChannelNameDto";
 import { gameRoomDto } from "./dto/gameRoomDto";
 import { Channel } from "src/databases/channel.entity";
 import { channelAccess } from "./dto/channelAccess";
 import { UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { WsExceptionFilter } from "src/Filter/ws.filter";
-import { log } from "console";
+
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway(1212, {cors: {
@@ -176,6 +177,11 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         }
     }
 
+    @SubscribeMessage('NotifUpdateChanneName')
+    async notifUpdateChanneName(@MessageBody() data: notifUpdateChannelNameDto, @ConnectedSocket() client: Socket)
+    {
+        this.server.to(data.prevName).emit('notifUpdate', data.channelId);
+    }
 
     @SubscribeMessage('sendInvitation')
     async sendInvitation(@MessageBody() invData: invitationDto, @ConnectedSocket() client: Socket)

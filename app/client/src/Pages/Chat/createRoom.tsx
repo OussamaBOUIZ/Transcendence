@@ -46,9 +46,12 @@ export default function CreateRoom({action, defaultValue}: {action: string, defa
         if (roomData?.channelId)
             newRoom.channelId = roomData?.channelId
         try {
+            const data = {prevName: roomData.channelName, channelId: newRoom.channelId}
             const res = await axios.post<string>(`/api/channel/${action}`, newRoom)
             if (res.data.length)
                 setNotif(res.data)
+            if (action === 'update')
+                socket?.emit('NotifUpdateChanneName', data)
             setIsClick(prev => !prev)
             setUpdate(prev => prev + 1)
         }
