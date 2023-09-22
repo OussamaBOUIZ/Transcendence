@@ -19,7 +19,7 @@ export function reset(p5: any, isHost: boolean): void {
     vars.effect = "";
     vars.isEffect = false;
 
-    // vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
+    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
     leftPad = new Pad(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
@@ -110,15 +110,17 @@ function drawBallEffect(props: MySketchProps, p5: P5CanvasInstance<MySketchProps
 
 function getCanvasWidth(p5: P5CanvasInstance<MySketchProps>) {
     let canvasWidth;
+    let windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-    if (p5.windowWidth <= 320)
-    canvasWidth = clipCanvas(p5.windowHeight / 2.3);
-    else if (p5.windowWidth <= 375)
-        canvasWidth = clipCanvas(p5.windowHeight / 2);
-    else if (p5.windowWidth <= 640)
-        canvasWidth = clipCanvas(p5.windowHeight / 1.7);
+    if (windowWidth <= 320)
+    canvasWidth = clipCanvas(windowHeight / 2.3);
+    else if (windowWidth <= 375)
+        canvasWidth = clipCanvas(windowHeight / 2);
+    else if (windowWidth <= 640)
+        canvasWidth = clipCanvas(windowHeight / 1.7);
     else
-        canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        canvasWidth = clipCanvas(windowWidth / 1.5);
 
     return canvasWidth;
 }
@@ -170,8 +172,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let winImg: string;
     let readyImg : string;
 
-
-
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Assets/GameArea/BattleRoyal.jpg");
     }
@@ -181,7 +181,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
     }
-
 
     p5.updateWithProps = (p: any) => {
         props = Object.assign(props, p)

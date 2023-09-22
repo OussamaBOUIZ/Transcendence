@@ -32,7 +32,7 @@ function matchingText(p5: P5CanvasInstance<MySketchProps>) {
   p5.fill(255);
   p5.textSize(50);
   p5.textAlign(p5.CENTER);
-  p5.textStyle(p5.BOLDITALIC)
+  p5.textStyle(p5.BOLD)
   p5.text("Matching...", p5.width / 2, p5.height / 2);
   p5.pop();
 }

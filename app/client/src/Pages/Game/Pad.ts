@@ -42,6 +42,12 @@ export default class Pad {
                 if (p5.pmouseY >= vars.GAP && p5.pmouseY + this.h  <= p5.height- vars.GAP)
                     this.y = p5.pmouseY;
             }
+
+            p5.touchMoved = () => {
+                if (p5.touchY >= vars.GAP && p5.touchY + this.h <= p5.height - vars.GAP) {
+                  this.y = p5.touches.y;
+                }
+            };
             
             if (p5.keyIsDown(p5.DOWN_ARROW) && this.y + this.h < p5.height - vars.GAP)
                 this.y += vars.PSPEED;
