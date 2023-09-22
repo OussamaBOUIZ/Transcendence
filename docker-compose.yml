@@ -1,7 +1,20 @@
 version: '3.8'
 
-networks:
-  net:
+
+
+volumes:
+  frontend_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/dist
+#  db_data:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/ael-mous/data/mysql
 
 services:
   # frontend:
@@ -10,14 +23,22 @@ services:
   #     context: ./app/client/
   #     dockerfile: Dockerfile
   #   image: frontend
-  #   ports:
-  #     - "5173:5173"
-  #   networks:
-  #     - net
   #   restart: unless-stopped
   #   depends_on:
   #     - backend
     
+
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: ./app/nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     - frontend
+  #   restart: unless-stopped
+
   # backend: 
   #   build:
   #     context: ./app/backend/
@@ -28,31 +49,31 @@ services:
   #     - "1212:1212"
   #     - "4000:4000"
   #     - "4343:4343"
-  #   networks:
-  #     - net
   #   depends_on:
   #     - postgres
-  #   env_file:
-  #     - .env
   #   restart: always
 
   postgres:
     image: postgres:13
     ports:
       - "5432:5432"
-    env_file:
-      - .env
-    networks:
-      - net
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: PingPong
+#    networks:
+#      - freecodecamp
     restart: always
 
-
+  # ? need volume  also for envs of course for testing
+  # ! put envs in .env file and should be ignord by git
   pg-admin:
     image: dpage/pgadmin4
     ports:
       - "5050:80"
-    env_file:
-      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: name@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
 
 # networks:
 #  freecodecamp:
