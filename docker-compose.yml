@@ -46,8 +46,7 @@ services:
       - net
     restart: always
 
-  # ? need volume  also for envs of course for testing
-  # ! put envs in .env file and should be ignord by git
+
   pg-admin:
     image: dpage/pgadmin4
     ports:

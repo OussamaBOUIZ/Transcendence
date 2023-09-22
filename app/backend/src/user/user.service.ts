@@ -63,7 +63,7 @@ export class UserService {
         const user =  await this.userRepo.find({
             where : {
                 id: Not(userid),
-                status: In(['Online', 'In a Game'])
+                status: In(['Online', 'In A Game'])
             },
             select: {
                 id: true,
