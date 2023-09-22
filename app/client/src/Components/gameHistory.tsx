@@ -13,6 +13,7 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
 
     const [dataFetch, setDataFetch] = useState<gameHistory[]>([])
     const {navigate} = useContext(UserContext)
+    const {pathname} = useLocation()
 
     useEffectOnUpdate(() => {
         const fetchGames = async () => {
@@ -34,7 +35,6 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
     }, [UserData.id])
 
     const games = useRef<React.JSX.Element[]>()
-    const {pathname} = useLocation();
     let header: React.JSX.Element | undefined
     if (pathname === "/")
         header = <p>Game History</p>
@@ -55,7 +55,7 @@ export default function GameHistory({UserData, NBgames}: {UserData: User, NBgame
         )
     })
 
-    if (!games.current.length) {
+    if (!games.current.length && pathname === '/') {
         return (
             <div className="item GameHistory">
                 <div className="w-full h-full flex items-center justify-center text-center">
