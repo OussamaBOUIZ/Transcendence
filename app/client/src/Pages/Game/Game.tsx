@@ -135,7 +135,15 @@ export default function Game () {
         }
     }
 
+    
+
     useEffectOnUpdate(()  => {
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space" || event.keyCode === 32) {
+                setIconStyle({animationName: "none"});
+            }
+        });
+
         document.addEventListener("visibilitychange", handleVisibilityChange);
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
