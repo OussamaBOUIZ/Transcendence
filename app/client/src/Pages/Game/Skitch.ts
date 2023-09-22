@@ -211,9 +211,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
             return;
 
         if (props.isGameEnd.current) {
-
-
-            console.log('is win: ', props.isWin);
             if (props.isWin.current)
                 p5.image(winImg, 0, 0, p5.width, p5.height);
             else

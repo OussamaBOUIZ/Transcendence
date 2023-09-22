@@ -101,9 +101,6 @@ export default function Game () {
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
-            console.log('gameMode: ', gameMode)
-            console.log('finalScore: ', finalScore)
-            console.log(socket?.id);
             socket?.emit("saveScore", {
                 userScore: finalScore?.myScore,
                 opponentScore: finalScore?.oppScore,
@@ -170,7 +167,6 @@ export default function Game () {
             isWin.current = true;
 
             if (gameMode && !isGameEnd.current) {
-                console.log("save score on leave: ", score);
                 updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
             }
             isGameEnd.current = true;
@@ -180,19 +176,13 @@ export default function Game () {
     }, [socket])
 
     useEffect(() => {
-        console.log(score);
-
-
         if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
             
             isGameEnd.current = true;
 
-            console.log('score res is: ', score.myScore === mode?.maxScore);
-
             if (score.myScore === mode?.maxScore) {
                 isWin.current = true;
-                console.log("save score on game end: ", score);
                 updateDataBase(score);
             }
 
