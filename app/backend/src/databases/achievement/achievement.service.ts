@@ -101,7 +101,7 @@ export class AchievementService {
         if(wins == 0)
             await this.unlockAchievement('Pong win', userId);
         switch (gameType) {
-            case 'Battle royal':
+            case 'Battle Royal':
                 await this.unlockAchievement('Battle royal winner', userId);
                 break;
             case 'Blazing Pong':
