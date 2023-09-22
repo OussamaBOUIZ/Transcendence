@@ -12,7 +12,7 @@ export default function GameInfo1() {
                 <figure className="w-2/5 flex flex-col gap-4">
                     <div className="flex gap-4 items-center font-semibold">
                         <img src={rectangle} alt="" />
-                        <h1>Get ready for an immersive gaming experience like never before!</h1>
+                        <h1>Get ready for an immersive gaming experience!</h1>
                     </div>
                     <p>
                     Dive into the captivating world of PONG and unleash your inner hero!
