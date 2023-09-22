@@ -66,6 +66,10 @@ export class AchievementService {
         achievement.is_achieved = true;
         await this.achieveRepo.save(achievement);
     }
+    async setShotsAchievement(userId: number)
+    {
+        await this.unlockAchievement('the wall', userId);
+    }
     async setUnderdogAchievement(userId: number)
     {
         await this.unlockAchievement('underdog', userId);
@@ -100,7 +104,6 @@ export class AchievementService {
     {        
         if(wins == 0)
             await this.unlockAchievement('Pong win', userId);
-        console.log('game data is: ', gameType, ' ', userId, ' ',wins);
         switch (gameType) {
             case 'BattleRoyal':
                 await this.unlockAchievement('Battle Royal winner', userId);

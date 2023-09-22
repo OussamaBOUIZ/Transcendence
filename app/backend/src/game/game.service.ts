@@ -41,6 +41,10 @@ export class gameService {
     }
 
     async saveScore(scoreData: scoreStoreDto) {
+        if(scoreData.userScore == 0)
+            await this.achievementService.setShotsAchievement(scoreData.userId);
+        else if(scoreData.opponentScore == 0)
+            await this.achievementService.setShotsAchievement(scoreData.opponentId);
         const game = new Game();
         game.user1 = scoreData.userId;
         game.user2 = scoreData.opponentId;
