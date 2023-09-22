@@ -135,7 +135,7 @@ export class ChatGatewayService {
         })
     }
 
-    async loadMessage(user: User, receiver: number) {
+    async loadMessage(user: User, receiver: number) {    
         const message = await this.getAllMessages(user.id, receiver)
         
         const transformedArray = message.map(item => {
