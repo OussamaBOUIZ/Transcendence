@@ -27,8 +27,9 @@ export class chatController {
         @Param('id', ParseIntPipe) id: number,
     ) 
     {
-        const user = await this.userRepository.findUserById(id)
+        const user = await this.userRepository.getUserFromJwt(req.cookies['access_token'])
 
+        console.log(id);
         
         if (!user)
             throw new NotFoundException('user not found')

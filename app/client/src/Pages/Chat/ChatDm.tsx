@@ -60,6 +60,8 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`/api/chat/${id}`)
+            console.log(res.data);
+            
             setMessagesList(res.data)
         } catch (err: any) {
             navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
@@ -79,6 +81,11 @@ export default function ChatDm () {
     useEffectOnUpdate(() => {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
     }, [messagesList])
+
+    console.log(messagesElements.length);
+    console.log(messagesList.length);
+
+    
 
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
     

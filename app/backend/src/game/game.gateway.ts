@@ -132,12 +132,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (!users?.find((user: User) => user.user.id == body.user.id )) {
 			if (users.length >= 1) {
 				const oppUser: User = users[0];
-				users.unshift();
 
 				setTimeout( () => {
-					socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
-					oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
+					// if (socket.connected && oppUser.socket.connected) {
+						socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
+						oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
+					// }
 				}, 1000)
+
+				users.unshift();
 			} else 
 				users.push({user: body.user, socket});
 		}
