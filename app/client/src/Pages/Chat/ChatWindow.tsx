@@ -19,7 +19,7 @@ export default function ChatWindow({children, id}: PropType) {
 
     if (!id) {
         return (
-            <section className={`chat_window bg-chat-body ${isBanned ? 'bg-black opacity-20' : ''}`} ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
+            <section className={`chat_window bg-chat-body ${(chatRoomsRegex.test(pathname) && isBanned) ? 'bg-black opacity-20' : ''}`} ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
                 <div className="w-full h-full flex justify-center items-center" ref={innerDiv} style={{position: 'relative'}}>
                     {chatRegex.test(pathname) && <ChatDmInit />}
                     {chatRoomsRegex.test(pathname) && <ChannelInitAction />}
@@ -29,7 +29,7 @@ export default function ChatWindow({children, id}: PropType) {
     }
 
     return (
-        <section className={`chat_window bg-chat-body ${isBanned ? 'bg-black opacity-20' : ''}`} ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
+        <section className={`chat_window bg-chat-body ${(chatRoomsRegex.test(pathname) && isBanned) ? 'bg-black opacity-20' : ''}`} ref={outerDiv} style={{position: 'relative', height: '100%', overflowY: 'scroll'}}>
             <div className={`${React.isValidElement(children) ? 'flex h-full justify-center items-center' : ''}`} ref={innerDiv} style={{position: 'relative'}}>
                 {children}
             </div>

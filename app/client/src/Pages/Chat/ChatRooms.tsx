@@ -51,7 +51,7 @@ export default function ChatRooms () {
     const [update, setUpdate] = useState<number>(0);
     const [blockedUsers, setBlockedUsers] = useState<{id: number}[]>([])
     const {id} = useParams()
-    const {outerDiv, innerDiv, prevInnerDivHeight, setBanned, viewIdRef} = useContext(InboxContext)
+    const {outerDiv, innerDiv, prevInnerDivHeight, isBanned, setBanned, viewIdRef} = useContext(InboxContext)
     const [defaultRoomType, setDefaultRoomType] = useState<string>("public")
 
     //set myGrade and room data
@@ -155,7 +155,7 @@ export default function ChatRooms () {
             <div className={`chat_main grid ${show === 'main' ? 'on' : 'off'}`}>
                 <RoomHeader />
                 <ChatWindow id={id} >
-                    {messagesElements.length ? messagesElements : <p>No messages yet</p>}
+                    {(messagesElements.length || isBanned) ? messagesElements : <p>No messages yet</p>}
                 </ChatWindow>
                 <ChatInput message={message} setMessage={setMessage} sender={sendMessage} id={id}/>
             </div>

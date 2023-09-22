@@ -24,7 +24,7 @@ export default function MessageOverview ({id, lastMsg, time, unsMsg, username, i
         >
             <img src={img} alt="Cat pic" />
             <figcaption>
-                <h4>{username}</h4>
+                <h4 className='text-lg font-bold'>{username}</h4>
                 <p>{shortenMessage(lastMsg)}</p>
             </figcaption>
             <time>{time}</time>

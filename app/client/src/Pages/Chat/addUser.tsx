@@ -7,13 +7,14 @@ import { SocketContext } from './ChatRooms'
 import Xmark from "../../Assets/Icons/xmark-solid.svg"
 import {handleClickOutside} from "../../Helpers/utils"
 import UserContext from '../../Context/UserContext'
+import useEffectOnUpdate from '../../Hooks/useEffectOnUpdate'
 
 export default function AddUser() {
     const [currentSearch, setCurrentSearch] = useState<string>("")
     const [submittedName, setSubmittedName] = useState<string>("")
     const [searchedUser, setSearchedUser] = useState<User>({} as User);
     const initialRender = useRef(true)
-    const {navigate} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
     const {setShowSearch} = useContext(SocketContext)
     const wrapperRef = handleClickOutside(setShowSearch)
 
@@ -27,21 +28,18 @@ export default function AddUser() {
             setSubmittedName(currentSearch)
     }
 
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
+    useEffectOnUpdate(() => {
         async function getUserCard () {
             try {
                 const response = await axios.get<User>(`/api/user/search/user/?username=${submittedName}`)
                 const imgRes = await getUserImage(response.data.id)
                 setSearchedUser({...response.data, image: imgRes})
             } catch (err: any) {
-                navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
+                setNotif("User not Found");
+                setCurrentSearch("")
             }
         }
-        if (submittedName !== "")
+        if (submittedName !== user.username && submittedName.length)
             void getUserCard()
     }, [submittedName])
 
@@ -60,7 +58,7 @@ export default function AddUser() {
                     onChange={handleChange}
                     value={currentSearch}
                     />
-                    <input className="bg-primary-pink py-1 px-2 rounded-md" type="submit" value="search" />
+                    <input className="bg-primary-pink py-1 px-2 rounded-md cursor-pointer" type="submit" value="search" />
                 </div>
             </form>
             {searchedUser.id
