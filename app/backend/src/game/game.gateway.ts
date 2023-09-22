@@ -18,7 +18,7 @@ interface User {
 	socket: Socket;
 }
 
-const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"];
+const gameModes: string[] = ["BattleRoyal", "BlazingPong", "ArcticPong", "RetroPong"];
 
 const waitingUsers = new Map<String, User[]>([
     ["BattleRoyal", []],
@@ -134,10 +134,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				const oppUser: User = users[0];
 
 				setTimeout( () => {
-					// if (socket.connected && oppUser.socket.connected) {
+					if (socket.connected && oppUser.socket.connected) {
 						socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
 						oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
-					// }
+					}
 				}, 1000)
 
 				users.unshift();
