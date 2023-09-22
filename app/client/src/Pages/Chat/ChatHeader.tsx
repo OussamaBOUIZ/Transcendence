@@ -23,7 +23,7 @@ export default function ChatHeader ({id, username, status, avatar}: {id: string 
     return (
         <>
         {isPopupOpen && <GameCards hostId={user.id} guestId={Number(id)} setPopupOpen={setPopupOpen}/>}
-        <header className='chat_header'>
+        <header className='chat_header lowercase'>
             <figure>
                 {isSmallDevice && <img className='w-8 h-8 cursor-pointer' src={arrow} alt="" onClick={() => setShow('inbox')}/>}
                 <img className="w-14 h-14" src={avatar} alt="" />
