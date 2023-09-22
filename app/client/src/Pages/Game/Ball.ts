@@ -53,19 +53,25 @@ export default class Ball {
             if (props.isHost) {
                 reset(p5, props.isHost);
 
-                console.log("Heeeeere");
 
                 if (this.x < 0) {
+                    console.log('change score');
+
                     props.setScore((prevState: Score) => {
-                        const newScore: Score = {...prevState, myScore: prevState.myScore++}
+                        
+                        const newScore: Score = {...prevState, myScore: prevState.myScore + 1}
                         this.updateScore(props, newScore);
                         return newScore;
                     });
                 }
 
                 if (this.x > p5.width) {
+
+                    console.log('change score');
+
                     props.setScore((prevState: Score) => {
-                        const newScore: Score = {...prevState, oppScore: prevState.oppScore++}
+
+                        const newScore: Score = {...prevState, oppScore: prevState.oppScore + 1}
                         this.updateScore(props, newScore);
                         return newScore;
                     });
