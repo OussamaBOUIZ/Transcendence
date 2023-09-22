@@ -26,11 +26,9 @@ export class chatController {
         @Req() req: Request,
         @Param('id', ParseIntPipe) id: number,
     ) 
-    { 
-        console.log('id is ', id);
-        
+    {
         const user = await this.userRepository.findUserById(id)
-        console.log(user);
+
         
         if (!user)
             throw new NotFoundException('user not found')

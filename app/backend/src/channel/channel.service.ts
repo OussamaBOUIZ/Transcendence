@@ -317,22 +317,17 @@ export class ChannelService {
     }
     async getChannelName(channelId: number, cook: string)
     {
-        console.log(channelId);
         
         const user = await this.userService.getUserFromJwt(cook['access_token'])
         if (!user)
             return null
-        // const channel = await this.channelRepo.findOne({
-        //     where: {id: channelId},
-        // });
-        console.log(user);
+
         
         const channel = await this.userService.findUserWithChannels(user.id)
         if (!channel.adminRoleChannels.find((item) => item.id === channelId)
             && !channel.ownerRoleChannels.find((item) => item.id === channelId)
             && !channel.userRoleChannels.find((item) => item.id === channelId))
             return null
-        console.log(channel);
         
         const channelname = await this.channelRepo.findOne({
             where: {id: channelId},
