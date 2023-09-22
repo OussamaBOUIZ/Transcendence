@@ -12,7 +12,8 @@ let rightPad: Pad;
 let ball: Ball;
 let net: Net;
 
-export function reset(p5: any, isHost: boolean): void {
+
+export function reset(p5: P5CanvasInstance<MySketchProps>, isHost: boolean): void {
     const angle: number = p5.random(p5.PI / 4, -p5.PI / 4);
     vars.vel.x = vars.ISPEED * p5.cos(angle);
     vars.vel.y = vars.ISPEED * p5.sin(angle);
@@ -108,7 +109,7 @@ function drawBallEffect(props: MySketchProps, p5: P5CanvasInstance<MySketchProps
     prevPos.push(ball.clone(props.gameMode?.color));
 }
 
-function getCanvasWidth(p5: P5CanvasInstance<MySketchProps>) {
+function getCanvasWidth() {
     let canvasWidth;
     let windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -177,7 +178,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     }
 
     p5.windowResized = (): void => {
-        let canvasWidth = getCanvasWidth(p5);;
+        let canvasWidth = getCanvasWidth();;
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
     }
@@ -187,7 +188,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
     
     p5.setup = (): void => {
-        let canvasWidth = getCanvasWidth(p5);
+        let canvasWidth = getCanvasWidth();
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         p5.frameRate(602)
         adjustGame(p5);

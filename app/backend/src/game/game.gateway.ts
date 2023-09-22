@@ -78,6 +78,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		if (!(this.server.sockets.adapter.rooms.get(roomKey)?.size > 2))
 			socket.join(roomKey);
+
+		if (this.server.sockets.adapter.rooms.get(roomKey)?.size == 2) {
+			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(roomKey);
+			const socketsArr: Array<string> = Array.from(socketsSet);
+			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
+
+			sock.emit("notHost");
+		}
 	}
   
 	@SubscribeMessage('gameEnd')
@@ -149,13 +157,5 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage('game')
 	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
-
-		if (this.server.sockets.adapter.rooms.get(body.gameKey)?.size == 2) {
-			const socketsSet: Set<string> = this.server.sockets.adapter.rooms.get(body.gameKey);
-			const socketsArr: Array<string> = Array.from(socketsSet);
-			const sock: Socket = this.server.sockets.sockets.get(socketsArr[0]);
-
-			sock.emit("notHost");
-		}
 	}
 }
