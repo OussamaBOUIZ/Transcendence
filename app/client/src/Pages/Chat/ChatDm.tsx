@@ -25,7 +25,7 @@ export default function ChatDm () {
     const {outerDiv, innerDiv, prevInnerDivHeight, viewIdRef, messagesList, setMessagesList} = useContext(InboxContext)
 
     const messagesElements = messagesList.map((msg, index) => {
-        if (msg.message !== "") {
+        if (msg.message.length) {
             return (
                 <MessageBox key={index}
                 id={msg.authorId !== user?.id}
@@ -60,8 +60,6 @@ export default function ChatDm () {
     const loadConversation = async ()  => {
         try {
             const res = await axios.get(`/api/chat/${id}`)
-            console.log(res.data);
-            
             setMessagesList(res.data)
         } catch (err: any) {
             navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
@@ -82,15 +80,8 @@ export default function ChatDm () {
         scrollLogic(outerDiv, innerDiv, prevInnerDivHeight);
     }, [messagesList])
 
-    console.log(messagesElements.length);
-    console.log(messagesList.length);
-
-    
-
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
 
-    console.log(messagesList.length);
-    
     return (
         <>
             <InboxDm/>

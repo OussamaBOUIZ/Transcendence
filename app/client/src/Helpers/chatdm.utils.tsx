@@ -78,14 +78,12 @@ const updateInboxBySending  = (sendMsg: MessageData,
         ]
 }
 
-const updateInboxByReceiving = async (
-    recMsg: MessageData,
-    inboxList: React.MutableRefObject<InboxItem[]>,
-    inView: boolean
-  ): Promise<InboxItem[]> => {
+const updateInboxByReceiving = async (socket: Socket, recMsg: MessageData, inboxList: React.MutableRefObject<InboxItem[]>, inView: boolean): Promise<InboxItem[]> => {
         if (inboxList.current.find((inbx) => inbx.author.id === recMsg.authorId)) {
             return inboxList.current.map((inbx) => {
                 if (inbx.author.id === recMsg.authorId ) {
+                    if (!inView)
+                        socket.emit('updateUnseenMessage', recMsg.authorId)
                     return {...inbx,
                         lastMessage: recMsg.message, 
                         CreatedAt: recMsg.creationTime,
@@ -97,6 +95,8 @@ const updateInboxByReceiving = async (
         } else {
             const getNewInboxElement = async (): Promise<InboxItem[]> => {
                 const img = await getUserImage(recMsg.authorId)
+                if (!inView)
+                    socket.emit('updateUnseenMessage', recMsg.authorId)
                 const NewConversation: InboxItem = {
                     author: {id: recMsg.authorId, username: recMsg.username},
                     lastMessage: recMsg.message,

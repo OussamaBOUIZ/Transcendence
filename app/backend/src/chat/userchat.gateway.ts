@@ -84,7 +84,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage('updateUnseenMessage')
-	async updateUnseenMessage(socket: Socket, peerDto) {
+	async updateUnseenMessage(socket: Socket, peerDto: number) {
 		const userEmail = socket.data.user.email
 
 		const user = await this.userService.findUserByEmail(userEmail);

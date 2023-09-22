@@ -80,17 +80,17 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
 
     useEffectOnUpdate(() => {
         dmSocket?.on('message', (recMsg: MessageData) => {
-            const inView: boolean = recMsg.authorId === viewIdRef.current;
-            if (inView)
-                setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
             const fetch = async () => {
                 try {
-                    const newInboxList = await updateInboxByReceiving(recMsg, inboxList, inView);
+                    const newInboxList = await updateInboxByReceiving(dmSocket, recMsg, inboxList, inView);
                     inboxList.current = newInboxList;
                     setUpdate(prev => prev + 1)
                 }
                 catch (error) {}
             }
+            const inView: boolean = recMsg.authorId === viewIdRef.current;
+            if (inView)
+                setMessagesList((prevMsgs) => [...prevMsgs, recMsg]);
             void fetch();
         });
     }, [dmSocket]);
