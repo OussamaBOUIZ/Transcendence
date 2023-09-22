@@ -5,9 +5,13 @@ interface PropType {
     children: React.ReactNode;
 }
 export default function SidebarButton ({to, children}:PropType) {
+    function handleProfile() {
+        window.location.href = to
+    }
     return (
-        <NavLink 
+        <NavLink
             to={to}
+            onClick={handleProfile}
             className={`sidebar_button ${(isActive:boolean) => isActive ? 'active' : ''} ${to === "/logout" && "logout"}`}>
                 {children}
         </NavLink>

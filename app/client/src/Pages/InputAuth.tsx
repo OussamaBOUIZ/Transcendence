@@ -41,8 +41,6 @@ export default function InputAuth() {
                         setNotif("The code is not valid");
 
                 } catch (err: any) {
-                    console.log(err);
-                    
                     navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
             } else {

@@ -88,7 +88,7 @@ const updateMuliterConfig = () => ({
 })
  
 @Controller('user')
-// @UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 export class UserController {
     constructor(private readonly userService: UserService
         , private readonly jwt: JwtService
@@ -106,8 +106,6 @@ export class UserController {
     }
     
     @Get()
-    // @UseGuards(JwtGuard)
-    // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -276,7 +274,6 @@ export class UserController {
     }
 
     @Get('2fa/turn-on/:id')
-    @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -286,7 +283,6 @@ export class UserController {
     }
 
     @Post('2fa/turn-off/:id')
-    @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -304,7 +300,6 @@ export class UserController {
     }
 
     @Get('2fa/isTurnedOn/:id')
-    @UseGuards(JwtGuard)
     async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -347,7 +342,6 @@ export class UserController {
     }
 
     @Put('setUserNames/:id')
-    @UseGuards(JwtGuard)
     async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
@@ -371,7 +365,6 @@ export class UserController {
     }
 
     @Post('setUserData/:id')
-    @UseGuards(JwtGuard)
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
@@ -402,20 +395,18 @@ export class UserController {
         return res.status(201).send('');
     }
     @Get('isFirstLog')
-    @UseGuards(JwtGuard)
     async isFirstLog(@Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         return user.firstLog;
     }
     @Post('logout/:id')
-    @UseGuards(JwtGuard)
     async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const token = req.cookies['access_token'];
         const user = await this.userService.findUserById(id);
         const payload = this.jwt.verify(token, {secret: process.env.JWT_SECRET});
-        const till = payload.iat + 86400;
+        const till = payload.iat + 259200;
         await this.BlockedTokenService.blacklistToken(token, till * 1000);
         user.status = 'Offline';
         await this.userService.saveUser(user);
