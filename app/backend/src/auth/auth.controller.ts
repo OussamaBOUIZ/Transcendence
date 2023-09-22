@@ -28,6 +28,8 @@ export class AuthController {
     async googleRedirect(@Req() googlereq, @Res() res: Response)
     {
         const token = await this.authService.apisignin(googlereq.user);
+        if(!token)
+            return res.redirect('http://localhost:5173/'); 
         const user = await this.userService.findUserByEmail(googlereq.user.email);
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)

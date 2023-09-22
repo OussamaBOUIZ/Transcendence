@@ -17,12 +17,7 @@ export class fortyTwoStrategy extends PassportStrategy(Strategy, '42')
     async validate(access_token: string, refresh_token: string, profile: Profile, done: DoneCallback): Promise<any>
     {
         const user = {
-            provider: '42',
-            providerId: profile.id,
-            username: profile.username,
             email: profile.emails[0].value,
-            firstname: profile.name.givenName,
-            lastname: profile.name.familyName,
         };
         done(null, user);
     }

@@ -30,14 +30,19 @@ export default function InputAuth() {
         const sendCode = async () => {
             if (isNumeric && collectedCode.length === 6) {
                 try {
-                    const collected = {
-                        token: collectedCode,
-                    }
+                    const collected = {token: collectedCode}
+                    console.log(data)
                     const res = await axios.post(`/api/user/2fa/login/${data}`, collected);
-                    if(res.data.length !== 0)
-                        await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
-                    window.location.href = '/'
+                    console.log('t1');
+                    
+                    if(res.data.length === 0)
+                        window.location.href = '/';
+                    else
+                        setNotif("The code is not valid");
+
                 } catch (err: any) {
+                    console.log(err);
+                    
                     navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
             } else {
