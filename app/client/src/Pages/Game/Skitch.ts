@@ -5,7 +5,6 @@ import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
 import Net from "./Net";
-
 const prevPos: Array<Ball> = [];
 
 let leftPad: Pad;
@@ -20,7 +19,7 @@ export function reset(p5: any, isHost: boolean): void {
     vars.effect = "";
     vars.isEffect = false;
 
-    vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
+    // vars.vel.x *= p5.random(1) < 0.5 ? -1 : 1;
 
     leftPad = new Pad(vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
     rightPad = new Pad(p5.width - vars.PW - vars.GAP, (p5.height / 2) - vars.PH / 2, vars.PW, vars.PH);
@@ -109,6 +108,21 @@ function drawBallEffect(props: MySketchProps, p5: P5CanvasInstance<MySketchProps
     prevPos.push(ball.clone(props.gameMode?.color));
 }
 
+function getCanvasWidth(p5: P5CanvasInstance<MySketchProps>) {
+    let canvasWidth;
+
+    if (p5.windowWidth <= 320)
+    canvasWidth = clipCanvas(p5.windowHeight / 2.3);
+    else if (p5.windowWidth <= 375)
+        canvasWidth = clipCanvas(p5.windowHeight / 2);
+    else if (p5.windowWidth <= 640)
+        canvasWidth = clipCanvas(p5.windowHeight / 1.7);
+    else
+        canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+
+    return canvasWidth;
+}
+
 function specialAbilities(props: MySketchProps) {
     if (vars.effect === "reverse") {
         if (vars.isEffect && props.isHost) {
@@ -138,9 +152,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         gameMode: null,
         score: {myScore: 0, oppScore: 0},
         setScore: () => {},
-        isGameEnd: false,
-        setIsGameEnd: () => {},
-        isWin: false,
+        isGameEnd: {current: false},
+        isWin: {current: false},
         isEffect: null,
         setPersentage: () => {},
         firstTime: true,
@@ -158,12 +171,13 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let readyImg : string;
 
 
+
     p5.preload = (): void => {
         backImg = p5.loadImage("/src/Assets/GameArea/BattleRoyal.jpg");
     }
 
     p5.windowResized = (): void => {
-        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        let canvasWidth = getCanvasWidth(p5);;
         p5.resizeCanvas(canvasWidth, canvasWidth / 1.77);
         adjustGame(p5);
     }
@@ -174,7 +188,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     };
     
     p5.setup = (): void => {
-        let canvasWidth = clipCanvas(p5.windowWidth / 1.5);
+        let canvasWidth = getCanvasWidth(p5);
         p5.createCanvas(canvasWidth, canvasWidth / 1.77);
         p5.frameRate(602)
         adjustGame(p5);
@@ -196,8 +210,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         if (gameEnd)
             return;
 
-        if (props.isGameEnd) {
-            if (props.isWin)
+        if (props.isGameEnd.current) {
+
+
+            console.log('is win: ', props.isWin);
+            if (props.isWin.current)
                 p5.image(winImg, 0, 0, p5.width, p5.height);
             else
                 p5.image(loseImg, 0, 0, p5.width, p5.height);

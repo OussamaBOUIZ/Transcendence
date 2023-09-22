@@ -9,7 +9,6 @@ export default function Home() {
 
     const {user} = useContext(UserContext);
     const leaders = useFetchLeaders();
-
     if (!user.id || !leaders)
       return (<Loading />)
 

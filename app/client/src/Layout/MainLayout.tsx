@@ -54,12 +54,14 @@ export default function MainLayout () {
           try {
             
             const user = await getUserData(gameInfo.userId, "id")
-            setInvitation({
-              hostId: gameInfo.userId,
-              image: String(user.image),
-              username: user.username,
-              gameName: gameInfo.gameName.replace(/\s/g, '')
-            })
+            if (typeof user === 'object') {
+              setInvitation({
+                hostId: gameInfo.userId,
+                image: String(user.image),
+                username: user.username,
+                gameName: gameInfo.gameName.replace(/\s/g, '')
+              })
+            }
           }
           catch (err: any) {
             navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });

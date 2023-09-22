@@ -36,7 +36,7 @@ const gameModes = new Map<string, GameMode>([
         paddle: "paddle.png",
         color: {r: 255, g: 154, b: 0, a: 1},
         xp: 6000,
-        maxScore: 14,
+        maxScore: 21,
         ability: "none"
     }],
     ["BlazingPong", {
@@ -87,8 +87,8 @@ export default function Game () {
     const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
-    const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const { user } = useContext(UserContext);
+    const isGameEnd = useRef<boolean>(false);
+    const { user, navigate } = useContext(UserContext);
     const [ability, setAbility] = useState<string>("");
     const [isClicked, setIsClicked] = useState<boolean>(false);
     const modeName = String(mode?.modeName)
@@ -97,10 +97,13 @@ export default function Game () {
 
     const {key, gameMode} = useParams();
 
-    // if (!user.id) navigate("/error")
+    if (!user.id) navigate('/error', { state: { statusCode: 404, statusText: "Not Found" } });
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
+            console.log('gameMode: ', gameMode)
+            console.log('finalScore: ', finalScore)
+            console.log(socket?.id);
             socket?.emit("saveScore", {
                 userScore: finalScore?.myScore,
                 opponentScore: finalScore?.oppScore,
@@ -161,27 +164,41 @@ export default function Game () {
         socket?.on("scoreChanged", (score: Score) => {
             setScore(score);
         });
+
         socket?.on("leaveGame", () => {
-            setIsGameEnd(true);
+
             isWin.current = true;
-            if (gameMode && !isGameEnd)
+
+            if (gameMode && !isGameEnd.current) {
+                console.log("save score on leave: ", score);
                 updateDataBase({myScore: mode?.maxScore || 10, oppScore: 0});
+            }
+            isGameEnd.current = true;
             socket?.emit("gameEnd", key);
-            socket?.disconnect();
+            // setTimeout(() => socket?.disconnect(), 500);
         });
     }, [socket])
 
     useEffect(() => {
+        console.log(score);
+
+
         if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
-            setIsGameEnd(true);
+            
+            isGameEnd.current = true;
+
+            console.log('score res is: ', score.myScore === mode?.maxScore);
+
+            if (score.myScore === mode?.maxScore) {
+                isWin.current = true;
+                console.log("save score on game end: ", score);
+                updateDataBase(score);
+            }
+
             socket?.emit("gameEnd", gameKey);
         }
 
-        if (gameMode && score.myScore === mode?.maxScore) {
-            isWin.current = true;
-            updateDataBase(score);
-        }
     }, [score])
 
     useEffectOnUpdate( () => {
@@ -227,7 +244,8 @@ export default function Game () {
         }
 
         return () => {
-            newSocket.emit("gameEnd", roomKey);
+            // if (!isGameEnd.current)
+            newSocket.emit("quitGame", roomKey);
             newSocket.disconnect();
         };
     }, [])
@@ -245,7 +263,7 @@ export default function Game () {
                 <FaSignOutAlt />
             </NavLink>
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
-            <div className='main-container flex flex-col justify-center gap-1'>
+            <div className='main-container flex flex-col items-center justify-center gap-1'>
                 {!isMatching && <img
                     onClick={handleClick}
                     style={iconStyle}
@@ -272,8 +290,7 @@ export default function Game () {
                     score={score}
                     setScore={setScore}
                     isGameEnd={isGameEnd}
-                    setIsGameEnd={setIsGameEnd}
-                    isWin={isWin.current}
+                    isWin={isWin}
                     isEffect={isEffect}
                     setPersentage={setPersentage}
                     firstTime={firstTime}

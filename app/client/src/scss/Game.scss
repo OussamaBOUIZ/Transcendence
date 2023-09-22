@@ -3,25 +3,6 @@
 @import "./animations.scss";
 
 section {
-    .usersBG {
-        .users {
-            overflow: hidden;
-            width: 50%;
-            height: 100%;
-            z-index: 1;
-            opacity: .6;
-            img {
-                width: 100%;
-                height: 100%;
-            }
-        }
-        .rightUser {
-            border-radius: 0 0 0 100%;
-        }
-        .leftUser {
-            border-radius: 0 0 100% 0;
-        }
-    }
     .bg {
         background-repeat: no-repeat;
         background-size: cover;
@@ -39,7 +20,7 @@ section {
         width: calc(100vw / 1.5);
         max-width: 800px;
         min-width: 300px;
-        height: 100%;
+        height: 100vh;
         z-index: 1;
         .user {
             top: 7.5%;
@@ -75,33 +56,40 @@ section {
 
 @media (max-width: 640px) {
     section {
-        .usersBG {
-            flex-direction: column;
-            .users {
-                width: 100%;
-                height: 50%;
-                img {
-                    width: 100%;
-                    height: 100%;
-                    transform: rotate(90deg);
-                }
-            }
-            .leftUser {
-                border-radius: 0 0 0 100%;
-            }
-            .rightUser {
-                border-radius: 100% 0 0 0;
-            }
-        }
         a.logout {
             transform: rotate(90deg);
         }
         .main-container {
+            #ability-icon {
+                left: -15%;
+            }
+            margin-top: calc((100vh - (100vh / 1.7)) / 2);
             transform: rotate(90deg);
-            height: 100vw;
-            max-height: 800px;
-            min-height: 300px;
+            height: calc(100vh / 1.7);
+            max-width: 800px;
+            min-width: 523px;
             width: 100%;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    section {
+        .main-container {
+            margin-top: calc((100vh - (100vh / 2)) / 2);
+            height: calc(100vh / 2);
+            min-width: 445px;
+        }
+    }
+}
+
+
+@media (max-width: 320px) {
+    section {
+        .main-container {
+            margin-top: calc((100vh - (100vh / 2.3)) / 2);
+            height: calc(100vh / 2.3);
+            min-width: 387px;
         }
     }
 }
@@ -124,7 +112,6 @@ section {
     animation-iteration-count: infinite;
     animation-direction: normal;
     animation-fill-mode: none;
-
 }
 
 #ability-icon.ability-position-modifier {

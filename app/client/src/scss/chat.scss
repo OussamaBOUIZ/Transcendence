@@ -224,38 +224,7 @@ div.chat_container {
             grid-row: 3/4;
             height: 90px;
             border-top: .2px solid $border-color;
-            // @include center-styles;
-            // @animationTime: 0.8s;
-            // @dotSize: 20px;
-            .loader {
-                text-align: center;    
-            }
-            .loader span {
-                display: inline-block;
-                vertical-align: middle;
-                width: 20px;
-                height: 20px;
-                background: white;
-                border-radius: 20px;
-                animation: loader 0.8s infinite alternate;
-            }
-            .loader span:nth-of-type(2) {
-                animation-delay: 0.2s;
-            }
-            .loader span:nth-of-type(3) {
-                animation-delay: 0.6s;
-            }
-            @keyframes loader {
-            0% {
-                opacity: 0.9;
-                transform: scale(0.5);
-            }
-            100% {
-                opacity: 0.1;
-                transform: scale(1);
-            }
-            }
-
+            @include center-styles;
             textarea {
                 border-radius: 5px;
                 width: 80%;
@@ -438,7 +407,5 @@ div.chat_container {
 .level_bar {
     width: 150px;
     height: 5px;
-    // background-color: $primary-pink;
     border-radius: 16px;
-    // border:solid .5px $primary-pink;
 }

@@ -3,7 +3,6 @@ import {nanoid} from 'nanoid'
 import React from "react"
 import StarRank from "./starRank";
 import { Leaders } from "../../global/Interfaces";
-import { Link } from "react-router-dom";
 
 export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
 

@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React from "react";
 import { SketchProps } from "react-p5-wrapper";
 import { Socket } from "socket.io-client";
 
@@ -13,9 +13,8 @@ export interface MySketchProps extends SketchProps {
     gameMode: GameMode | null;
     score: Score;
     setScore:  React.Dispatch<React.SetStateAction<Score>>;
-    isGameEnd: boolean;
-    setIsGameEnd: React.Dispatch<SetStateAction<boolean>>;
-    isWin: boolean;
+    isGameEnd:  React.MutableRefObject<boolean>;
+    isWin: React.MutableRefObject<boolean>;
     isEffect: React.MutableRefObject<boolean> | null;
     setPersentage: React.Dispatch<React.SetStateAction<Persentage>>;
     firstTime: boolean;

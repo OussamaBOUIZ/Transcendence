@@ -1,15 +1,13 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import wins from "../Assets/Icons/wins.svg"
 import losses from "../Assets/Icons/losses.svg"
 import "../scss/userInfoCard.scss"
 import {userInfoCard} from "../../global/Interfaces"
 import AdminPopUp from "../Pages/Chat/AdminPopUp"
 import MutePopUp from "../Pages/Chat/MutePopUp"
-import UserContext from '../Context/UserContext';
 
 export default function UserInfoCard(props: userInfoCard) {
 
-    const {navigate} = useContext(UserContext)
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [isMuteClicked, setIsClicked] = useState<boolean>(false);
 
