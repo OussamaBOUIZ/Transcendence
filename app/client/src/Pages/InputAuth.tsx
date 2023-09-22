@@ -3,6 +3,7 @@ import axios from "axios"
 import React, {useContext, useState} from "react"
 import Notification from "../Components/Notification";
 import UserContext from "../Context/UserContext";
+import { useParams } from "react-router";
 
 interface Inputs {
     [id: number]: string;
@@ -17,6 +18,8 @@ interface Inputs {
 
 export default function InputAuth() {
     const {user, navigate} = useContext(UserContext)
+    const { data } = useParams();
+    console.log('data is: ', data);
     const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -30,7 +33,7 @@ export default function InputAuth() {
                     const collected = {
                         token: collectedCode,
                     }
-                    const res = await axios.post("/api/user/2fa/login", collected);
+                    const res = await axios.post(`/api/user/2fa/login/${data}`, collected);
                     if(res.data.length !== 0)
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                     window.location.href = '/'
