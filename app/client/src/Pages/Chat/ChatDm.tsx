@@ -81,6 +81,8 @@ export default function ChatDm () {
     }, [messagesList])
 
     useEffectOnUpdate(scrollLogic(outerDiv, innerDiv, prevInnerDivHeight), [messagesList])
+
+    console.log(messagesList.length);
     
     return (
         <>

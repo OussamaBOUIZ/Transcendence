@@ -22,7 +22,7 @@ import { gameModule } from './game/game.module';
   gameModule,
   ConfigModule.forRoot({
     isGlobal: true,
-    envFilePath: "./backend/.env"
+    envFilePath: "Transcendence/.env"
   }),
   ChatGatewayModule,
    ScheduleModule.forRoot(),

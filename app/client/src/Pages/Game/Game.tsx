@@ -31,28 +31,28 @@ let abilityImgs = new Map<string, string>([
 const gameModes = new Map<string, GameMode>([
     ["BattleRoyal", {
         modeName: "BattleRoyal",
-        ball: "fireBall.png",
+        ball: "RoyalBall.png",
         background: "BattleRoyal.jpg",
-        paddle: "paddle.png",
-        color: {r: 255, g: 154, b: 0, a: 1},
+        paddle: "RoyalPaddle.png",
+        color: {r: 239, g: 7, b: 253, a: 1},
         xp: 6000,
         maxScore: 21,
         ability: "none"
     }],
     ["BlazingPong", {
         modeName: "BlazingPong",
-        ball: "fireBall.png",
-        paddle: "paddle.png",
+        ball: "BlazingBall.png",
+        paddle: "BlazingPaddle.png",
         background: "BlazingPong.jpg",
-        color: {r: 255, g: 154, b: 0, a: 1},
+        color: {r: 250, g: 128, b: 8, a: 1},
         xp: 5000,
         maxScore: 11,
         ability: "reverse"
     }],
     ["ArcticPong", {
         modeName: "ArcticPong",
-        ball: "iceBall.png",
-        paddle: "paddle.png",
+        ball: "ArcticBall.png",
+        paddle: "ArcticPaddle.png",
         background: "ArcticPong.jpg",
         color: {r: 135, g: 206, b: 235, a: 1},
         xp: 4000,
@@ -61,10 +61,10 @@ const gameModes = new Map<string, GameMode>([
     }],
     ["RetroPong", {
         modeName: "RetroPong",
-        ball: "iceBall.png",
-        paddle: "paddle.png",
+        ball: "RetroBall.png",
+        paddle: "RetroPaddle.png",
         background: "RetroPong.jpg",
-        color: {r: 135, g: 206, b: 235, a: 1},
+        color: {r: 1, g: 248, b: 88, a: 1},
         xp: 3000,
         maxScore: 5,
         ability: "hide"
@@ -127,9 +127,16 @@ export default function Game () {
     useEffect(() => {
         setAbility(mode?.ability || "")
     }, [mode])
-    
-    useEffectOnUpdate(()  => {
 
+    const handleVisibilityChange = function() {
+        if (document.visibilityState !== 'visible') {
+            isGameEnd.current = true;
+            socket?.emit("quitGame", roomKey);
+        }
+    }
+
+    useEffectOnUpdate(()  => {
+        document.addEventListener("visibilitychange", handleVisibilityChange);
         if (!firstTime && persentage.myPersentage < 100) {
             setInterval(() => {
                 setPersentage((prevState) => {
@@ -171,7 +178,6 @@ export default function Game () {
             }
             isGameEnd.current = true;
             socket?.emit("gameEnd", key);
-            // setTimeout(() => socket?.disconnect(), 500);
         });
     }, [socket])
 
@@ -234,7 +240,6 @@ export default function Game () {
         }
 
         return () => {
-            // if (!isGameEnd.current)
             newSocket.emit("quitGame", roomKey);
             newSocket.disconnect();
         };

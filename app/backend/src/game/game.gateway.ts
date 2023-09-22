@@ -18,7 +18,7 @@ interface User {
 	socket: Socket;
 }
 
-const gameModes: string[] = ["BattleRoyal", "IceLand", "TheBeat", "BrighGround"];
+const gameModes: string[] = ["BattleRoyal", "BlazingPong", "ArcticPong", "RetroPong"];
 
 const waitingUsers = new Map<String, User[]>([
     ["BattleRoyal", []],
