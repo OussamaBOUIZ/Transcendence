@@ -63,7 +63,7 @@ export class UserService {
         const user =  await this.userRepo.find({
             where : {
                 id: Not(userid),
-                status: In(['Online', 'In a Game'])
+                status: In(['Online', 'In A Game'])
             },
             select: {
                 id: true,
@@ -393,7 +393,7 @@ export class UserService {
     }
     async generate2fa(user: User) {
         const secret = authenticator.generateSecret();
-        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        const otpPathUrl = authenticator.keyuri(user.email, process.env.APP_NAME, secret);
         user.two_factor_secret = secret;
         user.otpPathUrl = otpPathUrl;
         await this.userRepo.save(user);
@@ -405,7 +405,7 @@ export class UserService {
 
     otpsetup(user: User) {
         const secret = authenticator.generateSecret();
-        const otpPathUrl = authenticator.keyuri(user.email, 'Transcendence', secret);
+        const otpPathUrl = authenticator.keyuri(user.email, process.env.APP_NAME, secret);
         return {
             secret,
             otpPathUrl

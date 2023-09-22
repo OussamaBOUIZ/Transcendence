@@ -1,4 +1,4 @@
-###################
+    ###################
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
@@ -7,6 +7,7 @@ FROM node:20-alpine As development
 WORKDIR /app
 
 COPY ./package.json .
+
 
 RUN npm i
 
@@ -35,6 +36,7 @@ RUN npm install -g @nestjs/cli
 COPY . .
 
 # COPY .env .
+
 #Use the node user from the image (instead of the root user)
 # USER dev
 
@@ -42,6 +44,6 @@ COPY . .
 
 RUN npm run build
 
-#EXPOSE 3000
+EXPOSE 3000
 
 CMD ["npm", "run", "start:prod"]

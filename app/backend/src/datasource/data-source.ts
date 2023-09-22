@@ -11,12 +11,12 @@ import { BlockedTokenList } from "src/databases/BlockedTokenList/BlockedTokenLis
 import { Game } from "src/databases/game.entity";
 
 export const dataSourceOptions: DataSourceOptions = {
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: '123',
-    database: 'PingPong', //  PingPong
+    type: "postgres",
+    host: process.env.HOST,
+    port: Number(process.env.PORT),
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB, //  PingPong
     entities: [
       Achievement, Channel,
        Muted_users, 
