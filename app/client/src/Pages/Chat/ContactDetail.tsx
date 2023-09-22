@@ -11,7 +11,6 @@ import { capitalize } from '../../Helpers/utils';
 function AllAchievement ({item} :{item: Achievement}) {
     const [image, setImage] = useState<string>()
 
-
     useEffect(() => {
         const getImage = async () => {
             setImage(await getAchievementImage(item.id));
@@ -33,7 +32,7 @@ function AllAchievement ({item} :{item: Achievement}) {
 export default function ContactDetail ({title, oview} : {title: string, oview?: User}) {
     
     const {setShow} = useContext(UserContext)
-    const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />)
+    const AchievementsElements = oview?.stat?.achievements?.map((item) => <AllAchievement key={item.id} item={item} />).slice(-3)
     const isSmallDevice = useMediaQuery("only screen and (max-width : 820px)");
 
     return (
