@@ -1,4 +1,4 @@
-###################
+    ###################
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
@@ -8,7 +8,6 @@ WORKDIR /app
 
 COPY ./package.json .
 
-ENV NODE_ENV production
 
 RUN npm i
 
@@ -28,6 +27,8 @@ COPY ./package.json .
 # so we can copy over the node_modules directory from the development image
 COPY --from=development /app/node_modules ./node_modules
 
+ENV NODE_ENV production
+
 RUN npm i
 
 RUN npm install -g @nestjs/cli
@@ -43,6 +44,6 @@ COPY . .
 
 RUN npm run build
 
-#EXPOSE 3000
+EXPOSE 3000
 
 CMD ["npm", "run", "start:prod"]
