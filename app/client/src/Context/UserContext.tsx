@@ -63,10 +63,12 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const verifyAuthentication = async () => {
       setIsLoading(true);
         try {
+          console.log('YEAAAH BRROOO')
             const response = await axios.get("/api/auth/tokenValidity");    
             setAuthenticated(response.data)
         }
         catch (error) {
+          console.log('error: ', error);
             setAuthenticated(false)
         }
         setIsLoading(false)

@@ -22,19 +22,9 @@ import { gameModule } from './game/game.module';
   gameModule,
   ConfigModule.forRoot({
     isGlobal: true,
+    envFilePath: "./backend/.env"
   }),
   ChatGatewayModule,
-  MailerModule.forRoot({
-    transport: {
-      host: 'smtp-mail.outlook.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      }
-    },
-   }),
    ScheduleModule.forRoot(),
 ],
   providers: []
