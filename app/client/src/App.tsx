@@ -35,7 +35,7 @@ export default function App () {
           </Route>
           
           <Route path="/sign" element={<Sign />} />
-            <Route path="/inputauth/:data" element={<InputAuth />} />
+          <Route path="/inputauth/:data" element={<InputAuth />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route element={<AuthRequired/>}>
             <Route path="/info" element={<Prompt />} />

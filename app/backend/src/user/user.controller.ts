@@ -36,6 +36,8 @@ import { access, unlink } from 'fs/promises';
 
 import { statusDto, userDataDto, userNamesDto } from './dto/userDataDto';
 import { ViewAuthFilter } from 'src/Filter/filter';
+import { AuthService } from 'src/auth/auth.service';
+import { User } from 'src/databases/user.entity';
 
 
 const DirUpload = './uploads/usersImage/'
@@ -86,11 +88,12 @@ const updateMuliterConfig = () => ({
 })
  
 @Controller('user')
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 export class UserController {
     constructor(private readonly userService: UserService
         , private readonly jwt: JwtService
-        , private readonly BlockedTokenService: BlockedTokenlistService) {}
+        , private readonly BlockedTokenService: BlockedTokenlistService
+        , private readonly authService: AuthService) {}
 
     @Put('updateStatus')
     async updateUserStatus(@Req() req, @Body() body: statusDto) {
@@ -103,7 +106,7 @@ export class UserController {
     }
     
     @Get()
-    @UseGuards(JwtGuard)
+    // @UseGuards(JwtGuard)
     // @UseFilters(V)
     async getUserData(@Req() req: Request)
     {
@@ -311,22 +314,35 @@ export class UserController {
             return res.status(200).send(false);
     }
     
-    @Post('2fa/login/:id')
-    @UseGuards(JwtGuard)
-    async login2fa(@Req() req: Request, @Res() res: Response, @Param('userId') userId: number)
+    @Post('2fa/login/:userId')
+    // @UseGuards(JwtGuard)
+    async login2fa(@Param('userId') userId: number, @Req() req: Request, @Res() res: Response)
     {
-        console.log(userId)
-        let user;
+        let user: User;
         if(isNaN(userId))
+        {
             user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+            if(!user)
+                throw new NotFoundException('user not found');
+        }
         else
+        {
             user = await this.userService.findUserById(userId);
+            if(!user)
+                throw new NotFoundException('user not found');
+        }
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
             user
         );
         if(!isCodeValid)
             return res.status(200).send('two factor token is invalid');
+        if(!isNaN(userId))
+        {
+            console.log('HERE BRO11111');
+            const token = await this.authService.apisignin(user);
+            this.authService.setResCookie(res, token);
+        }
         return res.status(200).send('');
     }
 
