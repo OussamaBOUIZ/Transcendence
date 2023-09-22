@@ -22,6 +22,7 @@ section {
         min-width: 300px;
         height: 100vh;
         z-index: 1;
+        position: relative;
         .user {
             top: 7.5%;
         }
@@ -60,9 +61,6 @@ section {
             transform: rotate(90deg);
         }
         .main-container {
-            #ability-icon {
-                left: -15%;
-            }
             margin-top: calc((100vh - (100vh / 1.7)) / 2);
             transform: rotate(90deg);
             height: calc(100vh / 1.7);
@@ -96,8 +94,9 @@ section {
 
 
 #ability-icon {
-    top: 37%;
-    left: 10%;
+    top: 35%;
+    left: 0;
+    margin-left: -15%;
     position: absolute;
     display: block;
     width: 3.5rem;
@@ -115,6 +114,7 @@ section {
 }
 
 #ability-icon.ability-position-modifier {
-    right: 10%;
+    right: 0;
     left: auto;
+    margin-right: -15%;
 }
