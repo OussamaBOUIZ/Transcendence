@@ -272,7 +272,7 @@ export default function Game () {
                 <FaSignOutAlt />
             </NavLink>
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
-            <div className='main-container flex flex-col items-center bg-red-400 justify-center gap-1'>
+            <div className='main-container flex flex-col items-center justify-center gap-1'>
                 {!isMatching && <img
                     onClick={handleClick}
                     style={iconStyle}

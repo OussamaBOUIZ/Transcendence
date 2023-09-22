@@ -111,8 +111,12 @@ function drawBallEffect(props: MySketchProps, p5: P5CanvasInstance<MySketchProps
 function getCanvasWidth(p5: P5CanvasInstance<MySketchProps>) {
     let canvasWidth;
 
-    if (p5.windowWidth <= 640)
-        canvasWidth = clipCanvas(p5.windowHeight / 1.5);
+    if (p5.windowWidth <= 320)
+    canvasWidth = clipCanvas(p5.windowHeight / 2.3);
+    else if (p5.windowWidth <= 375)
+        canvasWidth = clipCanvas(p5.windowHeight / 2);
+    else if (p5.windowWidth <= 640)
+        canvasWidth = clipCanvas(p5.windowHeight / 1.7);
     else
         canvasWidth = clipCanvas(p5.windowWidth / 1.5);
 
