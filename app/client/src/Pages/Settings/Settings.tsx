@@ -87,8 +87,9 @@ export default function Settings () {
 
     const handleEnable2FA = () => {
         if (tfaStatus)
-            window.location.replace('/disabletfa')
-        window.location.replace('/auth')
+            window.location.href = '/disabletfa'
+        else
+            window.location.href = '/auth'
     }
 
     const get2FAStatus =async () => {

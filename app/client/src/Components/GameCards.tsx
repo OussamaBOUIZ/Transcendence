@@ -9,8 +9,6 @@ import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import UserContext from '../Context/UserContext';
 import {handleClickOutside} from "../Helpers/utils"
-import InboxContext from '../Context/InboxContext';
-
 
 const data = [
   {

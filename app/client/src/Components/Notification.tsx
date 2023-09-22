@@ -3,8 +3,6 @@ import '../scss/Notification.scss'
 import { BsFillInfoCircleFill } from "react-icons/bs"
 import UserContext from "../Context/UserContext";
 import ProfileImage from "./profileImage";
-import { Link } from "react-router-dom";
-import { Socket } from "socket.io-client";
 import {nanoid} from 'nanoid'
 
 interface userType {

@@ -14,7 +14,7 @@ export default function Sign() {
     const {authenticated, isLoading} = useContext(UserContext);
 
     if (authenticated)
-        window.location.replace('/')
+        window.location.href = '/'
 
     useEffect(() => {
         const getImage = async () => {

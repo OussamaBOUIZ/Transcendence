@@ -66,7 +66,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
             return ;
             // throw new WsException('user is not authenticated');
         }
-        user.socketId = "empty";
+        user.socketId = "";
         user.status = 'Offline'
         await this.userService.saveUser(user);
     }

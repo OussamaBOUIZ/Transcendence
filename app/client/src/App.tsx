@@ -5,6 +5,7 @@ import Home from './Pages/Home/Home'
 import Sign from './Pages/Sign/Sign'
 import Game from './Pages/Game/Game'
 import Settings from './Pages/Settings/Settings'
+import PageNotFound from './Pages/Errors/PageNotFound'
 import MainLayout from './Layout/MainLayout'
 import AuthRequired from './Layout/AuthRequired'
 import {UserProvider} from './Context/UserContext'
@@ -58,6 +59,7 @@ export default function App () {
                 </Route>
             </Route>
           </Route>
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </UserProvider>
     </BrowserRouter>

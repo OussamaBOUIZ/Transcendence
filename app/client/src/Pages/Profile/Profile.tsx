@@ -15,13 +15,11 @@ export default function Profile() {
 
   useEffectOnUpdate(() => {
     const getData = async () => {
-      try {
         const data = await getUserData(String(username), "username")
-        setUser(data)
-      }
-      catch (err: any) {
-        navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
-      }
+        if (typeof data === 'string')
+          navigate('/error', { state: { statusCode: 404, statusText: "Not Found" } });
+        else
+          setUser(data)
     }
     void getData();
   }, [userData.status])

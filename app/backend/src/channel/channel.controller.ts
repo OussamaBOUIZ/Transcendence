@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, ForbiddenException, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Post, Query, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { channelDto } from './dto/channelDto';
 import { ChannelService } from './channel.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { channelAdminDto, channelOwnerDto } from './dto/channelOwnerAdminDto';
 import { UserOperationDto } from './dto/operateUserDto';
 import { protectedChannelDto } from './dto/protectedChannelDto';
+import { NotFoundError } from 'rxjs';
 
 @Controller('channel')
 export class ChannelController {    
@@ -51,9 +52,13 @@ export class ChannelController {
         return await this.channelservice.getChannelData(id);
     }
     @Get('channelName/:id')
-    async getChannelNameById(@Param('id', ParseIntPipe) id: number)
+    async getChannelNameById(@Param('id', ParseIntPipe) id: number, @Req() req: Request)
     {
-        return await this.channelservice.getChannelName(id);
+
+        const channel = await this.channelservice.getChannelName(id, req.cookies);
+        if (!channel)
+            throw new ForbiddenException("channel not found")
+        return channel.channel_name
     }
     @Get('AllChannels/:id')
     async getAllChannels(@Param('id', ParseIntPipe) id: number)

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/databases/user.entity';
-import { Not, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt';
 import { Achievement } from "../databases/achievement/achievement.entity";
@@ -63,7 +63,7 @@ export class UserService {
         const user =  await this.userRepo.find({
             where : {
                 id: Not(userid),
-                status: 'Online'
+                status: In(['Online', 'In a Game'])
             },
             select: {
                 id: true,
@@ -329,19 +329,19 @@ export class UserService {
         })
         return achieved.slice(0, 3);
     }
-    async onlineFriends(id: number) {
-        const user = await this.userRepo.findOne({
-            where: { id: id },
-            relations: {
-                friends: {
-                    stat: true,
-                },
-            }
-        });
-        const friends: User[] = user.friends.filter((friend) => friend.status === 'Online').splice(0, 4);
-        return friends;
+    // async onlineFriends(id: number) {
+    //     const user = await this.userRepo.findOne({
+    //         where: { id: id },
+    //         relations: {
+    //             friends: {
+    //                 stat: true,
+    //             },
+    //         }
+    //     });
+    //     const friends: User[] = user.friends.filter((friend) => friend.status === 'Online').splice(0, 4);
+    //     return friends;
 
-    }
+    // }
     async AllFriends(id: number) {
         const user = await this.userRepo.findOne({
             relations: {

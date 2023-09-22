@@ -16,10 +16,12 @@ export const accessChannel = (id: number, socket: Socket | undefined, roomData: 
                     if (binarySearch(blockedUsers, message.fromUser))
                         return message
                     const userData = await getUserData(message.fromUser, "id");
-                    message.image = userData.image;
-                    message.username = userData.username;
-                    message.isBlocked = false
-                    return message
+                    if (typeof userData === 'object') {
+                        message.image = userData.image;
+                        message.username = userData.username;
+                        message.isBlocked = false
+                    }
+                        return message
                 })
             );
             setMessageList(newData);

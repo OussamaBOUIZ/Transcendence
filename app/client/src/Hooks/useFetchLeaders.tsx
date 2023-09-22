@@ -1,11 +1,9 @@
-import {useState, useEffect, useContext} from "react";
+import {useState, useEffect} from "react";
 import axios from 'axios';
 import {Leaders} from "../../global/Interfaces"
 import { getUserImage } from "./getUserImage";
-import UserContext from "../Context/UserContext";
 
 export const useFetchLeaders = (): Leaders[] | [] => {
-  const {navigate} = useContext(UserContext)
   const [leaders, setLeaders] = useState<Leaders[]>([]);
 
   useEffect(() => {

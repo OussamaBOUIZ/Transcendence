@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React from "react";
 import { SketchProps } from "react-p5-wrapper";
 import { Socket } from "socket.io-client";
 

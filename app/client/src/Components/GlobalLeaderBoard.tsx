@@ -50,7 +50,7 @@ export default function GlobalLeaderBoard({Leaders} : {Leaders: Leaders[]}) {
         return (
             <div key={user.id} className={`topRank`} >
                 <StarRank RankNumber={index + 4} color="#A0A0A0" />
-                <p>{user.username}</p>
+                <p>{user.user.username}</p>
                 <span><p>{`level ${user.ladder_level}`}</p></span>
             </div>
         )
