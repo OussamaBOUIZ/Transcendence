@@ -31,7 +31,7 @@ export default function Auth() {
             if (isNumeric && collectedCode.length === 6) {
                 try {
                     const collected = { token: collectedCode }
-                    const res = await axios.post("/api/user/2fa/login", collected);
+                    const res = await axios.post("/api/user/2fa/login/undefined", collected);
                     if(res.data.length == 0) {
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                         window.location.href = '/'

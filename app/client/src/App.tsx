@@ -35,12 +35,12 @@ export default function App () {
           </Route>
           
           <Route path="/sign" element={<Sign />} />
+            <Route path="/inputauth/:data" element={<InputAuth />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route element={<AuthRequired/>}>
             <Route path="/info" element={<Prompt />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/disabletfa" element={<DisableTFA />} />
-            <Route path="/inputauth" element={<InputAuth />} />
             <Route path="/game/:gameMode" element={<Game />} />
             <Route path="/game/:gameMode/:key" element={<Game />} />
             <Route element={<MainLayout />}>
