@@ -311,11 +311,16 @@ export class UserController {
             return res.status(200).send(false);
     }
     
-    @Post('2fa/login/')
+    @Post('2fa/login/:id')
     @UseGuards(JwtGuard)
-    async login2fa(@Req() req: Request, @Res() res: Response)
+    async login2fa(@Req() req: Request, @Res() res: Response, @Param('userId') userId: number)
     {
-        const user = await this.userService.getUserFromJwt(req.cookies['access_token'])
+        console.log(userId)
+        let user;
+        if(isNaN(userId))
+            user = await this.userService.getUserFromJwt(req.cookies['access_token']);
+        else
+            user = await this.userService.findUserById(userId);
         const isCodeValid = this.userService.isUserAuthValid(
             req.body.token,
             user
