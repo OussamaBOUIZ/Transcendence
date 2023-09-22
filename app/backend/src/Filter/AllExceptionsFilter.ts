@@ -8,7 +8,6 @@ export class AllExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     let message;
     const status = exception instanceof HttpException ? exception.getStatus() : 500;
-    console.log('message is: ', status, exception.message);
     if (status == 500)
       message = 'Internal Server Error';
     else if (status == 400)

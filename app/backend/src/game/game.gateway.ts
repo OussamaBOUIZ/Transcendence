@@ -55,7 +55,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		for (const [key, value] of this.server.sockets.adapter.rooms) {
 			if (key.includes(socket.id) && value.size > 0) {
-				console.log("leave game");
 				this.server.to(key).emit("leaveGame")
 			}
 		}
@@ -77,14 +76,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('joinGame')
 	onJoinGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log('join game');
 		if (!(this.server.sockets.adapter.rooms.get(roomKey)?.size > 2))
 			socket.join(roomKey);
 	}
   
 	@SubscribeMessage('gameEnd')
 	async onGameEnd(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
-		console.log("game End");
 
 		socket.leave(roomKey);
 		cleanWaitingSockets(socket);
@@ -93,7 +90,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('quitGame')
 	async onQuitGame(@MessageBody() roomKey: string, @ConnectedSocket() socket: Socket) {
 		socket.to(roomKey).emit("leaveGame");
-		console.log("quit game");
 
 		socket.leave(roomKey);
 		cleanWaitingSockets(socket);
@@ -109,7 +105,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('saveScore') 
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
-		console.log("score: ", score);
 		await this.gameservice.saveScore(score);
 
 	}

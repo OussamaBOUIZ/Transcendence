@@ -425,7 +425,6 @@ export class UserController {
     @Get('user/details/:id')
     async getUserDetails(@Param('id', ParseIntPipe) id: number) {
         const user = await this.userService.getUserDetails(id)
-        console.log(user);
         
         if (!user )
             throw new NotFoundException('user not found')
