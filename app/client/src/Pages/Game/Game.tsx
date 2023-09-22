@@ -36,7 +36,7 @@ const gameModes = new Map<string, GameMode>([
         paddle: "RoyalPaddle.png",
         color: {r: 239, g: 7, b: 253, a: 1},
         xp: 6000,
-        maxScore: 21,
+        maxScore: 15,
         ability: "none"
     }],
     ["BlazingPong", {
@@ -101,6 +101,7 @@ export default function Game () {
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
+            console.log("final score: ", finalScore);
             socket?.emit("saveScore", {
                 userScore: finalScore?.myScore,
                 opponentScore: finalScore?.oppScore,
@@ -193,13 +194,14 @@ export default function Game () {
         if (gameMode && (score.myScore === mode?.maxScore
                 || score.oppScore === mode?.maxScore )) {
             
-            isGameEnd.current = true;
 
-            if (score.myScore === mode?.maxScore) {
+            if (!isGameEnd.current && score.myScore === mode?.maxScore) {
                 isWin.current = true;
+                console.log("gamessssssssss");
                 updateDataBase(score);
             }
 
+            isGameEnd.current = true;
             socket?.emit("gameEnd", gameKey);
         }
 

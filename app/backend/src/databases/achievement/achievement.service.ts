@@ -66,6 +66,10 @@ export class AchievementService {
         achievement.is_achieved = true;
         await this.achieveRepo.save(achievement);
     }
+    async setShotsAchievement(userId: number)
+    {
+        await this.unlockAchievement('the wall', userId);
+    }
     async setUnderdogAchievement(userId: number)
     {
         await this.unlockAchievement('underdog', userId);
@@ -101,16 +105,16 @@ export class AchievementService {
         if(wins == 0)
             await this.unlockAchievement('Pong win', userId);
         switch (gameType) {
-            case 'Battle royal':
-                await this.unlockAchievement('Battle royal winner', userId);
+            case 'BattleRoyal':
+                await this.unlockAchievement('Battle Royal winner', userId);
                 break;
-            case 'Blazing Pong':
+            case 'BlazingPong':
                 await this.unlockAchievement('Blazing Pong winner', userId);
                 break;
-            case 'Arctic Pong':
+            case 'ArcticPong':
                 await this.unlockAchievement('Arctic Pong winner', userId);
                 break;
-            case 'Retro Pong':
+            case 'RetroPong':
                 await this.unlockAchievement('Retro Pong winner', userId);
                 break;
         }
