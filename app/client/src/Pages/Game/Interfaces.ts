@@ -1,10 +1,10 @@
 import React from "react";
 import { SketchProps } from "react-p5-wrapper";
 import { Socket } from "socket.io-client";
+import { User } from "../../../global/Interfaces";
 
 export interface MySketchProps extends SketchProps {
-    rotation: number;
-    theme: string;
+    user:  User;
     socket: Socket | null;
     isHost: boolean;
     setIsHost:  React.Dispatch<React.SetStateAction<boolean>>;
