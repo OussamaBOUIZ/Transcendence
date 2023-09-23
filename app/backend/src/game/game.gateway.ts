@@ -12,6 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { userWinDto } from "./dto/userWinDto";
 import { scoreStoreDto } from "./dto/scoreSavingDto";
 import { gameService } from "./game.service";
+import { UserService } from "src/user/user.service";
 
 interface User {
 	user: any;
@@ -36,6 +37,12 @@ function cleanWaitingSockets (socket: Socket) {
 	});
 }
 
+async function updateStatus(userService: UserService, userId: number) {
+	const user = await userService.findUserById(userId);
+	user.status = 'In A Game';
+	await userService.saveUser(user);
+}
+
 @WebSocketGateway(4343, {cors: {
 	origin: "http://localhost:5173",
 	credentials: true
@@ -43,7 +50,8 @@ function cleanWaitingSockets (socket: Socket) {
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
 
-	constructor(private readonly gameservice: gameService) {}
+	constructor(private readonly gameservice: gameService
+		, private readonly userService: UserService) {}
 
     afterInit(server: any) {
     }
@@ -109,7 +117,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		await this.gameservice.addLoserStat(gameData.opponentId)
 		
 	}
-	
 
 	@SubscribeMessage('saveScore') 
 	async onSaveScore(@MessageBody() score: scoreStoreDto, @ConnectedSocket() socket: Socket) {
@@ -134,28 +141,32 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("gameMatching")
-	onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+	async onGameMatching(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		const users: User[] =  waitingUsers.get(body.modeName);
+		const user = await this.userService.findUserById(body.user.id);
 
-		if (!users?.find((user: User) => user.user.id == body.user.id )) {
+
+		if (user.status != "In A Game" && !users?.find((user: User) => user.user.id == body.user.id )) {
 			if (users.length >= 1) {
 				const oppUser: User = users[0];
+				
+				setTimeout( async () => {
 
-				setTimeout( () => {
 					if (socket.connected && oppUser.socket.connected) {
 						socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: oppUser.user});
 						oppUser.socket.emit("matched", {roomKey: socket.id + oppUser.socket.id, user: body.user});
+						users.unshift();
 					}
 				}, 1000)
-
-				users.unshift();
-			} else 
+			} else
 				users.push({user: body.user, socket});
 		}
 	}
 
     @SubscribeMessage('game')
-	onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
+	async onNewMessage(@MessageBody() body: any, @ConnectedSocket() socket: Socket) {
 		socket.to(body.gameKey).emit("movePad", body);
+
+		updateStatus(this.userService, body.userId);
 	}
 }

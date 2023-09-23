@@ -117,12 +117,12 @@ export default function Game () {
         }
     }
 
-    const UpdateStatus = async () => {
-        try {
-            void axios.put('/api/user/updateStatus', {status: "In A Game"})
-        }
-        catch (error) {}
-    }
+    // const UpdateStatus = async () => {
+    //     try {
+    //         void axios.put('/api/user/updateStatus', {status: "In A Game"})
+    //     }
+    //     catch (error) {}
+    // }
 
     useEffect(() => {
         setAbility(mode?.ability || "")
@@ -209,9 +209,6 @@ export default function Game () {
         const newSocket: any = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
-      
-        void UpdateStatus() 
-
 
         if (key && gameMode) {
             setIsMatching(true);
@@ -282,9 +279,9 @@ export default function Game () {
                 }
 
                 <ReactP5Wrapper 
+                    user={user}
                     sketch={sketch}
                     socket={socket}
-                    theme="black"
                     isHost={isHost}
                     setIsHost={setIsHost}
                     gameKey={gameKey}

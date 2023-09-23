@@ -5,6 +5,8 @@ import vars from "./vars"
 import Ball from "./Ball"
 import Pad from "./Pad";
 import Net from "./Net";
+import { User } from "../../../global/Interfaces";
+
 const prevPos: Array<Ball> = [];
 
 let leftPad: Pad;
@@ -40,6 +42,7 @@ export function adjustGame(p5: P5CanvasInstance<MySketchProps>) {
 function sendData(props: MySketchProps, p5: P5CanvasInstance<MySketchProps>) {
     if (props.isHost) {
         props.socket?.emit("game", {
+            userId : props.user.id,
             gameKey: props.gameKey,
             padX: rightPad.y,
             ballX: ball?.x,
@@ -49,6 +52,7 @@ function sendData(props: MySketchProps, p5: P5CanvasInstance<MySketchProps>) {
     }
     else {
         props.socket?.emit("game", {
+            userId : props.user.id,
             gameKey: props.gameKey, 
             padX: leftPad.y,
             canvasSize: p5.width,
@@ -145,8 +149,7 @@ function specialAbilities(props: MySketchProps) {
 
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
     let props: MySketchProps = {
-        rotation: 0,
-        theme: "",
+        user: {} as User,
         socket: null,
         isHost: true,
         setIsHost: () => {},

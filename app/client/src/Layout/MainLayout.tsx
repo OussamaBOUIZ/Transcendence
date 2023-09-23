@@ -18,7 +18,7 @@ export default function MainLayout () {
 
     const UpdateStatus = async () => {
       try {
-        void axios.put('/api/user/updateStatus', {status: "offline"})
+        void axios.put('/api/user/updateStatus', {status: "Offline"})
       }
       catch (err: any) {
         navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
