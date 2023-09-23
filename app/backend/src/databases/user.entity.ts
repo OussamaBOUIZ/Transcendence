@@ -42,10 +42,6 @@ export class User extends BaseEntity {
     @Column({nullable: true, unique: true})
     username: string
 
-    @Exclude()
-    @Column({nullable: true})
-    password: string
-
     @Column({default: 'path', nullable: true})
     avatar: string
 

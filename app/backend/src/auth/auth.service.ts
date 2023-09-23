@@ -61,17 +61,6 @@ export class AuthService {
         return null;
     }
 
-    async validateUser(email: string, password: string)
-    {
-        const foundUser = await this.userService.findUserByEmail(email);
-        if(!foundUser)
-            return null;
-        const userCorrect = await argon.verify(foundUser.password, password);
-        if(!userCorrect || !foundUser.isEmailConfirmed)
-            return null;
-        return this.signToken(foundUser);
-    }
-
     signToken(user: User)
     {
         const secret = this.configService.get<string>('JWT_SECRET');
