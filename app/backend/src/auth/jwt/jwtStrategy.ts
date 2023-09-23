@@ -41,6 +41,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt')
         if (!user) throw new UnauthorizedException('Please log in to continue');
         if((await this.BlockedTokenService.blackListHasToken(this.request.cookies['access_token'])) === true)
             throw new UnauthorizedException('token is not valid');
+        // console.log('user data is: ', {
+            id: payload.sub,
+            email: payload.email,
+        } )
         return {
             id: payload.sub,
             email: payload.email,

@@ -101,7 +101,7 @@ export default function Game () {
 
     const updateDataBase = (finalScore: Score | undefined) => {
         if (gameMode) {
-            console.log("final score: ", finalScore);
+            // console.log("final score: ", finalScore);
             socket?.emit("saveScore", {
                 userScore: finalScore?.myScore,
                 opponentScore: finalScore?.oppScore,
@@ -197,7 +197,7 @@ export default function Game () {
 
             if (!isGameEnd.current && score.myScore === mode?.maxScore) {
                 isWin.current = true;
-                console.log("gamessssssssss");
+                // console.log("gamessssssssss");
                 updateDataBase(score);
             }
 

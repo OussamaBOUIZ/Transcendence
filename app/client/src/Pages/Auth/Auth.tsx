@@ -32,7 +32,7 @@ export default function Auth() {
                 try {
                     const collected = { token: collectedCode }
                     const res = await axios.post(`/api/user/2fa/login/${user.id}`, collected);
-                    console.log(res);
+                    // console.log(res);
                     if(res.data.length == 0) {
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                         window.location.href = '/'

@@ -88,7 +88,6 @@ const updateMuliterConfig = () => ({
 })
  
 @Controller('user')
-@UseGuards(JwtGuard)
 export class UserController {
     constructor(private readonly userService: UserService
         , private readonly jwt: JwtService
@@ -96,6 +95,7 @@ export class UserController {
         , private readonly authService: AuthService) {}
 
     @Put('updateStatus')
+    @UseGuards(JwtGuard)
     async updateUserStatus(@Req() req, @Body() body: statusDto) {
         const userEmail = req.user.email
         const user = await this.userService.findUserByEmail(userEmail)
@@ -106,6 +106,7 @@ export class UserController {
     }
     
     @Get()
+    @UseGuards(JwtGuard)
     async getUserData(@Req() req: Request)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
@@ -115,6 +116,7 @@ export class UserController {
     }   
 
     @Get('online/users')
+    @UseGuards(JwtGuard)
     async getOnlineUsers(@Req() req) {
 
         const user = await this.userService.findUserByEmail(req.user.email)
@@ -126,6 +128,7 @@ export class UserController {
     @Post('/:userId/upload')
 	@UseInterceptors(FileInterceptor('image', multerConfig()))
 	@HttpCode(HttpStatus.CREATED)
+    @UseGuards(JwtGuard)
 	async uploadImage(
 		@Param('userId', ParseIntPipe) id: number,
 		@UploadedFile(new ParseFilePipe({
@@ -140,6 +143,7 @@ export class UserController {
 	}
 
     @Put('/:userId/avatar/')
+    @UseGuards(JwtGuard)
 	@UseInterceptors(FileInterceptor('image', updateMuliterConfig()))
 	async updateAvatar(
 		@Param('userId', ParseIntPipe) id: number,
@@ -157,6 +161,7 @@ export class UserController {
 	}
 
     @Delete('delete/:id')
+    @UseGuards(JwtGuard)
     async deleteUser(@Param('id') userId: number) // return success
     {
         await this.userService.deleteUserFromDB(userId);
@@ -164,22 +169,26 @@ export class UserController {
     }
 
     @Get('achievements/:id')
+    @UseGuards(JwtGuard)
     async getAchievements(@Param('id') id: number) {
         return await this.userService.getAchievement(id);
     }
 
     @Get('leaders')
+    @UseGuards(JwtGuard)
     async getGameLeaders() {
         return this.userService.getLeaderBoard()
     }
 
     @Get(':id/data')
     @UseFilters(ViewAuthFilter)
+    @UseGuards(JwtGuard)
     async getUserById(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findUserById(id)
     }
 
     @Get('blockedUsers/:userId')
+    @UseGuards(JwtGuard)
     async getBlockedUser(
         @Param('userId', ParseIntPipe) userId: number,
     )
@@ -195,6 +204,7 @@ export class UserController {
 
 
     @Post('block/:userId')
+    @UseGuards(JwtGuard)
     async blockUser(
         @Param('userId', ParseIntPipe) userId: number,
         @Req() req,
@@ -209,6 +219,7 @@ export class UserController {
 
 	@Get('avatar/:id')
 	@Header('Content-Type', 'image/jpg')
+    @UseGuards(JwtGuard)
 	async getAvatarById(@Param('id', ParseIntPipe) id: number): Promise<StreamableFile> {
 		const user = await this.userService.findUserById(id)
 		if (!user)
@@ -227,17 +238,20 @@ export class UserController {
 		}
 	}
     @Get('stats/:userId')
+    @UseGuards(JwtGuard)
     async getStatsById( @Param('userId', ParseIntPipe) id: number) {
        return await this.userService.getStatsById(id)
     }
 
     @Get('achievement/firstThree/:id')
+    @UseGuards(JwtGuard)
     async getLastThree(@Param('id') id: number)
     {
         return await this.userService.getLastThreeAchievements(id);
     }
     @Get('achievement/image/:id')
     @Header('Content-Type', 'image/jpg')
+    @UseGuards(JwtGuard)
     async getAchievementImage(@Param('id', ParseIntPipe) id: number) // todo add parseInt pipe
     {
         const filename = id % 14 !== 0 ? (id % 14) + '.jpg' : 14 + '.jpg'
@@ -252,28 +266,33 @@ export class UserController {
     //     return await this.userService.onlineFriends(id);
     // }
     @Post('addfriend/:id')
+    @UseGuards(JwtGuard)
     async addFriend(@Param('id') id: number, @Query('friendId') friendId: number, @Res() res: Response)
     {
         await this.userService.addFriend(id, friendId);
         return res.status(201).send(`user has ${friendId} as a friend now`);
     }
     @Get('allfriends/:id')
+    @UseGuards(JwtGuard)
     async getAllFriends(@Param('id') id: number)
     {
         return await this.userService.AllFriends(id);
     }
     @Get('friendLastGame/:friendId')
+    @UseGuards(JwtGuard)
     async getFriendLastGame(@Param('friendId', ParseIntPipe) friendId: number, @Query('userId') userId: number)
     {
         return await this.userService.getFriendLastGame(friendId, userId);
     }
 
     @Get('game/history/:userId/:toTake')
+    @UseGuards(JwtGuard)
     async getGameHistory(@Param('userId', ParseIntPipe) userId: number, @Param('toTake', ParseIntPipe) toTake: number) {
         return await this.userService.getGameHistory(userId, toTake)
     }
 
     @Get('2fa/turn-on/:id')
+    @UseGuards(JwtGuard)
     async turnOn2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -283,6 +302,7 @@ export class UserController {
     }
 
     @Post('2fa/turn-off/:id')
+    @UseGuards(JwtGuard)
     async turnOff2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -300,6 +320,7 @@ export class UserController {
     }
 
     @Get('2fa/isTurnedOn/:id')
+    @UseGuards(JwtGuard)
     async isTurned2fa(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.findUserById(id);
@@ -310,7 +331,6 @@ export class UserController {
     }
     
     @Post('2fa/login/:userId')
-    // @UseGuards(JwtGuard)
     async login2fa(@Param('userId') userId: number, @Req() req: Request, @Res() res: Response)
     {
         let user: User;
@@ -334,14 +354,16 @@ export class UserController {
             return res.status(200).send('two factor token is invalid');
         if(!isNaN(userId))
         {
-            console.log('HERE BRO11111');
+            // console.log('HERE BRO11111');
             const token = await this.authService.apisignin(user);
             this.authService.setResCookie(res, token);
         }
+        // console.log('HERE status 200')
         return res.status(200).send('');
     }
 
     @Put('setUserNames/:id')
+    @UseGuards(JwtGuard)
     async setUserNames(@Body() userData: userNamesDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
@@ -365,6 +387,7 @@ export class UserController {
     }
 
     @Post('setUserData/:id')
+    @UseGuards(JwtGuard)
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
@@ -395,12 +418,14 @@ export class UserController {
         return res.status(201).send('');
     }
     @Get('isFirstLog')
+    @UseGuards(JwtGuard)
     async isFirstLog(@Req() req: Request, @Res() res: Response)
     {
         const user = await this.userService.getUserFromJwt(req.cookies['access_token']);
         return user.firstLog;
     }
     @Post('logout/:id')
+    @UseGuards(JwtGuard)
     async logout(@Param('id') id: number, @Req() req: Request, @Res() res: Response)
     {
         const token = req.cookies['access_token'];
@@ -414,11 +439,13 @@ export class UserController {
     }
 
     @Patch('stat/add')
+    @UseGuards(JwtGuard)
 	async addUserStat(@Query() statDto: StatsDto, @Req() req) {
 		await this.userService.addUserStat(statDto, req.user) 
 	}
 
 	@Get('search/user')
+    @UseGuards(JwtGuard)
 	async searchForUser(@Query() dto: searchDto) {
 		const { username } = dto
 		const user = await this.userService.searchUser(username)
@@ -428,6 +455,7 @@ export class UserController {
 	}
 
     @Get('user/details/:id')
+    @UseGuards(JwtGuard)
     async getUserDetails(@Param('id', ParseIntPipe) id: number) {
         const user = await this.userService.getUserDetails(id)
         
@@ -437,6 +465,7 @@ export class UserController {
     }
 
     @Get('user/profile/:username')
+    @UseGuards(JwtGuard)
     async getUserProfile(@Param('username') username: string) {
         const user = await this.userService.getUserProfile(username)
         if (!user )

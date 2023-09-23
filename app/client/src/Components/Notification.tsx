@@ -52,7 +52,7 @@ export default function Notification({ message, playNow }: {message?: string, pl
 		<button className='PlayButton shadow-md px-4 py-1' onClick={acceptChallenge}><span>Play</span></button>
 	</div>;
 	const Content = (message) ? popUp : invitation
-
+	// console.log("isAnimationfinshed : ", isAnimationFinished);
 	return (
 		<>
 			{!isAnimationFinished && (<div className="NotifContainer">

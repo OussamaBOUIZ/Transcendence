@@ -15,7 +15,7 @@ import {
       const response = ctx.getResponse<Response>();
       const status = exception.getStatus();
       const str: string = exception.getResponse().toString();
-      // const res = JSON.parse(str);
+      // console.log('HERE SIGN IS3333')
       return response.status(status).send(exception.message);
      }
    }

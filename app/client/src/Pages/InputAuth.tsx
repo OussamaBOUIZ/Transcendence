@@ -19,7 +19,7 @@ interface Inputs {
 export default function InputAuth() {
     const {user, navigate} = useContext(UserContext)
     const { data } = useParams();
-    console.log('data is: ', data);
+    // console.log('data is: ', data);
     const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -31,9 +31,9 @@ export default function InputAuth() {
             if (isNumeric && collectedCode.length === 6) {
                 try {
                     const collected = {token: collectedCode}
-                    console.log(data)
+                    // console.log(data)
                     const res = await axios.post(`/api/user/2fa/login/${data}`, collected);
-                    console.log('t1');
+                    // console.log('t1');
                     
                     if(res.data.length === 0)
                         window.location.href = '/';
