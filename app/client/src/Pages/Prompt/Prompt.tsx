@@ -22,9 +22,6 @@ export default function Prompt() {
     const [val, increment] = useState<number>(0)
     const updateFullName = setFullName(setData);
 
-    if (!user)
-        return (<Loading />)
-
     if (user.username)
         return <Navigate to="/" />
 
