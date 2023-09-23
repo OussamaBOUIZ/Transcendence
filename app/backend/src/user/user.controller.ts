@@ -354,11 +354,9 @@ export class UserController {
             return res.status(200).send('two factor token is invalid');
         if(!isNaN(userId))
         {
-            // console.log('HERE BRO11111');
             const token = await this.authService.apisignin(user);
             this.authService.setResCookie(res, token);
         }
-        // console.log('HERE status 200')
         return res.status(200).send('');
     }
 

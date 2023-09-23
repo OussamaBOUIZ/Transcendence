@@ -4,6 +4,8 @@ import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import { Socket } from 'socket.io-client';
 import { NavigateFunction, useNavigate } from 'react-router';
+import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
+import Notification from '../Components/Notification';
 
 
 type typeProps = {
@@ -63,12 +65,10 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
     const verifyAuthentication = async () => {
       setIsLoading(true);
         try {
-          // console.log('YEAAAH BRROOO')
             const response = await axios.get("/api/auth/tokenValidity");    
             setAuthenticated(response.data)
         }
         catch (error) {
-          // console.log('error: ', error);
             setAuthenticated(false)
         }
         setIsLoading(false)
@@ -78,7 +78,6 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
       void verifyAuthentication();
   }, [])
 
-    
     useEffect(() => {
         if (user)
           void fetchUserData();
@@ -99,6 +98,7 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
             invitation, setInvitation,
             navigate
         }}>
+          {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />}
             {children}
         </UserContext.Provider>
     );

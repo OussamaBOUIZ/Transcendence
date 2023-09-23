@@ -13,7 +13,6 @@ import {
        const ctx = host.switchToHttp();
        const response = ctx.getResponse<Response>();
        const status = exception.getStatus();
-       // console.log('HERE SIGN IS1111')
        response.status(status).redirect('/');
      }
    }

@@ -29,7 +29,6 @@ export class chatController {
     {
         const user = await this.userRepository.getUserFromJwt(req.cookies['access_token'])
 
-        // console.log(id);
         
         if (!user)
             throw new NotFoundException('user not found')

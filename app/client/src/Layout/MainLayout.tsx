@@ -83,7 +83,7 @@ export default function MainLayout () {
 
     return (
         <div className='w-screen h-full'>
-          {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />}
+          {/* {(notif || invitation?.username) && <Notification message={notif} playNow={invitation} />} */}
             <div className="fixed z-50 w-screen top-0 bg-primary-color sm:bg-transparent">
                 {!re.test(pathname) && <Header />}
             </div>

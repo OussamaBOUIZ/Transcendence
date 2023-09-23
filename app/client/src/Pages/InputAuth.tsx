@@ -17,10 +17,8 @@ interface Inputs {
 
 
 export default function InputAuth() {
-    const {user, navigate} = useContext(UserContext)
+    const {navigate, setNotif} = useContext(UserContext)
     const { data } = useParams();
-    // console.log('data is: ', data);
-    const [notif, setNotif] = useState<string>("")
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
     const collectedCode = Object.values(codeNumber).join('');
@@ -31,9 +29,7 @@ export default function InputAuth() {
             if (isNumeric && collectedCode.length === 6) {
                 try {
                     const collected = {token: collectedCode}
-                    // console.log(data)
                     const res = await axios.post(`/api/user/2fa/login/${data}`, collected);
-                    // console.log('t1');
                     
                     if(res.data.length === 0)
                         window.location.href = '/';
@@ -80,7 +76,7 @@ export default function InputAuth() {
 
   return (
     <>
-        {notif && <Notification message={notif} />}
+        {/* {notif && <Notification message={notif} />} */}
         <div className="verify-container" >
             <div className="verification">
                 <div className="title">

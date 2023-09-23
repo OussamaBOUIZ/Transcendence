@@ -99,7 +99,7 @@ export default function Prompt() {
 
   return (
     <div className="info-body">
-        {notif && <Notification message={notif} />}
+        {/* {notif && <Notification message={notif} />} */}
         <div className="info-container">
             {icon}
             <div className="buttons">

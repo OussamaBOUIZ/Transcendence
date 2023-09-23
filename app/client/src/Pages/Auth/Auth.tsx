@@ -17,8 +17,8 @@ interface Inputs {
 
 
 export default function Auth() {
-    const {user, navigate} = useContext(UserContext)
-    const [notif, setNotif] = useState<string>("")
+    const {user, navigate, setNotif} = useContext(UserContext)
+    // const [notif, setNotif] = useState<string>("")
     const QRcode = useFetchQRcode();
     const [codeNumber, setCodeNumber] =useState<Inputs>({} as Inputs)
 
@@ -32,13 +32,13 @@ export default function Auth() {
                 try {
                     const collected = { token: collectedCode }
                     const res = await axios.post(`/api/user/2fa/login/${user.id}`, collected);
-                    // console.log(res);
                     if(res.data.length == 0) {
                         await axios.get(`/api/user/2fa/turn-on/${user?.id}`)
                         window.location.href = '/'
                     }
-                    else
+                    else {                        
                         setNotif('token is not valid');
+                    }
                 } catch (err: any) {
                     navigate('/error', { state: { statusCode: err.response.status, statusText: err.response.statusText } });
                 }
@@ -79,7 +79,7 @@ export default function Auth() {
 
   return (
     <>
-        {notif && <Notification message={notif} />}
+        {/* {notif && <Notification message={notif} />} */}
         <div className="verify-container" >
             <div className="verification p-10 lg:p-14">
                 <div className="title text-center">
