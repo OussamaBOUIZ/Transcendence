@@ -419,9 +419,7 @@ export class UserController {
 	}
 
 	@Get('search/user')
-	async searchForUser(
-		@Query() dto: searchDto,
-	) {
+	async searchForUser(@Query() dto: searchDto) {
 		const { username } = dto
 		const user = await this.userService.searchUser(username)
         if (!user)

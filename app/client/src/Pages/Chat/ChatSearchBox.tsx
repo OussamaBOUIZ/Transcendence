@@ -11,10 +11,11 @@ export default function ChatSearchBox () {
     const [submittedName, setSubmittedName] = React.useState<string>("")
     const [searchedUser, setSearchedUser] = React.useState<User | null>(null);
     const initialRender = React.useRef<boolean>(true)
-    const {setNotif} = useContext(UserContext)
+    const {user, setNotif} = useContext(UserContext)
 
     const submitStyle = {
         marginTop: "1em",
+        cursor: "pointer"
     }
     function handleChange (e: {target: {value: string}}) {
         setCurrentSearch(e.target.value)
@@ -39,9 +40,11 @@ export default function ChatSearchBox () {
             }
             catch (err) {
                 setNotif("User not Found");
+                setCurrentSearch("")
             }
         }
-        void getUserCard()
+        if (submittedName !== user.username)
+            void getUserCard()
     }, [submittedName])
     return (
         <section className="search_box">
@@ -53,7 +56,7 @@ export default function ChatSearchBox () {
                 onChange={handleChange}
                 value={currentSearch}
                 />
-                <input style={submitStyle}type="submit" value="submit" />
+                <input style={submitStyle} type="submit" value="submit" />
             </form>
             {
                 searchedUser && 
