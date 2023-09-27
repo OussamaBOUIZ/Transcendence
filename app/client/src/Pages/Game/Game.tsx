@@ -3,7 +3,6 @@ import "../../scss/Game.scss"
 import Board from './Board';
 import {FaSignOutAlt} from 'react-icons/fa'
 import { NavLink } from 'react-router-dom';
-import { io } from "socket.io-client";
 import { useParams } from "react-router-dom"
 import { GameMode, Persentage, Score } from './Interfaces';
 import { ReactP5Wrapper } from "react-p5-wrapper"
@@ -18,11 +17,11 @@ import RetroPong from "../../Assets/GameArea/RetroPong.jpg"
 import HideAbility from "../../Assets/GameArea/HideAbility.png"
 import ReverseAbility from "../../Assets/GameArea/ReverseAbility.png"
 import SpeedAbility from "../../Assets/GameArea/SpeedAbility.png"
-import axios from 'axios';
+import io, {Socket} from 'socket.io-client'
 
-let ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
+const ModeImages = [BattleRoyal, BlazingPong, ArcticPong, RetroPong]
 
-let abilityImgs = new Map<string, string>([
+const abilityImgs = new Map<string, string>([
     ["reverse", ReverseAbility],
     ["speed", SpeedAbility],
     ["hide", HideAbility],
@@ -81,14 +80,14 @@ export default function Game () {
     const isEffect = useRef<boolean>(false);
     const oppUser = useRef<User>({} as User);
     const [firstTime, setFirstTime] = useState<boolean>(true);
-    const [socket, setSocket] = useState<any>(null);
+    const [socket, setSocket] = useState<Socket>();
     const [gameKey, setGameKey] = useState<string | null>(null);
     const [isMatching, setIsMatching] = useState<boolean>(false);
     const [mode, setMode]  = useState<GameMode>();
     const [score, setScore] = useState<Score>({myScore: 0, oppScore: 0});
     const [persentage, setPersentage] = useState<Persentage>({myPersentage: 0, oppPersentage: 0});
     const isGameEnd = useRef<boolean>(false);
-    const { user, navigate } = useContext(UserContext);
+    const { user, navigate, setUpdate} = useContext(UserContext);
     const [ability, setAbility] = useState<string>("");
     const [isClicked, setIsClicked] = useState<boolean>(false);
     const modeName = String(mode?.modeName)
@@ -117,13 +116,6 @@ export default function Game () {
         }
     }
 
-    // const UpdateStatus = async () => {
-    //     try {
-    //         void axios.put('/api/user/updateStatus', {status: "In A Game"})
-    //     }
-    //     catch (error) {}
-    // }
-
     useEffect(() => {
         setAbility(mode?.ability || "")
     }, [mode])
@@ -139,9 +131,8 @@ export default function Game () {
 
     useEffectOnUpdate(()  => {
         document.addEventListener("keydown", function(event) {
-            if (event.code === "Space" || event.keyCode === 32) {
+            if (event.code === "Space")
                 setIconStyle({animationName: "none"});
-            }
         });
 
         document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -206,7 +197,7 @@ export default function Game () {
     }, [score])
 
     useEffectOnUpdate( () => {
-        const newSocket: any = io("ws://localhost:4343");
+        const newSocket = io("ws://localhost:4343");
         setSocket(newSocket);
         setMode(gameModes.get(String(gameMode)));
 
@@ -259,7 +250,7 @@ export default function Game () {
 
     return (
         <section className="flex flex-col justify-center items-center w-full h-full">
-            <NavLink to={'/'} className="logout absolute cursor-pointer z-50">
+            <NavLink to={'/'} onClick={() => setUpdate(true)} className="logout absolute cursor-pointer z-50">
                 <FaSignOutAlt />
             </NavLink>
             <div className='bg absolute w-full h-full top-0' style={{backgroundImage: `url(${backgroundImage})`}}></div>
@@ -269,7 +260,7 @@ export default function Game () {
                     style={iconStyle}
                     id="ability-icon"
                     src={abilityImgs.get(ability)}
-                    className={`bg-purple-400 rounded-full ${isHost && "ability-position-modifier"}`} />
+                    className={`bg-purple-400 rounded-full ${isHost ? "ability-position-modifier" : ''}`} />
                 }
                 {!isMatching && <Board
                     score={score}

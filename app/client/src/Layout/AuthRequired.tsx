@@ -7,7 +7,6 @@ import useEffectOnUpdate from '../Hooks/useEffectOnUpdate'
 export default function AuthRequired () {
 
     const {authenticated, isLoading, isAnimationFinished, setIsAnimationFinished, setNotif, setInvitation} = useContext(UserContext)
-    useEffectOnUpdate(() => {setNotif(""); setInvitation(undefined); setIsAnimationFinished(false)}, [isAnimationFinished])
 
     if (isLoading)
         return <Loading />

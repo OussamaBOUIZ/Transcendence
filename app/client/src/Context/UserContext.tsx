@@ -4,8 +4,8 @@ import axios from 'axios'
 import { getUserImage } from '../Hooks/getUserImage';
 import { Socket } from 'socket.io-client';
 import { NavigateFunction, useNavigate } from 'react-router';
-import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
 import Notification from '../Components/Notification';
+import useEffectOnUpdate from '../Hooks/useEffectOnUpdate';
 
 
 type typeProps = {
@@ -58,14 +58,14 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         const image = await getUserImage(response.data.id)
         setUser({...response.data, image});
         
-      } catch (err: any) {}
+      } catch (err: unknown) { /* empty */ }
       setIsLoading(false);        
     };
     
     const verifyAuthentication = async () => {
       setIsLoading(true);
         try {
-            const response = await axios.get("/api/auth/tokenValidity");    
+            const response = await axios.get<boolean>("/api/auth/tokenValidity");    
             setAuthenticated(response.data)
         }
         catch (error) {
@@ -82,6 +82,8 @@ export function UserProvider ({children}: {children: React.ReactNode}) {
         if (user)
           void fetchUserData();
       }, [update])
+
+    useEffectOnUpdate(() => {setNotif(""); setInvitation(undefined); setIsAnimationFinished(false)}, [isAnimationFinished])
 
     return (
         <UserContext.Provider value={{

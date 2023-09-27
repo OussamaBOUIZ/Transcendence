@@ -34,9 +34,10 @@ export class AuthController {
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
             return res.redirect(`http://localhost:5173/inputauth/${user.id}`);
+            this.authService.setResCookie(res, token);
         if(user.firstLog === true)
             return res.redirect('http://localhost:5173/info');
-        this.authService.setResCookie(res, token);
+        // this.authService.setResCookie(res, token);
         return res.redirect('http://localhost:5173/');
     }
 
@@ -55,9 +56,9 @@ export class AuthController {
         const userHasAuth = await this.userService.userHasAuth(user);
         if(userHasAuth === true)
             return res.redirect(`http://localhost:5173/inputauth/${user.id}`);
+        this.authService.setResCookie(res, token);  
         if(user.firstLog === true) 
             return res.redirect('http://localhost:5173/info');  
-        this.authService.setResCookie(res, token);  
         return res.redirect('http://localhost:5173/');
     }
     @Get('qrcode')

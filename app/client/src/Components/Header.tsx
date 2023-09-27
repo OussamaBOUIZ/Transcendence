@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import logo from "../Assets/Icons/logo.svg";
 import { HiMenu, HiOutlineX } from "react-icons/hi";
 import {nanoid} from 'nanoid'
 import { Link } from 'react-router-dom';
 import '../scss/main.scss'
 import '../scss/mobilenav.scss'
+import UserContext from '../Context/UserContext';
 
 
 export default function Header () {
 
     const [On, setOn] = useState<boolean>(false)
+    const {user} = useContext(UserContext)
 
     const navLinks = [
         {id: nanoid(), value: "Home", link: "/"},
         {id: nanoid(), value: "Chat", link: "/chat"},
-        {id: nanoid(), value: "Game", link: "/game"},
-        {id: nanoid(), value: "Friends", link: "/friends"},
+        {id: nanoid(), value: "Profile", link: "/profile"},
+        {id: nanoid(), value: "Friends", link: `/friends/${user.username}`},
         {id: nanoid(), value: "Settings", link: "/settings"},
         {id: nanoid(), value: "Log out", link: "/logout"},
     ]

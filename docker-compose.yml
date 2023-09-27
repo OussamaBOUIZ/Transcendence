@@ -40,7 +40,7 @@ services:
     restart: always
 
   # ? need volume  also for envs of course for testing
-  # ! put envs in .env file and should be ignord by git
+  # ! put envs in .env file and should be ignored by git
   pg-admin:
     image: dpage/pgadmin4
     ports:

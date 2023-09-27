@@ -139,7 +139,7 @@ export class UserController {
         
         
 	    await this.userService.saveUserAvatarPath(id, image.path)
-        return  res.status(HttpStatus.CREATED).send('Avatar Uploaded')
+        return  res.status(HttpStatus.CREATED).send('')
 	}
 
     @Put('/:userId/avatar/')
@@ -385,7 +385,7 @@ export class UserController {
     }
 
     @Post('setUserData/:id')
-    @UseGuards(JwtGuard)
+    // @UseGuards(JwtGuard)
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {

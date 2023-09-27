@@ -63,7 +63,7 @@ export function InboxProvider ({children}: {children:React.ReactNode}) {
         }
     }
     
-    useEffectOnUpdate(() => {fetchInbox()}, [isLoaded])
+    useEffectOnUpdate(() => {void fetchInbox()}, [isLoaded])
 
     useEffectOnUpdate(() => {
         //init socket
