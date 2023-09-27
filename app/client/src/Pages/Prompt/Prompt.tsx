@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import "../../scss/prompt.scss";
-import Notification from "../../Components/Notification"
-import axios, {AxiosRequestConfig} from "axios";
+import axios from "axios";
 import { useState } from "react";
 import {Data} from "../../../global/Interfaces";
 import UserName from "./userName";
@@ -9,12 +8,11 @@ import FullName from "./fullName";
 import ChangeAvatar from "./changeAvatar";
 import {setFullName} from "../../Hooks/setFullName"
 import UserContext from "../../Context/UserContext";
-import Loading from "../Loading";
 import { Navigate } from "react-router";
 
 export default function Prompt() {
 
-    const {user, navigate, notif, setNotif} = useContext(UserContext)
+    const {user, navigate, setNotif} = useContext(UserContext)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
 
@@ -48,8 +46,8 @@ export default function Prompt() {
     const handleSubmit = () => {
         const sendData = async (Path: string, data: Data | FormData | null, headers: AxiosRequestConfig<Data | FormData>) => {
             try {
-                if (data) {
-                    const res = await axios.post(Path, data, headers);
+                if (data && user.id) {
+                    const res = await axios.post<string>(Path, data, headers);
                     if(res.data.length)
                         setNotif(res.data);
                     else
@@ -69,9 +67,7 @@ export default function Prompt() {
         let headers = {};
         (val === 2) ? Path = `/api/user/${user.id}/upload` : Path = `/api/user/setUserData/${user.id}`
         if (val === 2) {
-            headers = {
-                'Content-Type': 'multipart/form-data',
-            };
+            headers = {'Content-Type': 'multipart/form-data'};
             let formData: FormData | null = new FormData();
             imagePreview ? formData.append('image', imagePreview) : formData = null
             void sendData(Path, formData, headers);
@@ -96,7 +92,6 @@ export default function Prompt() {
 
   return (
     <div className="info-body">
-        {/* {notif && <Notification message={notif} />} */}
         <div className="info-container">
             {icon}
             <div className="buttons">
