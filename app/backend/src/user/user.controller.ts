@@ -385,7 +385,7 @@ export class UserController {
     }
 
     @Post('setUserData/:id')
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     async postUsername(@Body() userData: userDataDto, @Req() req: Request, @Res() res: Response,
     @Param('id', ParseIntPipe) id: number)
     {
