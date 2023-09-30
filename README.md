@@ -14,9 +14,7 @@ In the following paragraphs we lay out what both the game and chat are about:
 ## The Game:
 Through the game users are able to play a live Pong game versus another player directly on the website.
 The user can join a queue until they get automatically matched with someone else, this is based on a matchmaking system.
-The game offers some customization options such as specials like **Hiding the ball, deviating its path and increasing its velocity** and different maps. Besides that, the user is able to select a default version of the game
-without any extra features if they want to.
-
+The game offers some customization options such as specials like **Hiding the ball, deviating its path and increasing its velocity** and different maps.
 
 
 ## The Chat:
